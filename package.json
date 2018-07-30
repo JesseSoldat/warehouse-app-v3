@@ -1,0 +1,32 @@
+{
+  "name": "warehouseapp",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server",
+    "server": "nodemon server",
+    "client": "npm run start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\" "
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "body-parser": "^1.18.3",
+    "crypto": "^1.0.1",
+    "express": "^4.16.3",
+    "express-validator": "^5.2.0",
+    "google-auth-library": "^1.6.1",
+    "jsonwebtoken": "^8.3.0",
+    "mongoose": "^5.2.4",
+    "nodemailer": "^4.6.7",
+    "validator": "^10.3.0"
+  },
+  "devDependencies": {
+    "axios": "^0.18.0",
+    "concurrently": "^3.5.1",
+    "faker": "^4.1.0",
+    "nodemon": "^1.17.5"
+  }
+}

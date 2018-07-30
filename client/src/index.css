@@ -1,0 +1,103 @@
+/* site wide styles */
+
+body {
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+}
+
+/* navbar */
+.navbar .nav-item a {
+  color: white;
+  cursor: pointer;
+  margin-right: 5px;
+  text-decoration: none;
+}
+
+.navbar .fa-sign-out-alt,
+.fa-sign-in-alt {
+  color: white;
+}
+
+.navbar-toggler:focus {
+  outline-color: white;
+}
+
+.dropdown-menu {
+  left: -60px;
+}
+.navbar .nav-item .dropdown-menu > .dropdown-item {
+  color: black;
+}
+
+/* welcomepage */
+.welcomepage {
+  background: url("./images/code.jpg") no-repeat;
+  background-position: center;
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+}
+
+.welcomepage .dark-overlay {
+  background-color: rgba(0, 0, 0, 0.4);
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+
+.dropTarget:hover {
+  outline-style: dotted;
+}
+
+/* react-select  */
+.Select-control {
+  height: 45px;
+}
+.Select-placeholder {
+  line-height: 46px;
+}
+.Select-value {
+  line-height: 46px !important;
+}
+
+.Select-value-label {
+  line-height: 46px;
+}
+
+.Select-input {
+  height: 46px;
+}
+
+/* customBreadcrumb------------------------------- */
+ul.customBreadcrumb {
+  list-style: none;
+  padding: 10px 16px;
+}
+
+/* Display list items side by side */
+ul.customBreadcrumb li {
+  display: inline;
+  font-size: 16px;
+}
+
+/* Add a slash symbol (/) before/behind each list item */
+ul.customBreadcrumb li + li:before {
+  color: black;
+  content: "/\00a0";
+  padding: 8px;
+}
+
+/* Add a color to all links inside the list */
+ul.customBreadcrumb li a {
+  color: #0275d8;
+  text-decoration: none;
+}
+
+/* Add a color on mouse-over */
+ul.customBreadcrumb li a:hover {
+  color: #01447e;
+  text-decoration: underline;
+}
