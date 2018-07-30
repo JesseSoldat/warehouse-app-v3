@@ -7,95 +7,45 @@ import isEmpty from "../../../../utils/validation/isEmpty";
 const ShelfTable = ({ storage, storageType, rack }) => {
   const { _id, shelfLabel, shelfSpots = [] } = storage;
 
-  // console.log("shelf");
-  // console.log(storage);
+  console.log(shelfSpots);
 
-  let max = 0;
-
-  for (let spot of shelfSpots) {
-    const length = spot["storedItems"].length;
-    max = length > max ? length : max;
-  }
-
-  const getTableHead = () => (
-    <thead>
-      <tr>
-        <th scope="col">
-          <Link to={`/storages/create/${_id}?type=shelfSpot`}>
-            <button className="btn btn-default">
-              <i className="fas fa-plus-circle mr-2" /> New Shelf Spot
-            </button>
-          </Link>
-        </th>
-        {shelfSpots.length === 0 ? (
-          <th>No Spots yet - create one</th>
-        ) : (
-          shelfSpots.map(({ _id: spotId = "", shelfSpotLabel = "" }, i) => (
-            <th scope="row" key={`spot-head-${i}`}>
-              <Link to={`/storages/${spotId}?type=shelfSpot`}>
-                Spot {shelfSpotLabel}
-              </Link>
-            </th>
-          ))
-        )}
-      </tr>
-    </thead>
-  );
-
-  const getTableCell = (item, kind, spotIndex, itemIndex) => (
-    <td key={`cellData-${spotIndex + itemIndex}`}>
-      <Link
-        to={`/${kind === "product" ? "products" : "storages"}/${item._id}${
-          kind === "product" ? "" : "?type=box"
-        }`}
-      >
-        {kind === "product" ? item.productName : `Box ${item.boxLabel}`}
-      </Link>
-    </td>
-  );
-
-  const getTableBody = () => {
-    // No Spots
-    if (shelfSpots.length === 0) {
+  const getShelfSpotCards = () => {
+    return shelfSpots.map((spot, spotIndex) => {
       return (
-        <tbody>
-          <tr>
-            <td>No Shelf Spots Yet!</td>
-          </tr>
-        </tbody>
+        <div key={spotIndex} className="card my-2" style={{ width: "300px" }}>
+          <div className="card-body">
+            <h5 className="mt-3 text-center card-title">
+              Shelf Spot {spot.shelfSpotLabel}
+            </h5>
+            {spot.storedItems.length === 0 ? (
+              <h6 className="text-center">No items stored yet</h6>
+            ) : null}
+
+            <ul className="list-group">
+              {spot.storedItems.map((storedItem, itemIndex) => {
+                if (storedItem.kind === "product") {
+                  return (
+                    <li key={itemIndex} className="text-center list-group-item">
+                      <Link to={`/products/${storedItem.item._id}?type=box`}>
+                        {storedItem.item.productName}
+                      </Link>
+                    </li>
+                  );
+                } else {
+                  return (
+                    <li key={itemIndex} className="text-center list-group-item">
+                      <Link to={`/storages/${storedItem.item._id}?type=box`}>
+                        Box {storedItem.item.boxLabel}
+                      </Link>
+                    </li>
+                  );
+                }
+              })}
+            </ul>
+          </div>
+        </div>
       );
-    }
-
-    // Have Spots
-
-    const bodyData = [];
-
-    shelfSpots.forEach((spot, spotIndex) => {
-      spot.storedItems.forEach(({ kind, item }, itemIndex) => {
-        if (!item || !kind) return;
-
-        // create an array
-        if (!bodyData[itemIndex]) bodyData[itemIndex] = [];
-
-        // push data to the current index of the loop
-        bodyData[itemIndex].push(
-          getTableCell(item, kind, spotIndex, itemIndex)
-        );
-      });
     });
-
-    return (
-      <tbody>
-        {bodyData.map((rowData, i) => (
-          <tr key={`rowData-${i}`}>
-            {/* empty first cell as spots start at 2nd column */}
-            <td />
-
-            {rowData.map((cellData, i) => rowData[i])}
-          </tr>
-        ))}
-      </tbody>
-    );
   };
 
   return (
@@ -120,11 +70,10 @@ const ShelfTable = ({ storage, storageType, rack }) => {
         </div>
       </div>
 
-      <div className="table-responsive-xs table-responsive-sm mt-1 mb-5">
-        <table className="table table-striped col-12">
-          {getTableHead()}
-          {getTableBody()}
-        </table>
+      <div className="row">
+        <div className="col-12 mx-auto d-flex justify-content-around flex-wrap">
+          {getShelfSpotCards()}
+        </div>
       </div>
     </div>
   );
