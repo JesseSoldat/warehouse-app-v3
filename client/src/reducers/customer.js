@@ -1,13 +1,14 @@
 import {
   CUSTOMERS_FETCH_ALL,
   CUSTOMERS_FETCH_ONE,
+  CUSTOMERS_ADD_ONE,
   CUSTOMERS_RESET
 } from "../actions/customer";
 const initialState = {
-  customers: [],
-  customer: null,
   customerEntity: null,
-  customerOrder: []
+  customerOrder: [],
+  customers: [],
+  customer: null
 };
 
 export default (state = initialState, action) => {
@@ -27,6 +28,31 @@ export default (state = initialState, action) => {
 
     case CUSTOMERS_FETCH_ONE:
       return { ...state, customer };
+
+    case CUSTOMERS_ADD_ONE:
+      // new customer
+      const id = customer._id;
+
+      // do not mutate original state
+      const updatedEntity = { ...state.customerEntity };
+      const newSortOrder = [...state.customerOrder];
+      const newCustomers = [...state.customers];
+
+      // check if customerEntity has been fetched and stored
+      if (state.customerEntity) {
+        updatedEntity[id] = customer;
+
+        // customers is sorted from newest first
+        newSortOrder.unshift(id);
+        newCustomers.unshift(customer);
+      }
+
+      return {
+        ...state,
+        customerEntity: updatedEntity,
+        customerOrder: newSortOrder,
+        customers: newCustomers
+      };
 
     case CUSTOMERS_RESET:
       return { ...initialState };

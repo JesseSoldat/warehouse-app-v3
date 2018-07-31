@@ -26,6 +26,7 @@ class Customer extends Component {
     bt2Disable: false
   };
 
+  // lifecycles ----------------------------------
   componentDidMount() {
     this.getCustomer();
   }
@@ -46,7 +47,6 @@ class Customer extends Component {
     if (customerEntity) {
       const customer = customerEntity[customerId];
       if (customer._id === customerId) {
-        console.log(`have entity ${customer._id}`);
         return;
       }
     }

@@ -7,6 +7,7 @@ import { loading } from "./ui";
 // types
 export const CUSTOMERS_FETCH_ALL = "CUSTOMERS_FETCH_ALL";
 export const CUSTOMERS_FETCH_ONE = "CUSTOMERS_FETCH_ONE";
+export const CUSTOMERS_ADD_ONE = "CUSTOMERS_ADD_ONE";
 export const CUSTOMERS_RESET = "CUSTOMERS_RESET";
 
 // Reset customers array and customer single obj
@@ -66,13 +67,18 @@ export const startGetCustomer = customerId => async dispatch => {
   }
 };
 // Create a new customer -----------------------------
+export const createCustomer = customer => ({
+  type: CUSTOMERS_ADD_ONE,
+  customer
+});
+
 export const startCreateCustomer = (data, history) => async dispatch => {
   try {
     const res = await axios.post("/api/customers", data);
 
     const { msg, payload, options } = res.data;
 
-    dispatch(resetCustomers());
+    dispatch(createCustomer(payload));
 
     checkForMsg(msg, dispatch, options);
 
@@ -80,6 +86,8 @@ export const startCreateCustomer = (data, history) => async dispatch => {
 
     history.push(`/customers/${customerId}`);
   } catch (err) {
+    console.log(err);
+
     axiosResponseErrorHandling(err, dispatch, "create", "customer");
   }
 };

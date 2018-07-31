@@ -13,7 +13,10 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
-import { startGetCustomer, startEditCustomer } from "../../../actions/customer";
+import {
+  startGetCustomers,
+  startEditCustomer
+} from "../../../actions/customer";
 
 class EditCustomer extends Component {
   // lifecycle --------------------------------------
@@ -31,12 +34,17 @@ class EditCustomer extends Component {
 
   // api calls ----------------------------------
   getCustomer = () => {
-    const { customer, match } = this.props;
+    const { customerEntity, match } = this.props;
     const { customerId } = match.params;
 
-    if (customer && customer._id === customerId) return;
+    if (customerEntity) {
+      const customer = customerEntity[customerId];
+      if (customer._id === customerId) {
+        return;
+      }
+    }
 
-    this.props.startGetCustomer(customerId);
+    this.props.startGetCustomers();
   };
 
   // events ------------------------------------
@@ -47,8 +55,15 @@ class EditCustomer extends Component {
   };
 
   render() {
-    const { loading, customer } = this.props;
-    let content;
+    // props
+    const { loading, customerEntity, match } = this.props;
+    const { customerId } = match.params;
+
+    let customer, content;
+
+    if (customerEntity) {
+      customer = customerEntity[customerId];
+    }
 
     if (loading) {
       content = <Spinner />;
@@ -76,10 +91,10 @@ const mapStateToProps = ({ ui, router, customer }) => ({
   options: ui.options,
   loading: ui.loading,
   from: router.from,
-  customer: customer.customer
+  customerEntity: customer.customerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetCustomer, startEditCustomer }
+  { serverMsg, changeRoute, startGetCustomers, startEditCustomer }
 )(withRouter(EditCustomer));
