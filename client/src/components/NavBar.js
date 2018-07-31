@@ -57,6 +57,13 @@ const NavBar = ({ isAuth, startLogout, history }) => {
         </div>
       </li>
 
+      <li className="nav-item mr-3 pb-sm-3 pb-md-0">
+        <Link to="/barcode/scan">
+          <i className="fas fa-barcode mr-2" />
+          Scan
+        </Link>
+      </li>
+
       <li className="nav-item dropdown mr-3 pb-sm-3 pb-md-0">
         <Link
           className="dropdown-toggle"

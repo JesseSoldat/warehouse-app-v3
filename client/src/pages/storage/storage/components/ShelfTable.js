@@ -7,15 +7,15 @@ import isEmpty from "../../../../utils/validation/isEmpty";
 const ShelfTable = ({ storage, storageType, rack }) => {
   const { _id, shelfLabel, shelfSpots = [] } = storage;
 
-  console.log(shelfSpots);
-
   const getShelfSpotCards = () => {
     return shelfSpots.map((spot, spotIndex) => {
       return (
         <div key={spotIndex} className="card my-2" style={{ width: "300px" }}>
           <div className="card-body">
             <h5 className="mt-3 text-center card-title">
-              Shelf Spot {spot.shelfSpotLabel}
+              <Link to={`/storages/${spot._id}?type=shelfSpot`}>
+                Shelf Spot {spot.shelfSpotLabel}
+              </Link>
             </h5>
             {spot.storedItems.length === 0 ? (
               <h6 className="text-center">No items stored yet</h6>
