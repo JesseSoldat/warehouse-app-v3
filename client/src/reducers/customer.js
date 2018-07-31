@@ -1,14 +1,14 @@
 import {
   CUSTOMERS_FETCH_ALL,
-  CUSTOMERS_FETCH_ONE,
   CUSTOMERS_ADD_ONE,
-  CUSTOMERS_RESET
+  CUSTOMERS_UPDATE_ONE,
+  CUSTOMERS_DELETE_ONE
 } from "../actions/customer";
+
 const initialState = {
   customerEntity: null,
   customerOrder: [],
-  customers: [],
-  customer: null
+  customers: []
 };
 
 export default (state = initialState, action) => {
@@ -26,36 +26,80 @@ export default (state = initialState, action) => {
         customerOrder
       };
 
-    case CUSTOMERS_FETCH_ONE:
-      return { ...state, customer };
-
     case CUSTOMERS_ADD_ONE:
-      // new customer
-      const id = customer._id;
+      const newId = customer._id;
 
       // do not mutate original state
-      const updatedEntity = { ...state.customerEntity };
+      const newEntity = { ...state.customerEntity };
       const newSortOrder = [...state.customerOrder];
       const newCustomers = [...state.customers];
 
       // check if customerEntity has been fetched and stored
-      if (state.customerEntity) {
-        updatedEntity[id] = customer;
+      if (newEntity) {
+        newEntity[newId] = customer;
 
         // customers is sorted from newest first
-        newSortOrder.unshift(id);
+        newSortOrder.unshift(newId);
         newCustomers.unshift(customer);
       }
 
       return {
         ...state,
-        customerEntity: updatedEntity,
+        customerEntity: newEntity,
         customerOrder: newSortOrder,
         customers: newCustomers
       };
 
-    case CUSTOMERS_RESET:
-      return { ...initialState };
+    case CUSTOMERS_UPDATE_ONE:
+      const updateId = customer._id;
+
+      // do not mutate original state
+      const updatedEntity = { ...state.customerEntity };
+      const updatedCustomers = [...state.customers];
+
+      // check if customerEntity has been fetched and stored
+      if (updatedEntity) {
+        updatedEntity[updateId] = customer;
+
+        const updateIndex = updatedCustomers.findIndex(
+          obj => obj._id === updateId
+        );
+
+        updatedCustomers.splice(updateIndex, 1, customer);
+      }
+      return {
+        ...state,
+        customerEntity: updatedEntity,
+        customers: updatedCustomers
+      };
+
+    case CUSTOMERS_DELETE_ONE:
+      const deleteId = customer._id;
+      console.log("deletedId", deleteId);
+
+      // do not mutate original state
+      const deleteEntity = { ...state.customerEntity };
+      const deleteSortOrder = [...state.customerOrder];
+      const deleteCustomers = [...state.customers];
+
+      // check if customerEntity has been fetched and stored
+      if (deleteEntity) {
+        // remove the prop from the entity
+        delete deleteEntity[deleteId];
+
+        const deleteIndex = deleteSortOrder.findIndex(id => id === deleteId);
+
+        // remove the item from both arrays
+        deleteSortOrder.splice(deleteIndex, 1);
+        deleteCustomers.splice(deleteIndex, 1);
+      }
+
+      return {
+        ...state,
+        customerEntity: deleteEntity,
+        customerOrder: deleteSortOrder,
+        customers: deleteCustomers
+      };
 
     default:
       return { ...state };

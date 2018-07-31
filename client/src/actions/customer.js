@@ -8,12 +8,9 @@ import { loading } from "./ui";
 export const CUSTOMERS_FETCH_ALL = "CUSTOMERS_FETCH_ALL";
 export const CUSTOMERS_FETCH_ONE = "CUSTOMERS_FETCH_ONE";
 export const CUSTOMERS_ADD_ONE = "CUSTOMERS_ADD_ONE";
-export const CUSTOMERS_RESET = "CUSTOMERS_RESET";
+export const CUSTOMERS_UPDATE_ONE = "CUSTOMERS_UPDATE_ONE";
+export const CUSTOMERS_DELETE_ONE = "CUSTOMERS_DELETE_ONE";
 
-// Reset customers array and customer single obj
-export const resetCustomers = () => ({
-  type: CUSTOMERS_RESET
-});
 // Get all customers -------------------------------
 export const getCustomers = (customerEntity, customerOrder) => ({
   type: CUSTOMERS_FETCH_ALL,
@@ -92,6 +89,11 @@ export const startCreateCustomer = (data, history) => async dispatch => {
   }
 };
 // Edit a customer ---------------------------------------
+export const editCustomer = customer => ({
+  type: CUSTOMERS_UPDATE_ONE,
+  customer
+});
+
 export const startEditCustomer = (
   customerId,
   data,
@@ -100,9 +102,9 @@ export const startEditCustomer = (
   try {
     const res = await axios.patch(`/api/customers/${customerId}`, data);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
-    dispatch(resetCustomers());
+    dispatch(editCustomer(payload));
 
     checkForMsg(msg, dispatch, options);
 
@@ -112,13 +114,18 @@ export const startEditCustomer = (
   }
 };
 // Delete a customer --------------------------------------
+export const deleteCustomer = customer => ({
+  type: CUSTOMERS_DELETE_ONE,
+  customer
+});
+
 export const startDeleteCustomer = (customerId, history) => async dispatch => {
   try {
     const res = await axios.delete(`/api/customers/${customerId}`);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
-    dispatch(resetCustomers());
+    dispatch(deleteCustomer(payload));
 
     checkForMsg(msg, dispatch, options);
 
