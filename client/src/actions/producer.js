@@ -9,7 +9,12 @@ import { loading } from "./ui";
 export const PRODUCERS_FETCH_ALL = "PRODUCERS_FETCH_ALL";
 export const PRODUCERS_FETCH_ONE = "PRODUCERS_FETCH_ONE";
 export const PRODUCERS_CREATE = "PRODUCERS_CREATE";
+export const PRODUCERS_RESET = "PRODUCERS_RESET";
 
+// Rest producers array and single obj
+export const resetProducers = () => ({
+  type: PRODUCERS_RESET
+});
 // Get all producers ----------------------------------------
 export const getProducers = producers => ({
   type: PRODUCERS_FETCH_ALL,
@@ -60,6 +65,8 @@ export const startCreateProducer = (data, history) => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
+    dispatch(resetProducers());
+
     checkForMsg(msg, dispatch, options);
 
     const productId = payload._id;
@@ -80,6 +87,8 @@ export const startEditProducer = (
 
     const { msg, options } = res.data;
 
+    dispatch(resetProducers());
+
     checkForMsg(msg, dispatch, options);
 
     history.push(`/producers/${producerId}`);
@@ -93,6 +102,8 @@ export const startDeleteProducer = (producerId, history) => async dispatch => {
     const res = await axios.delete(`/api/producers/${producerId}`);
 
     const { msg, options } = res.data;
+
+    dispatch(resetProducers());
 
     checkForMsg(msg, dispatch, options);
 

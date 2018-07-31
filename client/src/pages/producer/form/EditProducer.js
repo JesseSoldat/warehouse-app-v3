@@ -31,7 +31,11 @@ class EditProducer extends Component {
 
   // api calls ------------------------------------------
   getProducer = () => {
-    const { producerId } = this.props.match.params;
+    const { producer, match } = this.props;
+    const { producerId } = match.params;
+
+    if (producer && producer._id === producerId) return;
+
     this.props.startGetProducer(producerId);
   };
 

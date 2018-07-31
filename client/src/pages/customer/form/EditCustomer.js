@@ -31,7 +31,11 @@ class EditCustomer extends Component {
 
   // api calls ----------------------------------
   getCustomer = () => {
-    const { customerId } = this.props.match.params;
+    const { customer, match } = this.props;
+    const { customerId } = match.params;
+
+    if (customer && customer._id === customerId) return;
+
     this.props.startGetCustomer(customerId);
   };
 

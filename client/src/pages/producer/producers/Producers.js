@@ -31,6 +31,12 @@ class Producers extends Component {
 
   // api calls --------------------------------------
   getProducers = () => {
+    const { producers } = this.props;
+
+    if (producers.length > 0) {
+      return;
+    }
+
     this.props.startGetProducers();
   };
 

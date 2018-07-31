@@ -1,19 +1,35 @@
-import { CUSTOMERS_FETCH_ALL, CUSTOMERS_FETCH_ONE } from "../actions/customer";
+import {
+  CUSTOMERS_FETCH_ALL,
+  CUSTOMERS_FETCH_ONE,
+  CUSTOMERS_RESET
+} from "../actions/customer";
 const initialState = {
   customers: [],
-  customer: null
+  customer: null,
+  customerEntity: null,
+  customerOrder: []
 };
 
 export default (state = initialState, action) => {
-  const { type, customers, customer } = action;
+  const { type, customer, customerEntity, customerOrder } = action;
 
   switch (type) {
     case CUSTOMERS_FETCH_ALL:
-      // console.log("CUSTOMERS_FETCH_ALL", customers);
-      return { ...state, customers };
+      const customers = [];
+      customerOrder.forEach(id => customers.push(customerEntity[id]));
+
+      return {
+        ...state,
+        customers,
+        customerEntity,
+        customerOrder
+      };
 
     case CUSTOMERS_FETCH_ONE:
       return { ...state, customer };
+
+    case CUSTOMERS_RESET:
+      return { ...initialState };
 
     default:
       return { ...state };

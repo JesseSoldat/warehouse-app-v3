@@ -30,6 +30,12 @@ class Customers extends Component {
 
   // api calls ----------------------------
   getCustomers = () => {
+    const { customers } = this.props;
+
+    if (customers.length > 0) {
+      return;
+    }
+
     this.props.startGetCustomers();
   };
 

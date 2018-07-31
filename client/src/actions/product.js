@@ -113,6 +113,8 @@ export const createProduct = (newProduct, history) => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
+    dispatch({ type: PRODUCTS_RESET });
+
     checkForMsg(msg, dispatch, options);
 
     const productId = payload._id;
@@ -130,6 +132,8 @@ export const editProduct = (productId, update, history) => async dispatch => {
 
     const { msg, options } = res.data;
 
+    dispatch({ type: PRODUCTS_RESET });
+
     checkForMsg(msg, dispatch, options);
 
     history.push(`/products/${productId}`);
@@ -144,6 +148,8 @@ export const deleteProduct = (productId, history) => async dispatch => {
     const res = await axios.delete(`/api/products/${productId}`);
 
     const { msg, options } = res.data;
+
+    dispatch({ type: PRODUCTS_RESET });
 
     checkForMsg(msg, dispatch, options);
 
