@@ -12,8 +12,7 @@ const generateArray = require("./helpers/generateArray");
 
 const PRODUCTS_TO_ADD = 150;
 
-const createProducts = labelNumber => ({
-  productLabel: labelNumber + 1000, //unique
+const createProducts = () => ({
   // string
   brandName: faker.commerce.productName(),
   productName: faker.commerce.productName(),
@@ -90,7 +89,7 @@ module.exports = seedProducts = async () => {
 
     while (times < PRODUCTS_TO_ADD) {
       ++times;
-      const product = new Product(createProducts(times));
+      const product = new Product(createProducts());
 
       // add producers and customers to product
       await linkProducerToProduct(product, producers);

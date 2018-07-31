@@ -18,7 +18,6 @@ const onSelectBuildNewState = selectedOptions => {
       break;
 
     case "price":
-    case "productLabel":
       searchType = "number";
       break;
 

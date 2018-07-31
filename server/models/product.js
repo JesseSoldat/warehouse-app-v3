@@ -16,7 +16,6 @@ const PackagingMeasurmentsSchema = new Schema({
 const ProductSchema = new Schema(
   {
     // required
-    productLabel: { type: Number, required: true, unique: true, default: 0 },
     brandName: { type: String, trim: true, minlength: 1, required: true },
     productName: { type: String, required: true },
     // Number

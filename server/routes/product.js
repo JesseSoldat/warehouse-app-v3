@@ -121,7 +121,6 @@ module.exports = app => {
     }
 
     try {
-      product["productLabel"] = await Counter.createProductLabel();
       await product.save();
 
       serverRes(res, 200, null, product);

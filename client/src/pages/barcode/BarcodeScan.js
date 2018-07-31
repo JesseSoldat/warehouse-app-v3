@@ -25,6 +25,8 @@ class BarcodeScan extends Component {
   handleSuccess = () => {};
 
   handleScan = data => {
+    console.log("no data", data);
+
     if (data) {
       console.log("data");
       console.log(data);
@@ -40,7 +42,7 @@ class BarcodeScan extends Component {
   };
 
   render() {
-    const { result, scanning, pastScannedItemType, delay } = this.state;
+    const { result, scanning, delay } = this.state;
 
     const UserCameraButton = (
       <button
@@ -62,7 +64,7 @@ class BarcodeScan extends Component {
             {scanning ? (
               <Fragment>
                 <div>
-                  <p>{this.state.result}</p>
+                  <p>{result}</p>
                 </div>
                 <QrReader
                   delay={delay}

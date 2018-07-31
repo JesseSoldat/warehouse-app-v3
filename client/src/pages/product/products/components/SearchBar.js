@@ -45,6 +45,7 @@ const SearchBar = ({
             valueErr={valueErr}
             info="Enter the text you want to filter by."
             onChangeSearchValue={onChangeSearchValue}
+            onSearchProduct={onSearchProduct}
           />
         )}
 
@@ -58,6 +59,7 @@ const SearchBar = ({
             onChangeSearchValue={onChangeSearchValue}
             onChangeSearchValue2={onChangeSearchValue2}
             handleUseValue2={handleUseValue2}
+            onSearchProduct={onSearchProduct}
           />
         )}
 

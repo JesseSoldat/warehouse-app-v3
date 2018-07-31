@@ -1,6 +1,18 @@
 import React from "react";
 
-const FilterTextInput = ({ value, valueErr, info, onChangeSearchValue }) => {
+const FilterTextInput = ({
+  value,
+  valueErr,
+  info,
+  onChangeSearchValue,
+  onSearchProduct
+}) => {
+  const onEnterKey = e => {
+    if (e.key === "Enter") {
+      onSearchProduct();
+    }
+  };
+
   return (
     <div className="col-xs-12 col-md-5 d-inline-block py-2 my-0">
       <span>
@@ -19,6 +31,7 @@ const FilterTextInput = ({ value, valueErr, info, onChangeSearchValue }) => {
             value={value}
             placeholder="Seach Text"
             onChange={onChangeSearchValue}
+            onKeyPress={onEnterKey}
           />
           <div className="invalid-feedback pl-2">{valueErr}</div>
         </div>

@@ -8,8 +8,15 @@ const NumberRangeInput = ({
   info,
   onChangeSearchValue,
   onChangeSearchValue2,
-  handleUseValue2
+  handleUseValue2,
+  onSearchProduct
 }) => {
+  const onEnterKey = e => {
+    if (e.key === "Enter") {
+      onSearchProduct();
+    }
+  };
+
   return (
     <div className="col-xs-12 col-md-5 d-inline-block py-2 my-0">
       <div className="input-group d-flex">
@@ -24,6 +31,7 @@ const NumberRangeInput = ({
             placeholder="Number #1"
             value={value}
             onChange={onChangeSearchValue}
+            onKeyPress={onEnterKey}
           />
         </span>
 
@@ -45,6 +53,7 @@ const NumberRangeInput = ({
             placeholder="Number #2"
             value={value2}
             onChange={onChangeSearchValue2}
+            onKeyPress={onEnterKey}
           />
         </span>
       </div>
