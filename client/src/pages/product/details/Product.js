@@ -26,7 +26,6 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
-  getProductDetails,
   startGetProductDetails,
   deleteProduct
 } from "../../../actions/product";
@@ -60,10 +59,12 @@ class Product extends Component {
 
   // api calls ---------------------------------------
   getProduct = () => {
-    const { getProductDetails, startGetProductDetails, match } = this.props;
+    const { product, startGetProductDetails, match } = this.props;
     const { productId } = match.params;
-    // clear old data
-    getProductDetails(null);
+
+    // clear old data if it does not match
+    if (product && product._id === productId) return;
+
     // fetch new data from api
     startGetProductDetails(productId);
   };
@@ -201,7 +202,6 @@ export default connect(
   {
     serverMsg,
     changeRoute,
-    getProductDetails,
     startGetProductDetails,
     deleteProduct
   }

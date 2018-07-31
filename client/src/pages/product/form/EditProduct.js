@@ -16,7 +16,7 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
-  getProductDetails,
+  startGetClients,
   startGetProductWithClients,
   editProduct
 } from "../../../actions/product";
@@ -37,11 +37,22 @@ class EditProduct extends Component {
 
   // api calls ----------------------------------------
   getFormData = () => {
-    const { productId } = this.props.match.params;
-    // reset old data
-    this.props.getProductDetails(null);
+    const {
+      product,
+      match,
+      startGetClients,
+      startGetProductWithClients
+    } = this.props;
+    const { productId } = match.params;
+
+    // fetch only the producers & clients
+    if (product && product._id === productId) {
+      startGetClients();
+      return;
+    }
+
     // get product / list of all producers & clients
-    this.props.startGetProductWithClients(productId);
+    startGetProductWithClients(productId);
   };
 
   // events ------------------------------------------
@@ -112,7 +123,7 @@ export default connect(
   {
     changeRoute,
     serverMsg,
-    getProductDetails,
+    startGetClients,
     startGetProductWithClients,
     editProduct
   }
