@@ -1,5 +1,6 @@
 import {
-  CUSTOMERS_FETCH_ALL,
+  CUSTOMERS_REQUESTED,
+  CUSTOMERS_LOADED,
   CUSTOMERS_ADD_ONE,
   CUSTOMERS_UPDATE_ONE,
   CUSTOMERS_DELETE_ONE
@@ -8,14 +9,23 @@ import {
 const initialState = {
   customerEntity: null,
   customerOrder: [],
-  customers: []
+  customers: [],
+  customersRequest: false,
+  customersLoaded: false
 };
 
 export default (state = initialState, action) => {
   const { type, customer, customerEntity, customerOrder } = action;
 
   switch (type) {
-    case CUSTOMERS_FETCH_ALL:
+    case CUSTOMERS_REQUESTED:
+      return {
+        ...state,
+        customersLoaded: false,
+        customersRequest: true
+      };
+
+    case CUSTOMERS_LOADED:
       const customers = [];
       customerOrder.forEach(id => customers.push(customerEntity[id]));
 
@@ -23,7 +33,9 @@ export default (state = initialState, action) => {
         ...state,
         customers,
         customerEntity,
-        customerOrder
+        customerOrder,
+        customersLoaded: true,
+        customersRequest: false
       };
 
     case CUSTOMERS_ADD_ONE:

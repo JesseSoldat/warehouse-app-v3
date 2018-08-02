@@ -13,10 +13,19 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
-import { startCreateProducer } from "../../../actions/producer";
+import {
+  startGetProducers,
+  startCreateProducer
+} from "../../../actions/producer";
 
 class CreateProducer extends Component {
   // lifecycle ----------------------------------------------
+  componentDidMount() {
+    if (this.props.producers.length === 0) {
+      this.props.startGetProducers();
+    }
+  }
+
   componentWillUnmount() {
     const { msg, options, serverMsg, changeRoute } = this.props;
     // check to see if the UiMsg should be cleared
@@ -59,13 +68,14 @@ class CreateProducer extends Component {
   }
 }
 
-const mapStateToProps = ({ ui }) => ({
+const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
   options: ui.options,
-  loading: ui.loading
+  loading: ui.loading,
+  producers: producer.producers
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startCreateProducer }
+  { serverMsg, changeRoute, startGetProducers, startCreateProducer }
 )(withRouter(CreateProducer));

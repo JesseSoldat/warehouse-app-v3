@@ -8,16 +8,18 @@ const serverMsg = require("../utils/serverMsg");
 const mergeObjFields = require("../utils/mergeObjFields");
 
 module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "customer",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
+
   // Get all customers
   app.get("/api/customers", isAuth, async (req, res) => {
     try {
       const customers = await Customer.find({}).sort({ $natural: -1 });
-
-      io.emit("update", {
-        msg: "customer",
-        senderId: "1313w57775434",
-        timestamp: Date.now()
-      });
 
       serverRes(res, 200, null, customers);
     } catch (err) {
@@ -47,9 +49,7 @@ module.exports = (app, io) => {
     try {
       await customer.save();
 
-      // emit an event to all connected sockets
-      io.emit("update", "customer");
-      io.emit("broadcast", "everyone except you");
+      emit(req.user._id);
 
       serverRes(res, 200, null, customer);
     } catch (err) {
@@ -71,6 +71,8 @@ module.exports = (app, io) => {
         { new: true }
       );
 
+      emit(req.user._id);
+
       serverRes(res, 200, null, customer);
     } catch (err) {
       console.log("Err: PATCH/api/customers/:customerId,", err);
@@ -86,6 +88,8 @@ module.exports = (app, io) => {
       const customer = await Customer.findByIdAndRemove(customerId);
 
       const msg = msgObj("The customer was deleted.", "blue", "delete");
+
+      emit(req.user._id);
 
       serverRes(res, 200, msg, customer);
     } catch (err) {

@@ -3,25 +3,29 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
+import createEntity from "./helpers/createEntity";
 // actions
 import { loading } from "./ui";
 // types
-export const PRODUCERS_FETCH_ALL = "PRODUCERS_FETCH_ALL";
-export const PRODUCERS_FETCH_ONE = "PRODUCERS_FETCH_ONE";
-export const PRODUCERS_CREATE = "PRODUCERS_CREATE";
-export const PRODUCERS_RESET = "PRODUCERS_RESET";
+export const PRODUCERS_REQUESTED = "PRODUCERS_REQUESTED";
+export const PRODUCERS_LOADED = "PRODUCERS_LOADED";
+export const PRODUCERS_ADD_ONE = "PRODUCERS_ADD_ONE";
+export const PRODUCERS_UPDATE_ONE = "PRODUCERS_UPDATE_ONE";
+export const PRODUCERS_DELETE_ONE = "PRODUCERS_DELETE_ONE";
 
-// Rest producers array and single obj
-export const resetProducers = () => ({
-  type: PRODUCERS_RESET
-});
 // Get all producers ----------------------------------------
-export const getProducers = producers => ({
-  type: PRODUCERS_FETCH_ALL,
-  producers
+export const producersRequested = () => ({
+  type: PRODUCERS_REQUESTED
+});
+
+export const producersLoaded = (producerEntity, producerOrder) => ({
+  type: PRODUCERS_LOADED,
+  producerEntity,
+  producerOrder
 });
 
 export const startGetProducers = () => async dispatch => {
+  dispatch(producersRequested());
   dispatch(loading(true));
 
   try {
@@ -29,7 +33,11 @@ export const startGetProducers = () => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
-    dispatch(getProducers(payload));
+    const { entity: producerEntity, order: producerOrder } = createEntity(
+      payload
+    );
+
+    dispatch(producersLoaded(producerEntity, producerOrder));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -37,35 +45,19 @@ export const startGetProducers = () => async dispatch => {
   }
 };
 
-// Get one producer ----------------------------------------
-export const getProducer = producer => ({
-  type: PRODUCERS_FETCH_ONE,
+// Create a producer ---------------------------------------
+export const createProducer = producer => ({
+  type: PRODUCERS_ADD_ONE,
   producer
 });
 
-export const startGetProducer = producerId => async dispatch => {
-  dispatch(loading(true));
-
-  try {
-    const res = await axios.get(`/api/producers/${producerId}`);
-
-    const { msg, payload, options } = res.data;
-
-    dispatch(getProducer(payload));
-
-    checkForMsg(msg, dispatch, options);
-  } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "fetch", "producer");
-  }
-};
-// Create a producer ---------------------------------------
 export const startCreateProducer = (data, history) => async dispatch => {
   try {
     const res = await axios.post("/api/producers", data);
 
     const { msg, payload, options } = res.data;
 
-    dispatch(resetProducers());
+    dispatch(createProducer(payload));
 
     checkForMsg(msg, dispatch, options);
 
@@ -77,6 +69,11 @@ export const startCreateProducer = (data, history) => async dispatch => {
   }
 };
 // Edit a producer -------------------------------------------
+export const editProducer = producer => ({
+  type: PRODUCERS_UPDATE_ONE,
+  producer
+});
+
 export const startEditProducer = (
   producerId,
   data,
@@ -85,9 +82,9 @@ export const startEditProducer = (
   try {
     const res = await axios.patch(`/api/producers/${producerId}`, data);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
-    dispatch(resetProducers());
+    dispatch(editProducer(payload));
 
     checkForMsg(msg, dispatch, options);
 
@@ -97,13 +94,18 @@ export const startEditProducer = (
   }
 };
 // Delete a producer --------------------------------------
+export const deleteProducer = producer => ({
+  type: PRODUCERS_DELETE_ONE,
+  producer
+});
+
 export const startDeleteProducer = (producerId, history) => async dispatch => {
   try {
     const res = await axios.delete(`/api/producers/${producerId}`);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
-    dispatch(resetProducers());
+    dispatch(deleteProducer(payload));
 
     checkForMsg(msg, dispatch, options);
 

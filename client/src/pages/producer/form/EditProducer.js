@@ -13,12 +13,15 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
-import { startGetProducer, startEditProducer } from "../../../actions/producer";
+import {
+  startGetProducers,
+  startEditProducer
+} from "../../../actions/producer";
 
 class EditProducer extends Component {
   // lifecycle ----------------------------------------------
   componentDidMount() {
-    this.getProducer();
+    this.getProducers();
   }
 
   componentWillUnmount() {
@@ -30,13 +33,18 @@ class EditProducer extends Component {
   }
 
   // api calls ------------------------------------------
-  getProducer = () => {
-    const { producer, match } = this.props;
+  getProducers = () => {
+    const { producerEntity, match, startGetProducers } = this.props;
     const { producerId } = match.params;
 
-    if (producer && producer._id === producerId) return;
+    if (producerEntity) {
+      const producer = producerEntity[producerId];
+      if (producer._id === producerId) {
+        return;
+      }
+    }
 
-    this.props.startGetProducer(producerId);
+    startGetProducers();
   };
 
   // events ---------------------------------------------
@@ -66,8 +74,14 @@ class EditProducer extends Component {
   };
 
   render() {
-    const { loading, producer } = this.props;
-    let content;
+    const { loading, producerEntity, match } = this.props;
+    const { producerId } = match.params;
+
+    let producer, content;
+
+    if (producerEntity) {
+      producer = producerEntity[producerId];
+    }
 
     if (loading) {
       content = <Spinner />;
@@ -80,7 +94,7 @@ class EditProducer extends Component {
 
     return (
       <div className="container">
-        <Message cb={this.getProducer} />
+        <Message cb={this.getProducers} />
         <Heading title="Edit Producer" />
         <div className="row">
           <div className="col-xs-12 col-md-8 mx-auto">{content}</div>
@@ -95,10 +109,10 @@ const mapStateToProps = ({ ui, router, producer }) => ({
   options: ui.options,
   loading: ui.loading,
   from: router.from,
-  producer: producer.producer
+  producerEntity: producer.producerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetProducer, startEditProducer }
+  { serverMsg, changeRoute, startGetProducers, startEditProducer }
 )(withRouter(EditProducer));

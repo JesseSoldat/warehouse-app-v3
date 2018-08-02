@@ -5,15 +5,20 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { loading } from "./ui";
 // types
-export const CUSTOMERS_FETCH_ALL = "CUSTOMERS_FETCH_ALL";
-export const CUSTOMERS_FETCH_ONE = "CUSTOMERS_FETCH_ONE";
+export const CUSTOMERS_REQUESTED = "CUSTOMERS_REQUESTED";
+export const CUSTOMERS_LOADED = "CUSTOMERS_LOADED";
+
 export const CUSTOMERS_ADD_ONE = "CUSTOMERS_ADD_ONE";
 export const CUSTOMERS_UPDATE_ONE = "CUSTOMERS_UPDATE_ONE";
 export const CUSTOMERS_DELETE_ONE = "CUSTOMERS_DELETE_ONE";
 
 // Get all customers -------------------------------
-export const getCustomers = (customerEntity, customerOrder) => ({
-  type: CUSTOMERS_FETCH_ALL,
+export const customersRequested = () => ({
+  type: CUSTOMERS_REQUESTED
+});
+
+export const customersLoaded = (customerEntity, customerOrder) => ({
+  type: CUSTOMERS_LOADED,
   customerEntity,
   customerOrder
 });
@@ -35,34 +40,14 @@ export const startGetCustomers = () => async dispatch => {
       customerOrder.push(obj._id);
     });
 
-    dispatch(getCustomers(customerEntity, customerOrder));
+    dispatch(customersLoaded(customerEntity, customerOrder));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "fetch", "customers");
   }
 };
-// Get one customer ----------------------------------
-export const getCustomer = customer => ({
-  type: CUSTOMERS_FETCH_ONE,
-  customer
-});
 
-export const startGetCustomer = customerId => async dispatch => {
-  dispatch(loading(true));
-
-  try {
-    const res = await axios.get(`/api/customers/${customerId}`);
-
-    const { msg, payload, options } = res.data;
-
-    dispatch(getCustomer(payload));
-
-    checkForMsg(msg, dispatch, options);
-  } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "fetch", "customer");
-  }
-};
 // Create a new customer -----------------------------
 export const createCustomer = customer => ({
   type: CUSTOMERS_ADD_ONE,

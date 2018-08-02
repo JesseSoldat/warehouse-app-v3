@@ -3,10 +3,12 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
+import createEntity from "./helpers/createEntity";
 // actions
 import { loading } from "./ui";
 import { getProducers } from "./producer";
-import { getCustomers } from "./customer";
+import { customersRequested, customersLoaded } from "./customer";
+import { producersRequested, producersLoaded } from "./producer";
 // types
 export const PRODUCTS_FETCH_ALL = "PRODUCTS_FETCH_ALL";
 export const PRODUCTS_FETCH_ONE = "PRODUCTS_FETCH_ONE";
@@ -70,6 +72,7 @@ export const startGetProductDetails = productId => async dispatch => {
 
 // Product ( Customers & Producers) -----------------------------------------
 export const startGetClients = () => async dispatch => {
+  dispatch(customersRequested());
   dispatch(loading(true));
   try {
     const res = await axios.get("/api/products/clients");
@@ -77,8 +80,18 @@ export const startGetClients = () => async dispatch => {
     const { msg, payload, options } = res.data;
     const { customers, producers } = payload;
 
-    dispatch(getCustomers(customers));
-    dispatch(getProducers(producers));
+    // CUSTOMERS
+    const { entity: customerEntity, order: customerOrder } = createEntity(
+      customers
+    );
+
+    dispatch(customersLoaded(customerEntity, customerOrder));
+
+    // PRODUCERS
+    const { entity: producerEntity, order: producerOrder } = createEntity(
+      producers
+    );
+    dispatch(producersLoaded(producerEntity, producerOrder));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -88,6 +101,7 @@ export const startGetClients = () => async dispatch => {
 
 // Product ( Product & Customers & Producers) -------------------
 export const startGetProductWithClients = productId => async dispatch => {
+  dispatch(customersRequested());
   dispatch(loading(true));
   try {
     const res = await axios.get(
@@ -97,9 +111,21 @@ export const startGetProductWithClients = productId => async dispatch => {
     const { msg, payload, options } = res.data;
     const { product, customers, producers } = payload;
 
+    // PRODUCT
     dispatch(getProductDetails(product));
-    dispatch(getCustomers(customers));
-    dispatch(getProducers(producers));
+
+    // CUSTOMERS
+    const { entity: customerEntity, order: customerOrder } = createEntity(
+      customers
+    );
+    dispatch(customersLoaded(customerEntity, customerOrder));
+
+    // PRODUCERS
+    const { entity: producerEntity, order: producerOrder } = createEntity(
+      producers
+    );
+    dispatch(producersLoaded(producerEntity, producerOrder));
+
     checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "fetch", "form data");

@@ -15,7 +15,7 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
-  startGetProducer,
+  startGetProducers,
   startDeleteProducer
 } from "../../../actions/producer";
 
@@ -27,7 +27,7 @@ class Producer extends Component {
 
   // lifecycle --------------------------------------
   componentDidMount() {
-    this.getProducer();
+    this.getProducers();
   }
 
   componentWillUnmount() {
@@ -39,13 +39,12 @@ class Producer extends Component {
   }
 
   // api calls ----------------------------------------
-  getProducer = () => {
-    const { producer, match } = this.props;
-    const { producerId } = match.params;
+  getProducers = () => {
+    const { producers } = this.props;
 
-    if (producer && producer._id === producerId) return;
+    if (producers.length > 0) return;
 
-    this.props.startGetProducer(producerId);
+    this.props.startGetProducers();
   };
 
   // events -----------------------------------------
@@ -65,22 +64,22 @@ class Producer extends Component {
 
   render() {
     // props
-    const { loading, producer } = this.props;
+    const { loading, producers } = this.props;
     // state
     const { bt1Disable, bt2Disable } = this.state;
     let content;
 
     if (loading) {
       content = <Spinner />;
-    } else if (!producer) {
+    } else if (!producers || !producers.length) {
     } else {
-      content = <SingleFieldList data={producerListData(producer)} />;
+      content = <SingleFieldList data={producerListData(producers)} />;
     }
 
     return (
       <div className="container">
-        <Message cb={this.getProducer} />
-        {producer && (
+        <Message cb={this.getProducers} />
+        {producers && (
           <TopRowBtns
             bt1Disable={bt1Disable}
             bt2Disable={bt2Disable}
@@ -100,10 +99,10 @@ const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
   options: ui.options,
   loading: ui.loading,
-  producer: producer.producer
+  producers: producer.producers
 });
 
 export default connect(
   mapStateToProps,
-  { startGetProducer, startDeleteProducer, serverMsg, changeRoute }
+  { startGetProducers, startDeleteProducer, serverMsg, changeRoute }
 )(Producer);
