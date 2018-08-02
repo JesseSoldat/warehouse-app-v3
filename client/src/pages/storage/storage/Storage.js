@@ -22,11 +22,14 @@ class Storage extends Component {
   // Api calls ----------------------------
   getStorage = () => {
     const { match, rack, startGetRack } = this.props;
-
     const rackId = match.params.id;
 
+    console.log("rackId");
+    console.log(rackId);
+
     if (rack && rack._id === rackId) {
-      console.log("fetch rack from store");
+      console.log("rack id matches");
+
       return;
     }
 
@@ -34,9 +37,13 @@ class Storage extends Component {
   };
 
   render() {
-    const { loading, rack } = this.props;
-
+    // props
+    const { loading, rack, match } = this.props;
+    const rackId = match.params.id;
+    // params
     const storageType = getUrlParameter("type");
+    const shelfId = getUrlParameter("shelfId");
+    const shelfSpotId = getUrlParameter("shelfSpotId");
 
     const heading = storageType === "shelfSpot" ? "Shelf Spot" : storageType;
 
@@ -44,10 +51,15 @@ class Storage extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (rack) {
+    } else if (rack && rack._id === rackId) {
       content = (
         <Fragment>
-          <TableContainer rack={rack} storageType={storageType} />
+          <TableContainer
+            rack={rack}
+            storageType={storageType}
+            shelfId={shelfId}
+            shelfSpotId={shelfSpotId}
+          />
         </Fragment>
       );
     }

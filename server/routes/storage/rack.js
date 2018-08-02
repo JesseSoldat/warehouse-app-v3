@@ -30,7 +30,10 @@ module.exports = app => {
       const rack = await Rack.findById(rackId)
         .populate({
           path: "shelves",
-          populate: { path: "shelfSpots" }
+          populate: {
+            path: "shelfSpots",
+            populate: { path: "storedItems.item " }
+          }
         })
         .populate("storage");
 

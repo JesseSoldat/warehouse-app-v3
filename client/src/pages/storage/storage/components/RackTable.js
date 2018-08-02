@@ -7,8 +7,6 @@ import isEmpty from "../../../../utils/validation/isEmpty";
 const RackTable = ({ rack }) => {
   const { _id: rackId, rackLabel, shelves = [] } = rack;
 
-  console.log(rack);
-
   let max = 0;
 
   for (let shelf of shelves) {
@@ -48,17 +46,21 @@ const RackTable = ({ rack }) => {
           <td>No Shelves yet</td>
         </tr>
       ) : (
-        shelves.map(({ shelfSpots = [], shelfLabel }, i) => (
+        shelves.map(({ shelfSpots = [], shelfLabel, _id: shelfId }, i) => (
           <tr key={`shelf-body${i}`}>
             <th scope="row">
-              <Link to={`/storages/${rackId}?type=shelf`}>
+              <Link to={`/storages/${rackId}?shelfId=${shelfId}&type=shelf`}>
                 Shelf {shelfLabel}
               </Link>
             </th>
             {shelfSpots.length > 0 &&
               shelfSpots.map((shelfSpot, i) => (
                 <td key={`spot-body${i}`}>
-                  <Link to={`/storages/${rackId}?type=shelfSpot`}>
+                  <Link
+                    to={`/storages/${rackId}?shelfId=${shelfId}&shelfSpotId=${
+                      shelfSpot._id
+                    }&type=shelfSpot`}
+                  >
                     Items{" "}
                     {shelfSpot.storedItems ? shelfSpot.storedItems.length : 0}
                   </Link>

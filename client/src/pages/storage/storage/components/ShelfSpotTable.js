@@ -4,11 +4,17 @@ import { Link } from "react-router-dom";
 // helpers
 import isEmpty from "../../../../utils/validation/isEmpty";
 
-const ShelfSpotTable = ({ storage }) => {
-  // console.log("shelfSpotTable");
-  // console.log(storage);
+const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
+  const { _id: rackId } = rack;
+  const { shelves } = rack;
 
-  const { _id, spotLabel, storedItems = [], shelf } = storage;
+  const shelf = shelves.find(shelf => shelf._id === shelfId);
+
+  const { shelfSpots } = shelf;
+
+  const shelfSpot = shelfSpots.find(shelfSpot => shelfSpot._id === shelfSpotId);
+
+  const { spotLabel, storedItems = [] } = shelfSpot;
 
   const getTableHead = () => (
     <thead>
@@ -39,7 +45,7 @@ const ShelfSpotTable = ({ storage }) => {
   );
 
   const getTableBody = () => {
-    // no items
+    //   // no items
     if (!storedItems.length) {
       return (
         <tbody>
@@ -76,14 +82,14 @@ const ShelfSpotTable = ({ storage }) => {
         <h2>Shelf Spot {spotLabel}</h2>
 
         <div>
-          <Link to={`/storages/edit/${_id}?type=shelfSpot`}>
+          <Link to={`/storages/edit/${shelfSpotId}?type=shelfSpot`}>
             <button className="btn btn-default m-1">
               <i className="fas fa-edit mr-2" /> Edit Spot
             </button>
           </Link>
 
           {!isEmpty(shelf) && (
-            <Link to={`/storages/${shelf._id}?type=shelf`}>
+            <Link to={`/storages/${rackId}?shelfId=${shelfId}&type=shelf`}>
               <button className="btn btn-default m-1">
                 <i className="fas fa-arrow-up mr-2" /> View Shelf
               </button>

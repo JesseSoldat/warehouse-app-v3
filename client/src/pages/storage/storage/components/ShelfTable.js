@@ -4,12 +4,12 @@ import { Link } from "react-router-dom";
 // helpers
 import isEmpty from "../../../../utils/validation/isEmpty";
 
-const ShelfTable = ({ rack }) => {
+const ShelfTable = ({ rack, shelfId }) => {
   const { _id: rackId, shelves } = rack;
-  const { _id: shelfId, shelfLabel, shelfSpots = [] } = shelves;
 
-  console.log("Shelf Table");
-  console.log(rack);
+  const shelf = shelves.find(shelf => shelf._id === shelfId);
+
+  const { shelfLabel, shelfSpots = [] } = shelf;
 
   const getShelfSpotCards = () => {
     return shelfSpots.map((spot, spotIndex) => {
@@ -17,7 +17,11 @@ const ShelfTable = ({ rack }) => {
         <div key={spotIndex} className="card my-2" style={{ width: "300px" }}>
           <div className="card-body">
             <h5 className="mt-3 text-center card-title">
-              <Link to={`/storages/${spot._id}?type=shelfSpot`}>
+              <Link
+                to={`/storages/${rackId}?shelfId=${shelfId}&shelfSpotId=${
+                  spot._id
+                }&type=shelfSpot`}
+              >
                 Shelf Spot {spot.shelfSpotLabel}
               </Link>
             </h5>

@@ -5,7 +5,12 @@ import RackTable from "./RackTable";
 import ShelfTable from "./ShelfTable";
 import ShelfSpotTable from "./ShelfSpotTable";
 
-const TableContainer = ({ rack = null, storageType = null }) => {
+const TableContainer = ({
+  rack = null,
+  storageType = null,
+  shelfId,
+  shelfSpotId
+}) => {
   if (!rack || !storageType) return null;
 
   let content;
@@ -16,12 +21,21 @@ const TableContainer = ({ rack = null, storageType = null }) => {
       break;
 
     case "shelf":
-      content = <ShelfTable rack={rack} storageType={storageType} />;
+      content = (
+        <ShelfTable rack={rack} storageType={storageType} shelfId={shelfId} />
+      );
       break;
 
-    // case "shelfSpot":
-    //   content = <ShelfSpotTable rack={rack} storageType={storageType} />;
-    //   break;
+    case "shelfSpot":
+      content = (
+        <ShelfSpotTable
+          rack={rack}
+          storageType={storageType}
+          shelfId={shelfId}
+          shelfSpotId={shelfSpotId}
+        />
+      );
+      break;
 
     default:
       content = null;
