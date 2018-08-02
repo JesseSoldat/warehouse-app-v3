@@ -1,6 +1,8 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import io from "socket.io-client";
+
 import registerServiceWorker from "./registerServiceWorker";
 
 // css
@@ -14,6 +16,19 @@ import handleInitialAuth from "./utils/auth/handleInitialAuth";
 
 const Loading = () => "loading..";
 const store = configureStore();
+
+const socket = io("http://localhost:5000");
+
+// socket.emit("client", "message from client");
+
+socket.on("update", data => {
+  const { msg, senderId } = data;
+  const userId = "1313w57775434";
+  if (senderId === userId) {
+    return;
+  }
+  console.log("update", data);
+});
 
 const jsx = (
   <Provider store={store}>

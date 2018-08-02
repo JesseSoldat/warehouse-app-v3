@@ -21,6 +21,7 @@
     "jsonwebtoken": "^8.3.0",
     "mongoose": "^5.2.4",
     "nodemailer": "^4.6.7",
+    "socket.io": "^2.1.1",
     "validator": "^10.3.0"
   },
   "devDependencies": {

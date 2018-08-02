@@ -49,15 +49,19 @@ const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
                 <Link to={`/dashboard`}>Dashboard</Link>
               </li>
             );
-          } else if (path === "single") {
+          }
+          // single is the route storages/single/:id
+          else if (path === "single") {
             return null;
           } else if (path === "edit") {
+            // default link to use
             let link = (
               <Link
                 to={`/${paths[1]}/${id}${paths[1] === "storages" ? type : ""}`}
               >{`${capitalizeFirstLetter(storageType)}`}</Link>
             );
 
+            // storage needs a special link to work correctly
             if (storageType === "storage") {
               link = <Link to={`/storages/single/${id}`}>Storage</Link>;
             }

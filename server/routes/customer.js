@@ -7,11 +7,14 @@ const { serverRes, msgObj } = require("../utils/serverRes");
 const serverMsg = require("../utils/serverMsg");
 const mergeObjFields = require("../utils/mergeObjFields");
 
-module.exports = app => {
+module.exports = (app, io) => {
   // Get all customers
   app.get("/api/customers", isAuth, async (req, res) => {
     try {
       const customers = await Customer.find({}).sort({ $natural: -1 });
+
+      io.emit("update", { msg: "customer", senderId: "1313w57775434" });
+      io.emit("update", { msg: "customer", senderId: "1677775434" });
 
       serverRes(res, 200, null, customers);
     } catch (err) {
@@ -41,11 +44,16 @@ module.exports = app => {
     try {
       await customer.save();
 
+      // emit an event to all connected sockets
+      io.emit("update", "customer");
+      io.emit("broadcast", "everyone except you");
+
       serverRes(res, 200, null, customer);
     } catch (err) {
       console.log("Err: POST/api/customers,", err);
 
       const msg = serverMsg("error", "save", "customer");
+
       serverRes(res, 400, msg, null);
     }
   });
