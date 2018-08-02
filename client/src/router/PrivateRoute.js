@@ -2,9 +2,9 @@ import React from "react";
 import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
-import RouteListener from "../components/RouteListener";
 import NavBar from "../components/NavBar";
 import BreadCrumb from "../components/BreadCrumb";
+import Socket from "../components/Socket";
 
 const idTypesArray = [":customerId", ":producerId", ":productId", ":id"];
 
@@ -15,9 +15,10 @@ const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
       component={props =>
         isAuth ? (
           <div>
-            <RouteListener />
+            <Socket />
             <NavBar />
             <BreadCrumb idTypesArray={idTypesArray} />
+
             <div className="my-3">
               <Component {...props} />
             </div>

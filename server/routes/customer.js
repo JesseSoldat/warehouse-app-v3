@@ -13,8 +13,11 @@ module.exports = (app, io) => {
     try {
       const customers = await Customer.find({}).sort({ $natural: -1 });
 
-      io.emit("update", { msg: "customer", senderId: "1313w57775434" });
-      io.emit("update", { msg: "customer", senderId: "1677775434" });
+      io.emit("update", {
+        msg: "customer",
+        senderId: "1313w57775434",
+        timestamp: Date.now()
+      });
 
       serverRes(res, 200, null, customers);
     } catch (err) {
