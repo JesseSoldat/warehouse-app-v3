@@ -74,11 +74,16 @@ class BarcodeScan extends Component {
                 />
               </Fragment>
             ) : (
-              <div>
-                <img
+              <div style={{ height: "200px" }}>
+                <i className="fas fa-times-circle fa-10x mr-2" />
+
+                <i className="fas fa-camera-retro fa-10x mr-2" />
+                <h1>Camera is turned off</h1>
+
+                {/* <img
                   className="mx-auto w-100"
                   src={require("../../images/noCamera.png")}
-                />
+                /> */}
               </div>
             )}
             {UserCameraButton}

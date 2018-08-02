@@ -19,6 +19,8 @@ require("./routes/storage/shelf")(app);
 require("./routes/storage/shelfSpot")(app);
 
 app.get("*", (req, res) => {
+  console.log(req.url);
+
   res.send("server running");
 });
 

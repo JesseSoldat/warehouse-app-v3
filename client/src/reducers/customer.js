@@ -75,7 +75,6 @@ export default (state = initialState, action) => {
 
     case CUSTOMERS_DELETE_ONE:
       const deleteId = customer._id;
-      console.log("deletedId", deleteId);
 
       // do not mutate original state
       const deleteEntity = { ...state.customerEntity };

@@ -10,7 +10,7 @@ const mergeObjFields = require("../../utils/mergeObjFields");
 
 module.exports = app => {
   // Get all of the racks
-  app.get("/api/racks", isAuth, async (req, res, next) => {
+  app.get("/api/racks", isAuth, async (req, res) => {
     try {
       const racks = await Rack.find({}).populate("shelves");
 
@@ -25,6 +25,7 @@ module.exports = app => {
   // Get a single rack
   app.get("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
+
     try {
       const rack = await Rack.findById(rackId)
         .populate({

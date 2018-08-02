@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
 // common components
@@ -11,46 +10,37 @@ import StoragesTable from "./components/StoragesTable";
 // actions
 import { startGetStorages } from "../../../actions/storage";
 
-class Storages extends Component {
-  // lifecycles ----------------------------------------------
+class Details extends Component {
   componentDidMount() {
+    // each time the route changes this will be called with a different TYPE
     this.getStorages();
   }
 
-  // api calls ------------------------------------------------
+  // Api calls ----------------------------
   getStorages = () => {
     const { storages, startGetStorages } = this.props;
 
     // check if the store has a copy of storages
     if (storages && storages.length === 0) {
-      startGetStorages();
+      return startGetStorages();
     }
   };
 
   render() {
-    const { loading, storages } = this.props;
+    const { match, loading, storages } = this.props;
+    const id = match.params.id;
 
-    let content, button;
+    let content;
 
     if (loading) {
       content = <Spinner />;
     } else if (!loading && storages.length < 1) {
     } else {
-      button = (
-        <div className="row">
-          <Link to="/storages/create/storage?type=storage">
-            <button className="btn btn-default ml-4">
-              <i className="fas fa-plus-circle mr-2" />
-              Create new Storage
-            </button>
-          </Link>
-        </div>
-      );
+      const storage = storages.find(storage => storage._id === id);
+
       content = (
         <div className="row">
-          {storages.map((storage, i) => (
-            <StoragesTable key={i} storage={storage} />
-          ))}
+          <StoragesTable storage={storage} type="details" />
         </div>
       );
     }
@@ -58,8 +48,7 @@ class Storages extends Component {
     return (
       <div className="container">
         <Message cb={this.getStorages} />
-        <Heading title="Storages" />
-        {button}
+        <Heading title="Storage Details" />
         {content}
       </div>
     );
@@ -67,11 +56,11 @@ class Storages extends Component {
 }
 
 const mapStateToProps = ({ ui, storage }) => ({
-  loading: ui.loading,
-  storages: storage.storages
+  storages: storage.storages,
+  loading: ui.loading
 });
 
 export default connect(
   mapStateToProps,
   { startGetStorages }
-)(Storages);
+)(Details);

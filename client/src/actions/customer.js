@@ -83,8 +83,6 @@ export const startCreateCustomer = (data, history) => async dispatch => {
 
     history.push(`/customers/${customerId}`);
   } catch (err) {
-    console.log(err);
-
     axiosResponseErrorHandling(err, dispatch, "create", "customer");
   }
 };

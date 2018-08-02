@@ -3,6 +3,7 @@ import React from "react";
 import PrivateRoute from "../PrivateRoute";
 
 import Storages from "../../pages/storage/storages/Storages";
+import Details from "../../pages/storage/storages/Details";
 import Storage from "../../pages/storage/storage/Storage";
 import StorageCreate from "../../pages/storage/form/StorageCreate";
 import StorageEdit from "../../pages/storage/form/StorageEdit";
@@ -31,6 +32,12 @@ const StorageRoutes = [
     key="/storages/edit/:id"
     path="/storages/edit/:id"
     component={StorageEdit}
+    exact={true}
+  />,
+  <PrivateRoute
+    key="/storages/details/:id"
+    path="/storages/details/:id"
+    component={Details}
     exact={true}
   />,
   <PrivateRoute

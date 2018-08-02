@@ -9,6 +9,11 @@ import { loading } from "./ui";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
+export const STORAGE_FETCH_RACK = "STORAGE_FETCH_RACK";
+
+export const RACK_REQUESTED = "RACK_REQUESTED";
+export const RACK_LOADED = "RACK_LOADED";
+
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
 
@@ -58,6 +63,32 @@ export const startGetStorages = () => async dispatch => {
     checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "get", "storages");
+  }
+};
+
+// GET SINGLE RACK -----------------------------
+export const rackRequested = () => ({
+  type: RACK_REQUESTED
+});
+
+export const rackLoaded = rack => ({
+  type: RACK_LOADED,
+  rack
+});
+
+export const startGetRack = rackId => async dispatch => {
+  dispatch(rackRequested());
+  dispatch(loading(true));
+  try {
+    const res = await axios.get(`/api/racks/${rackId}`);
+
+    const { msg, payload, options } = res.data;
+
+    dispatch(rackLoaded(payload));
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "get", "rack");
   }
 };
 

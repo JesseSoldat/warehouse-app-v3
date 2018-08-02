@@ -27,6 +27,7 @@ const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
           if (i === 0) {
             return null;
           }
+
           if (idTypesArray.includes(path)) {
             return (
               <li key={`bread${i}dash`} className="breadcrumb-item">
@@ -34,15 +35,18 @@ const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
               </li>
             );
           }
+
           if (paths.length === 2) {
             if (path === "dashboard") {
-              return "Welcome to SaRA";
+              return "Welcome to Warehouse App";
             }
             return (
               <li key={`bread${i}dash`} className="breadcrumb-item">
                 <Link to={`/dashboard`}>Dashboard</Link>
               </li>
             );
+          } else if (path === "details") {
+            return null;
           } else if (path === "edit") {
             return (
               <Fragment key={`bread${i}mode`}>

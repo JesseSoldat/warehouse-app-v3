@@ -4,9 +4,12 @@ import React from "react";
 import TableTitle from "./TableTitle";
 import TableHead from "./TableHead";
 import TableBody from "./TableBody";
+// utils
+import capitalizeEachWordOfString from "../../../../utils/stringManipulation/capitalizeEachWordOfString";
 
 const StoragesTable = ({
-  storage: { _id = "", storageLabel = "", racks = [], description = "" }
+  storage: { _id = "", storageLabel = "", racks = [], description = "" },
+  type = null
 }) => {
   let maxShelves = 0;
 
@@ -20,9 +23,10 @@ const StoragesTable = ({
     <div className="col-12 d-flex justify-content-around flex-wrap mt-4">
       <div className="card card-body mb-3">
         <TableTitle
-          storageLabel={storageLabel}
+          storageLabel={capitalizeEachWordOfString(storageLabel)}
           description={description}
           id={_id}
+          type={type}
         />
         <div className="table-responsive-xs table-responsive-sm">
           <table className="table table-striped col-12">

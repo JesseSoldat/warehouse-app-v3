@@ -11,24 +11,31 @@ import TableContainer from "./components/TableContainer";
 import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
-import { startGetStorage } from "../../../actions/storage";
+import { startGetStorage, startGetRack } from "../../../actions/storage";
 
 class Storage extends Component {
+  // lifecyles -----------------------------
   componentDidMount() {
-    // each time the route changes this will be called with a different TYPE
     this.getStorage();
   }
 
   // Api calls ----------------------------
   getStorage = () => {
-    const { match, startGetStorage } = this.props;
-    const storageType = getUrlParameter("type");
-    const id = match.params.id;
-    startGetStorage(id, storageType);
+    const { match, rack, startGetRack } = this.props;
+
+    const rackId = match.params.id;
+
+    if (rack && rack._id === rackId) {
+      console.log("fetch rack from store");
+      return;
+    }
+
+    startGetRack(rackId);
   };
 
   render() {
-    const { loading, storage } = this.props;
+    const { loading, rack } = this.props;
+
     const storageType = getUrlParameter("type");
 
     const heading = storageType === "shelfSpot" ? "Shelf Spot" : storageType;
@@ -37,11 +44,10 @@ class Storage extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (!storage) {
-    } else {
-      content = storage && (
+    } else if (rack) {
+      content = (
         <Fragment>
-          <TableContainer storage={storage} storageType={storageType} />
+          <TableContainer rack={rack} storageType={storageType} />
         </Fragment>
       );
     }
@@ -58,10 +64,11 @@ class Storage extends Component {
 
 const mapStateToProps = ({ ui, storage }) => ({
   storage: storage.storage,
+  rack: storage.rack,
   loading: ui.loading
 });
 
 export default connect(
   mapStateToProps,
-  { startGetStorage }
+  { startGetStorage, startGetRack }
 )(Storage);

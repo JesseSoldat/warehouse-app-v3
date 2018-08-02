@@ -13,9 +13,18 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
-import { startCreateCustomer } from "../../../actions/customer";
+import {
+  startGetCustomers,
+  startCreateCustomer
+} from "../../../actions/customer";
 
 class CreateCustomer extends Component {
+  componentDidMount() {
+    if (this.props.customers.length === 0) {
+      this.props.startGetCustomers();
+    }
+  }
+
   componentWillUnmount() {
     const { msg, options, serverMsg, changeRoute } = this.props;
     // check to see if the UiMsg should be cleared
@@ -67,5 +76,5 @@ const mapStateToProps = ({ ui }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startCreateCustomer }
+  { serverMsg, changeRoute, startGetCustomers, startCreateCustomer }
 )(withRouter(CreateCustomer));

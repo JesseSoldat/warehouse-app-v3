@@ -4,11 +4,10 @@ import { Link } from "react-router-dom";
 // helpers
 import isEmpty from "../../../../utils/validation/isEmpty";
 
-const RackTable = ({ storage, storageType }) => {
-  const { _id, rackLabel, shelves = [] } = storage;
+const RackTable = ({ rack }) => {
+  const { _id: rackId, rackLabel, shelves = [] } = rack;
 
-  // console.log('Rack Table');
-  // console.log(storage);
+  console.log(rack);
 
   let max = 0;
 
@@ -21,7 +20,7 @@ const RackTable = ({ storage, storageType }) => {
     <thead>
       <tr>
         <th scope="col">
-          <Link to={`/storages/create/${_id}?type=shelf`}>
+          <Link to={`/storages/create/${rackId}?type=shelf`}>
             <button className="btn btn-default">
               <i className="fas fa-plus-circle mr-2" /> New Shelf
             </button>
@@ -49,17 +48,17 @@ const RackTable = ({ storage, storageType }) => {
           <td>No Shelves yet</td>
         </tr>
       ) : (
-        shelves.map(({ _id: shelfId, shelfSpots = [], shelfLabel }, i) => (
+        shelves.map(({ shelfSpots = [], shelfLabel }, i) => (
           <tr key={`shelf-body${i}`}>
             <th scope="row">
-              <Link to={`/storages/${shelfId}?type=shelf`}>
+              <Link to={`/storages/${rackId}?type=shelf`}>
                 Shelf {shelfLabel}
               </Link>
             </th>
             {shelfSpots.length > 0 &&
               shelfSpots.map((shelfSpot, i) => (
                 <td key={`spot-body${i}`}>
-                  <Link to={`/storages/${shelfSpot._id}?type=shelfSpot`}>
+                  <Link to={`/storages/${rackId}?type=shelfSpot`}>
                     Items{" "}
                     {shelfSpot.storedItems ? shelfSpot.storedItems.length : 0}
                   </Link>
@@ -76,14 +75,14 @@ const RackTable = ({ storage, storageType }) => {
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
         <h2>Rack {rackLabel}</h2>
 
-        <Link to={`/storages/edit/${_id}?type=rack`}>
+        <Link to={`/storages/edit/${rackId}?type=rack`}>
           <button className="btn btn-default m-1">
             <i className="fas fa-edit mr-2" /> Edit Rack
           </button>
         </Link>
 
-        {!isEmpty(storage.storage) && (
-          <Link to={`/storages/${storage.storage._id}?type=storage`}>
+        {!isEmpty(rack.storage) && (
+          <Link to={`/storages/details/${rack.storage._id}`}>
             <button className="btn btn-default m-1">
               <i className="fas fa-arrow-up mr-2" /> View Storage
             </button>

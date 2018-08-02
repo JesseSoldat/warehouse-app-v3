@@ -4,8 +4,12 @@ import { Link } from "react-router-dom";
 // helpers
 import isEmpty from "../../../../utils/validation/isEmpty";
 
-const ShelfTable = ({ storage, storageType, rack }) => {
-  const { _id, shelfLabel, shelfSpots = [] } = storage;
+const ShelfTable = ({ rack }) => {
+  const { _id: rackId, shelves } = rack;
+  const { _id: shelfId, shelfLabel, shelfSpots = [] } = shelves;
+
+  console.log("Shelf Table");
+  console.log(rack);
 
   const getShelfSpotCards = () => {
     return shelfSpots.map((spot, spotIndex) => {
@@ -54,14 +58,14 @@ const ShelfTable = ({ storage, storageType, rack }) => {
         <h2>Shelf {shelfLabel}</h2>
 
         <div>
-          <Link to={`/storages/edit/${_id}?type=shelf`}>
+          <Link to={`/storages/edit/${shelfId}?type=shelf`}>
             <button className="btn btn-default m-1">
               <i className="fas fa-edit mr-2" /> Edit Shelf
             </button>
           </Link>
 
           {!isEmpty(rack) && (
-            <Link to={`/storages/${rack._id}?type=rack`}>
+            <Link to={`/storages/${rackId}?type=rack`}>
               <button className="btn btn-default m-1">
                 <i className="fas fa-arrow-up mr-2" /> View Rack
               </button>

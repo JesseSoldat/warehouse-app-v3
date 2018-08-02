@@ -21,7 +21,6 @@ import {
 
 class Customer extends Component {
   state = {
-    customer: null,
     bt1Disable: false,
     bt2Disable: false
   };
@@ -41,17 +40,17 @@ class Customer extends Component {
 
   // api calls ----------------------------
   getCustomer = () => {
-    const { customerEntity, match } = this.props;
+    const { customerEntity, match, startGetCustomers } = this.props;
     const { customerId } = match.params;
 
     if (customerEntity) {
       const customer = customerEntity[customerId];
-      if (customer._id === customerId) {
+      if (customer && customer._id === customerId) {
         return;
       }
     }
 
-    this.props.startGetCustomers();
+    startGetCustomers();
   };
 
   // events -------------------------------
