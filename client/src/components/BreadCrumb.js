@@ -2,6 +2,8 @@ import React, { Fragment } from "react";
 import { Link, withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
+// utils
+import getUrlParameter from "../utils/getUrlParameter";
 import capitalizeFirstLetter from "../utils/stringManipulation/capitalizeFirstLetter";
 
 // idTypesArray is passed in with a list of all :id types to check for
@@ -9,6 +11,8 @@ const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
   const paths = match.path.split("/");
 
   const type = location.search;
+
+  const storageType = getUrlParameter("type");
 
   let id;
 
@@ -45,18 +49,22 @@ const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
                 <Link to={`/dashboard`}>Dashboard</Link>
               </li>
             );
-          } else if (path === "details") {
+          } else if (path === "single") {
             return null;
           } else if (path === "edit") {
+            let link = (
+              <Link
+                to={`/${paths[1]}/${id}${paths[1] === "storages" ? type : ""}`}
+              >{`${capitalizeFirstLetter(storageType)}`}</Link>
+            );
+
+            if (storageType === "storage") {
+              link = <Link to={`/storages/single/${id}`}>Storage</Link>;
+            }
+
             return (
               <Fragment key={`bread${i}mode`}>
-                <li className="breadcrumb-item">
-                  <Link
-                    to={`/${paths[1]}/${id}${
-                      paths[1] === "storages" ? type : ""
-                    }`}
-                  >{`${capitalizeFirstLetter(paths[1].slice(0, -1))}`}</Link>
-                </li>
+                <li className="breadcrumb-item">{link}</li>
                 <li key={`bread${i}`} className="breadcrumb-item">
                   {`${capitalizeFirstLetter(path)}`}
                 </li>

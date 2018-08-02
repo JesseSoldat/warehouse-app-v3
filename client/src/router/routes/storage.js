@@ -35,8 +35,8 @@ const StorageRoutes = [
     exact={true}
   />,
   <PrivateRoute
-    key="/storages/details/:id"
-    path="/storages/details/:id"
+    key="/storages/single/:id"
+    path="/storages/single/:id"
     component={Details}
     exact={true}
   />,

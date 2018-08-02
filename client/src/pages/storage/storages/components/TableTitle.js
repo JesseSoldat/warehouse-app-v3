@@ -14,7 +14,7 @@ const TableTitle = ({
       </button>
     </Link>
   ) : (
-    <Link to={`/storages/details/${id}`} className="pr-3">
+    <Link to={`/storages/single/${id}`} className="pr-3">
       <button className="btn btn-default">
         <i className="fas fa-eye mr-2" />View Storage
       </button>

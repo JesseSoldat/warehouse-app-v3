@@ -166,6 +166,8 @@ class StorageEdit extends Component {
       content = contentObj.content;
       button = contentObj.button;
     } else if (rack && type === "box") {
+      console.log("BOX");
+
       const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
 
       const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
