@@ -26,7 +26,8 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
-  startGetProductDetails,
+  productLoaded,
+  startGetProduct,
   deleteProduct
 } from "../../../actions/product";
 
@@ -59,14 +60,30 @@ class Product extends Component {
 
   // api calls ---------------------------------------
   getProduct = () => {
-    const { product, startGetProductDetails, match } = this.props;
+    const {
+      productEntity,
+      product,
+      productLoaded,
+      startGetProduct,
+      match
+    } = this.props;
     const { productId } = match.params;
 
-    // clear old data if it does not match
+    // check store for product in productEntity map
+    if (productEntity) {
+      if (productEntity[productId]) {
+        productLoaded(productEntity[productId]);
+        return;
+      }
+    }
+
+    // check store if single product equal requested product
     if (product && product._id === productId) return;
 
+    // clear old data
+    productLoaded(null);
     // fetch new data from api
-    startGetProductDetails(productId);
+    startGetProduct(productId);
   };
 
   // events -----------------------------------------
@@ -88,17 +105,14 @@ class Product extends Component {
   onUnlinkProduct = () => {};
 
   render() {
-    const { msg, product, loading } = this.props;
+    const { product, loading, match, history } = this.props;
+    const { productId } = match.params;
+
     let content;
 
     if (loading) {
       content = <Spinner />;
-    } else if (!product) {
-      content = <Spinner />;
-    } else {
-      const { match, history, product } = this.props;
-      const { productId } = match.params;
-
+    } else if (product) {
       const {
         // array ----------
         packagingPictures,
@@ -194,7 +208,8 @@ const mapStateToProps = ({ ui, product }) => ({
   loading: ui.loading,
   options: ui.options,
   msg: ui.msg,
-  product: product.product
+  product: product.product,
+  productEntity: product.productEntity
 });
 
 export default connect(
@@ -202,7 +217,8 @@ export default connect(
   {
     serverMsg,
     changeRoute,
-    startGetProductDetails,
+    productLoaded,
+    startGetProduct,
     deleteProduct
   }
 )(withRouter(Product));

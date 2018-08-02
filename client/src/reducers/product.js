@@ -1,12 +1,22 @@
 import {
-  PRODUCTS_FETCH_ALL,
-  PRODUCTS_FETCH_ONE,
+  PRODUCTS_REQUESTED,
+  PRODUCTS_LOADED,
+  PRODUCT_REQUESTED,
+  PRODUCT_LOADED,
   PRODUCTS_RESET
 } from "../actions/product";
 
 const initialState = {
+  productEntity: null,
+  productOrder: [],
   products: [],
   product: null,
+  // All Products
+  productsRequest: false,
+  productsLoaded: false,
+  // Single Product
+  productRequest: false,
+  productLoaded: false,
   query: {
     page: 1,
     skip: 0,
@@ -21,15 +31,44 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  const { type, products, product, query } = action;
+  const { type, productEntity, productOrder, product, query } = action;
   switch (type) {
-    case PRODUCTS_FETCH_ALL:
-      // console.log("PRODUCTS_FETCH_ALL", products);
-      return { ...state, products, query };
+    case PRODUCTS_REQUESTED:
+      return {
+        ...state,
+        productsRequest: true,
+        productsLoaded: false
+      };
 
-    case PRODUCTS_FETCH_ONE:
-      // console.log("PRODUCTS_FETCH_ONE", product);
-      return { ...state, product };
+    case PRODUCTS_LOADED:
+      const products = [];
+
+      productOrder.forEach(id => products.push(productEntity[id]));
+
+      return {
+        ...state,
+        productEntity,
+        productOrder,
+        products,
+        query,
+        productsRequest: false,
+        productsLoaded: true
+      };
+
+    case PRODUCT_REQUESTED:
+      return {
+        ...state,
+        productsRequest: true,
+        productsLoaded: false
+      };
+
+    case PRODUCT_LOADED:
+      return {
+        ...state,
+        product,
+        productsRequest: false,
+        productsLoaded: true
+      };
 
     case PRODUCTS_RESET:
       return { ...initialState };

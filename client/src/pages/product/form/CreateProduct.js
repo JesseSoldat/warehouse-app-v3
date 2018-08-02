@@ -16,15 +16,17 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
-  getProductDetails,
+  productLoaded,
   createProduct,
   startGetClients
 } from "../../../actions/product";
+import { startGetProducers } from "../../../actions/producer";
+import { startGetCustomers } from "../../../actions/customer";
 
 class CreateProduct extends Component {
   // lifecycle -----------------------------------------------
   componentDidMount() {
-    this.props.getProductDetails(null);
+    this.props.productLoaded(null);
     this.getFormData();
   }
 
@@ -38,7 +40,34 @@ class CreateProduct extends Component {
 
   // load api data --------------------------------------------
   getFormData = () => {
-    this.props.startGetClients();
+    const { customers, producers } = this.props;
+
+    let haveCustomers = false;
+    let haveProducers = false;
+    // CUSTOMERS ----------------------------------
+    if (customers.length > 0) {
+      haveCustomers = true;
+    }
+    // PRODUCERS ----------------------------------
+    if (producers.length > 0) {
+      haveProducers = true;
+    }
+
+    if (haveCustomers && haveProducers) {
+      console.log("Have Product, Customers, Producers");
+    } else if (!haveCustomers && !haveProducers) {
+      console.log("NO Clients");
+
+      this.props.startGetClients();
+    } else if (!haveCustomers && haveProducers) {
+      console.log("Have Producer NO Customers");
+
+      this.props.startGetCustomers();
+    } else if (haveCustomers && !haveProducers) {
+      console.log("Have Customers NO Producer");
+
+      this.props.startGetProducers();
+    }
   };
 
   // events handle cb ----------------------------------------
@@ -101,8 +130,10 @@ const mapStateToProps = ({ ui, customer, producer }) => ({
 export default connect(
   mapStateToProps,
   {
-    getProductDetails,
+    productLoaded,
     createProduct,
+    startGetProducers,
+    startGetCustomers,
     startGetClients,
     serverMsg,
     changeRoute

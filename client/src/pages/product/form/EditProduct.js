@@ -16,10 +16,13 @@ import clearUiMsg from "../../../utils/clearUiMsg";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
+  productLoaded,
   startGetClients,
   startGetProductWithClients,
   editProduct
 } from "../../../actions/product";
+import { startGetProducers } from "../../../actions/producer";
+import { startGetCustomers } from "../../../actions/customer";
 
 class EditProduct extends Component {
   // lifecycle ------------------------------------------
@@ -37,22 +40,60 @@ class EditProduct extends Component {
 
   // api calls ----------------------------------------
   getFormData = () => {
-    const {
-      product,
-      match,
-      startGetClients,
-      startGetProductWithClients
-    } = this.props;
+    const { productEntity, product, customers, producers, match } = this.props;
     const { productId } = match.params;
 
-    // fetch only the producers & clients
+    let haveProduct = false;
+    let haveCustomers = false;
+    let haveProducers = false;
+
+    // PRODUCT ----------------------------------
+    // check store for product in productEntity map
+    if (productEntity) {
+      if (productEntity[productId]) {
+        this.props.productLoaded(productEntity[productId]);
+        haveProduct = true;
+      }
+    }
+    // check store if single product equal requested product
     if (product && product._id === productId) {
-      startGetClients();
-      return;
+      haveProduct = true;
     }
 
-    // get product / list of all producers & clients
-    startGetProductWithClients(productId);
+    // CUSTOMERS ----------------------------------
+    if (customers.length > 0) {
+      haveCustomers = true;
+    }
+    // PRODUCERS ----------------------------------
+    if (producers.length > 0) {
+      haveProducers = true;
+    }
+
+    // have all the data already
+    if (haveProduct && haveCustomers && haveProducers) {
+      console.log("Have Product, Customers, Producers");
+    } else if (haveProduct && !haveCustomers && !haveProducers) {
+      console.log("Have Product but NO Clients");
+
+      this.props.startGetClients();
+    } else if (haveProduct && !haveCustomers && haveProducers) {
+      console.log("Have Product and Producer NO Customers");
+
+      this.props.startGetCustomers();
+    } else if (haveProduct && haveCustomers && !haveProducers) {
+      console.log("Have Product and Customers NO Producer");
+
+      this.props.startGetProducers();
+    } else if (!haveProduct && haveCustomers && haveProducers) {
+      console.log("Have Clients NO Product");
+
+      this.props.productLoaded(null);
+      this.props.startGetProduct(productId);
+    } else if (!haveProduct && !haveCustomers && !haveProducers) {
+      console.log("NO Product && NO Clients");
+
+      this.props.startGetProductWithClients(productId);
+    }
   };
 
   // events ------------------------------------------
@@ -110,6 +151,7 @@ class EditProduct extends Component {
 const mapStateToProps = ({ ui, router, product, producer, customer }) => {
   return {
     product: product.product,
+    productEntity: product.productEntity,
     loading: ui.loading,
     options: ui.options,
     msg: ui.msg,
@@ -123,6 +165,7 @@ export default connect(
   {
     changeRoute,
     serverMsg,
+    productLoaded,
     startGetClients,
     startGetProductWithClients,
     editProduct

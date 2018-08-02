@@ -24,7 +24,21 @@ module.exports = app => {
       const [products, count, totalCount] = await Promise.all([
         Product.find(mongoQuery)
           .skip(query.skip)
-          .limit(query.limit),
+          .limit(query.limit)
+          .populate("producer customer")
+          .populate({
+            path: "productLocation.item",
+            populate: {
+              path: "shelf shelfSpot",
+              populate: {
+                path: "shelf rack",
+                populate: {
+                  path: "rack storage",
+                  populate: { path: "storage" }
+                }
+              }
+            }
+          }),
         Product.find(mongoQuery).countDocuments(),
         Product.find({}).countDocuments()
       ]);

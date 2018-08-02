@@ -6,10 +6,16 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import createEntity from "./helpers/createEntity";
 // actions
 import { loading } from "./ui";
-import { getProducers } from "./producer";
 import { customersRequested, customersLoaded } from "./customer";
 import { producersRequested, producersLoaded } from "./producer";
 // types
+// all products
+export const PRODUCTS_REQUESTED = "PRODUCTS_REQUESTED";
+export const PRODUCTS_LOADED = "PRODUCTS_LOADED";
+// single product
+export const PRODUCT_REQUESTED = "PRODUCT_REQUESTED";
+export const PRODUCT_LOADED = "PRODUCT_LOADED";
+
 export const PRODUCTS_FETCH_ALL = "PRODUCTS_FETCH_ALL";
 export const PRODUCTS_FETCH_ONE = "PRODUCTS_FETCH_ONE";
 export const PRODUCTS_RESET = "PRODUCTS_RESET";
@@ -28,6 +34,17 @@ export const resetProducts = () => ({
 });
 
 // All Products or a subset based on the query ------------------------------
+export const productsRequested = () => ({
+  type: PRODUCTS_REQUESTED
+});
+
+export const productsLoaded = (productEntity, productOrder, query) => ({
+  type: PRODUCTS_LOADED,
+  productEntity,
+  productOrder,
+  query
+});
+
 export const getProducts = ({ products, query }) => ({
   type: PRODUCTS_FETCH_ALL,
   products,
@@ -35,6 +52,7 @@ export const getProducts = ({ products, query }) => ({
 });
 
 export const startGetProducts = query => async dispatch => {
+  dispatch(productsRequested());
   dispatch(loading(true));
 
   try {
@@ -42,7 +60,13 @@ export const startGetProducts = query => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
-    dispatch(getProducts(payload));
+    const { query: q, products } = payload;
+
+    const { entity: productEntity, order: productOrder } = createEntity(
+      products
+    );
+
+    dispatch(productsLoaded(productEntity, productOrder, q));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -51,18 +75,24 @@ export const startGetProducts = query => async dispatch => {
 };
 
 // Product Details ----------------------------------------------------------
-export const getProductDetails = product => ({
-  type: PRODUCTS_FETCH_ONE,
+export const productRequested = () => ({
+  type: PRODUCT_REQUESTED
+});
+
+export const productLoaded = product => ({
+  type: PRODUCT_LOADED,
   product
 });
 
-export const startGetProductDetails = productId => async dispatch => {
+export const startGetProduct = productId => async dispatch => {
+  dispatch(productRequested());
+  dispatch(loading(true));
   try {
     const res = await axios.get(`/api/products/${productId}`);
 
     const { msg, payload, options } = res.data;
 
-    dispatch(getProductDetails(payload));
+    dispatch(productLoaded(payload));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -73,6 +103,7 @@ export const startGetProductDetails = productId => async dispatch => {
 // Product ( Customers & Producers) -----------------------------------------
 export const startGetClients = () => async dispatch => {
   dispatch(customersRequested());
+  dispatch(producersRequested());
   dispatch(loading(true));
   try {
     const res = await axios.get("/api/products/clients");
@@ -102,6 +133,7 @@ export const startGetClients = () => async dispatch => {
 // Product ( Product & Customers & Producers) -------------------
 export const startGetProductWithClients = productId => async dispatch => {
   dispatch(customersRequested());
+  dispatch(producersRequested());
   dispatch(loading(true));
   try {
     const res = await axios.get(
@@ -111,8 +143,8 @@ export const startGetProductWithClients = productId => async dispatch => {
     const { msg, payload, options } = res.data;
     const { product, customers, producers } = payload;
 
-    // PRODUCT
-    dispatch(getProductDetails(product));
+    // SINGLE PRODUCT
+    dispatch(productLoaded(product));
 
     // CUSTOMERS
     const { entity: customerEntity, order: customerOrder } = createEntity(
