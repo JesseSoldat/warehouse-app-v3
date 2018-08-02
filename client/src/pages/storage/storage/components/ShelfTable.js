@@ -62,7 +62,7 @@ const ShelfTable = ({ rack, shelfId }) => {
         <h2>Shelf {shelfLabel}</h2>
 
         <div>
-          <Link to={`/storages/edit/${shelfId}?type=shelf`}>
+          <Link to={`/storages/edit/${rackId}?shelfId=${shelfId}&type=shelf`}>
             <button className="btn btn-default m-1">
               <i className="fas fa-edit mr-2" /> Edit Shelf
             </button>

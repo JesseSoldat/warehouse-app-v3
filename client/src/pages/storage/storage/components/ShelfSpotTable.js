@@ -82,7 +82,9 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
         <h2>Shelf Spot {spotLabel}</h2>
 
         <div>
-          <Link to={`/storages/edit/${shelfSpotId}?type=shelfSpot`}>
+          <Link
+            to={`/storages/edit/${rackId}?shelfId=${shelfId}&shelfSpotId=${shelfSpotId}&type=shelfSpot`}
+          >
             <button className="btn btn-default m-1">
               <i className="fas fa-edit mr-2" /> Edit Spot
             </button>

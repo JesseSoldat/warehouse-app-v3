@@ -24,14 +24,7 @@ class Storage extends Component {
     const { match, rack, startGetRack } = this.props;
     const rackId = match.params.id;
 
-    console.log("rackId");
-    console.log(rackId);
-
-    if (rack && rack._id === rackId) {
-      console.log("rack id matches");
-
-      return;
-    }
+    if (rack && rack._id === rackId) return;
 
     startGetRack(rackId);
   };
@@ -51,7 +44,10 @@ class Storage extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (rack && rack._id === rackId) {
+    }
+    // if the store rack id is not the same are the URL rack id
+    // wait until the data is fetched and the store gets the correct rack
+    else if (rack && rack._id === rackId) {
       content = (
         <Fragment>
           <TableContainer

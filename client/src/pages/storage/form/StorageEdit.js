@@ -12,7 +12,8 @@ import getUrlParameter from "../../../utils/getUrlParameter";
 import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 // actions
 import {
-  startGetStorage,
+  startGetStorages,
+  startGetRack,
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
@@ -22,13 +23,37 @@ class StorageEdit extends Component {
 
   // lifecycle -----------------------------------
   componentDidMount() {
-    const { match, startGetStorage } = this.props;
-    const id = match.params.id;
-    const type = getUrlParameter("type");
-
-    startGetStorage(id, type);
+    this.getFormData();
   }
 
+  // store / api call -------------------------------
+  getFormData() {
+    const { match, storages, rack } = this.props;
+    const rackId = match.params.id;
+    const type = getUrlParameter("type");
+
+    // Type is storage -----------------------------------
+    if (type === "storage") {
+      // Check store first for storages in the STORE
+      if (storages.length === 0) {
+        // fetch storages from API
+        this.props.startGetStorages();
+      }
+    }
+    // Type is either rack, shelf, shelfSpot -------------
+    // Rack is present in the STORE
+    else if (rack) {
+      // Fetch Rack from Store || API call
+      if (rack._id !== rackId) {
+        this.props.startGetRack(rackId);
+        return;
+      }
+    }
+    // Rack is null in the Store / do API call
+    else {
+      this.props.startGetRack(rackId);
+    }
+  }
   // cb ---------------------------------------------
   handleSubmit = form => {
     const { startEditStorage, match, history } = this.props;
@@ -45,9 +70,42 @@ class StorageEdit extends Component {
     startDeleteStorage(type, id, history);
   };
 
+  renderContent = (type, defaultState) => {
+    const button = (
+      <div className="row">
+        <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
+          <button className="btn btn-danger mt-4" onClick={this.handleDelete}>
+            <i className="far fa-trash-alt mr-2" /> Delete{" "}
+            {type && capitalizeFirstLetter(type)}
+          </button>
+        </div>
+      </div>
+    );
+
+    const content = (
+      <StorageForm
+        storageType={type}
+        formType="edit"
+        handleSubmit={this.handleSubmit}
+        defaultState={defaultState}
+      />
+    );
+
+    return { content, button };
+  };
+
   render() {
-    const { loading, storage } = this.props;
+    // props
+    const { match, loading, storages, rack } = this.props;
+
+    const id = match.params.id;
     const type = getUrlParameter("type");
+    const shelfId = getUrlParameter("shelfId");
+    const shelfSpotId = getUrlParameter("shelfSpotId");
+
+    let storage, content, button;
+
+    const title = type === "shelfSpot" ? "Shelf Spot" : type;
 
     const defaultState = {
       storageLabel: "",
@@ -58,61 +116,64 @@ class StorageEdit extends Component {
       boxLabel: ""
     };
 
-    let content, button;
-
     if (loading) {
       content = <Spinner />;
-    } else if (storage === null) {
-    } else {
-      switch (type) {
-        case "storage":
-          defaultState.storageLabel = storage.storageLabel;
-          defaultState.description = storage.description;
-          break;
-
-        case "rack":
-          defaultState.rackLabel = storage.rackLabel;
-          break;
-
-        case "shelf":
-          defaultState.shelfLabel = storage.shelfLabel;
-          break;
-
-        case "shelfSpot":
-          defaultState.spotLabel = storage.spotLabel;
-          break;
-
-        case "box":
-          defaultState.boxLabel = storage.boxLabel;
-          break;
-
-        default:
-          break;
-      }
-
-      button = (
-        <div className="row">
-          <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
-            <button className="btn btn-danger mt-4" onClick={this.handleDelete}>
-              <i className="far fa-trash-alt mr-2" /> Delete{" "}
-              {type && capitalizeFirstLetter(type)}
-            </button>
-          </div>
-        </div>
-      );
-
-      content = (
-        <StorageForm
-          storageType={type}
-          storage={storage}
-          formType="edit"
-          handleSubmit={this.handleSubmit}
-          defaultState={defaultState}
-        />
-      );
     }
 
-    const title = type === "shelfSpot" ? "Shelf Spot" : type;
+    // Type is Storage
+    else if (storages.length > 0 && type === "storage") {
+      const storageId = id;
+      storage = storages.find(({ _id }) => _id === storageId);
+
+      defaultState.storageLabel = storage.storageLabel;
+      defaultState.description = storage.description;
+
+      const contentObj = this.renderContent(type, defaultState);
+      content = contentObj.content;
+      button = contentObj.button;
+    }
+    // Type is Rack
+    else if (rack && type === "rack") {
+      defaultState.rackLabel = rack.rackLabel;
+
+      const contentObj = this.renderContent(type, defaultState);
+      content = contentObj.content;
+      button = contentObj.button;
+    }
+    // Type is Shelf
+    else if (rack && type === "shelf") {
+      const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
+      console.log(shelf);
+
+      defaultState.shelfLabel = shelf.shelfLabel;
+
+      const contentObj = this.renderContent(type, defaultState);
+
+      content = contentObj.content;
+      button = contentObj.button;
+    }
+    // Type is Shelf Spot
+    else if (rack && type === "shelfSpot") {
+      const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
+
+      const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
+      console.log(shelfSpot);
+
+      defaultState.spotLabel = shelfSpot.shelfSpotLabel;
+
+      const contentObj = this.renderContent(type, defaultState);
+
+      content = contentObj.content;
+      button = contentObj.button;
+    } else if (rack && type === "box") {
+      const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
+
+      const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
+      console.log(shelfSpot);
+
+      // get the box from the store items
+      //     defaultState.boxLabel = storage.boxLabel;
+    }
 
     return (
       <div className="container">
@@ -128,10 +189,11 @@ class StorageEdit extends Component {
 const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
   loading: ui.loading,
-  storage: storage.storage
+  storages: storage.storages,
+  rack: storage.rack
 });
 
 export default connect(
   mapStateToProps,
-  { startGetStorage, startEditStorage, startDeleteStorage }
+  { startGetStorages, startGetRack, startEditStorage, startDeleteStorage }
 )(StorageEdit);
