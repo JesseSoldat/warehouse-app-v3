@@ -10,6 +10,10 @@ import capitalizeFirstLetter from "../utils/stringManipulation/capitalizeFirstLe
 const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
   const paths = match.path.split("/");
 
+  console.log(paths);
+  let joined = paths.join("/");
+  console.log(joined);
+
   const type = location.search;
 
   const storageType = getUrlParameter("type");
