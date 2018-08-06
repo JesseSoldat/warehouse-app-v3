@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import isEmpty from "../../../../utils/validation/isEmpty";
 
 const ShelfTable = ({ rack, shelfId }) => {
+  const storageId = rack.storage._id;
   const { _id: rackId, shelves } = rack;
 
   const shelf = shelves.find(shelf => shelf._id === shelfId);
@@ -18,7 +19,7 @@ const ShelfTable = ({ rack, shelfId }) => {
           <div className="card-body">
             <h5 className="mt-3 text-center card-title">
               <Link
-                to={`/shelfSpot/${rackId}/${shelfId}/${
+                to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${
                   spot._id
                 }?type=shelfSpot`}
               >
@@ -40,8 +41,6 @@ const ShelfTable = ({ rack, shelfId }) => {
                     </li>
                   );
                 } else {
-                  console.log(storedItem.item);
-
                   return (
                     <li key={itemIndex} className="text-center list-group-item">
                       <Link to={`/storages/${storedItem.item._id}?type=box`}>

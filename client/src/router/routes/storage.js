@@ -57,26 +57,26 @@ const StorageRoutes = [
 
   // NEW
   <PrivateRoute
-    key="/storage/:storageId"
+    key="storage"
     path="/storage/:storageId"
     component={Details}
     exact={true}
   />,
   <PrivateRoute
-    key="/rack/:rackId"
-    path="/rack/:rackId"
+    key="rack"
+    path="/rack/:storageId/:rackId"
     component={Storage}
     exact={true}
   />,
   <PrivateRoute
-    key="/shelf/:rackId/:shelfId"
-    path="/shelf/:rackId/:shelfId"
+    key="shelf"
+    path="/shelf/:storageId/:rackId/:shelfId"
     component={Storage}
     exact={true}
   />,
   <PrivateRoute
-    key="/shelfSpot/:rackId/:shelfId/:shelfSpotId"
-    path="/shelfSpot/:rackId/:shelfId/:shelfSpotId"
+    key="shelfSpot"
+    path="/shelfSpot/:storageId/:rackId/:shelfId/:shelfSpotId"
     component={Storage}
     exact={true}
   />,

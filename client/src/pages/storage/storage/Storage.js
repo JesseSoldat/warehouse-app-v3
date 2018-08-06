@@ -36,6 +36,7 @@ class Storage extends Component {
     const rackId = match.params.rackId;
     const shelfId = match.params.shelfId;
     const shelfSpotId = match.params.shelfSpotId;
+    const boxId = match.params.boxId;
 
     // params
     const storageType = getUrlParameter("type");

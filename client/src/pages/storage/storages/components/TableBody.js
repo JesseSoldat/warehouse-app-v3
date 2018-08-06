@@ -14,7 +14,9 @@ const TableBody = ({ racks = [], storageId }) => {
           return (
             <tr key={`rack-body-${i}`}>
               <th scope="row">
-                <Link to={`/rack/${rackId}?type=rack`}>Rack {rackLabel}</Link>
+                <Link to={`/rack/${storageId}/${rackId}?type=rack`}>
+                  Rack {rackLabel}
+                </Link>
               </th>
               {shelves.length === 0
                 ? null
@@ -22,7 +24,11 @@ const TableBody = ({ racks = [], storageId }) => {
                     (shelf = null, i) =>
                       !isEmpty(shelf) && (
                         <td key={`shelf-body-${i}`}>
-                          <Link to={`/shelf/${rackId}/${shelf._id}?type=shelf`}>
+                          <Link
+                            to={`/shelf/${storageId}/${rackId}/${
+                              shelf._id
+                            }?type=shelf`}
+                          >
                             {shelf.shelfSpots.length
                               ? shelf.shelfSpots.length
                               : 0}{" "}
