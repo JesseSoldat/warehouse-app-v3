@@ -79,21 +79,23 @@ module.exports = app => {
       const { productId } = req.params;
       try {
         const [product, customers, producers] = await Promise.all([
-          Product.findById(productId).populate({
-            path: "productLocation.item",
-            populate: {
-              // shelf = shelfSpot
-              // shelfSpot = box
-              path: "shelf shelfSpot",
+          Product.findById(productId)
+            .populate("producer customer")
+            .populate({
+              path: "productLocation.item",
               populate: {
-                path: "shelf rack",
+                // shelf = shelfSpot
+                // shelfSpot = box
+                path: "shelf shelfSpot",
                 populate: {
-                  path: "rack storage",
-                  populate: { path: "storage" }
+                  path: "shelf rack",
+                  populate: {
+                    path: "rack storage",
+                    populate: { path: "storage" }
+                  }
                 }
               }
-            }
-          }),
+            }),
           Customer.find({}),
           Producer.find({})
         ]);

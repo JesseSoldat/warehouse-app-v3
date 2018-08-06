@@ -110,18 +110,18 @@ class EditProduct extends Component {
   render() {
     const { msg, product, loading, producers, customers } = this.props;
 
-    // productObj & selectedProducer & selectedCustomers - used to hydrate child form's state
-    const { productObj, selectedProducer, selectedCustomers } = createEditState(
-      product
-    );
-
     let content;
 
     if (loading) {
       content = <Spinner />;
-    } else if (!product) {
-      content = <Spinner />;
-    } else {
+    } else if (product && producers.length > 0 && customers.length > 0) {
+      // productObj & selectedProducer & selectedCustomers - used to hydrate child form's state
+      const {
+        productObj,
+        selectedProducer,
+        selectedCustomers
+      } = createEditState(product);
+
       content = (
         <ProductForm
           msg={msg}
@@ -166,6 +166,8 @@ export default connect(
     changeRoute,
     serverMsg,
     productLoaded,
+    startGetProducers,
+    startGetCustomers,
     startGetClients,
     startGetProductWithClients,
     editProduct

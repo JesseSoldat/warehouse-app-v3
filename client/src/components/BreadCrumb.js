@@ -9,10 +9,13 @@ import capitalizeFirstLetter from "../utils/stringManipulation/capitalizeFirstLe
 // idTypesArray is passed in with a list of all :id types to check for
 const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
   const paths = match.path.split("/");
+  console.log(match.path);
 
-  console.log(paths);
+  // console.log("params", match.params);
+
+  // console.log(paths);
   let joined = paths.join("/");
-  console.log(joined);
+  // console.log(joined);
 
   const type = location.search;
 

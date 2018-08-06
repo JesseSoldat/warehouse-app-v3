@@ -40,11 +40,18 @@ class Producer extends Component {
 
   // api calls ----------------------------------------
   getProducers = () => {
-    const { producers } = this.props;
+    const { producerEntity, match, startGetProducers } = this.props;
+    const { producerId } = match.params;
 
-    if (producers.length > 0) return;
+    // producerEntity = null to start with
+    if (producerEntity) {
+      const producer = producerEntity[producerId];
+      if (producer && producer._id === producerId) {
+        return;
+      }
+    }
 
-    this.props.startGetProducers();
+    startGetProducers();
   };
 
   // events -----------------------------------------
@@ -64,22 +71,26 @@ class Producer extends Component {
 
   render() {
     // props
-    const { loading, producers } = this.props;
+    const { loading, producerEntity, match } = this.props;
+    const { producerId } = match.params;
     // state
     const { bt1Disable, bt2Disable } = this.state;
-    let content;
+    let producer, content;
+
+    if (producerEntity) {
+      producer = producerEntity[producerId];
+    }
 
     if (loading) {
       content = <Spinner />;
-    } else if (!producers || !producers.length) {
-    } else {
-      content = <SingleFieldList data={producerListData(producers)} />;
+    } else if (producer) {
+      content = <SingleFieldList data={producerListData(producer)} />;
     }
 
     return (
       <div className="container">
         <Message cb={this.getProducers} />
-        {producers && (
+        {producer && (
           <TopRowBtns
             bt1Disable={bt1Disable}
             bt2Disable={bt2Disable}
@@ -99,7 +110,7 @@ const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
   options: ui.options,
   loading: ui.loading,
-  producers: producer.producers
+  producerEntity: producer.producerEntity
 });
 
 export default connect(
