@@ -8,7 +8,8 @@ import TableBody from "./TableBody";
 import capitalizeEachWordOfString from "../../../../utils/stringManipulation/capitalizeEachWordOfString";
 
 const StoragesTable = ({
-  storage: { _id = "", storageLabel = "", racks = [], description = "" },
+  storage: { storageLabel = "", racks = [], description = "" },
+  storageId,
   type = null
 }) => {
   let maxShelves = 0;
@@ -25,13 +26,13 @@ const StoragesTable = ({
         <TableTitle
           storageLabel={capitalizeEachWordOfString(storageLabel)}
           description={description}
-          id={_id}
+          storageId={storageId}
           type={type}
         />
         <div className="table-responsive-xs table-responsive-sm">
           <table className="table table-striped col-12">
-            <TableHead maxShelves={maxShelves} id={_id} />
-            <TableBody racks={racks} />
+            <TableHead maxShelves={maxShelves} storageId={storageId} />
+            <TableBody racks={racks} storageId={storageId} />
           </table>
         </div>
       </div>

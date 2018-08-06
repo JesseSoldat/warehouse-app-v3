@@ -13,7 +13,14 @@ const serverMsg = require("../utils/serverMsg");
 const mergeObjFields = require("../utils/mergeObjFields");
 const stringParamsToIntegers = require("../utils/stringParamsToIntegers");
 
-module.exports = app => {
+module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "product",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
   // Get All Products ------------------------------------------
   app.get("/api/products", isAuth, async (req, res) => {
     const shouldBeIntegers = ["skip", "limit", "page"];
@@ -153,6 +160,8 @@ module.exports = app => {
     try {
       await product.save();
 
+      emit(req.user._id);
+
       serverRes(res, 200, null, product);
     } catch (err) {
       console.log("ERR: POST/api/products", err);
@@ -182,6 +191,8 @@ module.exports = app => {
         mergeObjFields("", product),
         { new: true }
       );
+
+      emit(req.user._id);
 
       serverRes(res, 200, null, updatedProduct);
     } catch (err) {
@@ -220,6 +231,8 @@ module.exports = app => {
           "red",
           "delete err"
         );
+
+        emit(req.user._id);
 
         return serverRes(res, 400, msg, product);
       }

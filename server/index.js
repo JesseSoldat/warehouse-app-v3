@@ -14,13 +14,13 @@ const io = require("socket.io")(server);
 app.use(bodyParser.json());
 
 require("./routes/user")(app);
-require("./routes/product")(app);
+require("./routes/product")(app, io);
 require("./routes/customer")(app, io);
-require("./routes/producer")(app);
-require("./routes/storage/storage")(app);
-require("./routes/storage/rack")(app);
-require("./routes/storage/shelf")(app);
-require("./routes/storage/shelfSpot")(app);
+require("./routes/producer")(app, io);
+require("./routes/storage/storage")(app, io);
+require("./routes/storage/rack")(app, io);
+require("./routes/storage/shelf")(app, io);
+require("./routes/storage/shelfSpot")(app, io);
 
 app.get("*", (req, res) => {
   console.log(req.url);

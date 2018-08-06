@@ -4,17 +4,17 @@ import { Link } from "react-router-dom";
 const TableTitle = ({
   storageLabel = "",
   description = "",
-  id = "",
+  storageId,
   type = null
 }) => {
   const renderBtn = type ? (
-    <Link to={`/storages/edit/${id}?type=storage`} className="mr-3">
+    <Link to={`/storages/edit/${storageId}?type=storage`} className="mr-3">
       <button className="btn btn-default m-1">
         <i className="fas fa-edit mr-2" /> Edit Storage
       </button>
     </Link>
   ) : (
-    <Link to={`/storages/single/${id}`} className="pr-3">
+    <Link to={`/storage/${storageId}`} className="pr-3">
       <button className="btn btn-default">
         <i className="fas fa-eye mr-2" />View Storage
       </button>

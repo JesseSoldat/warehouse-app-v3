@@ -7,7 +7,14 @@ const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 
-module.exports = app => {
+module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "storage",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
   // Get all shelfSpots
   app.get("/api/shelfSpots", async (req, res) => {
     try {
@@ -65,6 +72,8 @@ module.exports = app => {
         { new: true, upsert: true }
       );
 
+      emit(req.user._id);
+
       serverRes(res, 200, null, { shelf, shelfSpot });
     } catch (err) {
       console.log("Err: POST/api/shelfSpots/:shelfId", err);
@@ -82,6 +91,8 @@ module.exports = app => {
         mergeObjFields("", req.body),
         { new: true }
       );
+
+      emit(req.user._id);
 
       serverRes(res, 200, null, shelfSpot);
     } catch (err) {
@@ -115,6 +126,8 @@ module.exports = app => {
       ]);
 
       const msg = msgObj("Shelf Spot deleted.", "green");
+
+      emit(req.user._id);
 
       serverRes(res, 200, msg, shelfSpot);
     } catch (err) {

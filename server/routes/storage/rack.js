@@ -8,7 +8,14 @@ const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 
-module.exports = app => {
+module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "storage",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
   // Get all of the racks
   app.get("/api/racks", isAuth, async (req, res) => {
     try {
@@ -46,7 +53,7 @@ module.exports = app => {
     }
   });
   // Create new rack inside storage and link the rack to storage
-  app.post("/api/racks/:storageId", async (req, res) => {
+  app.post("/api/racks/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;
     const rack = new Rack(req.body);
 
@@ -66,6 +73,9 @@ module.exports = app => {
       );
 
       const msg = msgObj("The rack was saved.", "green", "create");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, { storage, rack });
     } catch (err) {
       console.log("Err: POST/api/rack/:storageId", err);
@@ -75,7 +85,7 @@ module.exports = app => {
     }
   });
   // Update a rack
-  app.patch("/api/racks/:rackId", async (req, res) => {
+  app.patch("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
     try {
       const rack = await Rack.findByIdAndUpdate(
@@ -85,6 +95,9 @@ module.exports = app => {
       );
 
       const msg = msgObj("The rack was updated.", "green", "update");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, rack);
     } catch (err) {
       console.log("Err: PATCH/api/rack/:rackId", err);
@@ -94,7 +107,7 @@ module.exports = app => {
     }
   });
   // delete a rack
-  app.delete("/api/racks/:rackId", async (req, res) => {
+  app.delete("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
     try {
       const rack = await Rack.findById(rackId);
@@ -117,6 +130,9 @@ module.exports = app => {
       ]);
 
       const msg = msgObj("Rack deleted.", "green");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, rack);
     } catch (err) {
       console.log("Err: DELETE/api/racks/:rackId", err);

@@ -1,12 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const TableHead = ({ id, maxShelves = 0 }) => {
+const TableHead = ({ storageId, maxShelves = 0 }) => {
   return (
     <thead>
       <tr style={{ width: 95 }}>
         <td>
-          <Link to={`/storages/create/${id}?type=rack`}>
+          <Link to={`/storages/create/${storageId}?type=rack`}>
             <button className="btn btn-default">
               <i className="fas fa-plus-circle mr-2" /> New Rack
             </button>

@@ -22,7 +22,8 @@ class Storage extends Component {
   // Api calls ----------------------------
   getStorage = () => {
     const { match, rack, startGetRack } = this.props;
-    const rackId = match.params.id;
+
+    const rackId = match.params.rackId;
 
     if (rack && rack._id === rackId) return;
 
@@ -32,11 +33,12 @@ class Storage extends Component {
   render() {
     // props
     const { loading, rack, match } = this.props;
-    const rackId = match.params.id;
+    const rackId = match.params.rackId;
+    const shelfId = match.params.shelfId;
+    const shelfSpotId = match.params.shelfSpotId;
+
     // params
     const storageType = getUrlParameter("type");
-    const shelfId = getUrlParameter("shelfId");
-    const shelfSpotId = getUrlParameter("shelfSpotId");
 
     const heading = storageType === "shelfSpot" ? "Shelf Spot" : storageType;
 

@@ -28,7 +28,7 @@ class Details extends Component {
 
   render() {
     const { match, loading, storages } = this.props;
-    const id = match.params.id;
+    const storageId = match.params.storageId;
 
     let content;
 
@@ -36,11 +36,15 @@ class Details extends Component {
       content = <Spinner />;
     } else if (!loading && storages.length < 1) {
     } else {
-      const storage = storages.find(storage => storage._id === id);
+      const storage = storages.find(storage => storage._id === storageId);
 
       content = (
         <div className="row">
-          <StoragesTable storage={storage} type="details" />
+          <StoragesTable
+            storage={storage}
+            type="details"
+            storageId={storageId}
+          />
         </div>
       );
     }

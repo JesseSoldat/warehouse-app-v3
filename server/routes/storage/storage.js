@@ -9,7 +9,14 @@ const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 
-module.exports = app => {
+module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "storage",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
   // Search storages
   app.get(
     "/api/storages/search/:storageType/:searchBy/:searchText",
@@ -103,11 +110,11 @@ module.exports = app => {
   });
   // Create new warehouse storage
   app.post("/api/storages", async (req, res) => {
-    console.log("storage route");
-
     const storage = new Storage(req.body);
     try {
       await storage.save();
+
+      emit(req.user._id);
 
       serverRes(res, 200, null, storage);
     } catch (err) {
@@ -128,6 +135,8 @@ module.exports = app => {
         { new: true }
       );
 
+      emit(req.user._id);
+
       serverRes(res, 200, null, storage);
     } catch (err) {
       console.log("ERR: PATCH/api/storage/:storageId", err);
@@ -141,7 +150,6 @@ module.exports = app => {
     const { storageId } = req.params;
     try {
       const storage = await Storage.findById(storageId);
-      console.log(storage);
 
       if (storage.racks.length !== 0) {
         const msg = msgObj(
@@ -154,6 +162,9 @@ module.exports = app => {
       await storage.remove();
 
       const msg = msgObj("Storage deleted.", "green");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, storage);
     } catch (err) {
       console.log("Err: DELETE/api/storages/:storageId", err);

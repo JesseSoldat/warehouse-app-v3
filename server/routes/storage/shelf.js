@@ -6,7 +6,14 @@ const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 
-module.exports = app => {
+module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "storage",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
   // Get all shelves
   app.get("/api/shelves", async (req, res) => {
     try {
@@ -66,6 +73,9 @@ module.exports = app => {
       );
 
       const msg = msgObj("The shelf was saved.", "green", "create");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, { rack, shelf });
     } catch (err) {
       console.log("Err: POST/api/shelf/:rackId", err);
@@ -85,6 +95,9 @@ module.exports = app => {
       );
 
       const msg = msgObj("The shelf was updateed.", "green", "update");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, shelf);
     } catch (err) {
       console.log("Err: PATCH/api/shelf/:shelfId", err);
@@ -118,6 +131,9 @@ module.exports = app => {
       ]);
 
       const msg = msgObj("Shelf deleted.", "green");
+
+      emit(req.user._id);
+
       serverRes(res, 200, msg, shelf);
     } catch (err) {
       console.log("Err: DELETE/api/shelves/:shelfId", err);

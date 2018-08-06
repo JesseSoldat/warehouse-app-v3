@@ -94,6 +94,18 @@ const allRoutes = {
     url1: "/storages",
     text: "Details"
   },
+  "/storages/:id": {
+    link1: "Storages",
+    url1: "/storages",
+    text: "Details"
+  },
+  "/storages/edit/:id": {
+    link1: "Storages",
+    url1: "/storages",
+    link2: "Details",
+    url2: "/storages/:id",
+    text: "Edit"
+  },
   "/storages/create/:id": {
     link1: "Storages",
     url1: "/storages",

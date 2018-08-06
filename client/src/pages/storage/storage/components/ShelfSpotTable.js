@@ -91,7 +91,7 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
           </Link>
 
           {!isEmpty(shelf) && (
-            <Link to={`/storages/${rackId}?shelfId=${shelfId}&type=shelf`}>
+            <Link to={`/shelf/${rackId}/${shelfId}?type=shelf`}>
               <button className="btn btn-default m-1">
                 <i className="fas fa-arrow-up mr-2" /> View Shelf
               </button>

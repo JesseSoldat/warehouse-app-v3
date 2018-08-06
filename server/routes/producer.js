@@ -7,7 +7,14 @@ const { serverRes, msgObj } = require("../utils/serverRes");
 const serverMsg = require("../utils/serverMsg");
 const mergeObjFields = require("../utils/mergeObjFields");
 
-module.exports = app => {
+module.exports = (app, io) => {
+  const emit = senderId => {
+    io.emit("update", {
+      msg: "producer",
+      senderId,
+      timestamp: Date.now()
+    });
+  };
   // Get all of the producers ------------------------------
   app.get("/api/producers", isAuth, async (req, res) => {
     try {
@@ -41,6 +48,8 @@ module.exports = app => {
     try {
       await producer.save();
 
+      emit(req.user._id);
+
       serverRes(res, 200, null, producer);
     } catch (err) {
       console.log("Err: POST/api/producers,", err);
@@ -59,6 +68,8 @@ module.exports = app => {
         { new: true }
       );
 
+      emit(req.user._id);
+
       serverRes(res, 200, null, producer);
     } catch (err) {
       console.log("Err: PATCH/api/producers,", err);
@@ -74,6 +85,8 @@ module.exports = app => {
       const producer = await Producer.findByIdAndRemove(producerId);
 
       const msg = msgObj("The producer was deleted.", "blue", "delete");
+
+      emit(req.user._id);
 
       serverRes(res, 200, msg, producer);
     } catch (err) {

@@ -18,9 +18,9 @@ const ShelfTable = ({ rack, shelfId }) => {
           <div className="card-body">
             <h5 className="mt-3 text-center card-title">
               <Link
-                to={`/storages/${rackId}?shelfId=${shelfId}&shelfSpotId=${
+                to={`/shelfSpot/${rackId}/${shelfId}/${
                   spot._id
-                }&type=shelfSpot`}
+                }?type=shelfSpot`}
               >
                 Shelf Spot {spot.shelfSpotLabel}
               </Link>
@@ -34,12 +34,14 @@ const ShelfTable = ({ rack, shelfId }) => {
                 if (storedItem.kind === "product") {
                   return (
                     <li key={itemIndex} className="text-center list-group-item">
-                      <Link to={`/products/${storedItem.item._id}?type=box`}>
+                      <Link to={`/products/${storedItem.item._id}`}>
                         {storedItem.item.productName}
                       </Link>
                     </li>
                   );
                 } else {
+                  console.log(storedItem.item);
+
                   return (
                     <li key={itemIndex} className="text-center list-group-item">
                       <Link to={`/storages/${storedItem.item._id}?type=box`}>
@@ -69,7 +71,7 @@ const ShelfTable = ({ rack, shelfId }) => {
           </Link>
 
           {!isEmpty(rack) && (
-            <Link to={`/storages/${rackId}?type=rack`}>
+            <Link to={`/rack/${rackId}?type=rack`}>
               <button className="btn btn-default m-1">
                 <i className="fas fa-arrow-up mr-2" /> View Rack
               </button>

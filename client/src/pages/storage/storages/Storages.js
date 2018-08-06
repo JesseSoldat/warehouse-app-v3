@@ -49,7 +49,7 @@ class Storages extends Component {
       content = (
         <div className="row">
           {storages.map((storage, i) => (
-            <StoragesTable key={i} storage={storage} />
+            <StoragesTable key={i} storage={storage} storageId={storage._id} />
           ))}
         </div>
       );

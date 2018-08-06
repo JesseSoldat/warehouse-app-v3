@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import isEmpty from "../../../../utils/validation/isEmpty";
 
 const RackTable = ({ rack }) => {
+  console.log(rack);
+  const storageId = rack.storage._id;
   const { _id: rackId, rackLabel, shelves = [] } = rack;
 
   let max = 0;
@@ -49,7 +51,7 @@ const RackTable = ({ rack }) => {
         shelves.map(({ shelfSpots = [], shelfLabel, _id: shelfId }, i) => (
           <tr key={`shelf-body${i}`}>
             <th scope="row">
-              <Link to={`/storages/${rackId}?shelfId=${shelfId}&type=shelf`}>
+              <Link to={`/shelf/${rackId}/${shelfId}?type=shelf`}>
                 Shelf {shelfLabel}
               </Link>
             </th>
@@ -57,9 +59,9 @@ const RackTable = ({ rack }) => {
               shelfSpots.map((shelfSpot, i) => (
                 <td key={`spot-body${i}`}>
                   <Link
-                    to={`/storages/${rackId}?shelfId=${shelfId}&shelfSpotId=${
+                    to={`/shelfSpot/${rackId}/${shelfId}/${
                       shelfSpot._id
-                    }&type=shelfSpot`}
+                    }?type=shelfSpot`}
                   >
                     Items{" "}
                     {shelfSpot.storedItems ? shelfSpot.storedItems.length : 0}
@@ -84,7 +86,7 @@ const RackTable = ({ rack }) => {
         </Link>
 
         {!isEmpty(rack.storage) && (
-          <Link to={`/storages/details/${rack.storage._id}`}>
+          <Link to={`/storage/${rack.storage._id}`}>
             <button className="btn btn-default m-1">
               <i className="fas fa-arrow-up mr-2" /> View Storage
             </button>
