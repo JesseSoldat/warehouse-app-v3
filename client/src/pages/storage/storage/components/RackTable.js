@@ -5,7 +5,6 @@ import { Link } from "react-router-dom";
 import isEmpty from "../../../../utils/validation/isEmpty";
 
 const RackTable = ({ rack }) => {
-  console.log(rack);
   const storageId = rack.storage._id;
   const { _id: rackId, rackLabel, shelves = [] } = rack;
 
@@ -51,7 +50,7 @@ const RackTable = ({ rack }) => {
         shelves.map(({ shelfSpots = [], shelfLabel, _id: shelfId }, i) => (
           <tr key={`shelf-body${i}`}>
             <th scope="row">
-              <Link to={`/shelf/${rackId}/${shelfId}?type=shelf`}>
+              <Link to={`/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`}>
                 Shelf {shelfLabel}
               </Link>
             </th>
@@ -59,7 +58,7 @@ const RackTable = ({ rack }) => {
               shelfSpots.map((shelfSpot, i) => (
                 <td key={`spot-body${i}`}>
                   <Link
-                    to={`/shelfSpot/${rackId}/${shelfId}/${
+                    to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${
                       shelfSpot._id
                     }?type=shelfSpot`}
                   >

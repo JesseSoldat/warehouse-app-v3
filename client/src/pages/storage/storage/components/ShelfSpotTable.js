@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import isEmpty from "../../../../utils/validation/isEmpty";
 
 const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
+  const storageId = rack.storage._id;
   const { _id: rackId } = rack;
   const { shelves } = rack;
 
@@ -91,7 +92,7 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
           </Link>
 
           {!isEmpty(shelf) && (
-            <Link to={`/shelf/${rackId}/${shelfId}?type=shelf`}>
+            <Link to={`/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`}>
               <button className="btn btn-default m-1">
                 <i className="fas fa-arrow-up mr-2" /> View Shelf
               </button>
