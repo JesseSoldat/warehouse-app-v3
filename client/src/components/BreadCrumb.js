@@ -1,117 +1,261 @@
-import React, { Fragment } from "react";
-import { Link, withRouter } from "react-router-dom";
-import { connect } from "react-redux";
+import React from "react";
+import { withRouter, Link } from "react-router-dom";
 
-// utils
-import getUrlParameter from "../utils/getUrlParameter";
-import capitalizeFirstLetter from "../utils/stringManipulation/capitalizeFirstLetter";
+import allRoutes from "../router/routes/allRoutes";
 
-// idTypesArray is passed in with a list of all :id types to check for
-const BreadCrumb = ({ location, match, idTypesArray = [":id"] }) => {
-  const paths = match.path.split("/");
-  console.log(match.path);
+const BreadCrumb2 = ({ match }) => {
+  const { params, path } = match;
+  const {
+    productId,
+    producerId,
+    customerId,
+    storageId,
+    rackId,
+    shelfId,
+    shelfSpotId
+  } = params;
 
-  // console.log("params", match.params);
+  let link1, link2, link3, link4, link5, text;
 
-  // console.log(paths);
-  let joined = paths.join("/");
-  // console.log(joined);
+  const createLink = (link, url) => (
+    <li className="breadcrumb-item">
+      <Link to={url}>{link}</Link>
+    </li>
+  );
 
-  const type = location.search;
+  const createText = text => <li className="breadcrumb-item">{text}</li>;
 
-  const storageType = getUrlParameter("type");
+  switch (path) {
+    // GENERAL ROUTES
+    case "/dashboard":
+      text = createText("Welcome");
+      break;
 
-  let id;
+    // ADMIN ROUTES
+    case "/admin/manageUsers":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Admin");
+      break;
 
-  // use idTypesArray to match a specific ':id' type from the params
-  idTypesArray.forEach(type => {
-    const noColon = type.split(":")[1];
-    if (match.params[noColon]) {
-      id = match.params[noColon];
-    }
-  });
+    case "/admin/playGround":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Playground");
+      break;
+
+    // PRODUCT ROUTES
+    case "/products/search":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    case "/products/:productId":
+      link1 = createLink("Products", "/products/search");
+      text = createText("Details");
+      break;
+
+    case "/products/edit/:productId":
+      link1 = createLink("Products", "/products/search");
+      link2 = createLink("Details", `/products/${productId}`);
+      text = createText("Edit");
+      break;
+
+    case "/products/create":
+      link1 = createLink("Products", "/products/search");
+      text = createText("Create");
+      break;
+
+    // PRODUCERS ROUTES
+    case "/producers/search":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    case "/producers/:producerId":
+      link1 = createLink("Producers", "/producers/search");
+      text = createText("Details");
+      break;
+
+    case "/producers/edit/:producerId":
+      link1 = createLink("Producers", "/producers/search");
+      link2 = createLink("Details", `/producers/${producerId}`);
+      text = createText("Edit");
+      break;
+
+    case "/producers/create":
+      link1 = createLink("Producers", "/producers/search");
+      text = createText("Create");
+      break;
+
+    // CUSTOMERS ROUTES
+    case "/customers/search":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    case "/customers/:customerId":
+      link1 = createLink("Customers", "/customers/search");
+      text = createText("Details");
+      break;
+
+    case "/customers/edit/:customerId":
+      link1 = createLink("Customers", "/customers/search");
+      link2 = createLink("Details", `/customers/${customerId}`);
+      text = createText("Edit");
+      break;
+
+    case "/customers/create":
+      link1 = createLink("Customers", "/customers/search");
+      text = createText("Create");
+      break;
+
+    // STORAGES ROUTES
+    case "/storages":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    case "/storages/search":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    // STORAGE DETAILS
+    case "/storage/:storageId":
+      link1 = createLink("Storages", "/storages");
+      text = createText("Storage");
+      break;
+
+    case "/rack/:storageId/:rackId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      text = createText("Rack");
+      break;
+
+    case "/shelf/:storageId/:rackId/:shelfId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      text = createText("Shelf");
+      break;
+
+    case "/shelfSpot/:storageId/:rackId/:shelfId/:shelfSpotId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      text = createText("ShelfSpot");
+      break;
+
+    case "/box/:boxId":
+      link1 = createLink("Storages", "/storages");
+      text = createText("Box");
+      break;
+
+    // STORAGE CREATE ----------------------------------
+    case "/storage/create":
+      link1 = createLink("Storages", "/storages");
+      text = createText("Create");
+      break;
+
+    case "/rack/create/:storageId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      text = createText("Create");
+      break;
+
+    case "/shelf/create/:storageId/:rackId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      text = createText("Create");
+      break;
+
+    case "/shelfSpot/create/:storageId/:rackId/:shelfId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      text = createText("Create");
+      break;
+
+    case "/box/create":
+      link1 = createLink("Storages", "/storages");
+      text = createText("Create");
+      break;
+
+    // STORAGE EDIT --------------------------------------------
+    case "/storage/edit/:storageId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      text = createText("Edit");
+      break;
+
+    case "/rack/edit/:storageId/:rackId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      text = createText("Edit");
+      break;
+
+    case "/shelf/edit/:storageId/:rackId/:shelfId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      text = createText("Edit");
+      break;
+
+    case "/shelfSpot/edit/:storageId/:rackId/:shelfId/:shelfSpotId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      link5 = createLink(
+        "ShelfSpot",
+        `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+      );
+      text = createText("Edit");
+      break;
+
+    // BARCODE ROUTES ------------------------------------------
+    case "/barcode/scan":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    case "/barcode/create":
+      link1 = createLink("Dashboard", "/dashboard");
+      text = createText("Search");
+      break;
+
+    default:
+      break;
+  }
 
   return (
     <nav aria-label="breadcrumb" className="pb-0">
       <ol className="breadcrumb">
-        {paths.map((path, i) => {
-          if (i === 0) {
-            return null;
-          }
-
-          if (idTypesArray.includes(path)) {
-            return (
-              <li key={`bread${i}dash`} className="breadcrumb-item">
-                Details
-              </li>
-            );
-          }
-
-          if (paths.length === 2) {
-            if (path === "dashboard") {
-              return "Welcome to Warehouse App";
-            }
-            return (
-              <li key={`bread${i}dash`} className="breadcrumb-item">
-                <Link to={`/dashboard`}>Dashboard</Link>
-              </li>
-            );
-          }
-          // single is the route storages/single/:id
-          else if (path === "single") {
-            return null;
-          } else if (path === "edit") {
-            // default link to use
-            let link = (
-              <Link
-                to={`/${paths[1]}/${id}${paths[1] === "storages" ? type : ""}`}
-              >{`${capitalizeFirstLetter(storageType)}`}</Link>
-            );
-
-            // storage needs a special link to work correctly
-            if (storageType === "storage") {
-              link = <Link to={`/storages/single/${id}`}>Storage</Link>;
-            }
-
-            return (
-              <Fragment key={`bread${i}mode`}>
-                <li className="breadcrumb-item">{link}</li>
-                <li key={`bread${i}`} className="breadcrumb-item">
-                  {`${capitalizeFirstLetter(path)}`}
-                </li>
-              </Fragment>
-            );
-          } else if (
-            path === "create" ||
-            path === "search" ||
-            path === "scan"
-          ) {
-            return (
-              <li key={`bread${i}mode`} className="breadcrumb-item">
-                {`${capitalizeFirstLetter(path)}`}
-              </li>
-            );
-          } else {
-            let linkUrl;
-            if (path === "storages") linkUrl = `/${path}`;
-            else if (path === "barcode") linkUrl = `/${path}/create`;
-            else {
-              linkUrl = `/${path}/search`;
-            }
-
-            return (
-              <li key={`bread${i}root`} className="breadcrumb-item">
-                <Link to={linkUrl}>{`${capitalizeFirstLetter(path)}`}</Link>
-              </li>
-            );
-          }
-        })}
+        {link1}
+        {link2}
+        {link3}
+        {link4}
+        {link5}
+        {text}
       </ol>
     </nav>
   );
 };
 
-export default connect(
-  null,
-  null
-)(withRouter(BreadCrumb));
+export default withRouter(BreadCrumb2);

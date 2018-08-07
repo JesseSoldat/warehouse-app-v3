@@ -6,12 +6,17 @@ import Spinner from "../../../components/Spinner";
 import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
 // custom components
+import BoxTable from "./components/BoxTable";
 import TableContainer from "./components/TableContainer";
 // utils
 import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
-import { startGetStorage, startGetRack } from "../../../actions/storage";
+import {
+  startGetStorage,
+  startGetRack,
+  startGetBox
+} from "../../../actions/storage";
 import { serverMsg } from "../../../actions/ui";
 
 class Storage extends Component {
@@ -33,7 +38,19 @@ class Storage extends Component {
 
   // Api calls ----------------------------
   getStorage = () => {
-    const { match, rack, startGetRack } = this.props;
+    const { match, rack, box, startGetRack } = this.props;
+
+    // check for box
+    const storageType = getUrlParameter("type");
+    if (storageType === "box") {
+      const { boxId } = match.params;
+      // check for box in the store
+      if (box && box._id === boxId) {
+        return;
+      }
+      this.props.startGetBox(boxId);
+      return;
+    }
 
     const rackId = match.params.rackId;
 
@@ -44,11 +61,11 @@ class Storage extends Component {
 
   render() {
     // props
-    const { loading, rack, match } = this.props;
-    const rackId = match.params.rackId;
-    const shelfId = match.params.shelfId;
-    const shelfSpotId = match.params.shelfSpotId;
-    const boxId = match.params.boxId;
+    const { loading, rack, box, match } = this.props;
+    const { rackId } = match.params;
+    const { shelfId } = match.params;
+    const { shelfSpotId } = match.params;
+    const { boxId } = match.params;
 
     // params
     const storageType = getUrlParameter("type");
@@ -64,22 +81,25 @@ class Storage extends Component {
     // wait until the data is fetched and the store gets the correct rack
     else if (rack && rack._id === rackId) {
       content = (
-        <Fragment>
-          <TableContainer
-            rack={rack}
-            storageType={storageType}
-            shelfId={shelfId}
-            shelfSpotId={shelfSpotId}
-          />
-        </Fragment>
+        <TableContainer
+          rack={rack}
+          box={box}
+          storageType={storageType}
+          shelfId={shelfId}
+          shelfSpotId={shelfSpotId}
+        />
       );
+    } else if (box && box._id === boxId) {
+      content = <BoxTable box={box} />;
     }
 
     return (
       <div className="container">
         <Message cb={this.getStorage} />
         <Heading title={`${capitalizeFirstLetter(heading)} Details`} />
-        {content}
+        <div className="col-12 d-flex justify-content-around flex-wrap mt-4">
+          {content}
+        </div>
       </div>
     );
   }
@@ -89,10 +109,11 @@ const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
   storage: storage.storage,
   rack: storage.rack,
+  box: storage.box,
   loading: ui.loading
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetStorage, startGetRack }
+  { serverMsg, startGetStorage, startGetRack, startGetBox }
 )(Storage);

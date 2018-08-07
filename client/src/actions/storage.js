@@ -18,6 +18,9 @@ export const RACK_LOADED = "RACK_LOADED";
 export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
 
+export const BOX_REQUESTED = "BOX_REQUESTED";
+export const BOX_LOADED = "BOX_LOADED";
+
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
 
@@ -96,6 +99,34 @@ export const startGetRack = rackId => async dispatch => {
   }
 };
 
+// GET SINGLE BOX
+export const boxRequested = () => ({
+  type: BOX_REQUESTED
+});
+
+export const boxLoaded = box => ({
+  type: BOX_LOADED,
+  storageType: "box",
+  box
+});
+
+export const startGetBox = boxId => async dispatch => {
+  dispatch(loading(true));
+  dispatch(boxRequested());
+  try {
+    const res = await axios.get(`/api/boxes/${boxId}`);
+
+    const { msg, options, payload } = res.data;
+
+    dispatch(boxLoaded(payload));
+    dispatch(loading(false));
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "get", "box");
+  }
+};
+
 // GET Storage ---------------------------
 export const getStorage = (storage = null, storageType = "") => ({
   type: STORAGE_FETCH_ONE,
@@ -154,7 +185,7 @@ export const startCreateStorage = (
 
     let newItemId = "";
 
-    const { storageId, rackId, shelfId, shelfSpotId } = ids;
+    const { storageId, rackId, shelfId } = ids;
 
     switch (type) {
       case "storage":
@@ -184,7 +215,6 @@ export const startCreateStorage = (
         break;
 
       case "box":
-        console.log("BOX TODO");
         newItemId = payload._id;
         history.push(`/box/${newItemId}?type=${type}`);
         break;

@@ -17,20 +17,17 @@ const TableContainer = ({
 
   switch (storageType) {
     case "rack":
-      content = <RackTable rack={rack} storageType={storageType} />;
+      content = <RackTable rack={rack} />;
       break;
 
     case "shelf":
-      content = (
-        <ShelfTable rack={rack} storageType={storageType} shelfId={shelfId} />
-      );
+      content = <ShelfTable rack={rack} shelfId={shelfId} />;
       break;
 
     case "shelfSpot":
       content = (
         <ShelfSpotTable
           rack={rack}
-          storageType={storageType}
           shelfId={shelfId}
           shelfSpotId={shelfSpotId}
         />
@@ -42,11 +39,7 @@ const TableContainer = ({
       break;
   }
 
-  return (
-    <div className="col-12 d-flex justify-content-around flex-wrap mt-4">
-      {content}
-    </div>
-  );
+  return { content };
 };
 
 export default TableContainer;

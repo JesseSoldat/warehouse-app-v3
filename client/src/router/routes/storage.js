@@ -49,6 +49,12 @@ const StorageRoutes = [
     component={StorageCreate}
     exact={true}
   />,
+  <PrivateRoute
+    key="/box/create"
+    path="/box/create"
+    component={StorageCreate}
+    exact={true}
+  />,
 
   // EDIT ---------------------
   <PrivateRoute

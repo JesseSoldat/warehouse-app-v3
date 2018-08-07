@@ -21,6 +21,7 @@ require("./routes/storage/storage")(app, io);
 require("./routes/storage/rack")(app, io);
 require("./routes/storage/shelf")(app, io);
 require("./routes/storage/shelfSpot")(app, io);
+require("./routes/storage/box")(app, io);
 
 app.get("*", (req, res) => {
   console.log(req.url);

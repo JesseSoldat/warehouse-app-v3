@@ -4,11 +4,8 @@ import { Route, Redirect } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import BreadCrumb from "../components/BreadCrumb";
-import BreadCrumb2 from "../components/BreadCrumb2";
 
 import Socket from "../components/Socket";
-
-const idTypesArray = [":customerId", ":producerId", ":productId", ":id"];
 
 const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
   return (
@@ -19,8 +16,7 @@ const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
           <div>
             <Socket />
             <NavBar />
-            {/* <BreadCrumb idTypesArray={idTypesArray} /> */}
-            <BreadCrumb2 />
+            <BreadCrumb />
 
             <div className="my-3">
               <Component {...props} />

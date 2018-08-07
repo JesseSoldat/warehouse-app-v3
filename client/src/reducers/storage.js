@@ -3,10 +3,12 @@ import {
   STORAGE_FETCH_ALL,
   STORAGE_FETCH_ONE,
   STORAGE_UPDATE_ONE,
+  STORAGE_DELETE_ONE,
   RACK_REQUESTED,
   RACK_LOADED,
   RACK_UPDATE_ONE,
-  STORAGE_DELETE_ONE
+  BOX_REQUESTED,
+  BOX_LOADED
 } from "../actions/storage";
 
 const initialState = {
@@ -15,12 +17,24 @@ const initialState = {
   rack: null,
   rackRequsted: false,
   rackLoaded: false,
+  box: null,
+  boxRequsted: false,
+  boxLoaded: false,
   search: [],
   storageType: null
 };
 
 export default (state = initialState, action) => {
-  const { type, search, storages, storage, rack, storageType, update } = action;
+  const {
+    type,
+    search,
+    storages,
+    storage,
+    rack,
+    box,
+    storageType,
+    update
+  } = action;
   switch (type) {
     case STORAGE_SEARCH:
       return {
@@ -112,9 +126,26 @@ export default (state = initialState, action) => {
         rack: rackUpdate
       };
 
-    case STORAGE_FETCH_ONE:
-      // console.log("STORAGE_FETCH_ONE", action);
-      return { ...state, storage, storageType };
+    case BOX_REQUESTED:
+      return {
+        ...state,
+        boxRequsted: true,
+        boxLoaded: false
+      };
+
+    case BOX_LOADED:
+      return {
+        ...state,
+        box,
+        storageType,
+        boxRequsted: false,
+        boxLoaded: true
+      };
+
+    // DEPRECATE
+
+    // case STORAGE_FETCH_ONE:
+    //   return { ...state, storage, storageType };
 
     case STORAGE_DELETE_ONE:
       return { ...state, storage: null, storages: [] };
