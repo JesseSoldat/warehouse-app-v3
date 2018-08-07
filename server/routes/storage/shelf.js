@@ -74,7 +74,7 @@ module.exports = (app, io) => {
         { new: true }
       );
 
-      const msg = msgObj("The shelf was saved.", "green", "create");
+      const msg = msgObj("The shelf was saved.", "blue", "create");
 
       emit(req.user._id);
 
@@ -89,18 +89,17 @@ module.exports = (app, io) => {
   // Update a shelf
   app.patch("/api/shelves/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
+    const update = req.body;
     try {
-      const shelf = await Shelf.findByIdAndUpdate(
-        shelfId,
-        mergeObjFields("", req.body),
-        { new: true }
-      );
+      await Shelf.findByIdAndUpdate(shelfId, mergeObjFields("", update), {
+        new: true
+      });
 
-      const msg = msgObj("The shelf was updateed.", "green", "update");
+      const msg = msgObj("The shelf was updated.", "blue", "update");
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, shelf);
+      serverRes(res, 200, msg, { ...update, shelfId });
     } catch (err) {
       console.log("Err: PATCH/api/shelf/:shelfId", err);
 
@@ -132,7 +131,7 @@ module.exports = (app, io) => {
         shelf.remove()
       ]);
 
-      const msg = msgObj("Shelf deleted.", "green");
+      const msg = msgObj("Shelf deleted.", "blue");
 
       emit(req.user._id);
 

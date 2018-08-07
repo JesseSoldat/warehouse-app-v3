@@ -9,10 +9,12 @@ import { loading } from "./ui";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
-export const STORAGE_FETCH_RACK = "STORAGE_FETCH_RACK";
+export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 
+export const STORAGE_FETCH_RACK = "STORAGE_FETCH_RACK";
 export const RACK_REQUESTED = "RACK_REQUESTED";
 export const RACK_LOADED = "RACK_LOADED";
+export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
 
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
@@ -158,10 +160,22 @@ export const startCreateStorage = (
 };
 
 // Edit Storage -------------------------------------
+export const editStorage = storage => ({
+  type: STORAGE_UPDATE_ONE,
+  storage
+});
+
+export const editRack = (storageType, update) => ({
+  type: RACK_UPDATE_ONE,
+  storageType,
+  update
+});
+
 export const startEditStorage = (
   obj,
   type,
-  id = "",
+  id,
+  ids,
   history
 ) => async dispatch => {
   const apiUrl = `${storageApiUrl(type)}/${id}`;
@@ -170,30 +184,40 @@ export const startEditStorage = (
     const res = await axios.patch(apiUrl, obj);
 
     const { msg, options, payload } = res.data;
-    console.log("payload", payload);
+
+    // hide the message after 3 seconds
+    msg.code = "hide-3";
 
     checkForMsg(msg, dispatch, options);
 
-    // switch (type) {
-    //   case 'storage':
-    //     history.push(`/storages/${storageId}?type=${type}`);
-    //     break;
+    const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
-    //     case 'rack':
-    //     history.push(`/rack/${storageId}/${rackId}?type=${type}`);
-    //     break;
+    switch (type) {
+      case "storage":
+        dispatch(editStorage(payload));
+        history.push(`/storage/${storageId}?type=${type}`);
+        break;
 
-    //     case 'shelf':
-    //     history.push(`/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`);
-    //     break;
+      case "rack":
+        dispatch(editRack(type, payload));
+        history.push(`/rack/${storageId}/${rackId}?type=${type}`);
+        break;
 
-    //     case 'shelfSpot':
-    //     history.push(`/shelf/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`);
-    //     break;
+      case "shelf":
+        dispatch(editRack(type, payload));
+        history.push(`/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`);
+        break;
 
-    //   default:
-    //     break;
-    // }
+      case "shelfSpot":
+        dispatch(editRack(type, payload));
+        history.push(
+          `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`
+        );
+        break;
+
+      default:
+        break;
+    }
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "patch", `${type}`);
   }

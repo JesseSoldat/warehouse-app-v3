@@ -72,7 +72,7 @@ module.exports = (app, io) => {
         { new: true }
       );
 
-      const msg = msgObj("The rack was saved.", "green", "create");
+      const msg = msgObj("The rack was saved.", "blue", "create");
 
       emit(req.user._id);
 
@@ -87,18 +87,19 @@ module.exports = (app, io) => {
   // Update a rack
   app.patch("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
+    const update = req.body;
     try {
       const rack = await Rack.findByIdAndUpdate(
         rackId,
-        mergeObjFields("", req.body),
+        mergeObjFields("", update),
         { new: true }
       );
 
-      const msg = msgObj("The rack was updated.", "green", "update");
+      const msg = msgObj("The rack was updated.", "blue", "update");
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, rack);
+      serverRes(res, 200, msg, update);
     } catch (err) {
       console.log("Err: PATCH/api/rack/:rackId", err);
 
@@ -129,7 +130,7 @@ module.exports = (app, io) => {
         rack.remove()
       ]);
 
-      const msg = msgObj("Rack deleted.", "green");
+      const msg = msgObj("Rack deleted.", "blue");
 
       emit(req.user._id);
 

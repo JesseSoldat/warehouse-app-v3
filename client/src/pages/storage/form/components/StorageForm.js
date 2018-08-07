@@ -17,8 +17,8 @@ class StorageForm extends Component {
     rackLabelErr: "",
     shelfLabel: this.props.defaultState.shelfLabel,
     shelfLabelErr: "",
-    spotLabel: this.props.defaultState.spotLabel,
-    spotLabelErr: "",
+    shelfSpotLabel: this.props.defaultState.shelfSpotLabel,
+    shelfSpotLabelErr: "",
     boxLabel: this.props.defaultState.boxLabel,
     boxLabelErr: ""
   };

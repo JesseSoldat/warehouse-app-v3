@@ -41,12 +41,28 @@ class Product extends Component {
     this.getProduct();
   }
 
-  componentDidUpdate(nextProps) {
+  componentDidUpdate(nextProps, state) {
     const { msg } = nextProps;
+
+    // hide the success message after 3 seconds
+    if (msg && msg.code === "hide-3") {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        this.props.serverMsg(null);
+      }, 3000);
+    }
+
+    // used for retrieve product button errors
+    if (msg && msg.code === "throw new Error") {
+      window.scrollTo(0, 0);
+    }
+
     // if there is an error while trying to delete a product
     // enable the delete btn after the msg is closed
     if (msg && msg.code === "delete err") {
-      this.setState({ bt1Disable: false });
+      if (state.bt1Disable === true) {
+        this.setState({ bt1Disable: false });
+      }
     }
   }
 

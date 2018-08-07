@@ -171,7 +171,7 @@ export const createProduct = (newProduct, history) => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
-    dispatch({ type: PRODUCTS_RESET });
+    dispatch(resetProducts());
 
     checkForMsg(msg, dispatch, options);
 
@@ -190,7 +190,7 @@ export const editProduct = (productId, update, history) => async dispatch => {
 
     const { msg, options } = res.data;
 
-    dispatch({ type: PRODUCTS_RESET });
+    dispatch(resetProducts());
 
     checkForMsg(msg, dispatch, options);
 

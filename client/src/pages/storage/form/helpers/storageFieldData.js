@@ -12,14 +12,6 @@ export default {
       err: "descriptionErr",
       msg: "Storage description is a required field!"
     }
-    // {
-    //   placeholder: "Racks",
-    //   name: "racks",
-    //   showOnlyOnEdit: true,
-    //   type: "array",
-    //   err: null,
-    //   msg: null
-    // }
   ],
   rack: [
     {
@@ -28,22 +20,6 @@ export default {
       err: "rackLabelErr",
       msg: "Rack label is a required field!"
     }
-    // {
-    //   placeholder: "Storage",
-    //   name: "storage",
-    //   showOnlyOnEdit: true,
-    //   type: "id",
-    //   err: null,
-    //   msg: null
-    // },
-    // {
-    //   placeholder: "Shelves",
-    //   name: "shelves",
-    //   showOnlyOnEdit: true,
-    //   type: "array",
-    //   err: null,
-    //   msg: null
-    // }
   ],
   shelf: [
     {
@@ -52,46 +28,14 @@ export default {
       err: "shelfLabelErr",
       msg: "Shelf label is a required field!"
     }
-    // {
-    //   placeholder: "Rack",
-    //   name: "rack",
-    //   showOnlyOnEdit: true,
-    //   type: "id",
-    //   err: null,
-    //   msg: null
-    // },
-    // {
-    //   placeholder: "Spots",
-    //   name: "spots",
-    //   showOnlyOnEdit: true,
-    //   type: "array",
-    //   err: null,
-    //   msg: null
-    // }
   ],
   shelfSpot: [
     {
       placeholder: "* Shelf Spot Label",
-      name: "spotLabel",
+      name: "shelfSpotLabel",
       err: "shelfSpotLabelErr",
       msg: "Shelf spot label is a required field!"
     }
-    // {
-    //   placeholder: "Shelf",
-    //   name: "shelf",
-    //   showOnlyOnEdit: true,
-    //   type: "id",
-    //   err: null,
-    //   msg: null
-    // },
-    // {
-    //   placeholder: "Stored Items",
-    //   name: "storedItems",
-    //   showOnlyOnEdit: true,
-    //   type: "array",
-    //   err: null,
-    //   msg: null
-    // }
   ],
   box: [
     {
@@ -100,21 +44,5 @@ export default {
       err: "boxLabelErr",
       msg: "Box label is a required field!"
     }
-    // {
-    //   placeholder: "Shelf Spot",
-    //   name: "shelfSpot",
-    //   showOnlyOnEdit: true,
-    //   type: "id",
-    //   err: null,
-    //   msg: null
-    // },
-    // {
-    //   placeholder: "Stored Items",
-    //   name: "storedItems",
-    //   showOnlyOnEdit: true,
-    //   type: "array",
-    //   err: null,
-    //   msg: null
-    // }
   ]
 };

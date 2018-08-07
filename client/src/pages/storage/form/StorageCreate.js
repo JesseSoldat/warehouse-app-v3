@@ -34,7 +34,7 @@ class StorageCreate extends Component {
       storageLabel: "",
       description: "",
       rackLabel: "",
-      shelfLabel: "",
+      shelfSpotLabel: "",
       spotLabel: "",
       boxLabel: ""
     };
@@ -42,7 +42,7 @@ class StorageCreate extends Component {
     let content;
 
     if (loading) {
-      let content = <Spinner />;
+      content = <Spinner />;
     } else {
       content = (
         <div className="row">

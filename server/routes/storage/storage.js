@@ -4,6 +4,8 @@ const Rack = require("../../models/storage/rack");
 const Shelf = require("../../models/storage/shelf");
 const ShelfSpot = require("../../models/storage/shelfSpot");
 const Box = require("../../models/storage/box");
+// middleware
+const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
@@ -20,6 +22,7 @@ module.exports = (app, io) => {
   // Search storages
   app.get(
     "/api/storages/search/:storageType/:searchBy/:searchText",
+    isAuth,
     async (req, res) => {
       const { storageType, searchBy, searchText } = req.params;
       let result = {};
@@ -70,7 +73,7 @@ module.exports = (app, io) => {
     }
   );
   // Get all storages
-  app.get("/api/storages", async (req, res) => {
+  app.get("/api/storages", isAuth, async (req, res) => {
     try {
       const storages = await Storage.find({}).populate({
         path: "racks",
@@ -86,7 +89,7 @@ module.exports = (app, io) => {
     }
   });
   // Get a single storage by storageId
-  app.get("/api/storages/:storageId", async (req, res) => {
+  app.get("/api/storages/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;
 
     try {
@@ -109,14 +112,16 @@ module.exports = (app, io) => {
     }
   });
   // Create new warehouse storage
-  app.post("/api/storages", async (req, res) => {
+  app.post("/api/storages", isAuth, async (req, res) => {
     const storage = new Storage(req.body);
     try {
       await storage.save();
 
       emit(req.user._id);
 
-      serverRes(res, 200, null, storage);
+      const msg = msgObj("The storage was created.", "blue", "create");
+
+      serverRes(res, 200, msg, storage);
     } catch (err) {
       console.log("ERR: POST/api/storage", err);
 
@@ -125,7 +130,7 @@ module.exports = (app, io) => {
     }
   });
   // Update a storage
-  app.patch("/api/storages/:storageId", async (req, res) => {
+  app.patch("/api/storages/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;
 
     try {
@@ -133,11 +138,16 @@ module.exports = (app, io) => {
         storageId,
         mergeObjFields("", req.body),
         { new: true }
-      );
+      ).populate({
+        path: "racks",
+        populate: { path: "shelves" }
+      });
 
       emit(req.user._id);
 
-      serverRes(res, 200, null, storage);
+      const msg = msgObj("The storage was updated.", "blue", "update");
+
+      serverRes(res, 200, msg, storage);
     } catch (err) {
       console.log("ERR: PATCH/api/storage/:storageId", err);
 
@@ -146,7 +156,7 @@ module.exports = (app, io) => {
     }
   });
   // Delete storage
-  app.delete("/api/storages/:storageId", async (req, res) => {
+  app.delete("/api/storages/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;
     try {
       const storage = await Storage.findById(storageId);
@@ -161,7 +171,7 @@ module.exports = (app, io) => {
 
       await storage.remove();
 
-      const msg = msgObj("Storage deleted.", "green");
+      const msg = msgObj("Storage deleted.", "blue");
 
       emit(req.user._id);
 

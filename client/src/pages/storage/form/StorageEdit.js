@@ -18,7 +18,7 @@ import {
 } from "../../../actions/storage";
 
 class StorageEdit extends Component {
-  state = { type: "", id: "" };
+  state = { type: "", id: "", ids: {} };
 
   // lifecycle -----------------------------------
   componentDidMount() {
@@ -31,21 +31,23 @@ class StorageEdit extends Component {
     const { match, storages, rack } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId } = match.params;
 
+    const ids = { storageId, rackId, shelfId, shelfSpotId };
+
     switch (type) {
       case "storage":
-        this.setState({ type, id: storageId });
+        this.setState({ type, id: storageId, ids });
         break;
 
       case "rack":
-        this.setState({ type, id: rackId });
+        this.setState({ type, id: rackId, ids });
         break;
 
       case "shelf":
-        this.setState({ type, id: shelfId });
+        this.setState({ type, id: shelfId, ids });
         break;
 
       case "shelfSpot":
-        this.setState({ type, id: shelfSpotId });
+        this.setState({ type, id: shelfSpotId, ids });
         break;
 
       default:
@@ -77,14 +79,14 @@ class StorageEdit extends Component {
   // cb ---------------------------------------------
   handleSubmit = form => {
     const { startEditStorage, history } = this.props;
-    const { type, id } = this.state;
-    startEditStorage(form, type, id, history);
+    const { type, id, ids } = this.state;
+    startEditStorage(form, type, id, ids, history);
   };
 
   handleDelete = () => {
     const { startDeleteStorage, history } = this.props;
-    const { type, id } = this.state;
-    startDeleteStorage(type, id, history);
+    const { type, id, ids } = this.state;
+    startDeleteStorage(type, id, ids, history);
   };
 
   renderContent = (type, defaultState) => {
@@ -112,9 +114,9 @@ class StorageEdit extends Component {
 
   render() {
     // props
-    const { match, loading, storages, rack } = this.props;
-    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
-    const { type } = this.state;
+    const { loading, storages, rack } = this.props;
+    const { type, ids } = this.state;
+    const { storageId, shelfId, shelfSpotId } = ids;
 
     let storage, content, button;
 
@@ -168,9 +170,8 @@ class StorageEdit extends Component {
       const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
 
       const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
-      console.log(shelfSpot);
 
-      defaultState.spotLabel = shelfSpot.shelfSpotLabel;
+      defaultState.shelfSpotLabel = shelfSpot.shelfSpotLabel;
 
       const contentObj = this.renderContent(type, defaultState);
 

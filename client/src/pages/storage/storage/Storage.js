@@ -12,10 +12,22 @@ import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeF
 import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
 import { startGetStorage, startGetRack } from "../../../actions/storage";
+import { serverMsg } from "../../../actions/ui";
 
 class Storage extends Component {
   // lifecyles -----------------------------
   componentDidMount() {
+    // Redirect to details after saving or updating a storage
+    const { msg } = this.props;
+
+    // hide the success message after 3 seconds
+    if (msg && msg.code === "hide-3") {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        this.props.serverMsg(null);
+      }, 3000);
+    }
+
     this.getStorage();
   }
 
@@ -74,6 +86,7 @@ class Storage extends Component {
 }
 
 const mapStateToProps = ({ ui, storage }) => ({
+  msg: ui.msg,
   storage: storage.storage,
   rack: storage.rack,
   loading: ui.loading
@@ -81,5 +94,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetStorage, startGetRack }
+  { serverMsg, startGetStorage, startGetRack }
 )(Storage);
