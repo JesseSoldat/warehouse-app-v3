@@ -8,9 +8,9 @@ const Socket = ({ userId }) => {
   socket.on("update", data => {
     const { msg, senderId, timestamp } = data;
 
-    if (senderId === userId) {
-      return;
-    }
+    // if (senderId === userId) {
+    //   return;
+    // }
 
     switch (msg) {
       case "product":

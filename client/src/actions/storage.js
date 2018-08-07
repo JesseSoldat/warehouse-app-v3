@@ -169,11 +169,31 @@ export const startEditStorage = (
   try {
     const res = await axios.patch(apiUrl, obj);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
+    console.log("payload", payload);
 
     checkForMsg(msg, dispatch, options);
 
-    history.push(`/storages/${id}?type=${type}`);
+    // switch (type) {
+    //   case 'storage':
+    //     history.push(`/storages/${storageId}?type=${type}`);
+    //     break;
+
+    //     case 'rack':
+    //     history.push(`/rack/${storageId}/${rackId}?type=${type}`);
+    //     break;
+
+    //     case 'shelf':
+    //     history.push(`/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`);
+    //     break;
+
+    //     case 'shelfSpot':
+    //     history.push(`/shelf/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`);
+    //     break;
+
+    //   default:
+    //     break;
+    // }
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "patch", `${type}`);
   }

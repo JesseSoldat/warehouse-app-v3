@@ -8,7 +8,7 @@ const TableTitle = ({
   type = null
 }) => {
   const renderBtn = type ? (
-    <Link to={`/storages/edit/${storageId}?type=storage`} className="mr-3">
+    <Link to={`/storage/edit/${storageId}?type=storage`} className="mr-3">
       <button className="btn btn-default m-1">
         <i className="fas fa-edit mr-2" /> Edit Storage
       </button>

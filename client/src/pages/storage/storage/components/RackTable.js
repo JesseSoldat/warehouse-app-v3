@@ -78,19 +78,11 @@ const RackTable = ({ rack }) => {
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
         <h2>Rack {rackLabel}</h2>
 
-        <Link to={`/storages/edit/${rackId}?type=rack`}>
+        <Link to={`/rack/edit/${storageId}/${rackId}?type=rack`}>
           <button className="btn btn-default m-1">
             <i className="fas fa-edit mr-2" /> Edit Rack
           </button>
         </Link>
-
-        {!isEmpty(rack.storage) && (
-          <Link to={`/storage/${rack.storage._id}`}>
-            <button className="btn btn-default m-1">
-              <i className="fas fa-arrow-up mr-2" /> View Storage
-            </button>
-          </Link>
-        )}
       </div>
 
       <div className="table-responsive-xs table-responsive-sm mb-5">

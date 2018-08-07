@@ -1,6 +1,8 @@
 // models
 const Rack = require("../../models/storage/rack");
 const Shelf = require("../../models/storage/shelf");
+// middleware
+const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
@@ -15,7 +17,7 @@ module.exports = (app, io) => {
     });
   };
   // Get all shelves
-  app.get("/api/shelves", async (req, res) => {
+  app.get("/api/shelves", isAuth, async (req, res) => {
     try {
       const shelves = await Shelf.find({});
 
@@ -28,7 +30,7 @@ module.exports = (app, io) => {
     }
   });
   // Get a single shelf
-  app.get("/api/shelves/:shelfId", async (req, res) => {
+  app.get("/api/shelves/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
 
     try {
@@ -53,7 +55,7 @@ module.exports = (app, io) => {
     }
   });
   // Create a new shelf inside a rack and link it to the rack
-  app.post("/api/shelves/:rackId", async (req, res) => {
+  app.post("/api/shelves/:rackId", isAuth, async (req, res) => {
     let { rackId } = req.params;
     const shelf = new Shelf(req.body);
 
@@ -85,7 +87,7 @@ module.exports = (app, io) => {
     }
   });
   // Update a shelf
-  app.patch("/api/shelves/:shelfId", async (req, res) => {
+  app.patch("/api/shelves/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
     try {
       const shelf = await Shelf.findByIdAndUpdate(
@@ -107,7 +109,7 @@ module.exports = (app, io) => {
     }
   });
   // delete a shelf
-  app.delete("/api/shelves/:shelfId", async (req, res) => {
+  app.delete("/api/shelves/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
     try {
       let shelf = await Shelf.findById(shelfId);

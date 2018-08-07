@@ -17,7 +17,6 @@ const StorageRoutes = [
     component={Storages}
     exact={true}
   />,
-
   <PrivateRoute
     key="/storages/search"
     path="/storages/search"
@@ -25,37 +24,41 @@ const StorageRoutes = [
     exact={true}
   />,
 
-  // CREATE -----UPDATE----------
+  // CREATE ------------------
   <PrivateRoute
     key="/storages/create/:id"
     path="/storages/create/:id"
     component={StorageCreate}
     exact={true}
   />,
+
+  // EDIT ---------------------
   <PrivateRoute
-    key="/storages/edit/:id"
-    path="/storages/edit/:id"
+    key="/storage/edit"
+    path="/storage/edit/:storageId"
+    component={StorageEdit}
+    exact={true}
+  />,
+  <PrivateRoute
+    key="/rack/edit"
+    path="/rack/edit/:storageId/:rackId"
+    component={StorageEdit}
+    exact={true}
+  />,
+  <PrivateRoute
+    key="/shelf/edit"
+    path="/shelf/edit/:storageId/:rackId/:shelfId"
+    component={StorageEdit}
+    exact={true}
+  />,
+  <PrivateRoute
+    key="/shelfSpot/edit"
+    path="/shelfSpot/edit/:storageId/:rackId/:shelfId/:shelfSpotId"
     component={StorageEdit}
     exact={true}
   />,
 
-  // DEPRECATE -----------------------------
-  <PrivateRoute
-    key="/storages/single/:id"
-    path="/storages/single/:id"
-    component={Details}
-    exact={true}
-  />,
-
-  <PrivateRoute
-    key="/storages/:id"
-    path="/storages/:id"
-    component={Storage}
-    exact={true}
-  />,
-  // DEPRECATE -----------------------------
-
-  // NEW
+  // DETAILS ----------------------
   <PrivateRoute
     key="storage"
     path="/storage/:storageId"

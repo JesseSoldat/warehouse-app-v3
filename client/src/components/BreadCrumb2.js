@@ -11,13 +11,14 @@ const BreadCrumb2 = ({ match }) => {
     customerId,
     storageId,
     rackId,
-    shelfId
+    shelfId,
+    shelfSpotId
   } = params;
 
   // console.log("path", path);
   // console.log("params", params);
 
-  let link1, link2, link3, link4, text;
+  let link1, link2, link3, link4, link5, text;
 
   const createLink = (link, url) => (
     <li className="breadcrumb-item">
@@ -121,6 +122,7 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("Search");
       break;
 
+    // STORAGE DETAILS
     case "/storage/:storageId":
       link1 = createLink("Storages", "/storages");
       text = createText("Storage");
@@ -150,12 +152,47 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("ShelfSpot");
       break;
 
-    case "/storages/edit/:id":
+    // STORAGE EDIT
+    case "/storage/edit/:storageId":
       link1 = createLink("Storages", "/storages");
-      link2 = createLink("Details", "/storages/:id");
+      link2 = createLink("Storage", `/storage/${storageId}`);
       text = createText("Edit");
       break;
 
+    case "/rack/edit/:storageId/:rackId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      text = createText("Edit");
+      break;
+
+    case "/shelf/edit/:storageId/:rackId/:shelfId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      text = createText("Edit");
+      break;
+
+    case "/shelfSpot/edit/:storageId/:rackId/:shelfId/:shelfSpotId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      link5 = createLink(
+        "ShelfSpot",
+        `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+      );
+      text = createText("Edit");
+      break;
+
+    // STORAGE CREATE
     case "/storages/create/:id":
       link1 = createLink("Storages", "/storages");
       text = createText("Create");
@@ -183,6 +220,7 @@ const BreadCrumb2 = ({ match }) => {
         {link2}
         {link3}
         {link4}
+        {link5}
         {text}
       </ol>
     </nav>

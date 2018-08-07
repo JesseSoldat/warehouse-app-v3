@@ -1,7 +1,8 @@
 // models
 const Shelf = require("../../models/storage/shelf");
 const ShelfSpot = require("../../models/storage/shelfSpot");
-// utils
+// middleware
+const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
@@ -16,7 +17,7 @@ module.exports = (app, io) => {
     });
   };
   // Get all shelfSpots
-  app.get("/api/shelfSpots", async (req, res) => {
+  app.get("/api/shelfSpots", isAuth, async (req, res) => {
     try {
       const shelfSpots = await ShelfSpot.find();
 
@@ -29,7 +30,7 @@ module.exports = (app, io) => {
     }
   });
   // Get a single shelfSpot
-  app.get("/api/shelfSpots/:shelfSpotId", async (req, res) => {
+  app.get("/api/shelfSpots/:shelfSpotId", isAuth, async (req, res) => {
     const { shelfSpotId } = req.params;
 
     try {
@@ -54,7 +55,7 @@ module.exports = (app, io) => {
     }
   });
   // Create a new shelfSpot and link it to its shelf
-  app.post("/api/shelfSpots/:shelfId", async (req, res) => {
+  app.post("/api/shelfSpots/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
     const shelfSpot = new ShelfSpot(req.body);
     shelfSpot["shelf"] = shelfId;
@@ -83,7 +84,7 @@ module.exports = (app, io) => {
     }
   });
   // Update a shelfSpot
-  app.patch("/api/shelfSpots/:shelfSpotId", async (req, res) => {
+  app.patch("/api/shelfSpots/:shelfSpotId", isAuth, async (req, res) => {
     const { shelfSpotId } = req.params;
     try {
       const shelfSpot = await ShelfSpot.findByIdAndUpdate(
@@ -103,7 +104,7 @@ module.exports = (app, io) => {
     }
   });
   // Delete a shelfSpot
-  app.delete("/api/shelfSpots/:shelfSpotId", async (req, res) => {
+  app.delete("/api/shelfSpots/:shelfSpotId", isAuth, async (req, res) => {
     const { shelfSpotId } = req.params;
     try {
       const shelfSpot = await ShelfSpot.findById(shelfSpotId);

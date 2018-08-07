@@ -9,7 +9,6 @@ import Heading from "../../../components/Heading";
 import StorageForm from "./components/StorageForm";
 // utils
 import getUrlParameter from "../../../utils/getUrlParameter";
-import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 // actions
 import {
   startGetStorages,
@@ -28,9 +27,30 @@ class StorageEdit extends Component {
 
   // store / api call -------------------------------
   getFormData() {
-    const { match, storages, rack } = this.props;
-    const rackId = match.params.id;
     const type = getUrlParameter("type");
+    const { match, storages, rack } = this.props;
+    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+
+    switch (type) {
+      case "storage":
+        this.setState({ type, id: storageId });
+        break;
+
+      case "rack":
+        this.setState({ type, id: rackId });
+        break;
+
+      case "shelf":
+        this.setState({ type, id: shelfId });
+        break;
+
+      case "shelfSpot":
+        this.setState({ type, id: shelfSpotId });
+        break;
+
+      default:
+        break;
+    }
 
     // Type is storage -----------------------------------
     if (type === "storage") {
@@ -56,17 +76,14 @@ class StorageEdit extends Component {
   }
   // cb ---------------------------------------------
   handleSubmit = form => {
-    const { startEditStorage, match, history } = this.props;
-    const id = match.params.id;
-    const type = getUrlParameter("type");
-
+    const { startEditStorage, history } = this.props;
+    const { type, id } = this.state;
     startEditStorage(form, type, id, history);
   };
 
   handleDelete = () => {
-    const { startDeleteStorage, match, history } = this.props;
-    const id = match.params.id;
-    const type = getUrlParameter("type");
+    const { startDeleteStorage, history } = this.props;
+    const { type, id } = this.state;
     startDeleteStorage(type, id, history);
   };
 
@@ -75,8 +92,7 @@ class StorageEdit extends Component {
       <div className="row">
         <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
           <button className="btn btn-danger mt-4" onClick={this.handleDelete}>
-            <i className="far fa-trash-alt mr-2" /> Delete{" "}
-            {type && capitalizeFirstLetter(type)}
+            <i className="far fa-trash-alt mr-2" /> Delete
           </button>
         </div>
       </div>
@@ -97,11 +113,8 @@ class StorageEdit extends Component {
   render() {
     // props
     const { match, loading, storages, rack } = this.props;
-
-    const id = match.params.id;
-    const type = getUrlParameter("type");
-    const shelfId = getUrlParameter("shelfId");
-    const shelfSpotId = getUrlParameter("shelfSpotId");
+    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+    const { type } = this.state;
 
     let storage, content, button;
 
@@ -122,7 +135,6 @@ class StorageEdit extends Component {
 
     // Type is Storage
     else if (storages.length > 0 && type === "storage") {
-      const storageId = id;
       storage = storages.find(({ _id }) => _id === storageId);
 
       defaultState.storageLabel = storage.storageLabel;
@@ -143,7 +155,6 @@ class StorageEdit extends Component {
     // Type is Shelf
     else if (rack && type === "shelf") {
       const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
-      console.log(shelf);
 
       defaultState.shelfLabel = shelf.shelfLabel;
 
