@@ -9,11 +9,13 @@ import { loading } from "./ui";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
+export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 
 export const STORAGE_FETCH_RACK = "STORAGE_FETCH_RACK";
 export const RACK_REQUESTED = "RACK_REQUESTED";
 export const RACK_LOADED = "RACK_LOADED";
+export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
 
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
@@ -120,10 +122,22 @@ export const startGetStorage = (id = "", storageType) => async dispatch => {
 };
 
 // New Storage -------------------------------------
+export const createStorage = storage => ({
+  type: STORAGE_CREATE_ONE,
+  storage
+});
+
+export const createRack = (storageType, update) => ({
+  type: RACK_CREATE_ONE,
+  storageType,
+  update
+});
+
 export const startCreateStorage = (
   storage,
   type,
   id,
+  ids,
   history
 ) => async dispatch => {
   const apiUrl = `${storageApiUrl(type)}/${id}`;
@@ -133,27 +147,51 @@ export const startCreateStorage = (
 
     const { msg, payload, options } = res.data;
 
+    // hide the message after 3 seconds
+    msg.code = "hide-3";
+
     checkForMsg(msg, dispatch, options);
 
     let newItemId = "";
 
+    const { storageId, rackId, shelfId, shelfSpotId } = ids;
+
     switch (type) {
       case "storage":
-      case "box":
         newItemId = payload._id;
+        dispatch(createStorage(payload));
+        history.push(`/storage/${newItemId}?type=${type}`);
         break;
 
       case "rack":
+        newItemId = payload[type]._id;
+        dispatch(createRack(type, payload));
+        history.push(`/rack/${storageId}/${newItemId}?type=${type}`);
+        break;
+
       case "shelf":
+        newItemId = payload[type]._id;
+        dispatch(createRack(type, payload));
+        history.push(`/shelf/${storageId}/${rackId}/${newItemId}?type=${type}`);
+        break;
+
       case "shelfSpot":
         newItemId = payload[type]._id;
+        dispatch(createRack(type, payload));
+        history.push(
+          `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`
+        );
+        break;
+
+      case "box":
+        console.log("BOX TODO");
+        newItemId = payload._id;
+        history.push(`/box/${newItemId}?type=${type}`);
         break;
 
       default:
         break;
     }
-
-    history.push(`/storages/${newItemId}?type=${type}`);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "post", "storages");
   }

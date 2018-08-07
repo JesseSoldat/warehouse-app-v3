@@ -60,6 +60,14 @@ const ShelfTable = ({ rack, shelfId }) => {
         <h2>Shelf {shelfLabel}</h2>
 
         <div>
+          <Link
+            to={`/shelfSpot/create/${storageId}/${rackId}/${shelfId}?type=shelfSpot`}
+          >
+            <button className="btn btn-default m-1">
+              <i className="fas fa-plus-circle mr-2" /> New Shelf Spot
+            </button>
+          </Link>
+
           <Link to={`/shelf/edit/${storageId}/${rackId}/${shelfId}?type=shelf`}>
             <button className="btn btn-default m-1">
               <i className="fas fa-edit mr-2" /> Edit Shelf

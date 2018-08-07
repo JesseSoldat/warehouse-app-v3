@@ -41,7 +41,7 @@ class Storages extends Component {
           <Link to="/storage/create?type=storage">
             <button className="btn btn-default ml-4">
               <i className="fas fa-plus-circle mr-2" />
-              Create new Storage
+              Create New Storage
             </button>
           </Link>
         </div>

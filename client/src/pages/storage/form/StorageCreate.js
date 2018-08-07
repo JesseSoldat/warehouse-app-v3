@@ -16,13 +16,33 @@ class StorageCreate extends Component {
   // api calls ------------------
   handleSubmit = form => {
     const { match, history, startCreateStorage } = this.props;
-
-    // when creating a storage it will not need an id
-    let id = match.params.id === "storage" ? "" : match.params.id;
+    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+    const ids = { storageId, rackId, shelfId, shelfSpotId };
 
     const type = getUrlParameter("type");
+    let id;
 
-    startCreateStorage(form, type, id, history);
+    switch (type) {
+      case "storage":
+        id = "";
+      case "rack":
+        id = storageId;
+        break;
+      case "shelf":
+        id = rackId;
+        break;
+      case "shelfSpot":
+        id = shelfId;
+        break;
+      case "box":
+        console.log("TODO BOX ID");
+        break;
+
+      default:
+        break;
+    }
+
+    startCreateStorage(form, type, id, ids, history);
   };
 
   render() {
@@ -34,8 +54,8 @@ class StorageCreate extends Component {
       storageLabel: "",
       description: "",
       rackLabel: "",
+      shelfLabel: "",
       shelfSpotLabel: "",
-      spotLabel: "",
       boxLabel: ""
     };
 

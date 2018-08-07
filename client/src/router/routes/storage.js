@@ -43,6 +43,12 @@ const StorageRoutes = [
     component={StorageCreate}
     exact={true}
   />,
+  <PrivateRoute
+    key="/shelfSpot/create"
+    path="/shelfSpot/create/:storageId/:rackId/:shelfId"
+    component={StorageCreate}
+    exact={true}
+  />,
 
   // EDIT ---------------------
   <PrivateRoute
