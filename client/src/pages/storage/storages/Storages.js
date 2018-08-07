@@ -38,7 +38,7 @@ class Storages extends Component {
     } else {
       button = (
         <div className="row">
-          <Link to="/storages/create/storage?type=storage">
+          <Link to="/storage/create?type=storage">
             <button className="btn btn-default ml-4">
               <i className="fas fa-plus-circle mr-2" />
               Create new Storage

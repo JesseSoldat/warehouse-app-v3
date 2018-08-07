@@ -26,8 +26,20 @@ const StorageRoutes = [
 
   // CREATE ------------------
   <PrivateRoute
-    key="/storages/create/:id"
-    path="/storages/create/:id"
+    key="/storage/create"
+    path="/storage/create"
+    component={StorageCreate}
+    exact={true}
+  />,
+  <PrivateRoute
+    key="/rack/create"
+    path="/rack/create/:storageId"
+    component={StorageCreate}
+    exact={true}
+  />,
+  <PrivateRoute
+    key="/shelf/create"
+    path="/shelf/create/:storageId/:rackId"
     component={StorageCreate}
     exact={true}
   />,

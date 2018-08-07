@@ -152,7 +152,25 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("ShelfSpot");
       break;
 
-    // STORAGE EDIT
+    // STORAGE CREATE ----------------------------------
+    case "/storage/create":
+      link1 = createLink("Storages", "/storages");
+      text = createText("Create");
+      break;
+
+    case "/rack/create/:storageId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      text = createText("Create");
+      break;
+
+    case "/shelf/create/:storageId/:rackId":
+      link1 = createLink("Storages", "/storages");
+      link2 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      text = createText("Create");
+      break;
+
+    // STORAGE EDIT --------------------------------------------
     case "/storage/edit/:storageId":
       link1 = createLink("Storages", "/storages");
       link2 = createLink("Storage", `/storage/${storageId}`);
@@ -192,13 +210,7 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("Edit");
       break;
 
-    // STORAGE CREATE
-    case "/storages/create/:id":
-      link1 = createLink("Storages", "/storages");
-      text = createText("Create");
-      break;
-
-    // BARCODE ROUTES
+    // BARCODE ROUTES ------------------------------------------
     case "/barcode/scan":
       link1 = createLink("Dashboard", "/dashboard");
       text = createText("Search");

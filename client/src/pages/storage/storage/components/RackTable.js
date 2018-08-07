@@ -1,9 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-// helpers
-import isEmpty from "../../../../utils/validation/isEmpty";
-
 const RackTable = ({ rack }) => {
   const storageId = rack.storage._id;
   const { _id: rackId, rackLabel, shelves = [] } = rack;
@@ -19,7 +16,7 @@ const RackTable = ({ rack }) => {
     <thead>
       <tr>
         <th scope="col">
-          <Link to={`/storages/create/${rackId}?type=shelf`}>
+          <Link to={`/shelf/create/${storageId}/${rackId}?type=shelf`}>
             <button className="btn btn-default">
               <i className="fas fa-plus-circle mr-2" /> New Shelf
             </button>

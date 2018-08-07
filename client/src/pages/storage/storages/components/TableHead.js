@@ -6,7 +6,7 @@ const TableHead = ({ storageId, maxShelves = 0 }) => {
     <thead>
       <tr style={{ width: 95 }}>
         <td>
-          <Link to={`/storages/create/${storageId}?type=rack`}>
+          <Link to={`/rack/create/${storageId}?type=rack`}>
             <button className="btn btn-default">
               <i className="fas fa-plus-circle mr-2" /> New Rack
             </button>
