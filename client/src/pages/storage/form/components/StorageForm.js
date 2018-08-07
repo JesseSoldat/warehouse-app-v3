@@ -20,12 +20,26 @@ class StorageForm extends Component {
     shelfSpotLabel: this.props.defaultState.shelfSpotLabel,
     shelfSpotLabelErr: "",
     boxLabel: this.props.defaultState.boxLabel,
-    boxLabelErr: ""
+    boxLabelErr: "",
+    disableBtn: false
   };
+
+  // lifecycles -----------------------------
+  componentWillUpdate(nextProps, state) {
+    const { msg } = nextProps;
+
+    // If an error comes back from the server enable button
+    if (msg && msg.color === "danger") {
+      if (state.disableBtn === true) {
+        this.setState({ disableBtn: false });
+      }
+    }
+  }
 
   // cb --------------------------------------
   onSubmit = e => {
     e.preventDefault();
+    this.setState({ disableBtn: true });
     const { storageType, formType, handleSubmit } = this.props;
 
     const { isValid, errsObj, form } = validateForm(
@@ -35,7 +49,7 @@ class StorageForm extends Component {
     );
 
     if (!isValid) {
-      this.setState({ ...errsObj });
+      this.setState({ ...errsObj, disableBtn: false });
       return;
     }
 
@@ -46,7 +60,7 @@ class StorageForm extends Component {
   onChange = e => {
     const { name, value } = e.target;
     const err = `${name}Err`;
-    this.setState({ [name]: value, [err]: null });
+    this.setState({ [name]: value, [err]: null, disableBtn: false });
   };
 
   render() {
@@ -66,6 +80,7 @@ class StorageForm extends Component {
 
         <input
           type="submit"
+          disabled={this.state.disableBtn}
           value={capitalizeFirstLetter(formType)}
           className="btn btn-info btn-block mt-4"
         />

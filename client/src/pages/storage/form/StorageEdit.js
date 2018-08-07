@@ -106,6 +106,7 @@ class StorageEdit extends Component {
         formType="edit"
         handleSubmit={this.handleSubmit}
         defaultState={defaultState}
+        msg={this.props.msg}
       />
     );
 

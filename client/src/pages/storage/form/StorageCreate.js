@@ -51,6 +51,7 @@ class StorageCreate extends Component {
             formType="create"
             handleSubmit={this.handleSubmit}
             defaultState={defaultState}
+            msg={this.props.msg}
           />
         </div>
       );
@@ -67,7 +68,8 @@ class StorageCreate extends Component {
 }
 
 const mapStateToProps = ({ ui }) => ({
-  loading: ui.loading
+  loading: ui.loading,
+  msg: ui.msg
 });
 
 export default connect(
