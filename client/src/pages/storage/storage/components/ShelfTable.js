@@ -24,10 +24,13 @@ const ShelfTable = ({ rack, shelfId }) => {
               </Link>
             </h5>
             {spot.storedItems.length === 0 ? (
-              <h6 className="text-center">No items stored yet</h6>
+              <div>
+                <hr />
+                <h6 className="pt-3 text-center">No items stored yet</h6>
+              </div>
             ) : null}
 
-            <ul className="list-group">
+            <ul className="list-group list-group-flush ">
               {spot.storedItems.map((storedItem, itemIndex) => {
                 if (storedItem.kind === "product") {
                   return (
@@ -57,9 +60,9 @@ const ShelfTable = ({ rack, shelfId }) => {
   return (
     <div className="card card-body mb-3">
       <div className="d-flex flex-wrap justify-content-between mb-3">
-        <h2>Shelf {shelfLabel}</h2>
+        <h2 className="my-2 ml-4">Shelf {shelfLabel}</h2>
 
-        <div>
+        <div className="my-2 mr-4">
           <Link
             to={`/shelfSpot/create/${storageId}/${rackId}/${shelfId}?type=shelfSpot`}
           >

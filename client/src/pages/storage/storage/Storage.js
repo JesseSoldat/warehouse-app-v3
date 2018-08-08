@@ -77,9 +77,13 @@ class Storage extends Component {
     if (loading) {
       content = <Spinner />;
     }
+    // storage is a box and we have fetched the box
+    else if (storageType === "box" && box && box._id === boxId) {
+      content = <BoxTable box={box} />;
+    }
     // if the store rack id is not the same are the URL rack id
     // wait until the data is fetched and the store gets the correct rack
-    else if (storageType === "rack" && rack && rack._id === rackId) {
+    else if (rack && rack._id === rackId) {
       content = (
         <TableContainer
           rack={rack}
@@ -88,8 +92,6 @@ class Storage extends Component {
           shelfSpotId={shelfSpotId}
         />
       );
-    } else if (storageType === "box" && box && box._id === boxId) {
-      content = <BoxTable box={box} />;
     }
 
     return (

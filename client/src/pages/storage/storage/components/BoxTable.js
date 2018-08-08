@@ -30,7 +30,7 @@ const BoxTable = ({ box }) => {
             {!shelfSpot && (
               <tr className="py-4">
                 <td>
-                  <h3 className="pt-1">The Box is not Stored</h3>
+                  <h4 className="pt-1">The Box is not Stored</h4>
                 </td>
                 <td>
                   <Link to="/barcode/scan?type=linkBoxToSpot">
@@ -45,7 +45,7 @@ const BoxTable = ({ box }) => {
             {storedItems.length === 0 && (
               <tr className="py-4">
                 <td>
-                  <h3 className="pt-1">No Products Stored</h3>
+                  <h4 className="pt-1">No Products Stored</h4>
                 </td>
                 <td>
                   <Link to="/barcode/scan?type=linkProductToBox">

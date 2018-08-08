@@ -18,7 +18,7 @@ const RackTable = ({ rack }) => {
         <th scope="col">
           <Link to={`/shelf/create/${storageId}/${rackId}?type=shelf`}>
             <button className="btn btn-default">
-              <i className="fas fa-plus-circle mr-2" /> New Shelf
+              <i className="fas fa-plus-circle mr-2" />New Shelf
             </button>
           </Link>
         </th>
@@ -29,7 +29,8 @@ const RackTable = ({ rack }) => {
         ) : (
           [...Array(max).keys()].map(key => (
             <th key={`spot-headrow${key + 1}`} scope="col">
-              Spot {key + 1}
+              <span className="d-none d-md-inline">Shelf</span>{" "}
+              <span className="d-none d-sm-inline">Spot</span> {key + 1}
             </th>
           ))
         )}
@@ -52,18 +53,23 @@ const RackTable = ({ rack }) => {
               </Link>
             </th>
             {shelfSpots.length > 0 &&
-              shelfSpots.map((shelfSpot, i) => (
-                <td key={`spot-body${i}`}>
-                  <Link
-                    to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${
-                      shelfSpot._id
-                    }?type=shelfSpot`}
-                  >
-                    Items{" "}
-                    {shelfSpot.storedItems ? shelfSpot.storedItems.length : 0}
-                  </Link>
-                </td>
-              ))}
+              shelfSpots.map((shelfSpot, i) => {
+                const length = shelfSpot.storedItems.length;
+                return (
+                  <td key={`spot-body${i}`}>
+                    <Link
+                      to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${
+                        shelfSpot._id
+                      }?type=shelfSpot`}
+                    >
+                      {shelfSpot.storedItems ? length : 0}{" "}
+                      <span className="d-none d-sm-inline">
+                        {length === 1 ? "Item" : "Items"}
+                      </span>
+                    </Link>
+                  </td>
+                );
+              })}
           </tr>
         ))
       )}
