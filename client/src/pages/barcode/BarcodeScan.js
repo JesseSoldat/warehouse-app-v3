@@ -46,7 +46,7 @@ class BarcodeScan extends Component {
 
     const UserCameraButton = (
       <button
-        className="btn btn-primary btn-block my-4"
+        className="btn btn-primary mt-3 float-right"
         onClick={this.handleClickUseCamera}
       >
         <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
@@ -57,36 +57,80 @@ class BarcodeScan extends Component {
     return (
       <div className="container">
         <Message />
-        <Heading title="Scan Item" />
+        <Heading title="Link Item" />
 
-        <div className="row">
-          <div className="col-xs-12 col-sm-8 col-md-6 mx-auto">
-            {scanning ? (
-              <Fragment>
-                <div>
-                  <p>{result}</p>
-                </div>
-                <QrReader
-                  delay={delay}
-                  onError={this.handleErr}
-                  onScan={this.handleScan}
-                  className="mx-auto w-100"
-                />
-              </Fragment>
-            ) : (
-              <div style={{ height: "200px" }}>
-                <i className="fas fa-times-circle fa-10x mr-2" />
+        <ul className="nav nav-tabs" id="myTab" role="tablist">
+          <li className="nav-item">
+            <a
+              className="nav-link active"
+              id="home-tab"
+              data-toggle="tab"
+              href="#home"
+              role="tab"
+              aria-controls="home"
+              aria-selected="true"
+            >
+              Scan
+            </a>
+          </li>
+          <li className="nav-item">
+            <a
+              className="nav-link"
+              id="profile-tab"
+              data-toggle="tab"
+              href="#profile"
+              role="tab"
+              aria-controls="profile"
+              aria-selected="false"
+            >
+              Manual Link
+            </a>
+          </li>
+        </ul>
 
-                <i className="fas fa-camera-retro fa-10x mr-2" />
-                <h1>Camera is turned off</h1>
-
-                {/* <img
-                  className="mx-auto w-100"
-                  src={require("../../images/noCamera.png")}
-                /> */}
+        <div className="tab-content" id="myTabContent">
+          <div
+            className="tab-pane fade show active"
+            id="home"
+            role="tabpanel"
+            aria-labelledby="home-tab"
+          >
+            <div className="row">
+              <div className="col-12">{UserCameraButton}</div>
+            </div>
+            <div className="row">
+              <div className="col-xs-12 col-sm-8 col-md-6 mx-auto">
+                {/* do not delete the span */}
+                <span />
+                {scanning ? (
+                  <Fragment>
+                    <div>
+                      <p className="pt-3">{result}</p>
+                    </div>
+                    <QrReader
+                      delay={delay}
+                      onError={this.handleErr}
+                      onScan={this.handleScan}
+                      className="mx-auto w-100"
+                    />
+                  </Fragment>
+                ) : (
+                  <div className="text-center" style={{ height: "200px" }}>
+                    <h1>Camera is turned off</h1>
+                    <i className="fas fa-camera-retro fa-10x mt-2 mr-2" />
+                  </div>
+                )}
               </div>
-            )}
-            {UserCameraButton}
+            </div>
+          </div>
+
+          <div
+            className="tab-pane fade"
+            id="profile"
+            role="tabpanel"
+            aria-labelledby="profile-tab"
+          >
+            Manual Link
           </div>
         </div>
       </div>
