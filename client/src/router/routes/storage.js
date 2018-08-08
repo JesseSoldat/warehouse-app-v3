@@ -5,7 +5,7 @@ import PrivateRoute from "../PrivateRoute";
 import Storages from "../../pages/storage/storages/Storages";
 import Details from "../../pages/storage/storages/Details";
 import Storage from "../../pages/storage/storage/Storage";
-import Box from "../../pages/storage/Box/Box";
+import Box from "../../pages/storage/box/Box";
 import StorageCreate from "../../pages/storage/form/StorageCreate";
 import StorageEdit from "../../pages/storage/form/StorageEdit";
 import StorageSearch from "../../pages/storage/search/StorageSearch";

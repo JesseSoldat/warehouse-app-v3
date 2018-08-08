@@ -52,10 +52,10 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
     box = shelfSpot.storedItems.find(
       storedItem => storedItem.item._id === boxId
     );
-    console.log("box");
-    console.log(box);
-    boxLabel = box.item;
-    storedItems = box.item;
+    // console.log("box");
+    // console.log(box);
+    boxLabel = box.item.boxLabel;
+    storedItems = box.item.storedItems;
   }
 
   // have products

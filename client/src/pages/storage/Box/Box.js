@@ -34,8 +34,7 @@ class Box extends Component {
 
     // Box has NO location
     if (match.path === "/box/:boxId") {
-      console.log("Box with NO location");
-
+      // console.log("Box with NO location");
       const { boxId } = match.params;
       // check for box in the store
       if (box && box._id === boxId) {
@@ -46,7 +45,7 @@ class Box extends Component {
     }
     // Box has a Location
     else {
-      console.log("Box with location");
+      // console.log("Box with location");
       const rackId = match.params.rackId;
 
       if (rack && rack._id === rackId) return;
@@ -77,7 +76,7 @@ class Box extends Component {
     }
     // have location
     else if (match.path !== "/box/:boxId") {
-      if (rack) {
+      if (rack && rack._id === rackId) {
         content = (
           <BoxTable
             rack={rack}

@@ -162,7 +162,7 @@ const BreadCrumb2 = ({ match }) => {
       );
       link5 = createLink(
         "ShelfSpot",
-        `/shelf/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+        `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
       );
       text = createText("Box");
       break;
