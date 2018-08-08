@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
 
 // common components
@@ -6,17 +6,12 @@ import Spinner from "../../../components/Spinner";
 import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
 // custom components
-import BoxTable from "./components/BoxTable";
 import TableContainer from "./components/TableContainer";
 // utils
 import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
-import {
-  startGetStorage,
-  startGetRack,
-  startGetBox
-} from "../../../actions/storage";
+import { startGetStorage, startGetRack } from "../../../actions/storage";
 import { serverMsg } from "../../../actions/ui";
 
 class Storage extends Component {
@@ -38,19 +33,7 @@ class Storage extends Component {
 
   // Api calls ----------------------------
   getStorage = () => {
-    const { match, rack, box, startGetRack } = this.props;
-
-    // check for box
-    // const storageType = getUrlParameter("type");
-    // if (storageType === "box") {
-    //   const { boxId } = match.params;
-    //   // check for box in the store
-    //   if (box && box._id === boxId) {
-    //     return;
-    //   }
-    //   this.props.startGetBox(boxId);
-    //   return;
-    // }
+    const { match, rack, startGetRack } = this.props;
 
     const rackId = match.params.rackId;
 
@@ -61,11 +44,10 @@ class Storage extends Component {
 
   render() {
     // props
-    const { loading, rack, box, match } = this.props;
+    const { loading, rack, match } = this.props;
     const { rackId } = match.params;
     const { shelfId } = match.params;
     const { shelfSpotId } = match.params;
-    const { boxId } = match.params;
 
     // params
     const storageType = getUrlParameter("type");
@@ -77,22 +59,16 @@ class Storage extends Component {
     if (loading) {
       content = <Spinner />;
     }
-    // storage is a box and we have fetched the box
-    // else if (storageType === "box" && box && box._id === boxId) {
-    //   content = <BoxTable box={box} />;
-    // }
+
     // if the store rack id is not the same are the URL rack id
     // wait until the data is fetched and the store gets the correct rack
     else if (rack && rack._id === rackId) {
-      // console.log("storage rack", rack);
-
       content = (
         <TableContainer
           rack={rack}
           storageType={storageType}
           shelfId={shelfId}
           shelfSpotId={shelfSpotId}
-          boxId={boxId}
         />
       );
     }
@@ -112,11 +88,10 @@ class Storage extends Component {
 const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
   rack: storage.rack,
-  box: storage.box,
   loading: ui.loading
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetStorage, startGetRack, startGetBox }
+  { serverMsg, startGetStorage, startGetRack }
 )(Storage);

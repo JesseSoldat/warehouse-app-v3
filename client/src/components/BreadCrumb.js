@@ -1,8 +1,6 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
 
-import allRoutes from "../router/routes/allRoutes";
-
 const BreadCrumb2 = ({ match }) => {
   const { params, path } = match;
   const {
@@ -12,10 +10,11 @@ const BreadCrumb2 = ({ match }) => {
     storageId,
     rackId,
     shelfId,
-    shelfSpotId
+    shelfSpotId,
+    boxId
   } = params;
 
-  let link1, link2, link3, link4, link5, text;
+  let link1, link2, link3, link4, link5, link6, text;
 
   const createLink = (link, url) => (
     <li className="breadcrumb-item">
@@ -108,7 +107,7 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("Create");
       break;
 
-    // STORAGES ROUTES
+    // STORAGES ROUTES ---------------------------------------------
     case "/storages":
       link1 = createLink("Dashboard", "/dashboard");
       text = createText("Search");
@@ -168,7 +167,7 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("Box");
       break;
 
-    // STORAGE CREATE ----------------------------------
+    // STORAGE CREATE
     case "/storage/create":
       link1 = createLink("Storages", "/storages");
       text = createText("Create");
@@ -203,7 +202,7 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("Create");
       break;
 
-    // STORAGE EDIT --------------------------------------------
+    // STORAGE EDIT
     case "/storage/edit/:storageId":
       link1 = createLink("Storages", "/storages");
       link2 = createLink("Storage", `/storage/${storageId}`);
@@ -239,6 +238,31 @@ const BreadCrumb2 = ({ match }) => {
       link5 = createLink(
         "ShelfSpot",
         `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+      );
+      text = createText("Edit");
+      break;
+
+    // No location
+    case "/box/edit/:boxId":
+      link1 = createLink("Box", `/box/${boxId}?type=box`);
+      text = createText("Edit");
+      break;
+
+    // have location
+    case "/box/edit/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId":
+      link1 = createLink("Storage", `/storage/${storageId}`);
+      link2 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link3 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      link4 = createLink(
+        "ShelfSpot",
+        `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+      );
+      link5 = createLink(
+        "Box",
+        `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`
       );
       text = createText("Edit");
       break;

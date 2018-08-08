@@ -4,14 +4,12 @@ import React from "react";
 import RackTable from "./RackTable";
 import ShelfTable from "./ShelfTable";
 import ShelfSpotTable from "./ShelfSpotTable";
-import BoxTable from "./BoxTable";
 
 const TableContainer = ({
   rack = null,
   storageType = null,
   shelfId,
-  shelfSpotId,
-  boxId
+  shelfSpotId
 }) => {
   if (!rack || !storageType) return null;
 
@@ -35,16 +33,6 @@ const TableContainer = ({
         />
       );
       break;
-
-    case "box":
-      content = (
-        <BoxTable
-          rack={rack}
-          shelfId={shelfId}
-          shelfSpotId={shelfSpotId}
-          boxId={boxId}
-        />
-      );
 
     default:
       break;

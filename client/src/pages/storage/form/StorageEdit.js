@@ -29,9 +29,9 @@ class StorageEdit extends Component {
   getFormData() {
     const type = getUrlParameter("type");
     const { match, storages, rack } = this.props;
-    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+    const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
 
-    const ids = { storageId, rackId, shelfId, shelfSpotId };
+    const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
 
     switch (type) {
       case "storage":
@@ -48,6 +48,10 @@ class StorageEdit extends Component {
 
       case "shelfSpot":
         this.setState({ type, id: shelfSpotId, ids });
+        break;
+
+      case "box":
+        this.setState({ type, id: boxId, ids });
         break;
 
       default:
@@ -117,7 +121,7 @@ class StorageEdit extends Component {
     // props
     const { loading, storages, rack } = this.props;
     const { type, ids } = this.state;
-    const { storageId, shelfId, shelfSpotId } = ids;
+    const { storageId, shelfId, shelfSpotId, boxId } = ids;
 
     let storage, content, button;
 
@@ -179,15 +183,19 @@ class StorageEdit extends Component {
       content = contentObj.content;
       button = contentObj.button;
     } else if (rack && type === "box") {
-      console.log("BOX");
-
       const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
-
       const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
-      console.log(shelfSpot);
+      const box = shelfSpot.storedItems.find(
+        storedItem => storedItem.item._id === boxId
+      );
+      console.log("box");
+      console.log(box.item);
 
-      // get the box from the store items
-      //     defaultState.boxLabel = storage.boxLabel;
+      defaultState.boxLabel = box.item.boxLabel;
+
+      const contentObj = this.renderContent(type, defaultState);
+      content = contentObj.content;
+      button = contentObj.button;
     }
 
     return (

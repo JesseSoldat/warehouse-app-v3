@@ -6,25 +6,21 @@ import CardList from "../../../../components/CardList";
 // helpers
 import productCardData from "../helpers/productCardData";
 
-const BoxTable = ({ rack, shelfId, shelfSpotId, boxId }) => {
-  let shelf, shelfSpot, box, notStored, haveProducts, noProducts;
+const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
+  let rackId,
+    storageId,
+    shelf,
+    shelfSpot,
+    box,
+    notStored,
+    haveProducts,
+    noProducts,
+    boxLabel;
+  let storedItems = [];
+  let editLink = `/box/edit/${boxId}?type=box`;
 
-  // Navigated to a box that has been stored
-  if (shelfId && shelfSpotId && boxId) {
-    shelf = rack.shelves.find(shelf => shelf._id === shelfId);
-    // console.log("shelf");
-    // console.log(shelf);
-    shelfSpot = shelf.shelfSpots.find(spot => spot._id === shelfSpotId);
-    // console.log("shelfSpot");
-    // console.log(shelfSpot);
-    box = shelfSpot.storedItems.find(
-      storedItem => storedItem.item._id === boxId
-    );
-    console.log("box");
-    console.log(box);
-  }
-  // Navigated to a box that has not been stored
-  else {
+  // NO location
+  if (!location) {
     notStored = (
       <tr className="py-4">
         <td>
@@ -40,10 +36,27 @@ const BoxTable = ({ rack, shelfId, shelfSpotId, boxId }) => {
       </tr>
     );
   }
+  // have location
+  else {
+    rackId = rack._id;
+    storageId = rack.storage._id;
 
-  if (!box) return null;
+    editLink = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
 
-  const { boxLabel, storedItems = [] } = box.item;
+    shelf = rack.shelves.find(shelf => shelf._id === shelfId);
+    // console.log("shelf");
+    // console.log(shelf);
+    shelfSpot = shelf.shelfSpots.find(spot => spot._id === shelfSpotId);
+    // console.log("shelfSpot");
+    // console.log(shelfSpot);
+    box = shelfSpot.storedItems.find(
+      storedItem => storedItem.item._id === boxId
+    );
+    console.log("box");
+    console.log(box);
+    boxLabel = box.item;
+    storedItems = box.item;
+  }
 
   // have products
   if (storedItems.length > 0) {
@@ -73,7 +86,7 @@ const BoxTable = ({ rack, shelfId, shelfSpotId, boxId }) => {
         <h2 className="my-2 ml-2">Box {boxLabel}</h2>
 
         <div>
-          <Link to={`/box/edit/${boxId}?type=box`}>
+          <Link to={editLink}>
             <button className="btn btn-default mr-2">
               <i className="fas fa-edit mr-2" /> Edit Box
             </button>
