@@ -6,10 +6,66 @@ import CardList from "../../../../components/CardList";
 // helpers
 import productCardData from "../helpers/productCardData";
 
-const BoxTable = ({ box }) => {
-  console.log(box);
-  const { _id: boxId, boxLabel, storedItems = [] } = box;
-  const { shelfSpot } = box;
+const BoxTable = ({ rack, shelfId, shelfSpotId, boxId }) => {
+  let shelf, shelfSpot, box, notStored, haveProducts, noProducts;
+
+  // Navigated to a box that has been stored
+  if (shelfId && shelfSpotId && boxId) {
+    shelf = rack.shelves.find(shelf => shelf._id === shelfId);
+    // console.log("shelf");
+    // console.log(shelf);
+    shelfSpot = shelf.shelfSpots.find(spot => spot._id === shelfSpotId);
+    // console.log("shelfSpot");
+    // console.log(shelfSpot);
+    box = shelfSpot.storedItems.find(
+      storedItem => storedItem.item._id === boxId
+    );
+    console.log("box");
+    console.log(box);
+  }
+  // Navigated to a box that has not been stored
+  else {
+    notStored = (
+      <tr className="py-4">
+        <td>
+          <h4 className="pt-1">The Box is not Stored</h4>
+        </td>
+        <td>
+          <Link to="/barcode/scan?type=linkBoxToSpot">
+            <button className="btn btn-default float-right">
+              <i className="fas fa-archive mr-2" /> Store Box
+            </button>
+          </Link>
+        </td>
+      </tr>
+    );
+  }
+
+  if (!box) return null;
+
+  const { boxLabel, storedItems = [] } = box.item;
+
+  // have products
+  if (storedItems.length > 0) {
+    haveProducts = <CardList data={productCardData(storedItems)} />;
+  }
+  // no products
+  else {
+    noProducts = (
+      <tr className="py-4">
+        <td>
+          <h4 className="pt-1">No Products Stored</h4>
+        </td>
+        <td>
+          <Link to="/barcode/scan?type=linkProductToBox">
+            <button className="btn btn-default float-right">
+              <i className="fas fa-link mr-2" /> Link Product
+            </button>
+          </Link>
+        </td>
+      </tr>
+    );
+  }
 
   return (
     <div className="card card-body mb-3" style={{ minHeight: "400px" }}>
@@ -24,56 +80,18 @@ const BoxTable = ({ box }) => {
           </Link>
         </div>
       </div>
-      <div className="table-responsive-xs table-hover table-responsive-sm mb-5">
+
+      <div className="table-responsive-xs table-hover table-responsive-sm">
         <table className="table col-12 mt-5">
           <tbody>
-            {!shelfSpot && (
-              <tr className="py-4">
-                <td>
-                  <h4 className="pt-1">The Box is not Stored</h4>
-                </td>
-                <td>
-                  <Link to="/barcode/scan?type=linkBoxToSpot">
-                    <button className="btn btn-default float-right">
-                      <i className="fas fa-archive mr-2" /> Store Box
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-            )}
-
-            {storedItems.length === 0 && (
-              <tr className="py-4">
-                <td>
-                  <h4 className="pt-1">No Products Stored</h4>
-                </td>
-                <td>
-                  <Link to="/barcode/scan?type=linkProductToBox">
-                    <button className="btn btn-default float-right">
-                      <i className="fas fa-link mr-2" /> Link Product
-                    </button>
-                  </Link>
-                </td>
-              </tr>
-            )}
+            {notStored}
+            {noProducts}
           </tbody>
         </table>
       </div>
 
-      <CardList data={productCardData(storedItems)} />
+      {haveProducts}
     </div>
-
-    // {!shelfSpot && (
-    //   <div className="p-3 mt-5 mb-3">
-    //     <h3>The Box is not Stored</h3>
-    //   </div>
-    // )}
-    // {storedItems.length === 0 ? (
-    //   <div className="p-3">
-    //     <h3>No Products Stored</h3>
-    //   </div>
-    // ) : (
-    // )}
   );
 };
 

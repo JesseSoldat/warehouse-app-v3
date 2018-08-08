@@ -43,7 +43,11 @@ const ShelfTable = ({ rack, shelfId }) => {
                 } else {
                   return (
                     <li key={itemIndex} className="text-center list-group-item">
-                      <Link to={`/box/${storedItem.item._id}?type=box`}>
+                      <Link
+                        to={`/box/${storageId}/${rackId}/${shelfId}/${
+                          spot._id
+                        }/${storedItem.item._id}?type=box`}
+                      >
                         Box {storedItem.item.boxLabel}
                       </Link>
                     </li>

@@ -39,7 +39,12 @@ module.exports = (app, io) => {
           path: "shelves",
           populate: {
             path: "shelfSpots",
-            populate: { path: "storedItems.item " }
+            populate: {
+              path: "storedItems.item ",
+              populate: {
+                path: "storedItems"
+              }
+            }
           }
         })
         .populate("storage");

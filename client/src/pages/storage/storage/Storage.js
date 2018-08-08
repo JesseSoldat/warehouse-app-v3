@@ -41,16 +41,16 @@ class Storage extends Component {
     const { match, rack, box, startGetRack } = this.props;
 
     // check for box
-    const storageType = getUrlParameter("type");
-    if (storageType === "box") {
-      const { boxId } = match.params;
-      // check for box in the store
-      if (box && box._id === boxId) {
-        return;
-      }
-      this.props.startGetBox(boxId);
-      return;
-    }
+    // const storageType = getUrlParameter("type");
+    // if (storageType === "box") {
+    //   const { boxId } = match.params;
+    //   // check for box in the store
+    //   if (box && box._id === boxId) {
+    //     return;
+    //   }
+    //   this.props.startGetBox(boxId);
+    //   return;
+    // }
 
     const rackId = match.params.rackId;
 
@@ -78,18 +78,21 @@ class Storage extends Component {
       content = <Spinner />;
     }
     // storage is a box and we have fetched the box
-    else if (storageType === "box" && box && box._id === boxId) {
-      content = <BoxTable box={box} />;
-    }
+    // else if (storageType === "box" && box && box._id === boxId) {
+    //   content = <BoxTable box={box} />;
+    // }
     // if the store rack id is not the same are the URL rack id
     // wait until the data is fetched and the store gets the correct rack
     else if (rack && rack._id === rackId) {
+      // console.log("storage rack", rack);
+
       content = (
         <TableContainer
           rack={rack}
           storageType={storageType}
           shelfId={shelfId}
           shelfSpotId={shelfSpotId}
+          boxId={boxId}
         />
       );
     }
@@ -108,7 +111,6 @@ class Storage extends Component {
 
 const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
-  storage: storage.storage,
   rack: storage.rack,
   box: storage.box,
   loading: ui.loading
