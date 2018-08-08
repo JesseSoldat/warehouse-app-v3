@@ -268,11 +268,18 @@ const BreadCrumb2 = ({ match }) => {
       break;
 
     // BARCODE ROUTES ------------------------------------------
+    // scan
     case "/barcode/scan":
       link1 = createLink("Dashboard", "/dashboard");
-      text = createText("Search");
+      text = createText("Scan");
       break;
 
+    case "/barcode/scan/:boxId":
+      link1 = createLink("Box", `/box/${boxId}?type=box`);
+      text = createText("Scan");
+      break;
+
+    // create
     case "/barcode/create":
       link1 = createLink("Dashboard", "/dashboard");
       text = createText("Search");

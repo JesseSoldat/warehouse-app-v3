@@ -13,13 +13,17 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
     shelfSpot,
     box,
     notStored,
-    haveProducts,
     noProducts,
+    haveProducts,
     boxLabel;
   let storedItems = [];
-  let editLink = `/box/edit/${boxId}?type=box`;
 
-  // NO location
+  // default URL for when the box has no location
+  let editUrl = `/box/edit/${boxId}?type=box`;
+  let boxToSpotUrl = `/barcode/scan/${boxId}?type=linkBoxToSpot`;
+  let productToBoxUrl = `/barcode/scan/${boxId}?type=linkProductToBox`;
+
+  // NO location ----------------------------------------------
   if (!location) {
     notStored = (
       <tr className="py-4">
@@ -27,7 +31,7 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
           <h4 className="pt-1">The Box is not Stored</h4>
         </td>
         <td>
-          <Link to="/barcode/scan?type=linkBoxToSpot">
+          <Link to={boxToSpotUrl}>
             <button className="btn btn-default float-right">
               <i className="fas fa-archive mr-2" /> Store Box
             </button>
@@ -36,12 +40,15 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
       </tr>
     );
   }
-  // have location
+  // have location --------------------------------------
   else {
+    // change the URL for a box with a location
+    editUrl = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
+    boxToSpotUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkBoxToSpot`;
+    productToBoxUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox`;
+    // get the box from the RACK object
     rackId = rack._id;
     storageId = rack.storage._id;
-
-    editLink = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
 
     shelf = rack.shelves.find(shelf => shelf._id === shelfId);
     // console.log("shelf");
@@ -58,19 +65,19 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
     storedItems = box.item.storedItems;
   }
 
-  // have products
+  // have products --------------------------------------------
   if (storedItems.length > 0) {
     haveProducts = <CardList data={productCardData(storedItems)} />;
   }
-  // no products
-  else {
+  // no products ------------------------------------------------
+  if (storedItems.length === 0) {
     noProducts = (
       <tr className="py-4">
         <td>
           <h4 className="pt-1">No Products Stored</h4>
         </td>
         <td>
-          <Link to="/barcode/scan?type=linkProductToBox">
+          <Link to={productToBoxUrl}>
             <button className="btn btn-default float-right">
               <i className="fas fa-link mr-2" /> Link Product
             </button>
@@ -86,7 +93,7 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
         <h2 className="my-2 ml-2">Box {boxLabel}</h2>
 
         <div>
-          <Link to={editLink}>
+          <Link to={editUrl}>
             <button className="btn btn-default mr-2">
               <i className="fas fa-edit mr-2" /> Edit Box
             </button>
