@@ -107,9 +107,17 @@ const StorageRoutes = [
     component={Storage}
     exact={true}
   />,
+  // NO LOCATION
   <PrivateRoute
     key="/box/:boxId"
     path="/box/:boxId"
+    component={Storage}
+    exact={true}
+  />,
+  // HAVE LOCATION
+  <PrivateRoute
+    key="/box/location/:boxId"
+    path="/box/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
     component={Storage}
     exact={true}
   />

@@ -150,7 +150,21 @@ const BreadCrumb2 = ({ match }) => {
       break;
 
     case "/box/:boxId":
-      link1 = createLink("Storages", "/storages");
+      link1 = createLink("Store", "/barcode/scan?type=linkBoxToSpot");
+      text = createText("Box");
+      break;
+
+    case "/box/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId":
+      link2 = createLink("Storage", `/storage/${storageId}`);
+      link3 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link4 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      link5 = createLink(
+        "ShelfSpot",
+        `/shelf/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+      );
       text = createText("Box");
       break;
 

@@ -35,7 +35,13 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
       {kind === "product" ? (
         <Link to={`/products/${item._id}`}>{item.productName}</Link>
       ) : (
-        <Link to={`/box/${item._id}?type=box`}>Box {item.boxLabel}</Link>
+        <Link
+          to={`/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${
+            item._id
+          }?type=box`}
+        >
+          Box {item.boxLabel}
+        </Link>
       )}
     </td>
   );

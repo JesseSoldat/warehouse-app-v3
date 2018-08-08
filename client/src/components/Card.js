@@ -5,6 +5,7 @@ import truncateStr from "../utils/stringManipulation/truncateStr";
 
 const Card = ({ data }) => {
   const {
+    cardSize = "240px",
     title = "",
     picture = "",
     subtitle = "",
@@ -16,7 +17,7 @@ const Card = ({ data }) => {
     picSrc = "http://via.placeholder.com/150x100"
   } = data;
   return (
-    <div className="card mb-3" style={{ width: "240px" }}>
+    <div className="card mb-3" style={{ width: cardSize }}>
       {showPic && (
         <img
           className="card-img-top"

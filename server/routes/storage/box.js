@@ -33,7 +33,16 @@ module.exports = (app, io) => {
     const { boxId } = req.params;
     try {
       const box = await Box.findById(boxId)
-        .populate("shelfSpots")
+        .populate({
+          path: "shelfSpot",
+          populate: {
+            path: "shelf",
+            populate: {
+              path: "rack",
+              populate: "storage"
+            }
+          }
+        })
         .populate("storedItems");
 
       serverRes(res, 200, null, box);
@@ -49,6 +58,9 @@ module.exports = (app, io) => {
     const box = new Box(req.body);
     try {
       await box.save();
+
+      emit(req.user._id);
+
       const msg = msgObj("Box created.", "blue");
       serverRes(res, 200, msg, box);
     } catch (err) {
