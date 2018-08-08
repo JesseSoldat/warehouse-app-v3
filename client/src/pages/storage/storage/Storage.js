@@ -83,7 +83,6 @@ class Storage extends Component {
       content = (
         <TableContainer
           rack={rack}
-          box={box}
           storageType={storageType}
           shelfId={shelfId}
           shelfSpotId={shelfSpotId}

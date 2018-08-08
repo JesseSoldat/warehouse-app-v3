@@ -32,13 +32,11 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
 
   const getTableCell = (item, kind, itemIndex) => (
     <td key={`cellData-${itemIndex}`}>
-      <Link
-        to={`/${kind === "product" ? "products" : "storages"}/${item._id}${
-          kind === "product" ? "" : "?type=box"
-        }`}
-      >
-        {kind === "product" ? item.productName : `Box ${item.boxLabel}`}
-      </Link>
+      {kind === "product" ? (
+        <Link to={`/products/${item._id}`}>{item.productName}</Link>
+      ) : (
+        <Link to={`/box/${item._id}?type=box`}>Box {item.boxLabel}</Link>
+      )}
     </td>
   );
 

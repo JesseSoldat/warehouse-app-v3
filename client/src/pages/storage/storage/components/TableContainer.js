@@ -39,7 +39,7 @@ const TableContainer = ({
       break;
   }
 
-  return { content };
+  return content;
 };
 
 export default TableContainer;
