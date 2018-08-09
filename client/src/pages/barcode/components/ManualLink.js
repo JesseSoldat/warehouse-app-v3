@@ -12,122 +12,176 @@ const ManualLink = ({
   shelfSpotId,
   handleSelectChange
 }) => {
-  let spinner;
+  let spinner, storages, racks, shelves, shelfSpots;
 
-  // shelfSpot --------------------------------------------
-
-  // shelf ------------------------------------------------
-  let shelfOptions = <option>Pick a Rack first</option>;
-
-  let shelfSelect = (
-    <div className="form-group">
-      <label>Pick a Rack</label>
-      <select className="form-control" id="rackSelect" onChange={rackChange}>
-        {shelfOptions}
-      </select>
-    </div>
-  );
-
-  // rack -----------------------------------------------
-  const rackChange = e => {
+  const onChange = e => {
+    const { name, value } = e.target;
     const obj = {
-      rackId: e.target.value
+      [name]: value
     };
     handleSelectChange(obj);
   };
 
-  let defaultRackOptions = [
-    <option key="rackDefault">Pick a Storage first</option>
+  const createSelect = (label, name, options, disabled = false) => {
+    return (
+      <div className="form-group">
+        <label>{label}</label>
+        <select
+          disabled={disabled}
+          className="form-control"
+          name={name}
+          onChange={onChange}
+        >
+          {options}
+        </select>
+      </div>
+    );
+  };
+  // storage -------------------------------------------
+  const storageOptions = [
+    <option key="storageNoValue" value="">
+      Select a Storage
+    </option>
   ];
 
-  let defaultRackSelect = (
-    <div className="form-group">
-      <label>Pick a Rack</label>
-      <select className="form-control" id="rackSelect" onChange={rackChange}>
-        {defaultRackOptions}
-      </select>
-    </div>
+  const storageSelect = createSelect(
+    "Pick a Storage",
+    "storageId",
+    storageOptions
   );
 
-  let rackOptions = [
-    <option key="noValue" value="">
+  // rack -----------------------------------------------
+  const defaultRackOptions = [
+    <option key="rackNoValue">Pick a Storage first</option>
+  ];
+
+  const defaultRackSelect = createSelect(
+    "Pick a Rack",
+    "rackId",
+    defaultRackOptions,
+    true
+  );
+
+  const rackOptions = [
+    <option key="rackNoValue" value="">
       Select a Rack
     </option>
   ];
 
-  let rackSelect = (
+  const rackSelect = (
     <div className="form-group">
       <label>Pick a Rack</label>
-      <select className="form-control" id="rackSelect" onChange={rackChange}>
+      <select className="form-control" name="rackId" onChange={onChange}>
         {rackOptions}
       </select>
     </div>
   );
 
   if (storageId) {
-    const racks = storageIdsEntity[storageId].racks;
-    console.log(racks);
+    racks = storageIdsEntity[storageId].racks;
 
     for (let obj in racks) {
-      let id;
-      let label;
-
-      let rack = racks[obj];
-      id = rack._id;
-      label = rack.rackLabel;
-
+      const rack = racks[obj];
       rackOptions.push(
-        <option key={id} value={id}>
-          {label}
+        <option key={rack._id} value={rack._id}>
+          {rack.rackLabel}
         </option>
       );
     }
   }
 
-  // storage -------------------------------------------
-  const storageChange = e => {
-    const obj = {
-      storageId: e.target.value
-    };
-    handleSelectChange(obj);
-  };
+  // shelf ------------------------------------------------
+  const defaultShelfOptions = <option>Pick a Rack first</option>;
 
-  let storageOptions = [];
+  const defaultShelfSelect = createSelect(
+    "Pick a Shelf",
+    "shelfId",
+    defaultShelfOptions,
+    true
+  );
 
-  let storageSelect = (
+  const shelfOptions = [
+    <option key="noValue" value="">
+      Select a Shelf
+    </option>
+  ];
+
+  const shelfSelect = (
     <div className="form-group">
-      <label>Pick a Storage</label>
-      <select
-        className="form-control"
-        id="storageSelect"
-        onChange={storageChange}
-      >
-        <option key="rackDefault" value="">
-          Select a Storage
-        </option>
-        {storageOptions}
+      <label>Pick a Shelf</label>
+      <select className="form-control" name="shelfId" onChange={onChange}>
+        {shelfOptions}
       </select>
     </div>
   );
 
+  if (rackId) {
+    shelves = racks[rackId].shelves;
+    console.log("shelves", shelves);
+
+    for (let obj in shelves) {
+      const shelf = shelves[obj];
+      shelfOptions.push(
+        <option key={shelf._id} value={shelf._id}>
+          {shelf.shelfLabel}
+        </option>
+      );
+    }
+  }
+
+  // shelfSpot --------------------------------------------
+  const defaultShelfSpotOptions = (
+    <option key="noValue" value="">
+      Pick a Shelf first
+    </option>
+  );
+
+  const defaultShelfSpotSelect = createSelect(
+    "Pick a Shelf Spot",
+    "shelfSpotId",
+    defaultShelfSpotOptions,
+    true
+  );
+
+  const shelfSpotOptions = [
+    <option key="noValue" value="">
+      Select a Shelf Spot
+    </option>
+  ];
+
+  const shelfSpotSelect = (
+    <div className="form-group">
+      <label>Pick a Shelf Spot</label>
+      <select className="form-control" name="shelfSpotId" onChange={onChange}>
+        {shelfOptions}
+      </select>
+    </div>
+  );
+
+  if (shelfId) {
+    shelfSpots = shelves[shelfId].shelfSpots;
+    console.log("shelfSpots", shelfSpots);
+
+    for (let obj in shelfSpots) {
+      const shelfSpot = shelfSpots[obj];
+      shelfSpotOptions.push(
+        <option key={shelfSpot._id} value={shelfSpot._id}>
+          {shelfSpot.shelfSpotLabel}
+        </option>
+      );
+    }
+  }
   // render --------------------------------
 
   if (loading) {
     spinner = <Spinner />;
   } else if (storageIdsEntity) {
-    // console.log(storageIdsEntity);
-
     for (let obj in storageIdsEntity) {
-      let id;
-      let label;
-
-      let storage = storageIdsEntity[obj];
-      id = storage._id;
-      label = storage.storageLabel;
+      const storage = storageIdsEntity[obj];
 
       const option = (
-        <option key={id} value={id}>
-          {label}
+        <option key={storage._id} value={storage._id}>
+          {storage.storageLabel}
         </option>
       );
 
@@ -147,7 +201,8 @@ const ManualLink = ({
             <form>
               {storageSelect}
               {storageId ? rackSelect : defaultRackSelect}
-              {shelfSelect}
+              {rackId ? shelfSelect : defaultShelfSelect}
+              {shelfId ? shelfSpotSelect : defaultShelfSpotSelect}
             </form>
           )}
         </div>
