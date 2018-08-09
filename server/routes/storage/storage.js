@@ -19,6 +19,30 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
+  // storage ids
+  app.get("/api/storages/ids", isAuth, async (req, res) => {
+    try {
+      const storages = await Storage.find({}).populate({
+        path: "racks",
+        select: ["_id", "rackLabel"],
+        populate: {
+          path: "shelves",
+          select: ["_id", "shelfLabel"],
+          populate: {
+            path: "shelfSpots",
+            select: ["_id", "shelfSpotLabel"]
+          }
+        }
+      });
+
+      serverRes(res, 200, null, storages);
+    } catch (err) {
+      console.log("ERR: GET/api/storages/ids", err);
+
+      const msg = serverMsg("error", "fetch", "storages ids");
+      serverRes(res, 400, msg, null);
+    }
+  });
   // Search storages
   app.get(
     "/api/storages/search/:storageType/:searchBy/:searchText",

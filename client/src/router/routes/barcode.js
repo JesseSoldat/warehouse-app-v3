@@ -2,7 +2,7 @@ import React from "react";
 
 import PrivateRoute from "../PrivateRoute";
 import BarcodeCreate from "../../pages/barcode/BarcodeCreate";
-import BarcodeScan from "../../pages/barcode/BarcodeScan";
+import LinkItems from "../../pages/barcode/LinkItems";
 
 const BarcodeRoutes = [
   // Create -----------------------------
@@ -16,21 +16,21 @@ const BarcodeRoutes = [
   <PrivateRoute
     key="barcode/scan"
     path="/barcode/scan"
-    component={BarcodeScan}
+    component={LinkItems}
     exact
   />,
   // no location
   <PrivateRoute
     key="barcode/scan/box"
     path="/barcode/scan/:boxId"
-    component={BarcodeScan}
+    component={LinkItems}
     exact
   />,
   // have location
   <PrivateRoute
     key="barcode/scan/box/location"
     path="/barcode/scan/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
-    component={BarcodeScan}
+    component={LinkItems}
     exact
   />
 ];

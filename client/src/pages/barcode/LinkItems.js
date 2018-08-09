@@ -1,22 +1,33 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import QrReader from "react-qr-reader";
 
+// custom components
+import BarcodeScan from "./components/BarcodeScan";
+import ManualLink from "./components/ManualLink";
 // common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
+// actions
+import { getStorageIds } from "../../actions/storage";
 
-class BarcodeScan extends Component {
+class LinkItems extends Component {
   state = {
-    delay: 300,
     scanning: true,
     result: ["Scanning, no results so far..."],
     pastScannedItemId: "",
     pastScannedItemType: ""
   };
 
+  // lifecycles --------------------------------------------
+  componentDidMount() {
+    this.props.getStorageIds();
+  }
+
+  // MANUAL LINK ----------------------------------------
+
+  // BARCODE ----------------------------------------------
   handleErr = err => {
     console.log("err");
     console.log(err);
@@ -25,11 +36,11 @@ class BarcodeScan extends Component {
   handleSuccess = () => {};
 
   handleScan = data => {
-    console.log("no data", data);
+    // console.log("no data", data);
 
     if (data) {
-      console.log("data");
-      console.log(data);
+      // console.log("data");
+      // console.log(data);
 
       this.setState({
         result: data
@@ -42,18 +53,6 @@ class BarcodeScan extends Component {
   };
 
   render() {
-    const { result, scanning, delay } = this.state;
-
-    const UserCameraButton = (
-      <button
-        className="btn btn-primary mt-3 float-right"
-        onClick={this.handleClickUseCamera}
-      >
-        <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
-        {scanning ? "Off" : "On"}
-      </button>
-    );
-
     return (
       <div className="container">
         <Message />
@@ -95,33 +94,13 @@ class BarcodeScan extends Component {
             role="tabpanel"
             aria-labelledby="home-tab"
           >
-            <div className="row">
-              <div className="col-12">{UserCameraButton}</div>
-            </div>
-            <div className="row">
-              <div className="col-xs-12 col-sm-8 col-md-6 mx-auto">
-                {/* do not delete the span */}
-                <span />
-                {scanning ? (
-                  <Fragment>
-                    <div>
-                      <p className="pt-3">{result}</p>
-                    </div>
-                    <QrReader
-                      delay={delay}
-                      onError={this.handleErr}
-                      onScan={this.handleScan}
-                      className="mx-auto w-100"
-                    />
-                  </Fragment>
-                ) : (
-                  <div className="text-center" style={{ height: "200px" }}>
-                    <h1>Camera is turned off</h1>
-                    <i className="fas fa-camera-retro fa-10x mt-2 mr-2" />
-                  </div>
-                )}
-              </div>
-            </div>
+            <BarcodeScan
+              result={this.state.result}
+              scanning={this.state.scanning}
+              handleClickUseCamera={this.handleClickUseCamera}
+              handleErr={this.handleErr}
+              handleScan={this.handleScan}
+            />
           </div>
 
           <div
@@ -138,4 +117,12 @@ class BarcodeScan extends Component {
   }
 }
 
-export default connect(null)(BarcodeScan);
+const mapStateToProps = ({ ui, storage }) => ({
+  loading: ui.loading,
+  storageIdsEntity: storage.storageIdsEntity
+});
+
+export default connect(
+  mapStateToProps,
+  { getStorageIds }
+)(LinkItems);

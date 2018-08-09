@@ -12,7 +12,9 @@ export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
 export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 
-export const STORAGE_FETCH_RACK = "STORAGE_FETCH_RACK";
+export const STORAGE_IDS_REQUESTED = "STORAGE_IDS_REQUESTED";
+export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
+
 export const RACK_REQUESTED = "RACK_REQUESTED";
 export const RACK_LOADED = "RACK_LOADED";
 export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
@@ -24,6 +26,95 @@ export const BOX_LOADED = "BOX_LOADED";
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
 
+// GET Storage IDS -------------------------
+export const storageIdsRequested = () => ({
+  type: STORAGE_IDS_REQUESTED
+});
+
+export const storageIdsLoaded = storageIdsEntity => ({
+  type: STORAGE_IDS_LOADED,
+  storageIdsEntity
+});
+
+export const getStorageIds = () => async dispatch => {
+  dispatch(storageIdsRequested());
+  dispatch(loading(true));
+  try {
+    const res = await axios.get("/api/storages/ids");
+
+    const { msg, payload, options } = res.data;
+
+    const storageIdsEntity = {
+      storageIds: [],
+      rackIds: [],
+      shelfIds: [],
+      shelfSpotIds: []
+    };
+
+    payload.forEach(storageObj => {
+      // storages --------------------------------------
+      const storageId = storageObj._id;
+      storageIdsEntity.storageIds.push(storageId);
+
+      const storage = {
+        _id: storageId,
+        storageLabel: storageObj.storageLabel,
+        racks: {}
+      };
+
+      // racks ------------------------------------------
+      storageObj.racks.forEach(rackObj => {
+        const rackId = rackObj._id;
+        storageIdsEntity.rackIds.push({ storageId, rackId });
+
+        const rack = {
+          _id: rackId,
+          rackLabel: rackObj.rackLabel,
+          shelves: {}
+        };
+        storage.racks[rackId] = rack;
+
+        // shelves ----------------------------------------
+        rackObj.shelves.forEach(shelfObj => {
+          const shelfId = shelfObj._id;
+          storageIdsEntity.shelfIds.push({ rackId, shelfId });
+
+          const shelf = {
+            _id: shelfId,
+            shelfLabel: shelfObj.shelfLabel,
+            shelfSpots: {}
+          };
+
+          storage.racks[rackId].shelves[shelfId] = shelf;
+
+          // shelfSpots ----------------------------------------
+          shelfObj.shelfSpots.forEach(shelfSpotObj => {
+            const shelfSpotId = shelfSpotObj._id;
+            storageIdsEntity.shelfSpotIds.push({ shelfId, shelfSpotId });
+
+            const shelfSpot = {
+              _id: shelfSpotId,
+              shelfSpotLabel: shelfSpotObj.shelfSpotLabel
+            };
+
+            storage.racks[rackId].shelves[shelfId].shelfSpots[
+              shelfSpotId
+            ] = shelfSpot;
+          });
+        });
+      });
+
+      storageIdsEntity[storageObj._id] = storage;
+    });
+
+    // console.log("entity");
+    // console.log(storageIdsEntity);
+
+    dispatch(storageIdsLoaded(storageIdsEntity));
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {}
+};
 // Search Storages -------------------------
 export const searchStorages = (search, storageType) => ({
   type: STORAGE_SEARCH,

@@ -1,12 +1,16 @@
 import {
+  // storage
   STORAGE_SEARCH,
   STORAGE_FETCH_ALL,
-  STORAGE_FETCH_ONE,
   STORAGE_UPDATE_ONE,
   STORAGE_DELETE_ONE,
+  STORAGE_IDS_REQUESTED,
+  STORAGE_IDS_LOADED,
+  // rack
   RACK_REQUESTED,
   RACK_LOADED,
   RACK_UPDATE_ONE,
+  // box  DEPRECATE?
   BOX_REQUESTED,
   BOX_LOADED
 } from "../actions/storage";
@@ -14,6 +18,9 @@ import {
 const initialState = {
   storages: [],
   storage: null, // will deprecate
+  storageIdsEntity: null,
+  storageIdsRequsted: false,
+  storageIdsLoaded: false,
   rack: null,
   rackRequsted: false,
   rackLoaded: false,
@@ -30,6 +37,7 @@ export default (state = initialState, action) => {
     search,
     storages,
     storage,
+    storageIdsEntity,
     rack,
     box,
     storageType,
@@ -62,6 +70,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storages: updateStorages
+      };
+
+    case STORAGE_IDS_REQUESTED:
+      return {
+        ...state,
+        storageIdsRequsted: true,
+        storageIdsLoaded: false
+      };
+
+    case STORAGE_IDS_LOADED:
+      const storageIdsCopy = { ...storageIdsEntity };
+      return {
+        ...state,
+        storageIds: storageIdsCopy,
+        storageIdsRequsted: false,
+        storageIdsLoaded: true
       };
 
     case RACK_REQUESTED:
@@ -141,11 +165,6 @@ export default (state = initialState, action) => {
         boxRequsted: false,
         boxLoaded: true
       };
-
-    // DEPRECATE
-
-    // case STORAGE_FETCH_ONE:
-    //   return { ...state, storage, storageType };
 
     case STORAGE_DELETE_ONE:
       return { ...state, storage: null, storages: [] };
