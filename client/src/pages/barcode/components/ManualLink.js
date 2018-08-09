@@ -70,22 +70,18 @@ const ManualLink = ({
   );
 
   // rack -----------------------------------------------
-  const defaultRackOptions = [
-    <option key="rackNoValue">Pick a Storage first</option>
+  const rackOptions = [
+    <option key="rackNoValue" value="">
+      {storageId ? "Select a Rack" : "Pick a Storage first"}
+    </option>
   ];
 
   const defaultRackSelect = createSelect(
     "Pick a Rack",
     "rackId",
-    defaultRackOptions,
+    rackOptions,
     true
   );
-
-  const rackOptions = [
-    <option key="rackNoValue" value="">
-      Select a Rack
-    </option>
-  ];
 
   const rackSelect = (
     <div className="form-group">
@@ -110,20 +106,18 @@ const ManualLink = ({
   }
 
   // shelf ------------------------------------------------
-  const defaultShelfOptions = <option>Pick a Rack first</option>;
+  const shelfOptions = [
+    <option key="shelNoValue" value="">
+      {storageId ? "Select a Shelf" : "Pick a Rack first"}
+    </option>
+  ];
 
   const defaultShelfSelect = createSelect(
     "Pick a Shelf",
     "shelfId",
-    defaultShelfOptions,
+    shelfOptions,
     true
   );
-
-  const shelfOptions = [
-    <option key="noValue" value="">
-      Select a Shelf
-    </option>
-  ];
 
   const shelfSelect = (
     <div className="form-group">
@@ -148,30 +142,24 @@ const ManualLink = ({
   }
 
   // shelfSpot --------------------------------------------
-  const defaultShelfSpotOptions = (
-    <option key="noValue" value="">
-      Pick a Shelf first
+  const shelfSpotOptions = [
+    <option key="shelfSpotNoValue" value="">
+      {storageId ? "Select a Shelf Spot" : "Pick a Shelf first"}
     </option>
-  );
+  ];
 
   const defaultShelfSpotSelect = createSelect(
     "Pick a Shelf Spot",
     "shelfSpotId",
-    defaultShelfSpotOptions,
+    shelfSpotOptions,
     true
   );
-
-  const shelfSpotOptions = [
-    <option key="noValue" value="">
-      Select a Shelf Spot
-    </option>
-  ];
 
   const shelfSpotSelect = (
     <div className="form-group">
       <label>Pick a Shelf Spot</label>
       <select className="form-control" name="shelfSpotId" onChange={onChange}>
-        {shelfOptions}
+        {shelfSpotOptions}
       </select>
     </div>
   );
