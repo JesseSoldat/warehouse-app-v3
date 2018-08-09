@@ -52,8 +52,12 @@ class LinkItems extends Component {
   };
 
   handleSelectChange = obj => {
-    // console.log(obj);
     this.setState({ ...obj });
+  };
+
+  handleLink = e => {
+    e.preventDefault();
+    console.log("type", this.state.type);
   };
 
   // BARCODE ----------------------------------------------
@@ -78,6 +82,9 @@ class LinkItems extends Component {
   };
 
   render() {
+    // navigate from product details page
+    const productId = getUrlParameter("productId");
+
     return (
       <div className="container">
         <Message />
@@ -90,6 +97,8 @@ class LinkItems extends Component {
             handleClickUseCamera={this.handleClickUseCamera}
             handleErr={this.handleErr}
             handleScan={this.handleScan}
+            // from product details
+            productId={productId}
           />
         )}
 
@@ -97,18 +106,23 @@ class LinkItems extends Component {
           <Tabs
             // manual link
             loading={this.props.loading}
+            type={this.state.type}
             storageIdsEntity={this.props.storageIdsEntity}
             storageId={this.state.storageId}
             rackId={this.state.rackId}
             shelfId={this.state.shelfId}
             shelfSpotId={this.state.shelfSpotId}
             handleSelectChange={this.handleSelectChange}
+            handleLink={this.handleLink}
             // scan
             result={this.state.result}
             scanning={this.state.scanning}
             handleClickUseCamera={this.handleClickUseCamera}
             handleErr={this.handleErr}
             handleScan={this.handleScan}
+            // scan && manual link
+            // from product details
+            productId={productId}
           />
         )}
       </div>

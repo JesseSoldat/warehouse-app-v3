@@ -6,6 +6,7 @@ import ManualLink from "./ManualLink";
 
 const Tabs = ({
   // manual link
+  type,
   loading,
   storageIdsEntity,
   storageId,
@@ -13,13 +14,30 @@ const Tabs = ({
   shelfId,
   shelfSpotId,
   handleSelectChange,
+  handleLink,
   // scan
   result,
   scanning,
   handleClickUseCamera,
   handleErr,
-  handleScan
+  handleScan,
+  // scan && manual link
+  productId
 }) => {
+  switch (type) {
+    case "linkBoxToSpot":
+      break;
+
+    case "linkProductToBox":
+      break;
+
+    case "product":
+      break;
+
+    default:
+      break;
+  }
+
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">
@@ -64,6 +82,7 @@ const Tabs = ({
             handleClickUseCamera={handleClickUseCamera}
             handleErr={handleErr}
             handleScan={handleScan}
+            productId={productId}
           />
         </div>
 
@@ -74,6 +93,7 @@ const Tabs = ({
           aria-labelledby="profile-tab"
         >
           <ManualLink
+            type={type}
             storageIdsEntity={storageIdsEntity}
             loading={loading}
             storageId={storageId}
@@ -81,6 +101,8 @@ const Tabs = ({
             shelfId={shelfId}
             shelfSpotId={shelfSpotId}
             handleSelectChange={handleSelectChange}
+            handleLink={handleLink}
+            productId={productId}
           />
         </div>
       </div>

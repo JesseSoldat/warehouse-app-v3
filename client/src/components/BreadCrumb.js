@@ -271,12 +271,17 @@ const BreadCrumb2 = ({ match }) => {
     // scan
     case "/barcode/scan":
       link1 = createLink("Dashboard", "/dashboard");
-      text = createText("Scan");
+      text = createText("Link");
       break;
 
-    case "/barcode/scan/:boxId":
+    case "/barcode/scan/box/:boxId":
       link1 = createLink("Box", `/box/${boxId}?type=box`);
-      text = createText("Scan");
+      text = createText("Link");
+      break;
+
+    case "/barcode/scan/product/:productId":
+      link1 = createLink("Product", `/products/${productId}?`);
+      text = createText("Link");
       break;
 
     // create

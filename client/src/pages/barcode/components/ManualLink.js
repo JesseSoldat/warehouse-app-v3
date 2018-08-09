@@ -4,15 +4,35 @@ import React from "react";
 import Spinner from "../../../components/Spinner";
 
 const ManualLink = ({
+  type,
   loading,
   storageIdsEntity,
   storageId,
   rackId,
   shelfId,
   shelfSpotId,
-  handleSelectChange
+  handleSelectChange,
+  handleLink,
+  productId
 }) => {
-  let spinner, racks, shelves, shelfSpots;
+  let spinner, text, racks, shelves, shelfSpots;
+
+  switch (type) {
+    case "linkBoxToSpot":
+      text = "Box to Shelf Spot";
+      break;
+
+    case "linkProductToBox":
+      text = "Product to Box";
+      break;
+
+    case "product":
+      text = "Store Product";
+      break;
+
+    default:
+      break;
+  }
 
   const onChange = e => {
     const { name, value } = e.target;
@@ -76,20 +96,13 @@ const ManualLink = ({
     </option>
   ];
 
-  const defaultRackSelect = createSelect(
+  const rackDisabled = storageId ? false : true;
+
+  const rackSelect = createSelect(
     "Pick a Rack",
     "rackId",
     rackOptions,
-    true
-  );
-
-  const rackSelect = (
-    <div className="form-group">
-      <label>Pick a Rack</label>
-      <select className="form-control" name="rackId" onChange={onChange}>
-        {rackOptions}
-      </select>
-    </div>
+    rackDisabled
   );
 
   if (storageId) {
@@ -112,20 +125,13 @@ const ManualLink = ({
     </option>
   ];
 
-  const defaultShelfSelect = createSelect(
+  const shelfDisabled = rackId ? false : true;
+
+  const shelfSelect = createSelect(
     "Pick a Shelf",
     "shelfId",
     shelfOptions,
-    true
-  );
-
-  const shelfSelect = (
-    <div className="form-group">
-      <label>Pick a Shelf</label>
-      <select className="form-control" name="shelfId" onChange={onChange}>
-        {shelfOptions}
-      </select>
-    </div>
+    shelfDisabled
   );
 
   if (rackId) {
@@ -148,20 +154,13 @@ const ManualLink = ({
     </option>
   ];
 
-  const defaultShelfSpotSelect = createSelect(
+  const shelfSpotDisabled = shelfId ? false : true;
+
+  const shelfSpotSelect = createSelect(
     "Pick a Shelf Spot",
     "shelfSpotId",
     shelfSpotOptions,
-    true
-  );
-
-  const shelfSpotSelect = (
-    <div className="form-group">
-      <label>Pick a Shelf Spot</label>
-      <select className="form-control" name="shelfSpotId" onChange={onChange}>
-        {shelfSpotOptions}
-      </select>
-    </div>
+    shelfSpotDisabled
   );
 
   if (shelfId) {
@@ -196,18 +195,26 @@ const ManualLink = ({
 
   return (
     <div className="container">
-      <div className="row mt-5">
+      <div className="row mt-3">
         <h2 />
       </div>
       <div className="row">
         <div className="col-xs-12 col-sm-10 col-md-8 mx-auto">
           {spinner}
           {!loading && (
-            <form>
+            <form onSubmit={handleLink}>
+              <h3 className="mb-4">{text}</h3>
               {storageSelect}
-              {storageId ? rackSelect : defaultRackSelect}
-              {rackId ? shelfSelect : defaultShelfSelect}
-              {shelfId ? shelfSpotSelect : defaultShelfSpotSelect}
+              {rackSelect}
+              {shelfSelect}
+              {shelfSpotSelect}
+              <button
+                type="submit"
+                disabled={shelfSpotId === ""}
+                className="btn btn-primary btn-block"
+              >
+                Link
+              </button>
             </form>
           )}
         </div>

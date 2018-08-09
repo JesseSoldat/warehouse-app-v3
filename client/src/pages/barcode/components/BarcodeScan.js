@@ -6,7 +6,8 @@ const BarcodeScan = ({
   scanning,
   handleClickUseCamera,
   handleErr,
-  handleScan
+  handleScan,
+  productId
 }) => {
   const UserCameraButton = (
     <button

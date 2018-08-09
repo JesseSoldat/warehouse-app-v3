@@ -20,8 +20,8 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
 
   // default URL for when the box has no location
   let editUrl = `/box/edit/${boxId}?type=box`;
-  let boxToSpotUrl = `/barcode/scan/${boxId}?type=linkBoxToSpot`;
-  let productToBoxUrl = `/barcode/scan/${boxId}?type=linkProductToBox`;
+  let boxToSpotUrl = `/barcode/scan/box/${boxId}?type=linkBoxToSpot`;
+  let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox`;
 
   // NO location ----------------------------------------------
   if (!location) {

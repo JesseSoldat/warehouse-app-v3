@@ -19,17 +19,24 @@ const BarcodeRoutes = [
     component={LinkItems}
     exact
   />,
-  // no location
+  // no location from box
   <PrivateRoute
     key="barcode/scan/box"
-    path="/barcode/scan/:boxId"
+    path="/barcode/scan/box/:boxId"
     component={LinkItems}
     exact
   />,
-  // have location
+  // no location from product
+  <PrivateRoute
+    key="barcode/scan/product"
+    path="/barcode/scan/product/:productId"
+    component={LinkItems}
+    exact
+  />,
+  // have location from box
   <PrivateRoute
     key="barcode/scan/box/location"
-    path="/barcode/scan/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
+    path="/barcode/scan/box/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
     component={LinkItems}
     exact
   />

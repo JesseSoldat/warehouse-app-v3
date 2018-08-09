@@ -19,7 +19,7 @@ const LocationCard = ({
 
   // events ---------------------------------------------
   const onLink = productId => {
-    history.push(`/barcode/scan?id=${productId}&type=product`);
+    history.push(`/barcode/scan/product/${productId}?type=product`);
   };
 
   const onUnLink = (productId, kind) => {
