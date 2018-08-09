@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 
 // custom components
 import BarcodeScan from "./components/BarcodeScan";
-import ManualLink from "./components/ManualLink";
+import Tabs from "./components/Tabs";
 // common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
@@ -14,32 +14,57 @@ import { getStorageIds } from "../../actions/storage";
 
 class LinkItems extends Component {
   state = {
-    scanning: true,
+    // scan
+    type: "",
+    showScan: false,
+    showTabs: false,
+    scanning: false,
     result: ["Scanning, no results so far..."],
     pastScannedItemId: "",
-    pastScannedItemType: ""
+    pastScannedItemType: "",
+    // manual link
+    storageId: "",
+    rackId: "",
+    shelfId: "",
+    shelfSpotId: ""
   };
 
   // lifecycles --------------------------------------------
   componentDidMount() {
-    this.props.getStorageIds();
+    this.getStorageEntityIds();
   }
 
   // MANUAL LINK ----------------------------------------
+  getStorageEntityIds = () => {
+    const { storageIdsEntity } = this.props;
+    const type = getUrlParameter("type");
+
+    // type is "" when clicking Navbar Scan link
+    if (type) {
+      this.setState({ type, showTabs: true });
+    } else {
+      this.setState({ showScan: true });
+    }
+
+    if (!storageIdsEntity) {
+      this.props.getStorageIds();
+    }
+  };
+
+  handleSelectChange = obj => {
+    // console.log(obj);
+    this.setState({ ...obj });
+  };
 
   // BARCODE ----------------------------------------------
   handleErr = err => {
-    console.log("err");
     console.log(err);
   };
 
   handleSuccess = () => {};
 
   handleScan = data => {
-    // console.log("no data", data);
-
     if (data) {
-      // console.log("data");
       // console.log(data);
 
       this.setState({
@@ -58,60 +83,34 @@ class LinkItems extends Component {
         <Message />
         <Heading title="Link Item" />
 
-        <ul className="nav nav-tabs" id="myTab" role="tablist">
-          <li className="nav-item">
-            <a
-              className="nav-link active"
-              id="home-tab"
-              data-toggle="tab"
-              href="#home"
-              role="tab"
-              aria-controls="home"
-              aria-selected="true"
-            >
-              Scan
-            </a>
-          </li>
-          <li className="nav-item">
-            <a
-              className="nav-link"
-              id="profile-tab"
-              data-toggle="tab"
-              href="#profile"
-              role="tab"
-              aria-controls="profile"
-              aria-selected="false"
-            >
-              Manual Link
-            </a>
-          </li>
-        </ul>
+        {this.state.showScan && (
+          <BarcodeScan
+            result={this.state.result}
+            scanning={this.state.scanning}
+            handleClickUseCamera={this.handleClickUseCamera}
+            handleErr={this.handleErr}
+            handleScan={this.handleScan}
+          />
+        )}
 
-        <div className="tab-content" id="myTabContent">
-          <div
-            className="tab-pane fade show active"
-            id="home"
-            role="tabpanel"
-            aria-labelledby="home-tab"
-          >
-            <BarcodeScan
-              result={this.state.result}
-              scanning={this.state.scanning}
-              handleClickUseCamera={this.handleClickUseCamera}
-              handleErr={this.handleErr}
-              handleScan={this.handleScan}
-            />
-          </div>
-
-          <div
-            className="tab-pane fade"
-            id="profile"
-            role="tabpanel"
-            aria-labelledby="profile-tab"
-          >
-            Manual Link
-          </div>
-        </div>
+        {this.state.showTabs && (
+          <Tabs
+            // manual link
+            loading={this.props.loading}
+            storageIdsEntity={this.props.storageIdsEntity}
+            storageId={this.state.storageId}
+            rackId={this.state.rackId}
+            shelfId={this.state.shelfId}
+            shelfSpotId={this.state.shelfSpotId}
+            handleSelectChange={this.handleSelectChange}
+            // scan
+            result={this.state.result}
+            scanning={this.state.scanning}
+            handleClickUseCamera={this.handleClickUseCamera}
+            handleErr={this.handleErr}
+            handleScan={this.handleScan}
+          />
+        )}
       </div>
     );
   }

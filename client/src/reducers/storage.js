@@ -83,7 +83,7 @@ export default (state = initialState, action) => {
       const storageIdsCopy = { ...storageIdsEntity };
       return {
         ...state,
-        storageIds: storageIdsCopy,
+        storageIdsEntity: storageIdsCopy,
         storageIdsRequsted: false,
         storageIdsLoaded: true
       };

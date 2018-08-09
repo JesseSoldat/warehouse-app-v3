@@ -44,17 +44,19 @@ export const getStorageIds = () => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
-    const storageIdsEntity = {
-      storageIds: [],
-      rackIds: [],
-      shelfIds: [],
-      shelfSpotIds: []
-    };
+    // const storageIdsEntity = {
+    //   storageIds: [],
+    //   rackIds: [],
+    //   shelfIds: [],
+    //   shelfSpotIds: []
+    // };
+
+    const storageIdsEntity = {};
 
     payload.forEach(storageObj => {
       // storages --------------------------------------
       const storageId = storageObj._id;
-      storageIdsEntity.storageIds.push(storageId);
+      // storageIdsEntity.storageIds.push(storageId);
 
       const storage = {
         _id: storageId,
@@ -65,7 +67,7 @@ export const getStorageIds = () => async dispatch => {
       // racks ------------------------------------------
       storageObj.racks.forEach(rackObj => {
         const rackId = rackObj._id;
-        storageIdsEntity.rackIds.push({ storageId, rackId });
+        // storageIdsEntity.rackIds.push({ storageId, rackId });
 
         const rack = {
           _id: rackId,
@@ -77,7 +79,7 @@ export const getStorageIds = () => async dispatch => {
         // shelves ----------------------------------------
         rackObj.shelves.forEach(shelfObj => {
           const shelfId = shelfObj._id;
-          storageIdsEntity.shelfIds.push({ rackId, shelfId });
+          // storageIdsEntity.shelfIds.push({ rackId, shelfId });
 
           const shelf = {
             _id: shelfId,
@@ -90,7 +92,7 @@ export const getStorageIds = () => async dispatch => {
           // shelfSpots ----------------------------------------
           shelfObj.shelfSpots.forEach(shelfSpotObj => {
             const shelfSpotId = shelfSpotObj._id;
-            storageIdsEntity.shelfSpotIds.push({ shelfId, shelfSpotId });
+            // storageIdsEntity.shelfSpotIds.push({ shelfId, shelfSpotId });
 
             const shelfSpot = {
               _id: shelfSpotId,
