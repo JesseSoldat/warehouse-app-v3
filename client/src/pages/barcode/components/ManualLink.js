@@ -12,13 +12,32 @@ const ManualLink = ({
   shelfSpotId,
   handleSelectChange
 }) => {
-  let spinner, storages, racks, shelves, shelfSpots;
+  let spinner, racks, shelves, shelfSpots;
 
   const onChange = e => {
     const { name, value } = e.target;
     const obj = {
       [name]: value
     };
+
+    switch (name) {
+      case "storageId":
+        (obj["rackId"] = ""), (obj["shelfId"] = "");
+        obj["shelfSpotId"] = "";
+        break;
+
+      case "rackId":
+        obj["shelfId"] = "";
+        obj["shelfSpotId"] = "";
+        break;
+
+      case "shelfId":
+        obj["shelfSpotId"] = "";
+        break;
+
+      default:
+        break;
+    }
     handleSelectChange(obj);
   };
 
@@ -117,7 +136,6 @@ const ManualLink = ({
 
   if (rackId) {
     shelves = racks[rackId].shelves;
-    console.log("shelves", shelves);
 
     for (let obj in shelves) {
       const shelf = shelves[obj];
@@ -160,7 +178,6 @@ const ManualLink = ({
 
   if (shelfId) {
     shelfSpots = shelves[shelfId].shelfSpots;
-    console.log("shelfSpots", shelfSpots);
 
     for (let obj in shelfSpots) {
       const shelfSpot = shelfSpots[obj];
