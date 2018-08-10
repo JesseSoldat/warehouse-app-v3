@@ -66,10 +66,17 @@ const ManualLink = ({
   const createSelect = (
     label,
     name,
+    defaultOptionText,
     options,
     disabled = false,
     link = null
   ) => {
+    const defaultOption = (
+      <option key={label} value="">
+        {defaultOptionText}
+      </option>
+    );
+
     return (
       <div className="form-group">
         {link ? (
@@ -85,49 +92,49 @@ const ManualLink = ({
           name={name}
           onChange={onChange}
         >
+          {defaultOption}
           {options}
         </select>
       </div>
     );
   };
   // storage -------------------------------------------
-  const storageOptions = [
-    <option key="storageNoValue" value="">
-      Select a Storage
-    </option>
-  ];
+  const storageOptions = [];
 
   const storageSelect = createSelect(
     "Pick a Storage",
     "storageId",
+    "Select a Storage",
     storageOptions
   );
 
   // rack -----------------------------------------------
-  let rackDisabled, rackSelect, createRackLink;
+  let rackDisabled, rackSelect;
 
-  const rackOptions = [
-    <option key="rackNoValue" value="">
-      {storageId ? "Select a Rack" : "Pick a Storage first"}
-    </option>
-  ];
+  let rackOptionText = storageId ? "Select a Rack" : "Pick a Storage first";
+
+  const rackOptions = [];
 
   rackDisabled = storageId ? false : true;
 
-  rackSelect = createSelect("Pick a Rack", "rackId", rackOptions, rackDisabled);
+  rackSelect = createSelect(
+    "Pick a Rack",
+    "rackId",
+    rackOptionText,
+    rackOptions,
+    rackDisabled
+  );
 
   if (storageId) {
     racks = storageIdsEntity[storageId].racks;
 
     if (isEmpty(racks)) {
+      rackOptionText = "No racks available";
       rackSelect = createSelect(
         "Create a Rack",
         "rackId",
-        [
-          <option key="rackNoValue" value="">
-            No racks available
-          </option>
-        ],
+        rackOptionText,
+        rackOptions,
         true,
         `/rack/create/${storageId}?type=rack`
       );
@@ -144,17 +151,18 @@ const ManualLink = ({
   }
 
   // shelf ------------------------------------------------
-  const shelfOptions = [
-    <option key="shelNoValue" value="">
-      {storageId ? "Select a Shelf" : "Pick a Rack first"}
-    </option>
-  ];
+  let shelfDisabled, shelfSelect;
 
-  const shelfDisabled = rackId ? false : true;
+  let shelfOptionText = storageId ? "Select a Shelf" : "Pick a Rack first";
 
-  const shelfSelect = createSelect(
+  const shelfOptions = [];
+
+  shelfDisabled = rackId ? false : true;
+
+  shelfSelect = createSelect(
     "Pick a Shelf",
     "shelfId",
+    shelfOptionText,
     shelfOptions,
     shelfDisabled
   );
@@ -162,28 +170,44 @@ const ManualLink = ({
   if (rackId) {
     shelves = racks[rackId].shelves;
 
-    for (let obj in shelves) {
-      const shelf = shelves[obj];
-      shelfOptions.push(
-        <option key={shelf._id} value={shelf._id}>
-          {shelf.shelfLabel}
-        </option>
+    if (isEmpty(shelves)) {
+      shelfSelect = createSelect(
+        "Create a Shelf",
+        "shelfId",
+        "No Shelves available",
+        shelfOptions,
+        true,
+        `/shelf/create/${storageId}/${rackId}?type=shelf`
       );
+    } else {
+      for (let obj in shelves) {
+        const shelf = shelves[obj];
+        shelfOptions.push(
+          <option key={shelf._id} value={shelf._id}>
+            {shelf.shelfLabel}
+          </option>
+        );
+      }
     }
   }
 
   // shelfSpot --------------------------------------------
-  const shelfSpotOptions = [
-    <option key="shelfSpotNoValue" value="">
-      {storageId ? "Select a Shelf Spot" : "Pick a Shelf first"}
-    </option>
-  ];
+  let shelfSpotDisabled, shelfSpotSelect;
 
-  const shelfSpotDisabled = shelfId ? false : true;
+  let shelfSpotOptionText = shelfId
+    ? "Select a Shelf Spot"
+    : "Pick a Shelf first";
 
-  const shelfSpotSelect = createSelect(
+  shelfSpotDisabled = shelfId ? false : true;
+
+  const shelfSpotOptions = [];
+
+  shelfSpotDisabled = shelfId ? false : true;
+
+  shelfSpotSelect = createSelect(
     "Pick a Shelf Spot",
     "shelfSpotId",
+    shelfSpotOptionText,
     shelfSpotOptions,
     shelfSpotDisabled
   );
@@ -191,13 +215,24 @@ const ManualLink = ({
   if (shelfId) {
     shelfSpots = shelves[shelfId].shelfSpots;
 
-    for (let obj in shelfSpots) {
-      const shelfSpot = shelfSpots[obj];
-      shelfSpotOptions.push(
-        <option key={shelfSpot._id} value={shelfSpot._id}>
-          {shelfSpot.shelfSpotLabel}
-        </option>
+    if (isEmpty(shelfSpots)) {
+      shelfSpotSelect = createSelect(
+        "Create a Shelf",
+        "shelfId",
+        "No Shelf Spots available",
+        shelfSpotOptions,
+        true,
+        `/shelfSpot/create/${storageId}/${rackId}/${shelfId}?type=shelfSpot`
       );
+    } else {
+      for (let obj in shelfSpots) {
+        const shelfSpot = shelfSpots[obj];
+        shelfSpotOptions.push(
+          <option key={shelfSpot._id} value={shelfSpot._id}>
+            {shelfSpot.shelfSpotLabel}
+          </option>
+        );
+      }
     }
   }
   // render --------------------------------
@@ -231,7 +266,6 @@ const ManualLink = ({
               <h3 className="mb-4">{text}</h3>
               {storageSelect}
               {rackSelect}
-              {createRackLink}
               {shelfSelect}
               {shelfSpotSelect}
               <button
