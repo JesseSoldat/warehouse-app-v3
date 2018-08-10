@@ -62,7 +62,7 @@ export default (state = initialState, action) => {
     case STORAGE_UPDATE_ONE:
       const updateStorages = [...state.storages];
       const updateIndex = updateStorages.findIndex(
-        storage => storage._id === storage._id
+        obj => obj._id === storage._id
       );
 
       updateStorages.splice(updateIndex, 1, storage);

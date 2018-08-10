@@ -10,11 +10,8 @@ import Heading from "../../components/Heading";
 import Spinner from "../../components/Spinner";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
-// helpers
-import productCardData from "./helpers/productCardData";
 // actions
 import { getStorageIds } from "../../actions/storage";
-import { startGetProduct } from "../../actions/product";
 
 class LinkItems extends Component {
   state = {
@@ -44,7 +41,7 @@ class LinkItems extends Component {
 
   // MANUAL LINK ----------------------------------------
   apiData = () => {
-    const { storageIdsEntity, product, match } = this.props;
+    const { storageIdsEntity, match } = this.props;
     const { productId, boxId } = match.params;
     const type = getUrlParameter("type");
 
@@ -54,12 +51,6 @@ class LinkItems extends Component {
       // Product Details -> Scan
       // put product on shelf OR in box
       case "product":
-        if (product && product._id === productId) {
-          console.log(product);
-        } else {
-          // fetch the product here picture / name
-          this.props.startGetProduct(productId);
-        }
         this.setState({
           title: "Link Product",
           productId,
@@ -106,6 +97,7 @@ class LinkItems extends Component {
 
   handleLink = e => {
     e.preventDefault();
+    const { productId, shelfSpotId, boxId } = this.state;
     console.log("type", this.state.type);
   };
 
@@ -138,11 +130,6 @@ class LinkItems extends Component {
       handleClickUseCamera={this.handleClickUseCamera}
       handleErr={this.handleErr}
       handleScan={this.handleScan}
-      // DON'T HAVE THESE -------------------
-      // from product details
-      productCardData={null}
-      // from box
-      boxId={null}
     />
   );
 
@@ -151,10 +138,6 @@ class LinkItems extends Component {
       // both -----------------------------
       type={this.state.type}
       loading={this.props.loading}
-      // from product details
-      productCardData={cardData}
-      // from box
-      boxId={this.state.boxId}
       // manual link -----------------------
       storageIdsEntity={this.props.storageIdsEntity}
       storageId={this.state.storageId}
@@ -173,32 +156,22 @@ class LinkItems extends Component {
   );
 
   render() {
-    const { type, productId } = this.state;
-    const { loading, product } = this.props;
+    const { type } = this.state;
+    const { loading } = this.props;
 
     let content;
 
-    if (loading) {
-      content = <Spinner />;
-    } else if (type === "product") {
-      // need to wait for the product to arrive from the backend
-      if (product && product._id === productId) {
-        // we have the data we need
-        // #1 format data to fit card API
-        const cardData = productCardData(product);
-        content = this.renderTabsContent(cardData);
-      }
-    } else if (type === "linkProductToBox") {
-      // don't need single product
+    switch (type) {
+      case "product":
+      case "linkProductToBox":
       // need to fetch orphans
-      content = this.renderTabsContent();
-    } else if (type === "linkBoxToSpot") {
-      // just need the boxId No API call
-      content = this.renderTabsContent();
-    }
-    // Navigated from the Scan Link on the NavBar
-    else if (this.state.showScan) {
-      content = this.renderScanContent();
+      case "linkBoxToSpot":
+        content = this.renderTabsContent();
+        break;
+
+      default:
+        content = this.renderScanContent();
+        break;
     }
 
     return (
@@ -211,13 +184,12 @@ class LinkItems extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, storage, product }) => ({
+const mapStateToProps = ({ ui, storage }) => ({
   loading: ui.loading,
-  storageIdsEntity: storage.storageIdsEntity,
-  product: product.product
+  storageIdsEntity: storage.storageIdsEntity
 });
 
 export default connect(
   mapStateToProps,
-  { getStorageIds, startGetProduct }
+  { getStorageIds }
 )(LinkItems);

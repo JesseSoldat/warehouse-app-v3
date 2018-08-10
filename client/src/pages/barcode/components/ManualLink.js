@@ -1,7 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 // common components
 import Spinner from "../../../components/Spinner";
+// utils
+import isEmpty from "../../../utils/validation/isEmpty";
 
 const ManualLink = ({
   type,
@@ -12,9 +15,7 @@ const ManualLink = ({
   shelfId,
   shelfSpotId,
   handleSelectChange,
-  handleLink,
-  productCardData,
-  boxId
+  handleLink
 }) => {
   let spinner, text, racks, shelves, shelfSpots;
 
@@ -62,10 +63,22 @@ const ManualLink = ({
     handleSelectChange(obj);
   };
 
-  const createSelect = (label, name, options, disabled = false) => {
+  const createSelect = (
+    label,
+    name,
+    options,
+    disabled = false,
+    link = null
+  ) => {
     return (
       <div className="form-group">
-        <label>{label}</label>
+        {link ? (
+          <label>
+            <Link to={link}>{label}</Link>
+          </label>
+        ) : (
+          <label>{label}</label>
+        )}
         <select
           disabled={disabled}
           className="form-control"
@@ -91,31 +104,42 @@ const ManualLink = ({
   );
 
   // rack -----------------------------------------------
+  let rackDisabled, rackSelect, createRackLink;
+
   const rackOptions = [
     <option key="rackNoValue" value="">
       {storageId ? "Select a Rack" : "Pick a Storage first"}
     </option>
   ];
 
-  const rackDisabled = storageId ? false : true;
+  rackDisabled = storageId ? false : true;
 
-  const rackSelect = createSelect(
-    "Pick a Rack",
-    "rackId",
-    rackOptions,
-    rackDisabled
-  );
+  rackSelect = createSelect("Pick a Rack", "rackId", rackOptions, rackDisabled);
 
   if (storageId) {
     racks = storageIdsEntity[storageId].racks;
 
-    for (let obj in racks) {
-      const rack = racks[obj];
-      rackOptions.push(
-        <option key={rack._id} value={rack._id}>
-          {rack.rackLabel}
-        </option>
+    if (isEmpty(racks)) {
+      rackSelect = createSelect(
+        "Create a Rack",
+        "rackId",
+        [
+          <option key="rackNoValue" value="">
+            No racks available
+          </option>
+        ],
+        true,
+        `/rack/create/${storageId}?type=rack`
       );
+    } else {
+      for (let obj in racks) {
+        const rack = racks[obj];
+        rackOptions.push(
+          <option key={rack._id} value={rack._id}>
+            {rack.rackLabel}
+          </option>
+        );
+      }
     }
   }
 
@@ -207,6 +231,7 @@ const ManualLink = ({
               <h3 className="mb-4">{text}</h3>
               {storageSelect}
               {rackSelect}
+              {createRackLink}
               {shelfSelect}
               {shelfSpotSelect}
               <button

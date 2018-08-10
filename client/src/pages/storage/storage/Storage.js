@@ -10,6 +10,7 @@ import TableContainer from "./components/TableContainer";
 // utils
 import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 import getUrlParameter from "../../../utils/getUrlParameter";
+import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { startGetStorage, startGetRack } from "../../../actions/storage";
 import { serverMsg } from "../../../actions/ui";
@@ -29,6 +30,11 @@ class Storage extends Component {
     }
 
     this.getStorage();
+  }
+
+  componentWillUnmount() {
+    const { msg, options, serverMsg } = this.props;
+    clearUiMsg(msg, options, serverMsg);
   }
 
   // Api calls ----------------------------
@@ -87,6 +93,7 @@ class Storage extends Component {
 
 const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
+  options: ui.options,
   rack: storage.rack,
   loading: ui.loading
 });

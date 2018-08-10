@@ -246,7 +246,7 @@ export const createRack = (storageType, update) => ({
 export const startCreateStorage = (
   storage,
   type,
-  id,
+  id = "",
   ids,
   history
 ) => async dispatch => {
