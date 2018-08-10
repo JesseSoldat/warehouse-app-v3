@@ -22,7 +22,8 @@ const Tabs = ({
   handleErr,
   handleScan,
   // scan && manual link
-  productId
+  productCardData,
+  boxId
 }) => {
   switch (type) {
     case "linkBoxToSpot":
@@ -82,7 +83,6 @@ const Tabs = ({
             handleClickUseCamera={handleClickUseCamera}
             handleErr={handleErr}
             handleScan={handleScan}
-            productId={productId}
           />
         </div>
 
@@ -102,7 +102,8 @@ const Tabs = ({
             shelfSpotId={shelfSpotId}
             handleSelectChange={handleSelectChange}
             handleLink={handleLink}
-            productId={productId}
+            productCardData={productCardData}
+            boxId={boxId}
           />
         </div>
       </div>

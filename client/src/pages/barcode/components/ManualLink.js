@@ -13,7 +13,8 @@ const ManualLink = ({
   shelfSpotId,
   handleSelectChange,
   handleLink,
-  productId
+  productCardData,
+  boxId
 }) => {
   let spinner, text, racks, shelves, shelfSpots;
 

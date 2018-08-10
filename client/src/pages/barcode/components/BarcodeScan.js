@@ -6,52 +6,67 @@ const BarcodeScan = ({
   scanning,
   handleClickUseCamera,
   handleErr,
-  handleScan,
-  productId
+  handleScan
 }) => {
-  const UserCameraButton = (
-    <button
-      className="btn btn-primary mt-3 float-right"
-      onClick={handleClickUseCamera}
+  const cameraButton = (
+    <div>
+      {/* small screens */}
+      <button
+        className="btn btn-primary btn-block mt-3 mb-5 d-block d-sm-none"
+        onClick={handleClickUseCamera}
+      >
+        <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
+        {scanning ? "Off" : "On"}
+      </button>
+      {/* large screens */}
+      <button
+        className="btn btn-primary mt-3 mb-5 float-right d-none d-sm-block"
+        onClick={handleClickUseCamera}
+      >
+        <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
+        {scanning ? "Off" : "On"}
+      </button>
+    </div>
+  );
+
+  const cameraIsOff = (
+    <div
+      className={scanning ? "invisible" : "visible"}
+      style={{ width: "100%" }}
     >
-      <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
-      {scanning ? "Off" : "On"}
-    </button>
+      <div
+        className="text-center mx-auto"
+        style={{ height: "300px", marginTop: "-15px" }}
+      >
+        <h4 className="d-block d-sm-none">Camera is turned off</h4>
+        <h2 className="d-none d-sm-block">Camera is turned off</h2>
+
+        <i className="fas fa-camera-retro fa-10x mt-2 mr-2" />
+      </div>
+    </div>
+  );
+
+  const cameraIsOn = (
+    <div className={scanning ? "visible" : "invisible"}>
+      <div style={{ marginTop: "-20px" }}>
+        <h5 className="d-block d-sm-none mb-2">{result}</h5>
+        <h3 className="d-none d-sm-block mb-2">{result}</h3>
+      </div>
+      {scanning && (
+        <QrReader delay={300} onError={handleErr} onScan={handleScan} />
+      )}
+    </div>
   );
 
   return (
     <div>
       <div className="row">
-        <div className="col-12">{UserCameraButton}</div>
+        <div className="col-12">{cameraButton}</div>
       </div>
       <div className="row">
-        <div
-          className="col-xs-12 col-sm-8 col-md-6 mx-auto"
-          style={{ position: "relative" }}
-        >
-          <div className={scanning ? "visible" : "invisible"}>
-            <div>
-              <p className="pt-3">{result}</p>
-            </div>
-            {scanning && (
-              <QrReader
-                delay={300}
-                onError={handleErr}
-                onScan={handleScan}
-                className="mx-auto w-100"
-              />
-            )}
-          </div>
-
-          <div
-            className={scanning ? "invisible" : "visible"}
-            style={{ position: "absolute", top: "10px", left: 0, right: 0 }}
-          >
-            <div className="text-center" style={{ height: "200px" }}>
-              <h1>Camera is turned off</h1>
-              <i className="fas fa-camera-retro fa-10x mt-2 mr-2" />
-            </div>
-          </div>
+        <div className="col-xs-12 col-sm-8 col-md-6 mx-auto">
+          {cameraIsOn}
+          {cameraIsOff}
         </div>
       </div>
     </div>

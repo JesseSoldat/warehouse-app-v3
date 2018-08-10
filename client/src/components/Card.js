@@ -3,9 +3,8 @@ import { Link } from "react-router-dom";
 
 import truncateStr from "../utils/stringManipulation/truncateStr";
 
-const Card = ({ data }) => {
+const Card = ({ data, cardSize = "240px" }) => {
   const {
-    cardSize = "240px",
     title = "",
     picture = "",
     subtitle = "",
@@ -25,7 +24,8 @@ const Card = ({ data }) => {
           src={picture ? picture : picSrc}
           style={{
             width: "90%",
-            height: "200px",
+            height: "100%",
+            maxHeight: "200px",
             margin: "10px auto",
             border: "1px solid black",
             boxSizing: "border-box"
@@ -37,9 +37,11 @@ const Card = ({ data }) => {
         {subtitle && <h6 className="card-subtitle mb-2">{subtitle}</h6>}
 
         <div className="d-flex justify-content-between mt-2">
-          <Link className="card-link" to={link1}>
-            <button className="btn btn-default">{linkText1}</button>
-          </Link>
+          {link1 && (
+            <Link className="card-link" to={link1}>
+              <button className="btn btn-default">{linkText1}</button>
+            </Link>
+          )}
 
           {link2 && (
             <Link className="card-link" to={link2}>

@@ -10,6 +10,8 @@ import Heading from "../../components/Heading";
 import Spinner from "../../components/Spinner";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
+// helpers
+import productCardData from "./helpers/productCardData";
 // actions
 import { getStorageIds } from "../../actions/storage";
 import { startGetProduct } from "../../actions/product";
@@ -130,23 +132,30 @@ class LinkItems extends Component {
 
   renderScanContent = () => (
     <BarcodeScan
+      type={this.state.type}
       result={this.state.result}
       scanning={this.state.scanning}
       handleClickUseCamera={this.handleClickUseCamera}
       handleErr={this.handleErr}
       handleScan={this.handleScan}
+      // DON'T HAVE THESE -------------------
       // from product details
-      product={this.props.product}
+      productCardData={null}
       // from box
-      boxId={this.state.boxId}
+      boxId={null}
     />
   );
 
-  renderTabsContent = () => (
+  renderTabsContent = cardData => (
     <Tabs
-      // manual link
-      loading={this.props.loading}
+      // both -----------------------------
       type={this.state.type}
+      loading={this.props.loading}
+      // from product details
+      productCardData={cardData}
+      // from box
+      boxId={this.state.boxId}
+      // manual link -----------------------
       storageIdsEntity={this.props.storageIdsEntity}
       storageId={this.state.storageId}
       rackId={this.state.rackId}
@@ -154,16 +163,12 @@ class LinkItems extends Component {
       shelfSpotId={this.state.shelfSpotId}
       handleSelectChange={this.handleSelectChange}
       handleLink={this.handleLink}
-      // scan
+      // scan --------------------------------
       result={this.state.result}
       scanning={this.state.scanning}
       handleClickUseCamera={this.handleClickUseCamera}
       handleErr={this.handleErr}
       handleScan={this.handleScan}
-      // from product details
-      product={this.props.product}
-      // from box
-      boxId={this.state.boxId}
     />
   );
 
@@ -179,7 +184,9 @@ class LinkItems extends Component {
       // need to wait for the product to arrive from the backend
       if (product && product._id === productId) {
         // we have the data we need
-        content = this.renderTabsContent();
+        // #1 format data to fit card API
+        const cardData = productCardData(product);
+        content = this.renderTabsContent(cardData);
       }
     } else if (type === "linkProductToBox") {
       // don't need single product
