@@ -14,7 +14,6 @@ export const linkProduct = (obj, history) => async dispatch => {
 
     switch (type) {
       case "shelfSpot":
-      case "product":
         apiUrl = `/api/link/productToShelfSpot`;
         break;
 

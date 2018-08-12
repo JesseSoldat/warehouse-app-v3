@@ -52,8 +52,6 @@ export const getStorageIds = () => async dispatch => {
 
     const storageIdsEntity = {};
 
-    console.log(payload);
-
     payload.forEach(storageObj => {
       // storages --------------------------------------
       const storageId = storageObj._id;
@@ -93,12 +91,24 @@ export const getStorageIds = () => async dispatch => {
 
             const shelfSpot = {
               _id: shelfSpotId,
-              shelfSpotLabel: shelfSpotObj.shelfSpotLabel
+              shelfSpotLabel: shelfSpotObj.shelfSpotLabel,
+              boxes: []
             };
 
             storage.racks[rackId].shelves[shelfId].shelfSpots[
               shelfSpotId
             ] = shelfSpot;
+
+            // boxes ---------------------------------------------
+            shelfSpotObj.storedItems.forEach(storedItem => {
+              if (storedItem.kind === "box") {
+                const box = {
+                  _id: storedItem.item._id,
+                  boxLabel: storedItem.item.boxLabel
+                };
+                shelfSpot.boxes.push(box);
+              }
+            });
           });
         });
       });

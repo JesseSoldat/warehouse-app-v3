@@ -14,10 +14,13 @@ const ManualLink = ({
   rackId,
   shelfId,
   shelfSpotId,
+  boxId,
   handleSelectChange,
   handleLink
 }) => {
-  let spinner, text, racks, shelves, shelfSpots;
+  let spinner, text, racks, shelves, shelfSpots, boxes;
+
+  if (boxId) console.log("boxid", boxId);
 
   switch (type) {
     case "linkBoxToSpot":
@@ -44,17 +47,25 @@ const ManualLink = ({
 
     switch (name) {
       case "storageId":
-        (obj["rackId"] = ""), (obj["shelfId"] = "");
+        obj["rackId"] = "";
+        obj["shelfId"] = "";
         obj["shelfSpotId"] = "";
+        obj["boxId"] = "";
         break;
 
       case "rackId":
         obj["shelfId"] = "";
         obj["shelfSpotId"] = "";
+        obj["boxId"] = "";
         break;
 
       case "shelfId":
         obj["shelfSpotId"] = "";
+        obj["boxId"] = "";
+        break;
+
+      case "shelfSpotId":
+        obj["boxId"] = "";
         break;
 
       default:
@@ -202,8 +213,6 @@ const ManualLink = ({
 
   const shelfSpotOptions = [];
 
-  shelfSpotDisabled = shelfId ? false : true;
-
   shelfSpotSelect = createSelect(
     "Pick a Shelf Spot",
     "shelfSpotId",
@@ -235,6 +244,49 @@ const ManualLink = ({
       }
     }
   }
+  // boxes -----------------------------------------------------
+  let boxDisabled, boxSpotSelect;
+
+  let boxOptionText = shelfSpotId
+    ? "Optional store in box"
+    : "Pick a Shelf Spot first";
+
+  boxDisabled = shelfSpotId ? false : true;
+
+  const boxOptions = [];
+
+  boxSpotSelect = createSelect(
+    "Optional Pick a Box",
+    "boxId",
+    boxOptionText,
+    boxOptions,
+    boxDisabled
+  );
+
+  if (shelfSpotId) {
+    boxes = shelfSpots[shelfSpotId].boxes;
+
+    if (isEmpty(boxes)) {
+      boxSpotSelect = createSelect(
+        "Create a Box",
+        "boxId",
+        "No Boxes available",
+        boxOptions,
+        true,
+        `/box/create/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=box`
+      );
+    } else {
+      for (let obj in boxes) {
+        const box = boxes[obj];
+        boxOptions.push(
+          <option key={box._id} value={box._id}>
+            {box.boxLabel}
+          </option>
+        );
+      }
+    }
+  }
+
   // render --------------------------------
 
   if (loading) {
@@ -268,6 +320,7 @@ const ManualLink = ({
               {rackSelect}
               {shelfSelect}
               {shelfSpotSelect}
+              {boxSpotSelect}
               <button
                 type="submit"
                 disabled={shelfSpotId === ""}

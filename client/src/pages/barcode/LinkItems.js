@@ -101,9 +101,10 @@ class LinkItems extends Component {
     const { type, productId, shelfSpotId, boxId } = this.state;
     let obj = { type, productId, shelfSpotId, boxId };
 
-    switch (type) {
+    switch (obj.type) {
       case "product":
       case "linkProductToBox":
+        boxId ? (obj.type = "box") : (obj.type = "shelfSpot");
         this.props.linkProduct(obj, this.props.history);
         break;
 
@@ -147,7 +148,7 @@ class LinkItems extends Component {
     />
   );
 
-  renderTabsContent = cardData => (
+  renderTabsContent = () => (
     <Tabs
       // both -----------------------------
       type={this.state.type}
@@ -158,6 +159,7 @@ class LinkItems extends Component {
       rackId={this.state.rackId}
       shelfId={this.state.shelfId}
       shelfSpotId={this.state.shelfSpotId}
+      boxId={this.state.boxId}
       handleSelectChange={this.handleSelectChange}
       handleLink={this.handleLink}
       // scan --------------------------------

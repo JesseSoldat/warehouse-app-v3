@@ -66,7 +66,7 @@ module.exports = (app, io) => {
       emit(req.user._id);
 
       const msg = msgObj(
-        "Product and Shelf Spot now linked.",
+        "Product and Shelf Spot are now linked.",
         "blue",
         "hide-3"
       );
@@ -81,7 +81,61 @@ module.exports = (app, io) => {
     }
   });
 
-  app.patch("/api/link/productToBox", isAuth, (req, res) => {});
+  app.patch("/api/link/productToBox", isAuth, async (req, res) => {
+    const { productId, boxId } = req.body;
+
+    try {
+      const [product, box] = await Promise.all([
+        Product.findByIdAndUpdate(
+          productId,
+          {
+            $set: {
+              productLocation: {
+                kind: "box",
+                item: boxId
+              }
+            }
+          },
+          { new: true }
+        )
+          .populate("producer customer")
+          .populate({
+            path: "productLocation.item",
+            populate: {
+              path: "shelf shelfSpot",
+              populate: {
+                path: "shelf rack",
+                populate: {
+                  path: "rack storage",
+                  populate: { path: "storage" }
+                }
+              }
+            }
+          }),
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $addToSet: {
+              storedItems: productId
+            }
+          },
+          { new: true }
+        )
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, { box, product });
+    } catch (err) {
+      console.log("Err: PATCH/productToBox,", err);
+
+      const msg = serverMsg("error", "link", "product to box");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
 
   app.patch("/api/link/boxToShelfSpot", isAuth, (req, res) => {});
 };

@@ -13,6 +13,7 @@ const Tabs = ({
   rackId,
   shelfId,
   shelfSpotId,
+  boxId,
   handleSelectChange,
   handleLink,
   // scan
@@ -97,6 +98,7 @@ const Tabs = ({
             rackId={rackId}
             shelfId={shelfId}
             shelfSpotId={shelfSpotId}
+            boxId={boxId}
             handleSelectChange={handleSelectChange}
             handleLink={handleLink}
           />

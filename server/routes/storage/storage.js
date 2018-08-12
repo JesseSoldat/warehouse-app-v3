@@ -35,7 +35,11 @@ module.exports = (app, io) => {
               "shelfSpotLabel",
               "storedItems.kind",
               "storedItems._id"
-            ]
+            ],
+            populate: {
+              path: "storedItems.item",
+              select: ["boxLabel", "_id"]
+            }
           }
         }
       });
