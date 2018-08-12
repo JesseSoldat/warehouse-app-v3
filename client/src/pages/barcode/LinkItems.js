@@ -12,6 +12,7 @@ import Spinner from "../../components/Spinner";
 import getUrlParameter from "../../utils/getUrlParameter";
 // actions
 import { getStorageIds } from "../../actions/storage";
+import { linkProduct } from "../../actions/link";
 
 class LinkItems extends Component {
   state = {
@@ -97,8 +98,21 @@ class LinkItems extends Component {
 
   handleLink = e => {
     e.preventDefault();
-    const { productId, shelfSpotId, boxId } = this.state;
-    console.log("type", this.state.type);
+    const { type, productId, shelfSpotId, boxId } = this.state;
+    let obj = { type, productId, shelfSpotId, boxId };
+
+    switch (type) {
+      case "product":
+      case "linkProductToBox":
+        this.props.linkProduct(obj);
+        break;
+
+      case "linkBoxToSpot":
+        break;
+
+      default:
+        break;
+    }
   };
 
   // BARCODE ----------------------------------------------
@@ -191,5 +205,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { getStorageIds }
+  { getStorageIds, linkProduct }
 )(LinkItems);

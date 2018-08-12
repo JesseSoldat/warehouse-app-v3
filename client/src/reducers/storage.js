@@ -69,7 +69,8 @@ export default (state = initialState, action) => {
 
       return {
         ...state,
-        storages: updateStorages
+        storages: updateStorages,
+        storageIdsEntity: null
       };
 
     case STORAGE_IDS_REQUESTED:
@@ -147,7 +148,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storageType,
-        rack: rackUpdate
+        rack: rackUpdate,
+        storageIdsEntity: null
       };
 
     case BOX_REQUESTED:
@@ -167,7 +169,12 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_DELETE_ONE:
-      return { ...state, storage: null, storages: [] };
+      return {
+        ...state,
+        storage: null,
+        storages: [],
+        storageIdsEntity: null
+      };
 
     default:
       return { ...state };

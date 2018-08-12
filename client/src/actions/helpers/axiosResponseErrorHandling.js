@@ -68,9 +68,18 @@ const axiosResponseErrorHandling = (error, dispatch, method, target) => {
     info = "The request was made but no response was received from the server.";
     color = "red";
   } else {
-    // No axios object catch any other errors
-    info = errMsg(method, target);
-    color = "red";
+    // CUSTOM ERROR ---------------------------------------------------
+    // throw new Error(message is typed here and put on a .message prop)
+    if (error.message) {
+      console.log("AXIOS Throw new Error", error.message);
+      info = error.message;
+      color = "red";
+      code = "throw new Error";
+    } else {
+      // No axios object catch any other errors
+      info = errMsg(method, target);
+      color = "red";
+    }
   }
 
   dispatch(
