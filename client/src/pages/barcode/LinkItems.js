@@ -12,7 +12,7 @@ import Heading from "../../components/Heading";
 import getUrlParameter from "../../utils/getUrlParameter";
 // actions
 import { getStorageIds } from "../../actions/storage";
-import { linkProduct } from "../../actions/link";
+import { linkProduct, linkBox } from "../../actions/link";
 
 class LinkItems extends Component {
   state = {
@@ -64,7 +64,7 @@ class LinkItems extends Component {
       case "linkProductToBox":
         // fetch orphans to put in the box
         this.setState({
-          title: "Link Product to Box",
+          title: "Link Product",
           boxId,
           type,
           showTabs: true
@@ -74,7 +74,7 @@ class LinkItems extends Component {
       // Box Details -> Scan
       case "linkBoxToSpot":
         this.setState({
-          title: "Link Box to Shelf Spot",
+          title: "Link Box",
           boxId,
           type,
           showTabs: true
@@ -98,17 +98,17 @@ class LinkItems extends Component {
 
   handleLink = e => {
     e.preventDefault();
-    const { type, productId, shelfSpotId, boxId } = this.state;
-    let obj = { type, productId, shelfSpotId, boxId };
 
-    switch (obj.type) {
+    switch (this.state.type) {
       case "product":
       case "linkProductToBox":
-        boxId ? (obj.type = "box") : (obj.type = "shelfSpot");
-        this.props.linkProduct(obj, this.props.history);
+        const productTo = this.state.boxId ? "box" : "shelfSpot";
+        this.props.linkProduct(this.state, productTo, this.props.history);
         break;
 
       case "linkBoxToSpot":
+        const { boxId } = this.props.match.params;
+        this.props.linkBox(this.state, boxId, this.props.history);
         break;
 
       default:
@@ -207,5 +207,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { getStorageIds, linkProduct }
+  { getStorageIds, linkProduct, linkBox }
 )(withRouter(LinkItems));

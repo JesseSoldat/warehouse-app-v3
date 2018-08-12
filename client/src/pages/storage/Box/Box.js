@@ -71,7 +71,9 @@ class Box extends Component {
     else if (match.path === "/box/:boxId") {
       // Box is in the STORE
       if (box && box._id === boxId) {
-        content = <BoxTable box={box} boxId={boxId} location={false} />;
+        content = (
+          <BoxTable boxLabel={box.boxLabel} boxId={boxId} location={false} />
+        );
       }
     }
     // have location
@@ -85,6 +87,7 @@ class Box extends Component {
             shelfId={shelfId}
             shelfSpotId={shelfSpotId}
             boxId={boxId}
+            boxLabel={null}
             location={true}
           />
         );

@@ -7,12 +7,12 @@ import { loading } from "./ui";
 import { productLoaded } from "./product";
 // types
 
-export const linkProduct = (obj, history) => async dispatch => {
+export const linkProduct = (obj, productTo, history) => async dispatch => {
   try {
-    const { productId, type } = obj;
+    const { productId } = obj;
     let apiUrl;
 
-    switch (type) {
+    switch (productTo) {
       case "shelfSpot":
         apiUrl = `/api/link/productToShelfSpot`;
         break;
@@ -41,5 +41,23 @@ export const linkProduct = (obj, history) => async dispatch => {
     history.push(`/products/${productId}`);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", "product to shelf spot");
+  }
+};
+
+export const linkBox = (obj, boxId, history) => async dispatch => {
+  const { storageId, rackId, shelfId, shelfSpotId } = obj;
+
+  try {
+    const apiUrl = "/api/link/boxToShelfSpot";
+    const res = await axios.patch(apiUrl, { boxId, shelfSpotId });
+    const { msg, payload, options } = res.data;
+
+    checkForMsg(msg, dispatch, options);
+
+    history.push(
+      `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type="box"`
+    );
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "link", "box to shelf spot");
   }
 };

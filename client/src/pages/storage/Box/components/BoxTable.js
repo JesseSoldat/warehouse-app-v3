@@ -6,7 +6,14 @@ import CardList from "../../../../components/CardList";
 // helpers
 import productCardData from "../helpers/productCardData";
 
-const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
+const BoxTable = ({
+  location,
+  rack,
+  shelfId,
+  shelfSpotId,
+  boxId,
+  boxLabel
+}) => {
   let rackId,
     storageId,
     shelf,
@@ -14,8 +21,8 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
     box,
     notStored,
     noProducts,
-    haveProducts,
-    boxLabel;
+    haveProducts;
+  let label = boxLabel;
   let storedItems = [];
 
   // default URL for when the box has no location
@@ -59,9 +66,8 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
     box = shelfSpot.storedItems.find(
       storedItem => storedItem.item._id === boxId
     );
-    // console.log("box");
-    // console.log(box);
-    boxLabel = box.item.boxLabel;
+
+    label = box.item.boxLabel;
     storedItems = box.item.storedItems;
   }
 
@@ -90,7 +96,7 @@ const BoxTable = ({ location, rack, shelfId, shelfSpotId, boxId }) => {
   return (
     <div className="card card-body mb-3" style={{ minHeight: "400px" }}>
       <div className="d-flex flex-wrap justify-content-between mb-3">
-        <h2 className="my-2 ml-2">Box {boxLabel}</h2>
+        <h2 className="my-2 ml-2">Box {label}</h2>
 
         <div>
           <Link to={editUrl}>

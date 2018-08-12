@@ -75,7 +75,7 @@ module.exports = (app, io) => {
     } catch (err) {
       console.log("Err: PATCH/productToShelfSpot,", err);
 
-      const msg = serverMsg("error", "link", "product to shelf");
+      const msg = serverMsg("error", "link", "product to shelf spot");
 
       serverRes(res, 400, msg, null);
     }
@@ -137,5 +137,40 @@ module.exports = (app, io) => {
     }
   });
 
-  app.patch("/api/link/boxToShelfSpot", isAuth, (req, res) => {});
+  app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
+    const { boxId, shelfSpotId } = req.body;
+
+    try {
+      const [shelfSpot, box] = await Promise.all([
+        ShelfSpot.findByIdAndUpdate(
+          shelfSpotId,
+          { $addToSet: { storedItems: { kind: "box", item: boxId } } },
+          { new: true }
+        ),
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $set: { shelfSpot: shelfSpotId }
+          },
+          { new: true }
+        )
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj(
+        "Box and Shelf Spot are now linked.",
+        "blue",
+        "hide-3"
+      );
+
+      serverRes(res, 200, msg, { shelfSpot, box });
+    } catch (err) {
+      console.log("Err: PATCH/productToBox,", err);
+
+      const msg = serverMsg("error", "link", "box to shelf spot");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
 };
