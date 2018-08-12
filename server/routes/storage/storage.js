@@ -30,7 +30,12 @@ module.exports = (app, io) => {
           select: ["_id", "shelfLabel"],
           populate: {
             path: "shelfSpots",
-            select: ["_id", "shelfSpotLabel"]
+            select: [
+              "_id",
+              "shelfSpotLabel",
+              "storedItems.kind",
+              "storedItems._id"
+            ]
           }
         }
       });

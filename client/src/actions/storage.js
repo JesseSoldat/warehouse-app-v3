@@ -26,6 +26,12 @@ export const BOX_LOADED = "BOX_LOADED";
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
 
+export const RESET_STORAGE = "RESET_STORAGE";
+// RESET Storage -----------------------------
+export const resetStorage = () => ({
+  type: RESET_STORAGE
+});
+
 // GET Storage IDS -------------------------
 export const storageIdsRequested = () => ({
   type: STORAGE_IDS_REQUESTED
@@ -45,6 +51,8 @@ export const getStorageIds = () => async dispatch => {
     const { msg, payload, options } = res.data;
 
     const storageIdsEntity = {};
+
+    console.log(payload);
 
     payload.forEach(storageObj => {
       // storages --------------------------------------

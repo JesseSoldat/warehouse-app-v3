@@ -8,6 +8,7 @@ import createEntity from "./helpers/createEntity";
 import { loading } from "./ui";
 import { customersRequested, customersLoaded } from "./customer";
 import { producersRequested, producersLoaded } from "./producer";
+import { resetStorage } from "./storage";
 // types
 // all products
 export const PRODUCTS_REQUESTED = "PRODUCTS_REQUESTED";
@@ -207,7 +208,11 @@ export const deleteProduct = (productId, history) => async dispatch => {
 
     const { msg, options } = res.data;
 
-    dispatch({ type: PRODUCTS_RESET });
+    dispatch(resetProducts());
+
+    if (options && options.update === "storage") {
+      dispatch(resetStorage());
+    }
 
     checkForMsg(msg, dispatch, options);
 

@@ -77,6 +77,8 @@ class Box extends Component {
     // have location
     else if (match.path !== "/box/:boxId") {
       if (rack && rack._id === rackId) {
+        console.log(rack);
+
         content = (
           <BoxTable
             rack={rack}

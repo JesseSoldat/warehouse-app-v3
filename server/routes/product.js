@@ -1,8 +1,9 @@
 // models
 const Product = require("../models/product");
-const Counter = require("../models/counter");
 const Customer = require("../models/customer");
 const Producer = require("../models/producer");
+const ShelfSpot = require("../models/storage/shelfSpot");
+const Box = require("../models/storage/box");
 // middleware
 const isAuth = require("../middleware/isAuth");
 // helpers
@@ -206,6 +207,7 @@ module.exports = (app, io) => {
   // Delete a Product -----------------------------------------------
   app.delete("/api/products/:productId", isAuth, async (req, res) => {
     const { productId } = req.params;
+    const options = {};
 
     try {
       const product = await Product.findById(productId);
@@ -215,7 +217,8 @@ module.exports = (app, io) => {
         pictureFolder,
         packagingFolder,
         productPictures,
-        packagingPictures
+        packagingPictures,
+        productLocation
       } = product;
 
       // if any of these exist
@@ -232,16 +235,51 @@ module.exports = (app, io) => {
           "delete err"
         );
 
-        emit(req.user._id);
-
         return serverRes(res, 400, msg, product);
+      } else if (productLocation) {
+        const { kind, item } = productLocation;
+        switch (kind) {
+          case "shelfSpot":
+            await ShelfSpot.findByIdAndUpdate(
+              item._id,
+              {
+                $pull: {
+                  storedItems: { item: productId }
+                }
+              },
+              { new: true }
+            );
+            options["update"] = "storage";
+            console.log("removed product from shelf spot");
+
+            break;
+
+          case "box":
+            await Box.findByIdAndUpdate(
+              item._id,
+              {
+                $pull: {
+                  storedItems: { item: productId }
+                }
+              },
+              { new: true }
+            );
+            options["update"] = "storage";
+            console.log("removed product from box");
+            break;
+
+          default:
+            break;
+        }
       }
 
       await product.remove();
 
+      emit(req.user._id);
+
       const msg = msgObj("The product was deleted.", "blue", "delete");
 
-      serverRes(res, 200, msg, null);
+      serverRes(res, 200, msg, options);
     } catch (err) {
       console.log("ERR: DELETE/api/products/:productId", err);
 

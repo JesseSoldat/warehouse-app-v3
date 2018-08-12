@@ -1,4 +1,5 @@
 import {
+  RESET_STORAGE,
   // storage
   STORAGE_SEARCH,
   STORAGE_FETCH_ALL,
@@ -44,6 +45,11 @@ export default (state = initialState, action) => {
     update
   } = action;
   switch (type) {
+    case RESET_STORAGE:
+      return {
+        initialState
+      };
+
     case STORAGE_SEARCH:
       return {
         ...state,

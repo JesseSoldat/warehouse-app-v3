@@ -42,20 +42,31 @@ const LocationCard = ({
     );
   };
 
-  const renderBreadCrumb = ({ storageId, rackId, shelfId, spotId }) => {
+  const renderBreadCrumb = ({
+    storageId,
+    rackId,
+    shelfId,
+    spotId: shelfSpotId
+  }) => {
     return (
       <ul className="customBreadcrumb d-inline-block">
         <li>
-          <Link to={`/storages/${storageId}?type=storage`}>Storage</Link>
+          <Link to={`/storage/${storageId}`}>Storage</Link>
         </li>
         <li>
-          <Link to={`/storages/${rackId}?type=rack`}>Rack</Link>
+          <Link to={`/rack/${storageId}/${rackId}?type=rack`}>Rack</Link>
         </li>
         <li>
-          <Link to={`/storages/${shelfId}?type=shelf`}>Shelf</Link>
+          <Link to={`/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`}>
+            Shelf
+          </Link>
         </li>
         <li>
-          <Link to={`/storages/${spotId}?type=shelfSpot`}>Shelf Spot</Link>
+          <Link
+            to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`}
+          >
+            Shelf Spot
+          </Link>
         </li>
       </ul>
     );
