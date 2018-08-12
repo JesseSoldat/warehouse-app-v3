@@ -46,7 +46,8 @@ const LocationCard = ({
     storageId,
     rackId,
     shelfId,
-    spotId: shelfSpotId
+    spotId: shelfSpotId,
+    boxId
   }) => {
     return (
       <ul className="customBreadcrumb d-inline-block">
@@ -68,6 +69,15 @@ const LocationCard = ({
             Shelf Spot
           </Link>
         </li>
+        {boxId && (
+          <li>
+            <Link
+              to={`/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`}
+            >
+              Box
+            </Link>
+          </li>
+        )}
       </ul>
     );
   };
@@ -131,8 +141,6 @@ const LocationCard = ({
       );
     };
 
-    const { spotId, type, storageId, rackId, shelfId } = breadcrumb;
-
     // set the content
     content = (
       <div>
@@ -161,13 +169,7 @@ const LocationCard = ({
                   <strong className="pr-3 pl-4 d-inline-block">
                     Location:
                   </strong>
-                  {renderBreadCrumb({
-                    spotId,
-                    type,
-                    storageId,
-                    rackId,
-                    shelfId
-                  })}
+                  {renderBreadCrumb(breadcrumb)}
                 </div>
               </ul>
             </div>

@@ -22,7 +22,7 @@ const createLocationObj = (productLocation, productId) => {
       return;
     }
 
-    let label, key, place, spotId, shelfId, rackId, storageId;
+    let label, key, place, boxId, spotId, shelfId, rackId, storageId;
 
     if (kind === "shelfSpot") {
       key = "shelfSpotLabel";
@@ -42,6 +42,7 @@ const createLocationObj = (productLocation, productId) => {
       shelfId = item.shelfSpot.shelf._id;
       rackId = item.shelfSpot.shelf.rack._id;
       storageId = item.shelfSpot.shelf.rack.storage._id;
+      boxId = item._id;
     }
 
     productLocationObj = {
@@ -56,7 +57,8 @@ const createLocationObj = (productLocation, productId) => {
         spotId,
         shelfId,
         rackId,
-        storageId
+        storageId,
+        boxId
       }
     };
   }
