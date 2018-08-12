@@ -7,12 +7,12 @@ import { loading } from "./ui";
 import { productLoaded } from "./product";
 // types
 
-export const linkProduct = obj => async dispatch => {
+export const linkProduct = (obj, history) => async dispatch => {
   try {
+    const { productId, type } = obj;
     let apiUrl;
-    console.log(obj);
 
-    switch (obj.type) {
+    switch (type) {
       case "shelfSpot":
       case "product":
         apiUrl = `/api/link/productToShelfSpot`;
@@ -28,8 +28,6 @@ export const linkProduct = obj => async dispatch => {
         );
     }
 
-    console.log(apiUrl);
-
     const res = await axios.patch(apiUrl, obj);
 
     const { msg, payload, options } = res.data;
@@ -40,6 +38,8 @@ export const linkProduct = obj => async dispatch => {
     dispatch(productLoaded(product));
 
     checkForMsg(msg, dispatch, options);
+
+    history.push(`/products/${productId}`);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", "product to shelf spot");
   }

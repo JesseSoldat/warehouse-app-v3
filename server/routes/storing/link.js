@@ -34,7 +34,21 @@ module.exports = (app, io) => {
             }
           },
           { new: true }
-        ),
+        )
+          .populate("producer customer")
+          .populate({
+            path: "productLocation.item",
+            populate: {
+              path: "shelf shelfSpot",
+              populate: {
+                path: "shelf rack",
+                populate: {
+                  path: "rack storage",
+                  populate: { path: "storage" }
+                }
+              }
+            }
+          }),
         ShelfSpot.findByIdAndUpdate(
           shelfSpotId,
           {

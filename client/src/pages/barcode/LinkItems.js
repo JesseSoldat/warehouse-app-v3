@@ -1,4 +1,5 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
+import { withRouter } from "react-router-dom";
 import { connect } from "react-redux";
 
 // custom components
@@ -7,7 +8,6 @@ import Tabs from "./components/Tabs";
 // common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
-import Spinner from "../../components/Spinner";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
 // actions
@@ -104,7 +104,7 @@ class LinkItems extends Component {
     switch (type) {
       case "product":
       case "linkProductToBox":
-        this.props.linkProduct(obj);
+        this.props.linkProduct(obj, this.props.history);
         break;
 
       case "linkBoxToSpot":
@@ -206,4 +206,4 @@ const mapStateToProps = ({ ui, storage }) => ({
 export default connect(
   mapStateToProps,
   { getStorageIds, linkProduct }
-)(LinkItems);
+)(withRouter(LinkItems));
