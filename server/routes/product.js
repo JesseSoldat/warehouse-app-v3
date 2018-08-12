@@ -240,8 +240,10 @@ module.exports = (app, io) => {
         const { kind, item } = productLocation;
         switch (kind) {
           case "shelfSpot":
-            await ShelfSpot.findByIdAndUpdate(
-              item._id,
+            const shelfSpotId = item;
+
+            const shelf = await ShelfSpot.findByIdAndUpdate(
+              shelfSpotId,
               {
                 $pull: {
                   storedItems: { item: productId }
@@ -249,23 +251,25 @@ module.exports = (app, io) => {
               },
               { new: true }
             );
+
             options["update"] = "storage";
             console.log("removed product from shelf spot");
-
             break;
 
           case "box":
+            const boxId = item;
+
             await Box.findByIdAndUpdate(
-              item._id,
+              boxId,
               {
                 $pull: {
-                  storedItems: { item: productId }
+                  storedItems: productId
                 }
               },
               { new: true }
             );
+
             options["update"] = "storage";
-            console.log("removed product from box");
             break;
 
           default:
