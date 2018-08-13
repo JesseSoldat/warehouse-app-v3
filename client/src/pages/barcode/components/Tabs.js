@@ -3,6 +3,7 @@ import React from "react";
 // custom components
 import BarcodeScan from "./BarcodeScan";
 import ManualLink from "./ManualLink";
+import LinkProductToBox from "./LinkProductToBox";
 
 const Tabs = ({
   // manual link
@@ -21,16 +22,41 @@ const Tabs = ({
   scanning,
   handleClickUseCamera,
   handleErr,
-  handleScan
+  handleScan,
+  // linkProductToBox
+  orphans,
+  history
 }) => {
+  let content;
+
   switch (type) {
+    case "product":
     case "linkBoxToSpot":
+      content = (
+        <ManualLink
+          type={type}
+          storageIdsEntity={storageIdsEntity}
+          loading={loading}
+          storageId={storageId}
+          rackId={rackId}
+          shelfId={shelfId}
+          shelfSpotId={shelfSpotId}
+          boxId={boxId}
+          handleSelectChange={handleSelectChange}
+          handleLink={handleLink}
+        />
+      );
       break;
 
     case "linkProductToBox":
-      break;
-
-    case "product":
+      content = (
+        <LinkProductToBox
+          loading={loading}
+          orphans={orphans}
+          handleLink={handleSelectChange}
+          history={history}
+        />
+      );
       break;
 
     default:
@@ -90,18 +116,7 @@ const Tabs = ({
           role="tabpanel"
           aria-labelledby="profile-tab"
         >
-          <ManualLink
-            type={type}
-            storageIdsEntity={storageIdsEntity}
-            loading={loading}
-            storageId={storageId}
-            rackId={rackId}
-            shelfId={shelfId}
-            shelfSpotId={shelfSpotId}
-            boxId={boxId}
-            handleSelectChange={handleSelectChange}
-            handleLink={handleLink}
-          />
+          {content}
         </div>
       </div>
     </div>

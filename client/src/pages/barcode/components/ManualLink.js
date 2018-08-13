@@ -320,7 +320,7 @@ const ManualLink = ({
               {rackSelect}
               {shelfSelect}
               {shelfSpotSelect}
-              {type !== "linkBoxToSpot" && { boxSpotSelect }}
+              {type !== "linkBoxToSpot" && boxSpotSelect}
               <button
                 type="submit"
                 disabled={shelfSpotId === ""}

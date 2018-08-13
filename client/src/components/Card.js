@@ -5,6 +5,7 @@ import truncateStr from "../utils/stringManipulation/truncateStr";
 
 const Card = ({ data, cardSize = "240px" }) => {
   const {
+    id = "",
     title = "",
     picture = "",
     subtitle = "",
@@ -12,6 +13,10 @@ const Card = ({ data, cardSize = "240px" }) => {
     link2 = "",
     linkText1 = "",
     linkText2 = "",
+    cb1Text = "",
+    cb2Text = "",
+    cb1 = null,
+    cb2 = null,
     showPic = true,
     picSrc = "http://via.placeholder.com/150x100"
   } = data;
@@ -36,18 +41,36 @@ const Card = ({ data, cardSize = "240px" }) => {
         <h6 className="card-title">{truncateStr(title, 25)}</h6>
         {subtitle && <h6 className="card-subtitle mb-2">{subtitle}</h6>}
 
-        <div className="d-flex justify-content-between mt-2">
-          {link1 && (
-            <Link className="card-link" to={link1}>
-              <button className="btn btn-default">{linkText1}</button>
-            </Link>
-          )}
+        {link1 && (
+          <div className="d-flex justify-content-between mt-2">
+            {link1 && (
+              <Link className="card-link" to={link1}>
+                <button className="btn btn-default">{linkText1}</button>
+              </Link>
+            )}
 
-          {link2 && (
-            <Link className="card-link" to={link2}>
-              <button className="btn btn-default">{linkText2}</button>
-            </Link>
-          )}
+            {link2 && (
+              <Link className="card-link" to={link2}>
+                <button className="btn btn-default">{linkText2}</button>
+              </Link>
+            )}
+          </div>
+        )}
+
+        <div>
+          <div className="d-flex justify-content-between">
+            {cb1Text && (
+              <button onClick={() => cb1(id)} className="btn btn-default mr-2">
+                {cb1Text}
+              </button>
+            )}
+
+            {cb2Text && (
+              <button onClick={() => cb2(id)} className="btn btn-default ml-2">
+                {cb2Text}
+              </button>
+            )}
+          </div>
         </div>
       </div>
     </div>

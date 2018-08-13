@@ -7,30 +7,21 @@ import CardList from "../../../../components/CardList";
 import productCardData from "../helpers/productCardData";
 
 const BoxTable = ({
+  // both
   location,
+  // have location
+  ids,
   rack,
-  shelfId,
-  shelfSpotId,
+  // no location
   boxId,
   boxLabel
 }) => {
-  let rackId,
-    storageId,
-    shelf,
-    shelfSpot,
-    box,
-    notStored,
-    noProducts,
-    haveProducts;
-  let label = boxLabel;
-  let storedItems = [];
-
+  // NO location ----------------------------------------------
   // default URL for when the box has no location
   let editUrl = `/box/edit/${boxId}?type=box`;
   let boxToSpotUrl = `/barcode/scan/box/${boxId}?type=linkBoxToSpot`;
   let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox`;
-
-  // NO location ----------------------------------------------
+  let notStored;
   if (!location) {
     notStored = (
       <tr className="py-4">
@@ -48,21 +39,23 @@ const BoxTable = ({
     );
   }
   // have location --------------------------------------
-  else {
+  let label = boxLabel;
+  let storedItems = [];
+  let shelf, shelfSpot, box;
+
+  if (location) {
+    const { storageId, rackId, shelfId, shelfSpotId } = ids;
+    boxId = ids.boxId;
+
     // change the URL for a box with a location
     editUrl = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
     boxToSpotUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkBoxToSpot`;
-    productToBoxUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox`;
-    // get the box from the RACK object
-    rackId = rack._id;
-    storageId = rack.storage._id;
-
+    productToBoxUrl = `/barcode/scan/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox`;
+    // get the BOX from the RACK object
     shelf = rack.shelves.find(shelf => shelf._id === shelfId);
-    // console.log("shelf");
-    // console.log(shelf);
+
     shelfSpot = shelf.shelfSpots.find(spot => spot._id === shelfSpotId);
-    // console.log("shelfSpot");
-    // console.log(shelfSpot);
+
     box = shelfSpot.storedItems.find(
       storedItem => storedItem.item._id === boxId
     );
@@ -72,10 +65,12 @@ const BoxTable = ({
   }
 
   // have products --------------------------------------------
+  let haveProducts;
   if (storedItems.length > 0) {
     haveProducts = <CardList data={productCardData(storedItems)} />;
   }
   // no products ------------------------------------------------
+  let noProducts;
   if (storedItems.length === 0) {
     noProducts = (
       <tr className="py-4">

@@ -13,6 +13,7 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // actions
 import { getStorageIds } from "../../actions/storage";
 import { linkProduct, linkBox } from "../../actions/link";
+import { startGetProducts } from "../../actions/product";
 
 class LinkItems extends Component {
   state = {
@@ -52,6 +53,9 @@ class LinkItems extends Component {
       // Product Details -> Scan
       // put product on shelf OR in box
       case "product":
+        if (!storageIdsEntity) {
+          this.props.getStorageIds();
+        }
         this.setState({
           title: "Link Product",
           productId,
@@ -63,6 +67,13 @@ class LinkItems extends Component {
       // Box Details -> Scan
       case "linkProductToBox":
         // fetch orphans to put in the box
+        this.props.startGetProducts({
+          searchType: "orphans",
+          skip: 0,
+          limit: 100,
+          page: 0
+        });
+
         this.setState({
           title: "Link Product",
           boxId,
@@ -73,6 +84,10 @@ class LinkItems extends Component {
       // BOX -------------------------------------------
       // Box Details -> Scan
       case "linkBoxToSpot":
+        if (!storageIdsEntity) {
+          this.props.getStorageIds();
+        }
+
         this.setState({
           title: "Link Box",
           boxId,
@@ -85,10 +100,6 @@ class LinkItems extends Component {
         // type is "" when clicking Navbar Scan link
         this.setState({ showScan: true });
         break;
-    }
-
-    if (!storageIdsEntity) {
-      this.props.getStorageIds();
     }
   };
 
@@ -168,16 +179,17 @@ class LinkItems extends Component {
       handleClickUseCamera={this.handleClickUseCamera}
       handleErr={this.handleErr}
       handleScan={this.handleScan}
+      // linkProductToBox
+      orphans={this.props.orphans}
+      history={this.props.history}
     />
   );
 
   render() {
-    const { type } = this.state;
-    const { loading } = this.props;
-
     let content;
+    if (this.props.orphans.length > 0) console.log(this.props.orphans);
 
-    switch (type) {
+    switch (this.state.type) {
       case "product":
       case "linkProductToBox":
       // need to fetch orphans
@@ -200,12 +212,13 @@ class LinkItems extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, storage }) => ({
+const mapStateToProps = ({ ui, storage, product }) => ({
   loading: ui.loading,
-  storageIdsEntity: storage.storageIdsEntity
+  storageIdsEntity: storage.storageIdsEntity,
+  orphans: product.products
 });
 
 export default connect(
   mapStateToProps,
-  { getStorageIds, linkProduct, linkBox }
+  { getStorageIds, linkProduct, linkBox, startGetProducts }
 )(withRouter(LinkItems));

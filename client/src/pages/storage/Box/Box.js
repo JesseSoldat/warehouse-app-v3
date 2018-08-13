@@ -57,10 +57,8 @@ class Box extends Component {
   render() {
     // props
     const { loading, rack, box, match } = this.props;
-    const { rackId } = match.params;
-    const { shelfId } = match.params;
-    const { shelfSpotId } = match.params;
-    const { boxId } = match.params;
+    const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
+    const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
 
     let content;
 
@@ -79,18 +77,7 @@ class Box extends Component {
     // have location
     else if (match.path !== "/box/:boxId") {
       if (rack && rack._id === rackId) {
-        console.log(rack);
-
-        content = (
-          <BoxTable
-            rack={rack}
-            shelfId={shelfId}
-            shelfSpotId={shelfSpotId}
-            boxId={boxId}
-            boxLabel={null}
-            location={true}
-          />
-        );
+        content = <BoxTable ids={ids} rack={rack} location={true} />;
       }
     }
 
