@@ -43,41 +43,64 @@ const LocationCard = ({
   };
 
   const renderBreadCrumb = ({
+    haveLocation,
     storageId,
     rackId,
     shelfId,
     spotId: shelfSpotId,
     boxId
   }) => {
+    const storageLink = haveLocation ? (
+      <li>
+        <Link to={`/storage/${storageId}`}>Storage</Link>
+      </li>
+    ) : null;
+
+    const rackLink = haveLocation ? (
+      <li>
+        <Link to={`/rack/${storageId}/${rackId}?type=rack`}>Rack</Link>
+      </li>
+    ) : null;
+
+    const shelfLink = haveLocation ? (
+      <li>
+        <Link to={`/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`}>
+          Shelf
+        </Link>
+      </li>
+    ) : null;
+
+    const shelfSpotLink = haveLocation ? (
+      <li>
+        <Link
+          to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`}
+        >
+          Shelf Spot
+        </Link>
+      </li>
+    ) : null;
+
+    const boxLink = haveLocation ? (
+      <li>
+        <Link
+          to={`/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`}
+        >
+          Box
+        </Link>
+      </li>
+    ) : (
+      <li>
+        <Link to={`/box/${boxId}?type=box`}>Box</Link>
+      </li>
+    );
+
     return (
       <ul className="customBreadcrumb d-inline-block">
-        <li>
-          <Link to={`/storage/${storageId}`}>Storage</Link>
-        </li>
-        <li>
-          <Link to={`/rack/${storageId}/${rackId}?type=rack`}>Rack</Link>
-        </li>
-        <li>
-          <Link to={`/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`}>
-            Shelf
-          </Link>
-        </li>
-        <li>
-          <Link
-            to={`/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`}
-          >
-            Shelf Spot
-          </Link>
-        </li>
-        {boxId && (
-          <li>
-            <Link
-              to={`/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`}
-            >
-              Box
-            </Link>
-          </li>
-        )}
+        {storageLink}
+        {rackLink}
+        {shelfLink}
+        {shelfSpotLink}
+        {boxId && boxLink}
       </ul>
     );
   };
@@ -166,9 +189,7 @@ const LocationCard = ({
                   <SingleField label={label} value={value} key={index} />
                 ))}
                 <div>
-                  <strong className="pr-3 pl-4 d-inline-block">
-                    Location:
-                  </strong>
+                  <strong className="pl-4 d-inline-block">Location:</strong>
                   {renderBreadCrumb(breadcrumb)}
                 </div>
               </ul>

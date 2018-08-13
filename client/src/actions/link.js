@@ -9,7 +9,6 @@ import { productLoaded } from "./product";
 
 export const linkProduct = (obj, productTo, history) => async dispatch => {
   try {
-    const { productId } = obj;
     let apiUrl;
 
     switch (productTo) {
@@ -38,7 +37,7 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
 
     checkForMsg(msg, dispatch, options);
 
-    history.push(`/products/${productId}`);
+    history.push(obj.historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", "product to shelf spot");
   }

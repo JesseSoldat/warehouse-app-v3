@@ -13,9 +13,12 @@ const BoxTable = ({
   ids,
   rack,
   // no location
+  items,
   boxId,
   boxLabel
 }) => {
+  let storedItems = [];
+
   // NO location ----------------------------------------------
   // default URL for when the box has no location
   let editUrl = `/box/edit/${boxId}?type=box`;
@@ -23,6 +26,9 @@ const BoxTable = ({
   let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox`;
   let notStored;
   if (!location) {
+    if (items) {
+      storedItems = items;
+    }
     notStored = (
       <tr className="py-4">
         <td>
@@ -40,7 +46,6 @@ const BoxTable = ({
   }
   // have location --------------------------------------
   let label = boxLabel;
-  let storedItems = [];
   let shelf, shelfSpot, box;
 
   if (location) {

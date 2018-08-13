@@ -60,13 +60,19 @@ const Card = ({ data, cardSize = "240px" }) => {
         <div>
           <div className="d-flex justify-content-between">
             {cb1Text && (
-              <button onClick={() => cb1(id)} className="btn btn-default mr-2">
+              <button
+                onClick={e => cb1(id, e)}
+                className="btn btn-default mr-2"
+              >
                 {cb1Text}
               </button>
             )}
 
             {cb2Text && (
-              <button onClick={() => cb2(id)} className="btn btn-default ml-2">
+              <button
+                onClick={e => cb2(id, e)}
+                className="btn btn-default ml-2"
+              >
                 {cb2Text}
               </button>
             )}

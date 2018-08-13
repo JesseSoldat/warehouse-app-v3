@@ -25,6 +25,7 @@ const Tabs = ({
   handleScan,
   // linkProductToBox
   orphans,
+  handleLinkProductToBox,
   history
 }) => {
   let content;
@@ -53,7 +54,7 @@ const Tabs = ({
         <LinkProductToBox
           loading={loading}
           orphans={orphans}
-          handleLink={handleSelectChange}
+          handleLinkProductToBox={handleLinkProductToBox}
           history={history}
         />
       );

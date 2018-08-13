@@ -17,6 +17,7 @@ import { startGetProducts } from "../../actions/product";
 
 class LinkItems extends Component {
   state = {
+    historyUrl: "",
     // scan
     type: "",
     title: "",
@@ -60,7 +61,8 @@ class LinkItems extends Component {
           title: "Link Product",
           productId,
           type,
-          showTabs: true
+          showTabs: true,
+          historyUrl: `/products/${productId}`
         });
         break;
       // PRODUCT - BOX -------------------------------------------
@@ -74,11 +76,19 @@ class LinkItems extends Component {
           page: 0
         });
 
+        const haveLocation = false;
+        let historyUrl = `/box/${boxId}?type=box`;
+        if (haveLocation) {
+          const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+          historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
+        }
+
         this.setState({
           title: "Link Product",
           boxId,
           type,
-          showTabs: true
+          showTabs: true,
+          historyUrl
         });
         break;
       // BOX -------------------------------------------
@@ -107,12 +117,16 @@ class LinkItems extends Component {
     this.setState({ ...obj });
   };
 
+  handleLinkProductToBox = productId => {
+    const obj = { boxId: this.state.boxId, productId };
+    this.props.linkProduct(obj, "box", this.props.history);
+  };
+
   handleLink = e => {
     e.preventDefault();
 
     switch (this.state.type) {
       case "product":
-      case "linkProductToBox":
         const productTo = this.state.boxId ? "box" : "shelfSpot";
         this.props.linkProduct(this.state, productTo, this.props.history);
         break;
@@ -181,6 +195,7 @@ class LinkItems extends Component {
       handleScan={this.handleScan}
       // linkProductToBox
       orphans={this.props.orphans}
+      handleLinkProductToBox={this.handleLinkProductToBox}
       history={this.props.history}
     />
   );

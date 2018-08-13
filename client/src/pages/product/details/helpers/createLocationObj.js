@@ -4,6 +4,8 @@ import capitalizeFirstLetter from "../../../../utils/stringManipulation/capitali
 const createLocationObj = (productLocation, productId) => {
   let productLocationObj;
 
+  console.log(productLocation);
+
   const noProductLocation = {
     haveLocation: false,
     data: [{ label: "Label", value: "" }, { label: "Type", value: "" }]
@@ -22,27 +24,35 @@ const createLocationObj = (productLocation, productId) => {
       return;
     }
 
-    let label, key, place, boxId, spotId, shelfId, rackId, storageId;
+    let label, key, place;
+    let breadcrumb = { productId };
 
     if (kind === "shelfSpot") {
       key = "shelfSpotLabel";
       label = "Spot Label";
       place = item === null ? "" : item[key];
-      spotId = item._id;
-      shelfId = item.shelf._id;
-      rackId = item.shelf.rack._id;
-      storageId = item.shelf.rack.storage._id;
+      breadcrumb["haveLocation"] = true;
+      breadcrumb["spotId"] = item._id;
+      breadcrumb["shelfId"] = item.shelf._id;
+      breadcrumb["rackId"] = item.shelf.rack._id;
+      breadcrumb["storageId"] = item.shelf.rack.storage._id;
     }
 
     if (kind === "box") {
       key = "boxLabel";
       label = "Box Label";
+      breadcrumb["haveLocation"] = false;
+      breadcrumb["boxId"] = item._id;
       place = item === null ? "" : item[key];
-      spotId = item.shelfSpot._id;
-      shelfId = item.shelfSpot.shelf._id;
-      rackId = item.shelfSpot.shelf.rack._id;
-      storageId = item.shelfSpot.shelf.rack.storage._id;
-      boxId = item._id;
+
+      // The BOX has been stored on a SHELFSPOT
+      if (item.shelfSpot) {
+        breadcrumb["haveLocation"] = true;
+        breadcrumb["spotId"] = item.shelfSpot._id;
+        breadcrumb["shelfId"] = item.shelfSpot.shelf._id;
+        breadcrumb["rackId"] = item.shelfSpot.shelf.rack._id;
+        breadcrumb["storageId"] = item.shelfSpot.shelf.rack.storage._id;
+      }
     }
 
     productLocationObj = {
@@ -52,14 +62,7 @@ const createLocationObj = (productLocation, productId) => {
         { label: label, value: place },
         { label: "Type", value: capitalizeFirstLetter(kind) }
       ],
-      breadcrumb: {
-        productId,
-        spotId,
-        shelfId,
-        rackId,
-        storageId,
-        boxId
-      }
+      breadcrumb
     };
   }
   return productLocationObj;

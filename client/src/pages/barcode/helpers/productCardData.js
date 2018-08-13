@@ -10,7 +10,7 @@ const productCardData = (products, cb1, cb2) => {
       cb1,
       cb2,
       cb1Text: "View",
-      cb2Text: "Edit"
+      cb2Text: "Link"
     };
   });
 };
