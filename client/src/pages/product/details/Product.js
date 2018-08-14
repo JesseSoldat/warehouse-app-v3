@@ -160,6 +160,8 @@ class Product extends Component {
     if (loading) {
       content = <Spinner />;
     } else if (product) {
+      console.log("product", product);
+
       const {
         // array ----------
         packagingPictures,

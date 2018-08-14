@@ -1,5 +1,6 @@
 // utils
 import capitalizeFirstLetter from "../../../../utils/stringManipulation/capitalizeFirstLetter";
+import isEmpty from "../../../../utils/validation/isEmpty";
 
 const createLocationObj = (productLocation, productId) => {
   let productLocationObj;
@@ -10,11 +11,12 @@ const createLocationObj = (productLocation, productId) => {
   };
 
   // No Product Location -----------------------------------------
-  if (!productLocation) {
+  if (isEmpty(productLocation)) {
     productLocationObj = noProductLocation;
   }
   // Have a Product Location -----------------------------------------
   else {
+    console.log("haveLocation");
     const { kind, item } = productLocation;
 
     if (!kind || !item) {
@@ -63,6 +65,7 @@ const createLocationObj = (productLocation, productId) => {
       breadcrumb
     };
   }
+
   return productLocationObj;
 };
 
