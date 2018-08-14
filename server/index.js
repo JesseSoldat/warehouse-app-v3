@@ -23,6 +23,7 @@ require("./routes/storage/shelf")(app, io);
 require("./routes/storage/shelfSpot")(app, io);
 require("./routes/storage/box")(app, io);
 require("./routes/storing/link")(app, io);
+require("./routes/storing/unlink")(app, io);
 
 if (process.env.NODE_ENV === "production") {
   // express will serve up production assets (main.js or main.css)

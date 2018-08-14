@@ -30,6 +30,7 @@ import {
   startGetProduct,
   deleteProduct
 } from "../../../actions/product";
+import { unlinkProduct } from "../../../actions/unlink";
 
 class Product extends Component {
   state = {
@@ -129,7 +130,26 @@ class Product extends Component {
     history.push(`/products/edit/${productId}`);
   };
 
-  onUnlinkProduct = () => {};
+  onUnlinkProduct = () => {
+    const { product, unlinkProduct } = this.props;
+    const { productLocation, _id } = product;
+    const { kind, item } = productLocation;
+    const productId = _id;
+
+    // remove product from shelf spot
+    if (kind === "shelfSpot") {
+      const shelfSpotId = item._id;
+      const obj = { shelfSpotId, kind, productId };
+      unlinkProduct(obj, product);
+    }
+    // remove product from box
+    else if (kind === "box") {
+      const boxId = item._id;
+      const obj = { boxId, kind, productId };
+      console.log("shelfSpot", obj);
+      unlinkProduct(obj, product);
+    }
+  };
 
   render() {
     const { product, loading, match, history } = this.props;
@@ -246,6 +266,7 @@ export default connect(
     changeRoute,
     productLoaded,
     startGetProduct,
-    deleteProduct
+    deleteProduct,
+    unlinkProduct
   }
 )(withRouter(Product));

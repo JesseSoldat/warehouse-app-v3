@@ -1,0 +1,41 @@
+import axios from "axios";
+// helpers
+import checkForMsg from "./helpers/checkForMsg";
+import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
+// actions
+import { loading } from "./ui";
+import { productLoaded } from "./product";
+// types
+
+export const unlinkProduct = (obj, product) => async dispatch => {
+  let apiUrl, errMsg;
+
+  try {
+    switch (obj.kind) {
+      case "shelfSpot":
+        apiUrl = `/api/unlink/productFromShelfSpot`;
+        errMsg = "product from shelf spot";
+        break;
+      case "box":
+        apiUrl = `/api/unlink/productFromBox`;
+        errMsg = "product from box";
+        break;
+      default:
+        throw new Error("An error occured while trying to unlink the product.");
+    }
+
+    const res = await axios.patch(apiUrl, obj);
+
+    // update store with new data
+    const updatedProduct = { ...product };
+    updatedProduct.productLocation = {};
+
+    dispatch(productLoaded(updatedProduct));
+
+    const { msg, options } = res.data;
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "unlink", errMsg);
+  }
+};

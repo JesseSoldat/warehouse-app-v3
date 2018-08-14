@@ -60,7 +60,6 @@ export const startGetProducts = query => async dispatch => {
     const res = await axios.get(getProductsQueryUrl(query));
 
     const { msg, payload, options } = res.data;
-    console.log(res.data);
 
     const { query: q, products } = payload;
 

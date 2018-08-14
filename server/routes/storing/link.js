@@ -7,7 +7,6 @@ const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
-const mergeObjFields = require("../../utils/mergeObjFields");
 
 module.exports = (app, io) => {
   const emit = senderId => {
