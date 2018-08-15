@@ -4,10 +4,12 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
-// types
+import { showOverlay } from "./ui";
 
 export const unlinkProduct = (obj, product) => async dispatch => {
   let apiUrl, errMsg;
+
+  dispatch(showOverlay(true));
 
   try {
     switch (obj.kind) {
@@ -34,6 +36,8 @@ export const unlinkProduct = (obj, product) => async dispatch => {
     const { msg, options } = res.data;
 
     checkForMsg(msg, dispatch, options);
+
+    dispatch(showOverlay(false));
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "unlink", errMsg);
   }

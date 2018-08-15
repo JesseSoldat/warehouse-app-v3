@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 
 import { startLogout } from "../actions/auth";
 
-const NavBar = ({ isAuth, startLogout, history }) => {
+const NavBar = ({ isAuth, startLogout }) => {
   const brandRoute = isAuth ? "/dashboard" : "/";
   const brand = (
     <Link className="navbar-brand" to={brandRoute}>
@@ -135,8 +135,7 @@ const NavBar = ({ isAuth, startLogout, history }) => {
   };
 
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark">
-      {" "}
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark site-navbar">
       {brand}
       <button
         className="navbar-toggler"

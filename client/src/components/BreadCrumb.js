@@ -17,12 +17,14 @@ const BreadCrumb2 = ({ match }) => {
   let link1, link2, link3, link4, link5, text;
 
   const createLink = (link, url) => (
-    <li className="breadcrumb-item">
+    <li className="breadcrumb-item site-breadcrumb-link">
       <Link to={url}>{link}</Link>
     </li>
   );
 
-  const createText = text => <li className="breadcrumb-item">{text}</li>;
+  const createText = text => (
+    <li className="breadcrumb-item site-breadcrumb-link">{text}</li>
+  );
 
   switch (path) {
     // GENERAL ROUTES
@@ -310,7 +312,7 @@ const BreadCrumb2 = ({ match }) => {
   }
 
   return (
-    <nav aria-label="breadcrumb" className="pb-0">
+    <nav aria-label="breadcrumb " className="pb-0 site-breadcrumb">
       <ol className="breadcrumb">
         {link1}
         {link2}

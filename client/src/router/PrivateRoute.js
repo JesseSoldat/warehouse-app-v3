@@ -4,7 +4,7 @@ import { Route, Redirect } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
 import BreadCrumb from "../components/BreadCrumb";
-
+import OverlaySpinner from "../components/OverlaySpinner";
 import Socket from "../components/Socket";
 
 const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
@@ -17,7 +17,7 @@ const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
             <Socket />
             <NavBar />
             <BreadCrumb />
-
+            <OverlaySpinner />
             <div className="my-3">
               <Component {...props} />
             </div>

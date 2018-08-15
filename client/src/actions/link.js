@@ -4,10 +4,12 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
-// types
+import { showOverlay } from "./ui";
 
 export const linkProduct = (obj, productTo, history) => async dispatch => {
   let apiUrl, info;
+  dispatch(showOverlay(true));
+
   try {
     switch (productTo) {
       case "shelfSpot":
@@ -37,6 +39,8 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
 
     checkForMsg(msg, dispatch, options);
 
+    dispatch(showOverlay(false));
+
     history.push(obj.historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", info);
@@ -50,6 +54,9 @@ export const relinkProduct = (
   history
 ) => async dispatch => {
   let apiUrl, info;
+
+  dispatch(showOverlay(true));
+
   try {
     switch (productTo) {
       case "shelfSpot":
@@ -79,6 +86,8 @@ export const relinkProduct = (
 
     checkForMsg(msg, dispatch, options);
 
+    dispatch(showOverlay(false));
+
     history.push(obj.historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "relink", info);
@@ -88,12 +97,16 @@ export const relinkProduct = (
 export const linkBox = (obj, history) => async dispatch => {
   const { storageId, rackId, shelfId, shelfSpotId, boxId } = obj;
 
+  dispatch(showOverlay(true));
+
   try {
     const apiUrl = "/api/link/boxToShelfSpot";
     const res = await axios.patch(apiUrl, { boxId, shelfSpotId });
     const { msg, options } = res.data;
 
     checkForMsg(msg, dispatch, options);
+
+    dispatch(showOverlay(false));
 
     history.push(
       `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type="box"`
