@@ -6,13 +6,15 @@ export const SHOW_OVERLAY = "SHOW_OVERLAY";
 export const serverMsg = (msg = null) => ({
   type: NEW_MSG,
   msg,
-  loading: false
+  loading: false,
+  showOverlay: false
 });
 
 export const serverOptions = (options = null) => ({
   type: NEW_OPTIONS,
   options,
-  loading: false
+  loading: false,
+  showOverlay: false
 });
 
 export const loading = loading => ({

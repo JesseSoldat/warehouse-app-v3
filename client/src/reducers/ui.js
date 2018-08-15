@@ -20,10 +20,10 @@ export default (state = initialState, action) => {
       return { ...state, loading };
 
     case NEW_MSG:
-      return { ...state, msg, loading };
+      return { ...state, msg, loading, showOverlay };
 
     case NEW_OPTIONS:
-      return { ...state, options, loading };
+      return { ...state, options, loading, showOverlay };
 
     case SHOW_OVERLAY:
       return { ...state, showOverlay };
