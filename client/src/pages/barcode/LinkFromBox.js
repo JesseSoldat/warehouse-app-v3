@@ -16,6 +16,7 @@ import { startGetProducts } from "../../actions/product";
 
 class LinkFromBox extends Component {
   state = {
+    formSubmit: false,
     type: "",
     location: null,
     title: "",
@@ -88,16 +89,18 @@ class LinkFromBox extends Component {
   };
 
   handleSelectChange = obj => {
-    this.setState({ ...obj });
+    this.setState({ ...obj, formSubmit: false });
   };
 
   handleLink = e => {
     e.preventDefault();
+    this.setState({ formSubmit: true });
 
     this.props.linkBox(this.state, this.props.history);
   };
 
   handleLinkProductToBox = productId => {
+    this.setState({ formSubmit: true });
     const obj = { boxId: this.state.boxId, productId };
     this.props.linkProduct(obj, "box", this.props.history);
   };
@@ -129,6 +132,7 @@ class LinkFromBox extends Component {
       // both -----------------------------
       type={this.state.type}
       loading={this.props.loading}
+      formSubmit={this.state.formSubmit}
       // scan --------------------------------
       result={this.state.result}
       scanning={this.state.scanning}

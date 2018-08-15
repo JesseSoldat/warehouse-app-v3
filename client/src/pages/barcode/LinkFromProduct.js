@@ -16,6 +16,7 @@ import { startGetProduct } from "../../actions/product";
 
 class LinkFromProduct extends Component {
   state = {
+    formSubmit: false,
     type: "",
     title: "",
     productId: "",
@@ -67,11 +68,12 @@ class LinkFromProduct extends Component {
 
   // child component CBs ----------------------------------
   handleSelectChange = obj => {
-    this.setState({ ...obj });
+    this.setState({ ...obj, formSubmit: false });
   };
 
   handleLink = e => {
     e.preventDefault();
+    this.setState({ formSubmit: true });
     const { type, boxId } = this.state;
     const productTo = boxId ? "box" : "shelfSpot";
 
@@ -92,7 +94,6 @@ class LinkFromProduct extends Component {
       if (productLocation.kind === "box") {
         prevLocation["kind"] = "box";
         prevLocation["_id"] = productLocation.item._id;
-        console.log(productLocation.item);
       }
 
       this.props.relinkProduct(
@@ -130,6 +131,7 @@ class LinkFromProduct extends Component {
       // both -----------------------------
       type={this.state.type}
       loading={this.props.loading}
+      formSubmit={this.state.formSubmit}
       // scan --------------------------------
       result={this.state.result}
       scanning={this.state.scanning}

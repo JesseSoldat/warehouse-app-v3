@@ -15,7 +15,8 @@ const ManualLink = ({
   shelfId,
   shelfSpotId,
   handleSelectChange,
-  handleLink
+  handleLink,
+  formSubmit = false
 }) => {
   let spinner, text, racks, shelves, shelfSpots, boxes;
 
@@ -293,6 +294,18 @@ const ManualLink = ({
     }
   }
 
+  const disableSubmitBtn = () => {
+    let shouldDisable = false;
+
+    if (shelfSpotId === "") {
+      shouldDisable = true;
+    } else if (formSubmit) {
+      shouldDisable = true;
+    }
+
+    return shouldDisable;
+  };
+
   return (
     <div className="container">
       <div className="row mt-3">
@@ -308,7 +321,7 @@ const ManualLink = ({
               {type !== "linkBoxToSpot" && boxSpotSelect}
               <button
                 type="submit"
-                disabled={shelfSpotId === ""}
+                disabled={disableSubmitBtn()}
                 className="btn btn-primary btn-block"
               >
                 Link

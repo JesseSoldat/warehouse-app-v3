@@ -102,7 +102,7 @@ module.exports = (app, io) => {
       }
       if (kind === "box") {
         oldRefQuery = Box.findByIdAndUpdate(
-          boxId,
+          _id,
           {
             $pull: {
               storedItems: productId
@@ -220,7 +220,7 @@ module.exports = (app, io) => {
 
       serverRes(res, 200, msg, { box, product });
     } catch (err) {
-      console.log("Err: PATCH/productToBox,", err);
+      console.log("Err: PATCH/link/productToBox,", err);
 
       const msg = serverMsg("error", "link", "product to box");
 
@@ -228,7 +228,90 @@ module.exports = (app, io) => {
     }
   });
 
-  app.patch("/api/relink/productToBox", isAuth, async (req, res) => {});
+  app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
+    const { obj, prevLocation } = req.body;
+    const { productId, boxId } = obj;
+    const { kind, _id } = prevLocation;
+
+    let oldRefQuery;
+
+    try {
+      // create query to remove old storage ref
+      if (kind === "shelfSpot") {
+        oldRefQuery = ShelfSpot.findByIdAndUpdate(
+          _id,
+          {
+            $pull: {
+              storedItems: { item: productId }
+            }
+          },
+          { new: true }
+        );
+      }
+      if (kind === "box") {
+        oldRefQuery = Box.findByIdAndUpdate(
+          _id,
+          {
+            $pull: {
+              storedItems: productId
+            }
+          },
+          { new: true }
+        );
+      }
+
+      const [oldSpot, product, box] = await Promise.all([
+        oldRefQuery,
+        Product.findByIdAndUpdate(
+          productId,
+          {
+            $set: {
+              productLocation: {
+                kind: "box",
+                item: boxId
+              }
+            }
+          },
+          { new: true }
+        )
+          .populate("producer customer")
+          .populate({
+            path: "productLocation.item",
+            populate: {
+              path: "shelf shelfSpot",
+              populate: {
+                path: "shelf rack",
+                populate: {
+                  path: "rack storage",
+                  populate: { path: "storage" }
+                }
+              }
+            }
+          }),
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $addToSet: {
+              storedItems: productId
+            }
+          },
+          { new: true }
+        )
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, { box, product });
+    } catch (err) {
+      console.log("Err: PATCH/relink/productToBox,", err);
+
+      const msg = serverMsg("error", "relink", "product to box");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
 
   app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
