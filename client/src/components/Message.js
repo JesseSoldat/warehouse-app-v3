@@ -1,22 +1,31 @@
-import React from "react";
+import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import { serverMsg } from "../actions/ui";
 
-const Message = ({ uiMsg, serverMsg, cb = null }) => {
-  const closeMessage = () => {
-    serverMsg(null);
+class Message extends Component {
+  componentWillUpdate(nextProps) {
+    const { msg } = nextProps;
+
+    console.log("MSG COMPONENT", msg);
+
+    // hide the success message after 3 seconds
+    if (msg && msg.code === "hide-3") {
+      window.scrollTo(0, 0);
+      setTimeout(() => {
+        this.closeMessage();
+      }, 3000);
+    }
+  }
+
+  closeMessage = () => {
+    this.props.serverMsg(null);
   };
 
-  const showMsgContainer = (
-    <div className="row" id="showMsgContainer" style={{ height: "20px" }} />
-  );
+  renderMsg = () => {
+    if (this.props.msg) {
+      const { heading, details, color, code = null } = this.props.msg;
 
-  const renderMsg = () => {
-    if (uiMsg) {
-      const { heading, details, color, code = null } = uiMsg;
-
-      const showCbBtn = cb && code === null ? true : false;
+      const showCbBtn = this.props.cb && code === null ? true : false;
 
       const showMsg = (
         <div className="row">
@@ -27,21 +36,22 @@ const Message = ({ uiMsg, serverMsg, cb = null }) => {
                 role="alert"
               >
                 <span className="mr-auto">
-                  <strong>{heading}: </strong>&nbsp; {details}
+                  <strong>{heading}: </strong>
+                  &nbsp; {details}
                 </span>
 
                 {showCbBtn && (
                   <a
                     href=""
                     className="ml-auto badge badge-info px-2"
-                    onClick={cb}
+                    onClick={this.props.cb}
                     style={{ verticalAlign: "middle", lineHeight: "22px" }}
                   >
                     Try Again?
                   </a>
                 )}
                 <button
-                  onClick={closeMessage}
+                  onClick={this.closeMessage}
                   type="button"
                   className="close"
                   data-dismiss="alert"
@@ -57,15 +67,20 @@ const Message = ({ uiMsg, serverMsg, cb = null }) => {
 
       return showMsg;
     } else {
+      const showMsgContainer = (
+        <div className="row" id="showMsgContainer" style={{ height: "20px" }} />
+      );
       return showMsgContainer;
     }
   };
 
-  return renderMsg();
-};
+  render() {
+    return this.renderMsg();
+  }
+}
 
 const mapStateToProps = ({ ui }) => ({
-  uiMsg: ui.msg
+  msg: ui.msg
 });
 
 export default connect(

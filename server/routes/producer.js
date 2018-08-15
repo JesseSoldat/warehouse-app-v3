@@ -50,7 +50,9 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, null, producer);
+      const msg = msgObj("The producer was created.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, producer);
     } catch (err) {
       console.log("Err: POST/api/producers,", err);
 
@@ -70,7 +72,9 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, null, producer);
+      const msg = msgObj("The producer was updated.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, producer);
     } catch (err) {
       console.log("Err: PATCH/api/producers,", err);
 
@@ -84,9 +88,9 @@ module.exports = (app, io) => {
     try {
       const producer = await Producer.findByIdAndRemove(producerId);
 
-      const msg = msgObj("The producer was deleted.", "blue", "delete");
-
       emit(req.user._id);
+
+      const msg = msgObj("The producer was deleted.", "blue", "hide-3");
 
       serverRes(res, 200, msg, producer);
     } catch (err) {

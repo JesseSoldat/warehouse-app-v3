@@ -153,7 +153,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("The storage was created.", "blue", "create");
+      const msg = msgObj("The storage was created.", "blue", "hide-3");
 
       serverRes(res, 200, msg, storage);
     } catch (err) {
@@ -179,7 +179,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("The storage was updated.", "blue", "update");
+      const msg = msgObj("The storage was updated.", "blue", "hide-3");
 
       serverRes(res, 200, msg, storage);
     } catch (err) {
@@ -205,7 +205,7 @@ module.exports = (app, io) => {
 
       await storage.remove();
 
-      const msg = msgObj("Storage deleted.", "blue");
+      const msg = msgObj("Storage deleted.", "blue", "hide-3");
 
       emit(req.user._id);
 

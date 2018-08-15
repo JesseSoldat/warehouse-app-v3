@@ -163,7 +163,9 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, null, product);
+      const msg = msgObj("The product was created.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, product);
     } catch (err) {
       console.log("ERR: POST/api/products", err);
 
@@ -195,7 +197,9 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, null, updatedProduct);
+      const msg = msgObj("The product was updated.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, updatedProduct);
     } catch (err) {
       console.log("ERR: PATCH/api/products/:productId", err);
 
@@ -281,7 +285,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("The product was deleted.", "blue", "delete");
+      const msg = msgObj("The product was deleted.", "blue", "hide-3");
 
       serverRes(res, 200, msg, options);
     } catch (err) {

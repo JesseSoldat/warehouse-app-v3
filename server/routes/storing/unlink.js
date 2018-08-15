@@ -40,7 +40,11 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("Product and Shelf Spot now unlinked.", "blue");
+      const msg = msgObj(
+        "Product and Shelf Spot now unlinked.",
+        "blue",
+        "hide-3"
+      );
       serverRes(res, 200, msg, null);
     } catch (err) {
       console.log("ERR: Patch/unlink/productFromShelfSpot", err);
@@ -73,7 +77,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("Product and Box now unlinked.", "blue");
+      const msg = msgObj("Product and Box now unlinked.", "blue", "hide-3");
 
       serverRes(res, 200, msg, { box, product });
     } catch (err) {

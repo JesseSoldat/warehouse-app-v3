@@ -24,7 +24,7 @@ module.exports = (app, io) => {
     } catch (err) {
       console.log("Err: GET/BOXES", err);
 
-      const msg = serverMsg("error", "fetcg", "boxes");
+      const msg = serverMsg("error", "fetch", "boxes");
       serverRes(res, 400, msg, null);
     }
   });
@@ -49,7 +49,7 @@ module.exports = (app, io) => {
     } catch (err) {
       console.log("Err: GET/SINGLE BOX", err);
 
-      const msg = serverMsg("error", "fetcg", "box");
+      const msg = serverMsg("error", "fetch", "box");
       serverRes(res, 400, msg, null);
     }
   });
@@ -61,7 +61,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("Box created.", "blue");
+      const msg = msgObj("Box created.", "blue", "hide-3");
       serverRes(res, 200, msg, box);
     } catch (err) {
       console.log("ERR: POST/BOX", err);

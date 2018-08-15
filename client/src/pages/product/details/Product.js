@@ -56,14 +56,6 @@ class Product extends Component {
   componentDidUpdate(nextProps, state) {
     const { msg } = nextProps;
 
-    // hide the success message after 3 seconds
-    if (msg && msg.code === "hide-3") {
-      window.scrollTo(0, 0);
-      setTimeout(() => {
-        this.props.serverMsg(null);
-      }, 3000);
-    }
-
     // used for retrieve product button errors
     if (msg && msg.code === "throw new Error") {
       window.scrollTo(0, 0);

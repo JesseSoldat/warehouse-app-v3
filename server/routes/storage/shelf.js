@@ -74,7 +74,7 @@ module.exports = (app, io) => {
         { new: true }
       );
 
-      const msg = msgObj("The shelf was saved.", "blue", "create");
+      const msg = msgObj("The shelf was saved.", "blue", "hide-3");
 
       emit(req.user._id);
 
@@ -95,7 +95,7 @@ module.exports = (app, io) => {
         new: true
       });
 
-      const msg = msgObj("The shelf was updated.", "blue", "update");
+      const msg = msgObj("The shelf was updated.", "blue", "hide-3");
 
       emit(req.user._id);
 
@@ -131,7 +131,7 @@ module.exports = (app, io) => {
         shelf.remove()
       ]);
 
-      const msg = msgObj("Shelf deleted.", "blue");
+      const msg = msgObj("Shelf deleted.", "blue", "hide-3");
 
       emit(req.user._id);
 

@@ -75,7 +75,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("The shelf spot was created.", "blue", "created");
+      const msg = msgObj("The shelf spot was created.", "blue", "hide-3");
 
       serverRes(res, 200, msg, { shelf, shelfSpot });
     } catch (err) {
@@ -99,7 +99,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      const msg = msgObj("The shelf spot was updated.", "blue", "update");
+      const msg = msgObj("The shelf spot was updated.", "blue", "hide-3");
 
       serverRes(res, 200, msg, { ...update, shelfSpotId });
     } catch (err) {
@@ -132,7 +132,7 @@ module.exports = (app, io) => {
         shelfSpot.remove()
       ]);
 
-      const msg = msgObj("Shelf Spot deleted.", "blue");
+      const msg = msgObj("Shelf Spot deleted.", "blue", "hide-3");
 
       emit(req.user._id);
 

@@ -77,7 +77,7 @@ module.exports = (app, io) => {
         { new: true }
       );
 
-      const msg = msgObj("The rack was saved.", "blue", "create");
+      const msg = msgObj("The rack was saved.", "blue", "hide-3");
 
       emit(req.user._id);
 
@@ -100,7 +100,7 @@ module.exports = (app, io) => {
         { new: true }
       );
 
-      const msg = msgObj("The rack was updated.", "blue", "update");
+      const msg = msgObj("The rack was updated.", "blue", "hide-3");
 
       emit(req.user._id);
 
@@ -135,7 +135,7 @@ module.exports = (app, io) => {
         rack.remove()
       ]);
 
-      const msg = msgObj("Rack deleted.", "blue");
+      const msg = msgObj("Rack deleted.", "blue", "hide-3");
 
       emit(req.user._id);
 
