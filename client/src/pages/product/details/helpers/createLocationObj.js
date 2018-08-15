@@ -16,7 +16,6 @@ const createLocationObj = (productLocation, productId) => {
   }
   // Have a Product Location -----------------------------------------
   else {
-    console.log("haveLocation");
     const { kind, item } = productLocation;
 
     if (!kind || !item) {

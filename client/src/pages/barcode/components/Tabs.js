@@ -3,7 +3,7 @@ import React from "react";
 // custom components
 import BarcodeScan from "./BarcodeScan";
 import ManualLink from "./ManualLink";
-import LinkProductToBox from "./LinkProductToBox";
+import LinkOrphansToBox from "./LinkOrphansToBox";
 
 const Tabs = ({
   // manual link
@@ -51,7 +51,7 @@ const Tabs = ({
 
     case "linkProductToBox":
       content = (
-        <LinkProductToBox
+        <LinkOrphansToBox
           loading={loading}
           orphans={orphans}
           handleLinkProductToBox={handleLinkProductToBox}

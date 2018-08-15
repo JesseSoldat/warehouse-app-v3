@@ -7,7 +7,7 @@ import CardList from "../../../components/CardList";
 // helpers
 import productCardData from "../helpers/productCardData";
 
-const LinkProductToBox = ({
+const LinkOrphansToBox = ({
   loading,
   orphans = [],
   handleLinkProductToBox,
@@ -51,4 +51,4 @@ const LinkProductToBox = ({
   );
 };
 
-export default LinkProductToBox;
+export default LinkOrphansToBox;

@@ -11,7 +11,7 @@ import Heading from "../../components/Heading";
 import getUrlParameter from "../../utils/getUrlParameter";
 // actions
 import { getStorageIds } from "../../actions/storage";
-import { linkProduct, linkBox } from "../../actions/link";
+import { linkProduct, relinkProduct } from "../../actions/link";
 import { startGetProduct } from "../../actions/product";
 
 class LinkFromProduct extends Component {
@@ -68,6 +68,40 @@ class LinkFromProduct extends Component {
   // child component CBs ----------------------------------
   handleSelectChange = obj => {
     this.setState({ ...obj });
+  };
+
+  handleLink = e => {
+    e.preventDefault();
+    const { type, boxId } = this.state;
+    const productTo = boxId ? "box" : "shelfSpot";
+
+    // store in a box or on a shelf spot
+    if (type === "storeProduct") {
+      this.props.linkProduct(this.state, productTo, this.props.history);
+    }
+    // restore in a box or on a shelf spot
+    else if (type === "restoreProduct") {
+      const { productLocation } = this.props.product;
+
+      const prevLocation = {};
+
+      if (productLocation.kind === "shelfSpot") {
+        prevLocation["kind"] = "shelfSpot";
+        prevLocation["_id"] = productLocation.item._id;
+      }
+      if (productLocation.kind === "box") {
+        prevLocation["kind"] = "box";
+        prevLocation["_id"] = productLocation.item._id;
+        console.log(productLocation.item);
+      }
+
+      this.props.relinkProduct(
+        this.state,
+        productTo,
+        prevLocation,
+        this.props.history
+      );
+    }
   };
 
   // BARCODE ----------------------------------------------
@@ -135,5 +169,5 @@ const mapStateToProps = ({ ui, storage, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { getStorageIds, startGetProduct, linkProduct }
+  { getStorageIds, startGetProduct, linkProduct, relinkProduct }
 )(withRouter(LinkFromProduct));

@@ -22,8 +22,8 @@ module.exports = (app, io) => {
 
     try {
       const [shelfSpot, product] = await Promise.all([
-        ShelfSpot.findOneAndUpdate(
-          { _id: shelfSpotId },
+        ShelfSpot.findByIdAndUpdate(
+          shelfSpotId,
           {
             $pull: { storedItems: { item: productId } }
           },
@@ -55,8 +55,8 @@ module.exports = (app, io) => {
     const { productId, boxId } = req.body;
     try {
       const [box, product] = await Promise.all([
-        Box.findOneAndUpdate(
-          { _id: boxId },
+        Box.findByIdAndUpdate(
+          boxId,
           {
             $pull: { storedItems: productId }
           },

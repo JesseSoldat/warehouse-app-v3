@@ -7,16 +7,17 @@ import { productLoaded } from "./product";
 // types
 
 export const linkProduct = (obj, productTo, history) => async dispatch => {
+  let apiUrl, info;
   try {
-    let apiUrl;
-
     switch (productTo) {
       case "shelfSpot":
         apiUrl = `/api/link/productToShelfSpot`;
+        info = "product to shelf spot";
         break;
 
       case "box":
         apiUrl = `/api/link/productToBox`;
+        info = "product to box";
         break;
 
       default:
@@ -38,7 +39,49 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
 
     history.push(obj.historyUrl);
   } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "link", "product to shelf spot");
+    axiosResponseErrorHandling(err, dispatch, "link", info);
+  }
+};
+
+export const relinkProduct = (
+  obj,
+  productTo,
+  prevLocation,
+  history
+) => async dispatch => {
+  let apiUrl, info;
+  try {
+    switch (productTo) {
+      case "shelfSpot":
+        apiUrl = `/api/relink/productToShelfSpot`;
+        info = "product to shelf spot";
+        break;
+
+      case "box":
+        apiUrl = `/api/relink/productToBox`;
+        info = "product to box";
+        break;
+
+      default:
+        throw new Error(
+          "Wrong linking type provided. A box or shelf spot type is required"
+        );
+    }
+
+    const res = await axios.patch(apiUrl, { obj, prevLocation });
+
+    const { msg, payload, options } = res.data;
+
+    // update store with new product
+    const { product } = payload;
+
+    dispatch(productLoaded(product));
+
+    checkForMsg(msg, dispatch, options);
+
+    history.push(obj.historyUrl);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "relink", info);
   }
 };
 
