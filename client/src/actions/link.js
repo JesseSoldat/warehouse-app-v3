@@ -42,8 +42,8 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
   }
 };
 
-export const linkBox = (obj, boxId, history) => async dispatch => {
-  const { storageId, rackId, shelfId, shelfSpotId } = obj;
+export const linkBox = (obj, history) => async dispatch => {
+  const { storageId, rackId, shelfId, shelfSpotId, boxId } = obj;
 
   try {
     const apiUrl = "/api/link/boxToShelfSpot";

@@ -13,7 +13,7 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // actions
 import { getStorageIds } from "../../actions/storage";
 import { linkProduct, linkBox } from "../../actions/link";
-import { startGetProducts } from "../../actions/product";
+import { startGetProducts, startGetProduct } from "../../actions/product";
 
 class LinkItems extends Component {
   state = {
@@ -45,16 +45,15 @@ class LinkItems extends Component {
 
   // MANUAL LINK ----------------------------------------
   apiData = () => {
-    const { storageIdsEntity, match } = this.props;
+    const { storageIdsEntity, match, product } = this.props;
     const { productId, boxId } = match.params;
     const type = getUrlParameter("type");
-    let location = getUrlParameter("location");
-    location = location === "true" ? true : false;
+    const location = getUrlParameter("location");
 
     switch (type) {
       // From PRODUCT DETAILS -----------------------------------
       // put product on shelf OR in box
-      case "product":
+      case "storeProduct":
         if (!storageIdsEntity) {
           this.props.getStorageIds();
         }
@@ -64,7 +63,27 @@ class LinkItems extends Component {
           type,
           showTabs: true,
           historyUrl: `/products/${productId}`,
-          location
+          location: false
+        });
+        break;
+      // From PRODUCT DETAILS -----------------------------------
+      // put product on shelf OR in box and remove from previous location
+      case "restoreProduct":
+        if (!storageIdsEntity) {
+          this.props.getStorageIds();
+        }
+
+        if (!product || product._id === productId) {
+          this.props.startGetProduct(productId);
+        }
+
+        this.setState({
+          title: "Restore Product",
+          productId,
+          type,
+          showTabs: true,
+          historyUrl: `/products/${productId}`,
+          location: true
         });
         break;
       // From BOX DETAILS -----------------------------------------
@@ -124,22 +143,21 @@ class LinkItems extends Component {
 
   handleLink = e => {
     e.preventDefault();
-    const { type, location } = this.state;
+    const { type, boxId } = this.state;
+    const productTo = boxId ? "box" : "shelfSpot";
 
     switch (type) {
-      case "product":
+      case "storeProduct":
         // store in a box or on a shelf spot
-        const productTo = this.state.boxId ? "box" : "shelfSpot";
-        if (location) {
-          // relink the product to a new location
-        } else {
-          // store a product that has not yet be stored
-          this.props.linkProduct(this.state, productTo, this.props.history);
-        }
+        this.props.linkProduct(this.state, productTo, this.props.history);
+        break;
+
+      case "restoreProduct":
+        // restore in a box or on a shelf spot
+        this.props.relinkProduct();
         break;
 
       case "linkBoxToSpot":
-        const { boxId } = this.props.match.params;
         this.props.linkBox(this.state, boxId, this.props.history);
         break;
 
@@ -218,7 +236,8 @@ class LinkItems extends Component {
     let content;
 
     switch (this.state.type) {
-      case "product":
+      case "storeProduct":
+      case "restoreProduct":
       case "linkProductToBox":
       case "linkBoxToSpot":
         content = this.renderTabsContent();
@@ -242,10 +261,11 @@ class LinkItems extends Component {
 const mapStateToProps = ({ ui, storage, product }) => ({
   loading: ui.loading,
   storageIdsEntity: storage.storageIdsEntity,
-  orphans: product.products
+  orphans: product.products,
+  product: product.product
 });
 
 export default connect(
   mapStateToProps,
-  { getStorageIds, linkProduct, linkBox, startGetProducts }
+  { getStorageIds, linkProduct, linkBox, startGetProducts, startGetProduct }
 )(withRouter(LinkItems));

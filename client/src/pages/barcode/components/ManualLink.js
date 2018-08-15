@@ -19,8 +19,10 @@ const ManualLink = ({
 }) => {
   let spinner, text, racks, shelves, shelfSpots, boxes;
 
-  if (type === "product") {
+  if (type === "storeProduct") {
     text = "Store Product";
+  } else if (type === "restoreProduct") {
+    text = "Restore Product";
   } else {
     text = "Box to Shelf Spot";
   }

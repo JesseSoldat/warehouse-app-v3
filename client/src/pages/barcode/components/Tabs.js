@@ -31,7 +31,8 @@ const Tabs = ({
   let content;
 
   switch (type) {
-    case "product":
+    case "storeProduct":
+    case "restoreProduct":
     case "linkBoxToSpot":
       content = (
         <ManualLink
