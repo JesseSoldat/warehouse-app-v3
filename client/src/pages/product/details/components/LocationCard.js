@@ -18,8 +18,10 @@ const LocationCard = ({
   let content;
 
   // events ---------------------------------------------
-  const onLink = productId => {
-    history.push(`/barcode/scan/product/${productId}?type=product`);
+  const onLink = (productId, location = false) => {
+    history.push(
+      `/barcode/scan/product/${productId}?type=product&location=${location}`
+    );
   };
 
   const onUnLink = (productId, kind) => {
@@ -33,7 +35,7 @@ const LocationCard = ({
       <div className={`col-12 ${css}`}>
         <button
           className={`btn btn-primary ${btnCss}`}
-          onClick={() => onLink(productId)}
+          onClick={() => onLink(productId, false)}
         >
           <i className="fas fa-archive mr-2 d-none d-sm-inline" />
           Store Product
@@ -147,7 +149,7 @@ const LocationCard = ({
         <div className={`col-12 ${css}`}>
           <button
             className={`btn btn-secondary ${btnCss}`}
-            onClick={() => onLink(productId)}
+            onClick={() => onLink(productId, true)}
           >
             <i className="fas fa-archive mr-2 d-none d-sm-inline" />
             Restore Product

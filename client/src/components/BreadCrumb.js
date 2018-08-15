@@ -14,7 +14,7 @@ const BreadCrumb2 = ({ match }) => {
     boxId
   } = params;
 
-  let link1, link2, link3, link4, link5, link6, text;
+  let link1, link2, link3, link4, link5, text;
 
   const createLink = (link, url) => (
     <li className="breadcrumb-item">

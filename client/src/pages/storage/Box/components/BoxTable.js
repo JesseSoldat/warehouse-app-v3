@@ -21,9 +21,9 @@ const BoxTable = ({
 
   // NO location ----------------------------------------------
   // default URL for when the box has no location
-  let editUrl = `/box/edit/${boxId}?type=box`;
-  let boxToSpotUrl = `/barcode/scan/box/${boxId}?type=linkBoxToSpot`;
-  let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox`;
+  let editUrl = `/box/edit/${boxId}?type=box&location=false`;
+  let boxToSpotUrl = `/barcode/scan/box/${boxId}?type=linkBoxToSpot&location=false`;
+  let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox&location=false`;
   let notStored;
   if (!location) {
     if (items) {
@@ -53,9 +53,9 @@ const BoxTable = ({
     boxId = ids.boxId;
 
     // change the URL for a box with a location
-    editUrl = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
-    boxToSpotUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkBoxToSpot`;
-    productToBoxUrl = `/barcode/scan/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox`;
+    editUrl = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box&location=true`;
+    boxToSpotUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkBoxToSpot&location=true`;
+    productToBoxUrl = `/barcode/scan/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox&location=true`;
     // get the BOX from the RACK object
     shelf = rack.shelves.find(shelf => shelf._id === shelfId);
 

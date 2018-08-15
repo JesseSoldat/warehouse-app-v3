@@ -42,7 +42,6 @@ const Tabs = ({
           rackId={rackId}
           shelfId={shelfId}
           shelfSpotId={shelfSpotId}
-          boxId={boxId}
           handleSelectChange={handleSelectChange}
           handleLink={handleLink}
         />

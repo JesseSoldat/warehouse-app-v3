@@ -3,7 +3,6 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { loading } from "./ui";
 import { productLoaded } from "./product";
 // types
 
@@ -49,7 +48,7 @@ export const linkBox = (obj, boxId, history) => async dispatch => {
   try {
     const apiUrl = "/api/link/boxToShelfSpot";
     const res = await axios.patch(apiUrl, { boxId, shelfSpotId });
-    const { msg, payload, options } = res.data;
+    const { msg, options } = res.data;
 
     checkForMsg(msg, dispatch, options);
 

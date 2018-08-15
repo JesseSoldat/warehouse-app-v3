@@ -25,6 +25,7 @@ class StorageCreate extends Component {
     switch (type) {
       case "storage":
         id = "";
+        break;
       case "rack":
         id = storageId;
         break;

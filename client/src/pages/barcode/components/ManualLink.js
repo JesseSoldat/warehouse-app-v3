@@ -14,29 +14,15 @@ const ManualLink = ({
   rackId,
   shelfId,
   shelfSpotId,
-  boxId,
   handleSelectChange,
   handleLink
 }) => {
   let spinner, text, racks, shelves, shelfSpots, boxes;
 
-  if (boxId) console.log("boxid", boxId);
-
-  switch (type) {
-    case "linkBoxToSpot":
-      text = "Box to Shelf Spot";
-      break;
-
-    case "linkProductToBox":
-      text = "Product to Box";
-      break;
-
-    case "product":
-      text = "Store Product";
-      break;
-
-    default:
-      break;
+  if (type === "product") {
+    text = "Store Product";
+  } else {
+    text = "Box to Shelf Spot";
   }
 
   const onChange = e => {
@@ -308,9 +294,6 @@ const ManualLink = ({
   return (
     <div className="container">
       <div className="row mt-3">
-        <h2 />
-      </div>
-      <div className="row">
         <div className="col-xs-12 col-sm-10 col-md-8 mx-auto">
           {spinner}
           {!loading && (

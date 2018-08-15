@@ -3,7 +3,6 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { loading } from "./ui";
 import { productLoaded } from "./product";
 // types
 

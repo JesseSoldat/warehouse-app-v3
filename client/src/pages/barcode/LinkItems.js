@@ -17,6 +17,7 @@ import { startGetProducts } from "../../actions/product";
 
 class LinkItems extends Component {
   state = {
+    location: false,
     historyUrl: "",
     // scan
     type: "",
@@ -47,11 +48,11 @@ class LinkItems extends Component {
     const { storageIdsEntity, match } = this.props;
     const { productId, boxId } = match.params;
     const type = getUrlParameter("type");
+    let location = getUrlParameter("location");
+    location = location === "true" ? true : false;
 
-    // navigated from product details page
     switch (type) {
-      // PRODUCT -----------------------------------
-      // Product Details -> Scan
+      // From PRODUCT DETAILS -----------------------------------
       // put product on shelf OR in box
       case "product":
         if (!storageIdsEntity) {
@@ -62,11 +63,12 @@ class LinkItems extends Component {
           productId,
           type,
           showTabs: true,
-          historyUrl: `/products/${productId}`
+          historyUrl: `/products/${productId}`,
+          location
         });
         break;
-      // PRODUCT - BOX -------------------------------------------
-      // Box Details -> Scan
+      // From BOX DETAILS -----------------------------------------
+      // put product in box
       case "linkProductToBox":
         // fetch orphans to put in the box
         this.props.startGetProducts({
@@ -76,9 +78,10 @@ class LinkItems extends Component {
           page: 0
         });
 
-        const haveLocation = false;
+        // No location
         let historyUrl = `/box/${boxId}?type=box`;
-        if (haveLocation) {
+        // Have location
+        if (location) {
           const { storageId, rackId, shelfId, shelfSpotId } = match.params;
           historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
         }
@@ -88,11 +91,12 @@ class LinkItems extends Component {
           boxId,
           type,
           showTabs: true,
-          historyUrl
+          historyUrl,
+          location
         });
         break;
-      // BOX -------------------------------------------
-      // Box Details -> Scan
+      // From BOX DETAILS -----------------------------------------
+      // link box to shelfSpot
       case "linkBoxToSpot":
         if (!storageIdsEntity) {
           this.props.getStorageIds();
@@ -102,12 +106,13 @@ class LinkItems extends Component {
           title: "Link Box",
           boxId,
           type,
-          showTabs: true
+          showTabs: true,
+          location: false
         });
         break;
-
+      // From NAVBAR SCAN LINK
+      // no TYPE param or LOCATION param
       default:
-        // type is "" when clicking Navbar Scan link
         this.setState({ showScan: true });
         break;
     }
@@ -117,18 +122,20 @@ class LinkItems extends Component {
     this.setState({ ...obj });
   };
 
-  handleLinkProductToBox = productId => {
-    const obj = { boxId: this.state.boxId, productId };
-    this.props.linkProduct(obj, "box", this.props.history);
-  };
-
   handleLink = e => {
     e.preventDefault();
+    const { type, location } = this.state;
 
-    switch (this.state.type) {
+    switch (type) {
       case "product":
+        // store in a box or on a shelf spot
         const productTo = this.state.boxId ? "box" : "shelfSpot";
-        this.props.linkProduct(this.state, productTo, this.props.history);
+        if (location) {
+          // relink the product to a new location
+        } else {
+          // store a product that has not yet be stored
+          this.props.linkProduct(this.state, productTo, this.props.history);
+        }
         break;
 
       case "linkBoxToSpot":
@@ -139,6 +146,12 @@ class LinkItems extends Component {
       default:
         break;
     }
+  };
+
+  // From Box adding Products ---------------------------
+  handleLinkProductToBox = productId => {
+    const obj = { boxId: this.state.boxId, productId };
+    this.props.linkProduct(obj, "box", this.props.history);
   };
 
   // BARCODE ----------------------------------------------
@@ -162,6 +175,7 @@ class LinkItems extends Component {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
+  // Render Content ------------------------------------
   renderScanContent = () => (
     <BarcodeScan
       type={this.state.type}
@@ -202,12 +216,10 @@ class LinkItems extends Component {
 
   render() {
     let content;
-    if (this.props.orphans.length > 0) console.log(this.props.orphans);
 
     switch (this.state.type) {
       case "product":
       case "linkProductToBox":
-      // need to fetch orphans
       case "linkBoxToSpot":
         content = this.renderTabsContent();
         break;
