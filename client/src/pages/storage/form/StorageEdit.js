@@ -137,6 +137,31 @@ class StorageEdit extends Component {
         }
         // Have Location ---------------------------------
         else {
+          if (rack) {
+            const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
+
+            const shelfSpot = shelf.shelfSpots.find(
+              ({ _id }) => _id === ids.shelfSpotId
+            );
+            const box = shelfSpot.storedItems.find(
+              storedItem => storedItem.item._id === ids.boxId
+            );
+
+            const { storedItems } = box.item;
+
+            if (storedItems && storedItems.length === 0) {
+              startDeleteStorage(type, id, history);
+            } else {
+              const msg = buildClientMsg({
+                info: "Delete or relink all products of this box first.",
+                color: "red",
+                code: "hide-3"
+              });
+              this.props.serverMsg(msg);
+            }
+          } else {
+            console.log("NO RACK ");
+          }
         }
 
         break;
@@ -245,9 +270,6 @@ class StorageEdit extends Component {
       const box = shelfSpot.storedItems.find(
         storedItem => storedItem.item._id === boxId
       );
-
-      console.log("box");
-      console.log(box.item);
 
       defaultState.boxLabel = box.item.boxLabel;
 

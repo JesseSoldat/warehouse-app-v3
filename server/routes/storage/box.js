@@ -1,5 +1,6 @@
 // models
 const Box = require("../../models/storage/box");
+const ShelfSpot = require("../../models/storage/shelfSpot");
 // middleware
 const isAuth = require("../../middleware/isAuth");
 // utils
@@ -78,6 +79,7 @@ module.exports = (app, io) => {
     try {
       const box = await Box.findById(boxId);
 
+      // check for stored items
       if (box["storedItems"].length !== 0) {
         const msg = msgObj(
           "Delete or relink all products of this box first.",
@@ -85,7 +87,22 @@ module.exports = (app, io) => {
           "hide-3"
         );
         serverRes(res, 400, msg, box);
-      } else {
+      }
+      // no stored items
+      else {
+        // check if the box is stored on a shelf spot
+        const shelfSpotId = box["shelfSpot"];
+        if (shelfSpotId) {
+          await ShelfSpot.findByIdAndUpdate(
+            shelfSpotId,
+            {
+              $pull: { storedItems: { item: boxId } }
+            },
+            { new: true }
+          );
+          // unlink the box from the shelf spot
+        }
+        // delete the box
         box.remove();
 
         const msg = msgObj("Box deleted", "blue", "hide-3");

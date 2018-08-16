@@ -396,7 +396,6 @@ export const startDeleteStorage = (type, id, history) => async dispatch => {
     dispatch(showOverlay(true));
 
     const apiUrl = `${storageApiUrl(type)}/${id}`;
-    console.log(apiUrl);
 
     const res = await axios.delete(apiUrl);
 
