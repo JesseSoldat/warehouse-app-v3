@@ -155,7 +155,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The storage was created.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, storage);
+      serverRes(res, 200, msg, { storage });
     } catch (err) {
       console.log("ERR: POST/api/storage", err);
 
@@ -209,7 +209,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, storage);
+      serverRes(res, 200, msg, { storageId: storage._id });
     } catch (err) {
       console.log("Err: DELETE/api/storages/:storageId", err);
 

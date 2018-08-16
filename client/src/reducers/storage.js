@@ -87,18 +87,19 @@ export default (state = initialState, action) => {
 
     case STORAGE_CREATE_ONE:
       console.log("STORAGE_CREATE_ONE", update);
-      console.log("storages", state.storages);
-
-      console.log("storages", state.storages);
 
       storagesCopy = [...state.storages];
+
+      console.log("storagesCopy", storagesCopy);
+
       if (storagesCopy.length > 0) {
-        storagesCopy.push(storage);
+        // API update = { storage }
+        storagesCopy.push(update.storage);
       }
       return {
         ...state,
         storages: storagesCopy,
-        storageIdsEntity: null
+        rack: null
       };
 
     case STORAGE_DELETE_ONE:
@@ -111,6 +112,20 @@ export default (state = initialState, action) => {
       console.log("rackCopy", rackCopy);
 
       switch (storageType) {
+        case "storage":
+          // API update = { storageId }
+          storageId = update.storageId;
+          rackCopy = null;
+
+          // Update Storages in the Store
+          if (storagesCopy.length !== 0) {
+            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
+            // console.log("storageIndex", storageIndex);
+            storagesCopy.splice(storageIndex, 1);
+            console.log("updated storageCopy", storagesCopy);
+          }
+
+          break;
         case "rack":
           // API update = { storageId, rackId }
           rackId = update.rackId;

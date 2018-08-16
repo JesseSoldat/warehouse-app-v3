@@ -250,9 +250,9 @@ export const startGetStorage = (id = "", storageType) => async dispatch => {
 };
 
 // New Storage -------------------------------------
-export const createStorage = storage => ({
+export const createStorage = update => ({
   type: STORAGE_CREATE_ONE,
-  storage
+  update
 });
 
 export const createRack = (storageType, update) => ({
@@ -284,7 +284,7 @@ export const startCreateStorage = (
 
     switch (type) {
       case "storage":
-        newItemId = payload._id;
+        newItemId = payload[type]._id;
         historyUrl = `/storage/${newItemId}`;
         break;
 
@@ -416,13 +416,14 @@ export const startDeleteStorage = (
 
     const { msg, options, payload } = res.data;
 
+    // ORDER HERE IS IMPORTANT
+    history.push(historyUrl);
+
     dispatch(deleteStorage(type, payload));
 
     checkForMsg(msg, dispatch, options);
 
     dispatch(showOverlay(false));
-
-    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "delete", `${type}`);
   }
