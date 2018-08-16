@@ -4,6 +4,7 @@ import {
   STORAGE_SEARCH,
   STORAGE_FETCH_ALL,
   STORAGE_UPDATE_ONE,
+  STORAGE_CREATE_ONE,
   STORAGE_DELETE_ONE,
   STORAGE_IDS_REQUESTED,
   STORAGE_IDS_LOADED,
@@ -13,7 +14,8 @@ import {
   RACK_UPDATE_ONE,
   // box  DEPRECATE?
   BOX_REQUESTED,
-  BOX_LOADED
+  BOX_LOADED,
+  RACK_CREATE_ONE
 } from "../actions/storage";
 
 const initialState = {
@@ -44,6 +46,10 @@ export default (state = initialState, action) => {
     storageType,
     update
   } = action;
+
+  let storageIndex, storagesCopy, rackCopy;
+  let rackId, storageId;
+
   switch (type) {
     case RESET_STORAGE:
       return {
@@ -77,6 +83,64 @@ export default (state = initialState, action) => {
         ...state,
         storages: updateStorages,
         storageIdsEntity: null
+      };
+
+    case STORAGE_CREATE_ONE:
+      console.log("STORAGE_CREATE_ONE", update);
+      console.log("storages", state.storages);
+
+      console.log("storages", state.storages);
+
+      storagesCopy = [...state.storages];
+      if (storagesCopy.length > 0) {
+        storagesCopy.push(storage);
+      }
+      return {
+        ...state,
+        storages: storagesCopy,
+        storageIdsEntity: null
+      };
+
+    case STORAGE_DELETE_ONE:
+      console.log("STORAGE_DELETE_ONE", update);
+
+      storagesCopy = [...state.storages];
+      rackCopy = state.rack === null ? null : { ...state.rack };
+
+      console.log("storagesCopy", storagesCopy);
+      console.log("rackCopy", rackCopy);
+
+      switch (storageType) {
+        case "rack":
+          // API update = { storageId, rackId }
+          rackId = update.rackId;
+          storageId = update.storageId;
+          rackCopy = null;
+
+          // Update Storages in the Store
+          if (storagesCopy.length !== 0) {
+            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
+            // console.log("storageIndex", storageIndex);
+            let tempRacks = storagesCopy[storageIndex].racks.filter(
+              rack => rack._id !== rackId
+            );
+            storagesCopy[storageIndex].racks = tempRacks;
+            // console.log("updated storageCopy", storagesCopy[storageIndex]);
+          }
+
+          break;
+
+        default:
+          break;
+      }
+
+      return {
+        ...state,
+        storages: storagesCopy,
+        storage: null,
+        storageIdsEntity: null,
+        rack: rackCopy,
+        box: null
       };
 
     case STORAGE_IDS_REQUESTED:
@@ -115,6 +179,7 @@ export default (state = initialState, action) => {
       // console.log("prev", state.rack);
       // console.log("update", update);
       // console.log("type:", storageType);
+
       const rackUpdate = { ...state.rack };
 
       switch (storageType) {
@@ -158,6 +223,51 @@ export default (state = initialState, action) => {
         storageIdsEntity: null
       };
 
+    case RACK_CREATE_ONE:
+      console.log("RACK_CREATE_ONE", update);
+
+      storagesCopy = [...state.storages];
+      rackCopy = state.rack === null ? null : { ...state.rack };
+
+      console.log("storagesCopy", storagesCopy);
+      console.log("rackCopy", rackCopy);
+
+      switch (storageType) {
+        case "rack":
+          // API update = { storage, rack }
+          if (storagesCopy.length !== 0) {
+            //[] of storages in store
+            storageId = update.storage._id;
+            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
+            // console.log("storageIndex", storageIndex);
+
+            if (storageIndex) {
+              storagesCopy[storageIndex].racks.push(update.rack);
+              // console.log("updated storage", storagesCopy[storageIndex]);
+            }
+          }
+
+          rackCopy = update.rack;
+          break;
+
+        case "shelf":
+          break;
+
+        case "shelfSpot":
+          break;
+
+        default:
+          rackCopy = null;
+          break;
+      }
+      return {
+        ...state,
+        storageType,
+        storages: storagesCopy,
+        rack: rackCopy,
+        storageIdsEntity: null
+      };
+
     case BOX_REQUESTED:
       return {
         ...state,
@@ -172,14 +282,6 @@ export default (state = initialState, action) => {
         storageType,
         boxRequsted: false,
         boxLoaded: true
-      };
-
-    case STORAGE_DELETE_ONE:
-      return {
-        ...state,
-        storage: null,
-        storages: [],
-        storageIdsEntity: null
       };
 
     default:

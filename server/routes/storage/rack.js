@@ -60,22 +60,25 @@ module.exports = (app, io) => {
   // Create new rack inside storage and link the rack to storage
   app.post("/api/racks/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;
-    const rack = new Rack(req.body);
+    const newRack = new Rack(req.body);
 
-    rack["storage"] = storageId;
+    newRack["storage"] = storageId;
 
     try {
-      await rack.save();
+      await newRack.save();
 
-      const storage = await Storage.findByIdAndUpdate(
-        storageId,
-        {
-          $addToSet: {
-            racks: rack._id
-          }
-        },
-        { new: true }
-      );
+      const [rack, storage] = await Promise.all([
+        Rack.findById(rack._id).populate("storage"),
+        Storage.findByIdAndUpdate(
+          storageId,
+          {
+            $addToSet: {
+              racks: newRack._id
+            }
+          },
+          { new: true }
+        )
+      ]);
 
       const msg = msgObj("The rack was saved.", "blue", "hide-3");
 
@@ -121,7 +124,8 @@ module.exports = (app, io) => {
       if (rack.shelves.length !== 0) {
         const msg = msgObj(
           "Delete or relink all shelves of this rack first.",
-          "red"
+          "red",
+          "hide-3"
         );
         return serverRes(res, 400, msg, rack);
       }
@@ -139,7 +143,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, rack);
+      serverRes(res, 200, msg, { storageId, rackId: rack._id });
     } catch (err) {
       console.log("Err: DELETE/api/racks/:rackId", err);
 

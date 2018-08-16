@@ -11,6 +11,7 @@ export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
 export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
+export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
 
 export const STORAGE_IDS_REQUESTED = "STORAGE_IDS_REQUESTED";
 export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
@@ -24,7 +25,6 @@ export const BOX_REQUESTED = "BOX_REQUESTED";
 export const BOX_LOADED = "BOX_LOADED";
 
 export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
-export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
 
 export const RESET_STORAGE = "RESET_STORAGE";
 // RESET Storage -----------------------------
@@ -269,8 +269,9 @@ export const startCreateStorage = (
   history
 ) => async dispatch => {
   dispatch(showOverlay(true));
-  const apiUrl = `${storageApiUrl(type)}/${id}`;
   try {
+    const apiUrl = `${storageApiUrl(type)}/${id}`;
+
     const res = await axios.post(apiUrl, storage);
 
     const { msg, payload, options } = res.data;
@@ -279,49 +280,48 @@ export const startCreateStorage = (
 
     const { storageId, rackId, shelfId } = ids;
 
+    let historyUrl;
+
     switch (type) {
       case "storage":
         newItemId = payload._id;
-        // dispatch(createStorage(payload));
-        dispatch(resetStorage());
-        history.push(`/storage/${newItemId}?type=${type}`);
+        historyUrl = `/storage/${newItemId}`;
         break;
 
       case "rack":
         newItemId = payload[type]._id;
-        // dispatch(createRack(type, payload));
-        dispatch(resetStorage());
-        history.push(`/rack/${storageId}/${newItemId}?type=${type}`);
+        historyUrl = `/rack/${storageId}/${newItemId}?type=${type}`;
+
         break;
 
       case "shelf":
         newItemId = payload[type]._id;
-        // dispatch(createRack(type, payload));
-        dispatch(resetStorage());
-        history.push(`/shelf/${storageId}/${rackId}/${newItemId}?type=${type}`);
+        historyUrl = `/shelf/${storageId}/${rackId}/${newItemId}?type=${type}`;
         break;
 
       case "shelfSpot":
         newItemId = payload[type]._id;
-        // dispatch(createRack(type, payload));
-        dispatch(resetStorage());
-        history.push(
-          `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`
-        );
+        historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`;
         break;
 
       case "box":
         newItemId = payload._id;
-        dispatch(resetStorage());
-        history.push(`/box/${newItemId}?type=${type}`);
+        historyUrl = `/box/${newItemId}?type=${type}`;
         break;
 
       default:
         break;
     }
+
+    type === "storage"
+      ? dispatch(createStorage(payload))
+      : dispatch(createRack(type, payload));
+
     checkForMsg(msg, dispatch, options);
 
     dispatch(showOverlay(false));
+
+    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "post", "storages");
   }
@@ -357,46 +357,56 @@ export const startEditStorage = (
 
     const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
+    let historyUrl;
+
     switch (type) {
       case "storage":
-        dispatch(editStorage(payload));
-        history.push(`/storage/${storageId}?type=${type}`);
+        historyUrl = `/storage/${storageId}?type=${type}`;
         break;
 
       case "rack":
-        dispatch(editRack(type, payload));
-        history.push(`/rack/${storageId}/${rackId}?type=${type}`);
+        historyUrl = `/rack/${storageId}/${rackId}?type=${type}`;
         break;
 
       case "shelf":
-        dispatch(editRack(type, payload));
-        history.push(`/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`);
+        historyUrl = `/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`;
         break;
 
       case "shelfSpot":
-        dispatch(editRack(type, payload));
-        history.push(
-          `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`
-        );
+        historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`;
         break;
 
       default:
         break;
     }
+
+    type === "storage"
+      ? dispatch(editStorage(payload))
+      : dispatch(editRack(type, payload));
+
     checkForMsg(msg, dispatch, options);
 
     dispatch(showOverlay(false));
+
+    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "patch", `${type}`);
   }
 };
 
 // Delete Storage ----------------------------------
-export const deleteStorage = () => ({
-  type: STORAGE_DELETE_ONE
+export const deleteStorage = (storageType, update) => ({
+  type: STORAGE_DELETE_ONE,
+  storageType,
+  update
 });
 
-export const startDeleteStorage = (type, id, history) => async dispatch => {
+export const startDeleteStorage = (
+  type,
+  id,
+  historyUrl,
+  history
+) => async dispatch => {
   try {
     dispatch(showOverlay(true));
 
@@ -404,15 +414,15 @@ export const startDeleteStorage = (type, id, history) => async dispatch => {
 
     const res = await axios.delete(apiUrl);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
-    dispatch(deleteStorage());
+    dispatch(deleteStorage(type, payload));
 
     checkForMsg(msg, dispatch, options);
 
     dispatch(showOverlay(false));
 
-    history.push(`/storages`);
+    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "delete", `${type}`);
   }

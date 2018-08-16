@@ -23,6 +23,7 @@ import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
 class StorageEdit extends Component {
   state = {
+    historyUrl: "",
     location: true,
     type: "",
     id: "",
@@ -44,25 +45,36 @@ class StorageEdit extends Component {
 
     const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
 
+    let historyUrl;
+
     switch (type) {
       case "storage":
-        this.setState({ type, id: storageId, ids });
+        historyUrl = "/storages";
+        this.setState({ historyUrl, type, id: storageId, ids });
         break;
 
       case "rack":
-        this.setState({ type, id: rackId, ids });
+        historyUrl = `/storage/${storageId}`;
+        this.setState({ historyUrl, type, id: rackId, ids });
         break;
 
       case "shelf":
-        this.setState({ type, id: shelfId, ids });
+        historyUrl = `/rack/${storageId}/${rackId}?type=rack`;
+        this.setState({ historyUrl, type, id: shelfId, ids });
         break;
 
       case "shelfSpot":
-        this.setState({ type, id: shelfSpotId, ids });
+        historyUrl = `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`;
+        this.setState({ historyUrl, type, id: shelfSpotId, ids });
         break;
 
       case "box":
-        this.setState({ location, type, id: boxId, ids });
+        if (location) {
+          historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
+        } else {
+          historyUrl = `/storages`;
+        }
+        this.setState({ historyUrl, location, type, id: boxId, ids });
         break;
 
       default:
@@ -103,21 +115,61 @@ class StorageEdit extends Component {
   };
 
   handleDelete = () => {
-    const { startDeleteStorage, rack, box, history } = this.props;
-    const { location, type, id, ids } = this.state;
+    const { startDeleteStorage, storages, rack, box, history } = this.props;
+    const { historyUrl, location, type, id, ids } = this.state;
+    let shelf;
 
     switch (type) {
       case "storage":
+        const storage = storages.find(obj => obj._id === id);
+
+        if (storage.racks.length === 0) {
+          startDeleteStorage(type, id, historyUrl, history);
+        } else {
+          const msg = buildClientMsg({
+            info: "Delete or relink all racks of this storage first.",
+            color: "red",
+            code: "hide-3"
+          });
+          this.props.serverMsg(msg);
+        }
+
         break;
 
       case "rack":
+        const { shelves } = rack;
+        if (shelves && shelves.length === 0) {
+          startDeleteStorage(type, id, historyUrl, history);
+        } else {
+          const msg = buildClientMsg({
+            info: "Delete or relink all shelves of this rack first.",
+            color: "red",
+            code: "hide-3"
+          });
+          this.props.serverMsg(msg);
+        }
+
         break;
 
       case "shelf":
+        shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
+        const { shelfSpots } = shelf;
+
+        if (shelfSpots && shelfSpots.length === 0) {
+          startDeleteStorage(type, id, historyUrl, history);
+        } else {
+          const msg = buildClientMsg({
+            info: "Delete or relink all shelf spots of this shelf first.",
+            color: "red",
+            code: "hide-3"
+          });
+          this.props.serverMsg(msg);
+        }
+
         break;
 
       case "shelfSpot":
-        const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
+        shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
 
         const shelfSpot = shelf.shelfSpots.find(
           ({ _id }) => _id === ids.shelfSpotId
@@ -126,7 +178,7 @@ class StorageEdit extends Component {
         const { storedItems } = shelfSpot;
 
         if (storedItems.length === 0) {
-          startDeleteStorage(type, id, history);
+          startDeleteStorage(type, id, historyUrl, history);
         } else {
           const msg = buildClientMsg({
             info:
@@ -144,7 +196,7 @@ class StorageEdit extends Component {
         if (box && location === false && type === "box") {
           const { storedItems } = box;
           if (storedItems.length === 0) {
-            startDeleteStorage(type, id, history);
+            startDeleteStorage(type, id, historyUrl, history);
           } else {
             const msg = buildClientMsg({
               info: "Delete or relink all products of this box first.",
@@ -156,30 +208,26 @@ class StorageEdit extends Component {
         }
         // Have Location ---------------------------------
         else {
-          if (rack) {
-            const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
+          const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
 
-            const shelfSpot = shelf.shelfSpots.find(
-              ({ _id }) => _id === ids.shelfSpotId
-            );
-            const box = shelfSpot.storedItems.find(
-              storedItem => storedItem.item._id === ids.boxId
-            );
+          const shelfSpot = shelf.shelfSpots.find(
+            ({ _id }) => _id === ids.shelfSpotId
+          );
+          const box = shelfSpot.storedItems.find(
+            storedItem => storedItem.item._id === ids.boxId
+          );
 
-            const { storedItems } = box.item;
+          const { storedItems } = box.item;
 
-            if (storedItems && storedItems.length === 0) {
-              startDeleteStorage(type, id, history);
-            } else {
-              const msg = buildClientMsg({
-                info: "Delete or relink all products of this box first.",
-                color: "red",
-                code: "hide-3"
-              });
-              this.props.serverMsg(msg);
-            }
+          if (storedItems && storedItems.length === 0) {
+            startDeleteStorage(type, id, historyUrl, history);
           } else {
-            console.log("NO RACK ");
+            const msg = buildClientMsg({
+              info: "Delete or relink all products of this box first.",
+              color: "red",
+              code: "hide-3"
+            });
+            this.props.serverMsg(msg);
           }
         }
 

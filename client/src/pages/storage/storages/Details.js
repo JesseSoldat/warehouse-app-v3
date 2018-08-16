@@ -34,8 +34,7 @@ class Details extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (!loading && storages.length < 1) {
-    } else {
+    } else if (storages && storages.length) {
       const storage = storages.find(storage => storage._id === storageId);
 
       content = (
