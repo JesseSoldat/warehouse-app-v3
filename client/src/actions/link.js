@@ -5,6 +5,7 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
+import { resetStorage } from "./storage";
 
 export const linkProduct = (obj, productTo, history) => async dispatch => {
   let apiUrl, info;
@@ -36,6 +37,8 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
     const { product } = payload;
 
     dispatch(productLoaded(product));
+
+    dispatch(resetStorage());
 
     checkForMsg(msg, dispatch, options);
 

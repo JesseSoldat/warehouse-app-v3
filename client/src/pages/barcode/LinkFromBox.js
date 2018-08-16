@@ -103,8 +103,9 @@ class LinkFromBox extends Component {
   };
 
   handleLinkProductToBox = productId => {
+    const { boxId, historyUrl } = this.state;
     this.setState({ formSubmit: true });
-    const obj = { boxId: this.state.boxId, productId };
+    const obj = { boxId, productId, historyUrl };
     this.props.linkProduct(obj, "box", this.props.history);
   };
 
