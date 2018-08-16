@@ -9,8 +9,8 @@ const Socket = ({ userId }) => {
     const { msg, senderId, timestamp } = data;
 
     if (senderId === userId) {
-      console.log("senderId matches userId", senderId);
-      // return;
+      // console.log("senderId matches userId", senderId);
+      return;
     }
 
     switch (msg) {

@@ -96,7 +96,10 @@ class LinkFromBox extends Component {
     e.preventDefault();
     this.setState({ formSubmit: true });
 
-    this.props.linkBox(this.state, this.props.history);
+    const { boxId } = this.props.match.params;
+    const newState = { ...this.state, boxId };
+
+    this.props.linkBox(newState, this.props.history);
   };
 
   handleLinkProductToBox = productId => {

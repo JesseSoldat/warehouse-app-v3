@@ -81,7 +81,8 @@ module.exports = (app, io) => {
       if (box["storedItems"].length !== 0) {
         const msg = msgObj(
           "Delete or relink all products of this box first.",
-          "red"
+          "red",
+          "hide-3"
         );
         serverRes(res, 400, msg, box);
       } else {

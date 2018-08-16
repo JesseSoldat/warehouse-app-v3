@@ -58,8 +58,6 @@ class Box extends Component {
     else if (match.path === "/box/:boxId") {
       // Box is in the STORE
       if (box && box._id === boxId) {
-        console.log(box);
-
         content = (
           <BoxTable
             items={box.storedItems}

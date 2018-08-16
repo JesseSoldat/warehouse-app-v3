@@ -17,7 +17,11 @@ import {
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
+import { serverMsg } from "../../../actions/ui";
+// helpers
+import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
+buildClientMsg;
 class StorageEdit extends Component {
   state = {
     location: true,
@@ -121,13 +125,14 @@ class StorageEdit extends Component {
         if (box && location === false && type === "box") {
           const { storedItems } = box;
           if (storedItems.length === 0) {
-            console.log("Delete Box");
-            console.log("id", id);
-            console.log("ids", ids);
-
             startDeleteStorage(type, id, history);
           } else {
-            console.log("Unlink Products first");
+            const msg = buildClientMsg({
+              info: "Delete or relink all products of this box first.",
+              color: "red",
+              code: "hide-3"
+            });
+            this.props.serverMsg(msg);
           }
         }
         // Have Location ---------------------------------
@@ -281,6 +286,7 @@ const mapStateToProps = ({ ui, storage }) => ({
 export default connect(
   mapStateToProps,
   {
+    serverMsg,
     startGetStorages,
     startGetRack,
     startGetBox,
