@@ -115,6 +115,7 @@ module.exports = (app, io) => {
     try {
       const shelfSpot = await ShelfSpot.findById(shelfSpotId);
 
+      // check for stored items
       if (shelfSpot.storedItems.length !== 0) {
         const msg = msgObj(
           "Delete or relink all stored items of this spot first.",
@@ -122,7 +123,7 @@ module.exports = (app, io) => {
         );
         return serverRes(res, 400, msg, spot);
       }
-
+      // no stored items
       const shelfId = shelfSpot.shelf;
 
       await Promise.all([

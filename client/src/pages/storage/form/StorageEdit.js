@@ -21,7 +21,6 @@ import { serverMsg } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
-buildClientMsg;
 class StorageEdit extends Component {
   state = {
     location: true,
@@ -118,6 +117,26 @@ class StorageEdit extends Component {
         break;
 
       case "shelfSpot":
+        const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
+
+        const shelfSpot = shelf.shelfSpots.find(
+          ({ _id }) => _id === ids.shelfSpotId
+        );
+
+        const { storedItems } = shelfSpot;
+
+        if (storedItems.length === 0) {
+          startDeleteStorage(type, id, history);
+        } else {
+          const msg = buildClientMsg({
+            info:
+              "Delete or relink all products or boxes of this shelf spot first.",
+            color: "red",
+            code: "hide-3"
+          });
+          this.props.serverMsg(msg);
+        }
+
         break;
 
       case "box":
@@ -221,7 +240,7 @@ class StorageEdit extends Component {
     }
 
     // Type is Storage
-    else if (storages.length > 0 && type === "storage") {
+    else if (storages && storages.length > 0 && type === "storage") {
       storage = storages.find(({ _id }) => _id === storageId);
 
       defaultState.storageLabel = storage.storageLabel;

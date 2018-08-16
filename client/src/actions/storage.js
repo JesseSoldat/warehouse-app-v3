@@ -282,25 +282,29 @@ export const startCreateStorage = (
     switch (type) {
       case "storage":
         newItemId = payload._id;
-        dispatch(createStorage(payload));
+        // dispatch(createStorage(payload));
+        dispatch(resetStorage());
         history.push(`/storage/${newItemId}?type=${type}`);
         break;
 
       case "rack":
         newItemId = payload[type]._id;
-        dispatch(createRack(type, payload));
+        // dispatch(createRack(type, payload));
+        dispatch(resetStorage());
         history.push(`/rack/${storageId}/${newItemId}?type=${type}`);
         break;
 
       case "shelf":
         newItemId = payload[type]._id;
-        dispatch(createRack(type, payload));
+        // dispatch(createRack(type, payload));
+        dispatch(resetStorage());
         history.push(`/shelf/${storageId}/${rackId}/${newItemId}?type=${type}`);
         break;
 
       case "shelfSpot":
         newItemId = payload[type]._id;
-        dispatch(createRack(type, payload));
+        // dispatch(createRack(type, payload));
+        dispatch(resetStorage());
         history.push(
           `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`
         );
@@ -308,6 +312,7 @@ export const startCreateStorage = (
 
       case "box":
         newItemId = payload._id;
+        dispatch(resetStorage());
         history.push(`/box/${newItemId}?type=${type}`);
         break;
 
