@@ -13,12 +13,18 @@ import getUrlParameter from "../../../utils/getUrlParameter";
 import {
   startGetStorages,
   startGetRack,
+  startGetBox,
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
 
 class StorageEdit extends Component {
-  state = { type: "", id: "", ids: {} };
+  state = {
+    location: true,
+    type: "",
+    id: "",
+    ids: {}
+  };
 
   // lifecycle -----------------------------------
   componentDidMount() {
@@ -28,6 +34,8 @@ class StorageEdit extends Component {
   // store / api call -------------------------------
   getFormData() {
     const type = getUrlParameter("type");
+    let location = getUrlParameter("location");
+    location = location === "false" ? false : true;
     const { match, storages, rack } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
 
@@ -51,15 +59,19 @@ class StorageEdit extends Component {
         break;
 
       case "box":
-        this.setState({ type, id: boxId, ids });
+        this.setState({ location, type, id: boxId, ids });
         break;
 
       default:
         break;
     }
 
+    // Type is Box and No Location -----------------------
+    if (type === "box" && !location) {
+      this.props.startGetBox(boxId);
+    }
     // Type is storage -----------------------------------
-    if (type === "storage") {
+    else if (type === "storage") {
       // Check store first for storages in the STORE
       if (storages.length === 0) {
         // fetch storages from API
@@ -88,9 +100,47 @@ class StorageEdit extends Component {
   };
 
   handleDelete = () => {
-    const { startDeleteStorage, history } = this.props;
-    const { type, id, ids } = this.state;
-    startDeleteStorage(type, id, ids, history);
+    const { startDeleteStorage, rack, box, history } = this.props;
+    const { location, type, id, ids } = this.state;
+
+    switch (type) {
+      case "storage":
+        break;
+
+      case "rack":
+        break;
+
+      case "shelf":
+        break;
+
+      case "shelfSpot":
+        break;
+
+      case "box":
+        // No Location ---------------------------------
+        if (box && location === false && type === "box") {
+          const { storedItems } = box;
+          if (storedItems.length === 0) {
+            console.log("Delete Box");
+            console.log("id", id);
+            console.log("ids", ids);
+
+            startDeleteStorage(type, id, history);
+          } else {
+            console.log("Unlink Products first");
+          }
+        }
+        // Have Location ---------------------------------
+        else {
+        }
+
+        break;
+
+      default:
+        break;
+    }
+
+    // startDeleteStorage(type, id, ids, history);
   };
 
   renderContent = (type, defaultState) => {
@@ -119,8 +169,8 @@ class StorageEdit extends Component {
 
   render() {
     // props
-    const { loading, storages, rack } = this.props;
-    const { type, ids } = this.state;
+    const { loading, storages, rack, box } = this.props;
+    const { location, type, ids } = this.state;
     const { storageId, shelfId, shelfSpotId, boxId } = ids;
 
     let storage, content, button;
@@ -182,12 +232,15 @@ class StorageEdit extends Component {
 
       content = contentObj.content;
       button = contentObj.button;
-    } else if (rack && type === "box") {
+    }
+    // BOX HAS LOCATION
+    else if (rack && type === "box" && location === true) {
       const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
       const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
       const box = shelfSpot.storedItems.find(
         storedItem => storedItem.item._id === boxId
       );
+
       console.log("box");
       console.log(box.item);
 
@@ -198,6 +251,14 @@ class StorageEdit extends Component {
       button = contentObj.button;
     }
 
+    // Type is Box with No Location
+    else if (box && location === false && type === "box") {
+      defaultState.boxLabel = box.boxLabel;
+
+      const contentObj = this.renderContent(type, defaultState);
+      content = contentObj.content;
+      button = contentObj.button;
+    }
     return (
       <div className="container">
         <Message />
@@ -213,10 +274,17 @@ const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
   loading: ui.loading,
   storages: storage.storages,
-  rack: storage.rack
+  rack: storage.rack,
+  box: storage.box
 });
 
 export default connect(
   mapStateToProps,
-  { startGetStorages, startGetRack, startEditStorage, startDeleteStorage }
+  {
+    startGetStorages,
+    startGetRack,
+    startGetBox,
+    startEditStorage,
+    startDeleteStorage
+  }
 )(StorageEdit);

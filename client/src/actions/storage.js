@@ -5,7 +5,7 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import storageApiUrl from "./helpers/storageApiUrl";
 // actions
-import { loading } from "./ui";
+import { loading, showOverlay } from "./ui";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
@@ -268,17 +268,12 @@ export const startCreateStorage = (
   ids,
   history
 ) => async dispatch => {
+  dispatch(showOverlay(true));
   const apiUrl = `${storageApiUrl(type)}/${id}`;
-
   try {
     const res = await axios.post(apiUrl, storage);
 
     const { msg, payload, options } = res.data;
-
-    // hide the message after 3 seconds
-    msg.code = "hide-3";
-
-    checkForMsg(msg, dispatch, options);
 
     let newItemId = "";
 
@@ -319,6 +314,9 @@ export const startCreateStorage = (
       default:
         break;
     }
+    checkForMsg(msg, dispatch, options);
+
+    dispatch(showOverlay(false));
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "post", "storages");
   }
@@ -343,17 +341,14 @@ export const startEditStorage = (
   ids,
   history
 ) => async dispatch => {
+  dispatch(showOverlay(true));
+
   const apiUrl = `${storageApiUrl(type)}/${id}`;
 
   try {
     const res = await axios.patch(apiUrl, obj);
 
     const { msg, options, payload } = res.data;
-
-    // hide the message after 3 seconds
-    msg.code = "hide-3";
-
-    checkForMsg(msg, dispatch, options);
 
     const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
@@ -383,6 +378,9 @@ export const startEditStorage = (
       default:
         break;
     }
+    checkForMsg(msg, dispatch, options);
+
+    dispatch(showOverlay(false));
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "patch", `${type}`);
   }
@@ -395,6 +393,8 @@ export const deleteStorage = () => ({
 
 export const startDeleteStorage = (type, id, history) => async dispatch => {
   try {
+    dispatch(showOverlay(true));
+
     const apiUrl = `${storageApiUrl(type)}/${id}`;
     console.log(apiUrl);
 
@@ -405,6 +405,8 @@ export const startDeleteStorage = (type, id, history) => async dispatch => {
     dispatch(deleteStorage());
 
     checkForMsg(msg, dispatch, options);
+
+    dispatch(showOverlay(false));
 
     history.push(`/storages`);
   } catch (err) {

@@ -71,7 +71,31 @@ module.exports = (app, io) => {
     }
   });
 
-  app.patch("/api/boxes/:boxId", isAuth, (req, res) => {});
+  app.patch("/api/boxes/:boxId", isAuth, async (req, res) => {});
 
-  app.delete("/api/boxes/:boxId", isAuth, (req, res) => {});
+  app.delete("/api/boxes/:boxId", isAuth, async (req, res) => {
+    const { boxId } = req.params;
+    try {
+      const box = await Box.findById(boxId);
+
+      if (box["storedItems"].length !== 0) {
+        const msg = msgObj(
+          "Delete or relink all products of this box first.",
+          "red"
+        );
+        serverRes(res, 400, msg, box);
+      } else {
+        box.remove();
+
+        const msg = msgObj("Box deleted", "blue", "hide-3");
+
+        serverRes(res, 200, msg, box);
+      }
+    } catch (err) {
+      console.log("ERR: Delet/box", err);
+
+      const msg = serverMsg("error", "delete", "boxes");
+      serverRes(res, 400, msg, null);
+    }
+  });
 };
