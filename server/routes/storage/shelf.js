@@ -57,28 +57,42 @@ module.exports = (app, io) => {
   // Create a new shelf inside a rack and link it to the rack
   app.post("/api/shelves/:rackId", isAuth, async (req, res) => {
     let { rackId } = req.params;
-    const shelf = new Shelf(req.body);
+    const newShelf = new Shelf(req.body);
 
-    shelf["rack"] = rackId;
+    newShelf["rack"] = rackId;
 
     try {
-      await shelf.save();
-
-      const rack = await Rack.findByIdAndUpdate(
-        rackId,
-        {
-          $addToSet: {
-            shelves: shelf._id
-          }
-        },
-        { new: true }
-      );
+      const [shelf, rack] = await Promise.all([
+        newShelf.save(),
+        Rack.findByIdAndUpdate(
+          rackId,
+          {
+            $addToSet: {
+              shelves: newShelf._id
+            }
+          },
+          { new: true }
+        )
+          .populate({
+            path: "shelves",
+            populate: {
+              path: "shelfSpots",
+              populate: {
+                path: "storedItems.item ",
+                populate: {
+                  path: "storedItems"
+                }
+              }
+            }
+          })
+          .populate("storage")
+      ]);
 
       const msg = msgObj("The shelf was saved.", "blue", "hide-3");
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, { rack, shelf });
+      serverRes(res, 200, msg, { rack, shelfId: shelf._id });
     } catch (err) {
       console.log("Err: POST/api/shelf/:rackId", err);
 
@@ -135,7 +149,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, shelf);
+      serverRes(res, 200, msg, { shelfId: shelf._id });
     } catch (err) {
       console.log("Err: DELETE/api/shelves/:shelfId", err);
 

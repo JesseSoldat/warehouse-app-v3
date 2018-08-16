@@ -68,7 +68,7 @@ module.exports = (app, io) => {
       await newRack.save();
 
       const [rack, storage] = await Promise.all([
-        Rack.findById(rack._id).populate("storage"),
+        Rack.findById(newRack._id).populate("storage"),
         Storage.findByIdAndUpdate(
           storageId,
           {

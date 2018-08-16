@@ -284,18 +284,18 @@ export const startCreateStorage = (
 
     switch (type) {
       case "storage":
-        newItemId = payload[type]._id;
+        newItemId = payload["storage"]._id;
         historyUrl = `/storage/${newItemId}`;
         break;
 
       case "rack":
-        newItemId = payload[type]._id;
+        newItemId = payload["rack"]._id;
         historyUrl = `/rack/${storageId}/${newItemId}?type=${type}`;
 
         break;
 
       case "shelf":
-        newItemId = payload[type]._id;
+        newItemId = payload["shelfId"];
         historyUrl = `/shelf/${storageId}/${rackId}/${newItemId}?type=${type}`;
         break;
 
@@ -317,11 +317,10 @@ export const startCreateStorage = (
       ? dispatch(createStorage(payload))
       : dispatch(createRack(type, payload));
 
-    checkForMsg(msg, dispatch, options);
-
-    dispatch(showOverlay(false));
-
+    // ORDER MATTERS
     history.push(historyUrl);
+
+    checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "post", "storages");
   }

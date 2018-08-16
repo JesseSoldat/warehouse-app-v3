@@ -47,8 +47,9 @@ export default (state = initialState, action) => {
     update
   } = action;
 
-  let storageIndex, storagesCopy, rackCopy;
-  let rackId, storageId;
+  let storageIndex, shelfIndex;
+  let storagesCopy, rackCopy;
+  let storageId, rackId, shelfId;
 
   switch (type) {
     case RESET_STORAGE:
@@ -86,11 +87,9 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_CREATE_ONE:
-      console.log("STORAGE_CREATE_ONE", update);
-
+      // console.log("STORAGE_CREATE_ONE", update);
       storagesCopy = [...state.storages];
-
-      console.log("storagesCopy", storagesCopy);
+      // console.log("storagesCopy", storagesCopy);
 
       if (storagesCopy.length > 0) {
         // API update = { storage }
@@ -108,8 +107,8 @@ export default (state = initialState, action) => {
       storagesCopy = [...state.storages];
       rackCopy = state.rack === null ? null : { ...state.rack };
 
-      console.log("storagesCopy", storagesCopy);
-      console.log("rackCopy", rackCopy);
+      // console.log("storagesCopy", storagesCopy);
+      // console.log("rackCopy", rackCopy);
 
       switch (storageType) {
         case "storage":
@@ -121,8 +120,10 @@ export default (state = initialState, action) => {
           if (storagesCopy.length !== 0) {
             storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
             // console.log("storageIndex", storageIndex);
-            storagesCopy.splice(storageIndex, 1);
-            console.log("updated storageCopy", storagesCopy);
+            if (storageIndex >= 0) {
+              storagesCopy.splice(storageIndex, 1);
+              // console.log("updated storageCopy", storagesCopy);
+            }
           }
 
           break;
@@ -136,13 +137,41 @@ export default (state = initialState, action) => {
           if (storagesCopy.length !== 0) {
             storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
             // console.log("storageIndex", storageIndex);
-            let tempRacks = storagesCopy[storageIndex].racks.filter(
-              rack => rack._id !== rackId
-            );
-            storagesCopy[storageIndex].racks = tempRacks;
-            // console.log("updated storageCopy", storagesCopy[storageIndex]);
+            if (storageIndex >= 0) {
+              let tempRacks = storagesCopy[storageIndex].racks.filter(
+                rack => rack._id !== rackId
+              );
+              storagesCopy[storageIndex].racks = tempRacks;
+              // console.log("updated storageCopy", storagesCopy[storageIndex]);
+            }
           }
 
+          break;
+
+        case "shelf":
+          // API update = { shelfId }
+          shelfId = update.shelfId;
+          if (rackCopy) {
+            // console.log(rackCopy);
+            // find the shelf and remove it
+            shelfIndex = rackCopy.shelves.findIndex(
+              shelf => shelf._id === shelfId
+            );
+            // console.log("shelfIndex", shelfIndex);
+
+            if (shelfIndex >= 0) {
+              rackCopy.shelves.splice(shelfIndex, 1);
+            }
+            // console.log("updated rackCopy", rackCopy);
+          }
+          break;
+
+        case "shelfSpot":
+          // API update = { shelfSpotId }
+          if (rackCopy) {
+            console.log(rackCopy);
+            // find the shelf spot and remove it
+          }
           break;
 
         default:
@@ -244,8 +273,8 @@ export default (state = initialState, action) => {
       storagesCopy = [...state.storages];
       rackCopy = state.rack === null ? null : { ...state.rack };
 
-      console.log("storagesCopy", storagesCopy);
-      console.log("rackCopy", rackCopy);
+      // console.log("storagesCopy", storagesCopy);
+      // console.log("rackCopy", rackCopy);
 
       switch (storageType) {
         case "rack":
@@ -256,7 +285,7 @@ export default (state = initialState, action) => {
             storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
             // console.log("storageIndex", storageIndex);
 
-            if (storageIndex) {
+            if (storageIndex >= 0) {
               storagesCopy[storageIndex].racks.push(update.rack);
               // console.log("updated storage", storagesCopy[storageIndex]);
             }
@@ -266,6 +295,8 @@ export default (state = initialState, action) => {
           break;
 
         case "shelf":
+          // API update = { rack }
+          rackCopy = update.rack;
           break;
 
         case "shelfSpot":

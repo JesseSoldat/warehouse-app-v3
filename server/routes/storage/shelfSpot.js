@@ -137,11 +137,11 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, shelfSpot);
+      serverRes(res, 200, msg, { shelfSpotId: shelfSpot._id });
     } catch (err) {
       console.log("Err: DELETE/api/shelfSpots/:shelfSpotId", err);
 
-      const msg = msgObj(errMsg("delete", "shelfSpot"), "red");
+      const msg = serverMsg("error", "delete", "shelf spot");
       serverRes(res, 400, msg, null);
     }
   });
