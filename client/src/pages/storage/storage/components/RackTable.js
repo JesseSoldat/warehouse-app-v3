@@ -18,7 +18,8 @@ const RackTable = ({ rack }) => {
         <th scope="col">
           <Link to={`/shelf/create/${storageId}/${rackId}?type=shelf`}>
             <button className="btn btn-default">
-              <i className="fas fa-plus-circle mr-2" />New Shelf
+              <i className="fas fa-plus-circle mr-2" />
+              New Shelf
             </button>
           </Link>
         </th>
@@ -81,11 +82,19 @@ const RackTable = ({ rack }) => {
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
         <h2>Rack {rackLabel}</h2>
 
-        <Link to={`/rack/edit/${storageId}/${rackId}?type=rack`}>
-          <button className="btn btn-default m-1">
-            <i className="fas fa-edit mr-2" /> Edit Rack
-          </button>
-        </Link>
+        <div>
+          <Link to={`/barcode/create/${storageId}/${rackId}?type=rack`}>
+            <button className="btn btn-default m-1 mr-2">
+              <i className="fas fa-barcode mr-2" /> Create Barcode
+            </button>
+          </Link>
+
+          <Link to={`/rack/edit/${storageId}/${rackId}?type=rack`}>
+            <button className="btn btn-default m-1">
+              <i className="fas fa-edit mr-2" /> Edit Rack
+            </button>
+          </Link>
+        </div>
       </div>
 
       <div className="table-responsive-xs table-responsive-sm mb-5">

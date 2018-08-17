@@ -85,6 +85,13 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
 
         <div>
           <Link
+            to={`/barcode/create/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`}
+          >
+            <button className="btn btn-default m-1 mr-2">
+              <i className="fas fa-barcode mr-2" /> Create Barcode
+            </button>
+          </Link>
+          <Link
             to={`/shelfSpot/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`}
           >
             <button className="btn btn-default m-1">

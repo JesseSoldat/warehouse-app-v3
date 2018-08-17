@@ -64,14 +64,23 @@ const ShelfTable = ({ rack, shelfId }) => {
   return (
     <div className="card card-body mb-3">
       <div className="d-flex flex-wrap justify-content-between mb-3">
-        <h2 className="my-2 ml-4">Shelf {shelfLabel}</h2>
-
-        <div className="my-2 mr-4">
+        <div className="ml-2">
+          <h2 className="py-1 ml-3">Shelf {shelfLabel}</h2>
           <Link
             to={`/shelfSpot/create/${storageId}/${rackId}/${shelfId}?type=shelfSpot`}
           >
-            <button className="btn btn-default m-1">
+            <button className="btn btn-default m-1 ml-3">
               <i className="fas fa-plus-circle mr-2" /> New Shelf Spot
+            </button>
+          </Link>
+        </div>
+
+        <div className="mr-4">
+          <Link
+            to={`/barcode/create/${storageId}/${rackId}/${shelfId}?type=shelf`}
+          >
+            <button className="btn btn-default m-1 mr-2">
+              <i className="fas fa-barcode mr-2" /> Create Barcode
             </button>
           </Link>
 

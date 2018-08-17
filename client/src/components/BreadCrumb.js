@@ -309,6 +309,36 @@ const BreadCrumb2 = ({ match }) => {
       text = createText("Barcode");
       break;
 
+    case "/barcode/create/:storageId/:rackId":
+      link1 = createLink("Storage", `/storage/${storageId}`);
+      link2 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      text = createText("Barcode");
+      break;
+
+    case "/barcode/create/:storageId/:rackId/:shelfId":
+      link1 = createLink("Storage", `/storage/${storageId}`);
+      link2 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link3 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      text = createText("Barcode");
+      break;
+
+    case "/barcode/create/:storageId/:rackId/:shelfId/:shelfSpotId":
+      link1 = createLink("Storage", `/storage/${storageId}`);
+      link2 = createLink("Rack", `/rack/${storageId}/${rackId}?type=rack`);
+      link3 = createLink(
+        "Shelf",
+        `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
+      );
+      link4 = createLink(
+        "Shelf Spot",
+        `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+      );
+      text = createText("Barcode");
+      break;
+
     default:
       break;
   }

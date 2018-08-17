@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import QrCode from "qrcode.react";
 // custom components
+import PrintBarcode from "./components/PrintBarcode";
 // common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
@@ -29,6 +30,21 @@ class BarcodeCreate extends Component {
         this.setState({ type, storageId });
         break;
 
+      case "rack":
+        storageId = this.props.match.params.rackId;
+        this.setState({ type, storageId });
+        break;
+
+      case "shelf":
+        storageId = this.props.match.params.shelfId;
+        this.setState({ type, storageId });
+        break;
+
+      case "shelfSpot":
+        storageId = this.props.match.params.shelfSpotId;
+        this.setState({ type, storageId });
+        break;
+
       default:
         break;
     }
@@ -38,7 +54,10 @@ class BarcodeCreate extends Component {
     const { type, storageId } = this.state;
 
     const printBtn = (
-      <button className="btn btn-info btn-block">
+      <button
+        className="btn btn-info btn-block"
+        onClick={() => PrintBarcode(type, storageId)}
+      >
         <i className="fas fa-print mr-2" /> Print Barcode
       </button>
     );
