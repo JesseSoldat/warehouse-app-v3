@@ -304,9 +304,9 @@ const BreadCrumb2 = ({ match }) => {
       break;
 
     // create
-    case "/barcode/create":
-      link1 = createLink("Dashboard", "/dashboard");
-      text = createText("Search");
+    case "/barcode/create/:storageId":
+      link1 = createLink("Storage", `/storage/${storageId}`);
+      text = createText("Barcode");
       break;
 
     default:

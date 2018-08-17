@@ -8,15 +8,23 @@ const TableTitle = ({
   type = null
 }) => {
   const renderBtn = type ? (
-    <Link to={`/storage/edit/${storageId}?type=storage`} className="mr-3">
-      <button className="btn btn-default m-1">
-        <i className="fas fa-edit mr-2" /> Edit Storage
-      </button>
-    </Link>
+    <div>
+      <Link to={`/barcode/create/${storageId}?type=storage`}>
+        <button className="btn btn-default m-1 mr-2">
+          <i className="fas fa-barcode mr-2" /> Create Barcode
+        </button>
+      </Link>
+      <Link to={`/storage/edit/${storageId}?type=storage`} className="mr-3">
+        <button className="btn btn-default m-1">
+          <i className="fas fa-edit mr-2" /> Edit Storage
+        </button>
+      </Link>
+    </div>
   ) : (
     <Link to={`/storage/${storageId}`} className="pr-3">
       <button className="btn btn-default">
-        <i className="fas fa-eye mr-2" />View Storage
+        <i className="fas fa-eye mr-2" />
+        View Storage
       </button>
     </Link>
   );
