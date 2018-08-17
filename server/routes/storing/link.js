@@ -315,6 +315,7 @@ module.exports = (app, io) => {
 
   app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
+    console.log("boxId", boxId);
 
     try {
       const [shelfSpot, box] = await Promise.all([
@@ -342,7 +343,7 @@ module.exports = (app, io) => {
 
       serverRes(res, 200, msg, { shelfSpot, box });
     } catch (err) {
-      console.log("Err: PATCH/productToBox,", err);
+      console.log("Err: PATCH/boxToShelfSpot,", err);
 
       const msg = serverMsg("error", "link", "box to shelf spot");
 
