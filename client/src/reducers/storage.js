@@ -47,9 +47,9 @@ export default (state = initialState, action) => {
     update
   } = action;
 
-  let storageIndex, shelfIndex;
+  let storageIndex, shelfIndex, shelfSpotIndex;
   let storagesCopy, rackCopy;
-  let storageId, rackId, shelfId;
+  let storageId, rackId, shelfId, shelfSpotId;
 
   switch (type) {
     case RESET_STORAGE:
@@ -89,7 +89,6 @@ export default (state = initialState, action) => {
     case STORAGE_CREATE_ONE:
       // console.log("STORAGE_CREATE_ONE", update);
       storagesCopy = [...state.storages];
-      // console.log("storagesCopy", storagesCopy);
 
       if (storagesCopy.length > 0) {
         // API update = { storage }
@@ -102,13 +101,10 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_DELETE_ONE:
-      console.log("STORAGE_DELETE_ONE", update);
+      // console.log("STORAGE_DELETE_ONE", update);
 
       storagesCopy = [...state.storages];
       rackCopy = state.rack === null ? null : { ...state.rack };
-
-      // console.log("storagesCopy", storagesCopy);
-      // console.log("rackCopy", rackCopy);
 
       switch (storageType) {
         case "storage":
@@ -167,10 +163,31 @@ export default (state = initialState, action) => {
           break;
 
         case "shelfSpot":
-          // API update = { shelfSpotId }
+          // API update = { shelfId, shelfSpotId }
+          shelfId = update.shelfId;
+          shelfSpotId = update.shelfSpotId;
           if (rackCopy) {
-            console.log(rackCopy);
-            // find the shelf spot and remove it
+            // console.log('rackCopy', rackCopy);
+            // find the shelf
+            shelfIndex = rackCopy.shelves.findIndex(
+              shelf => shelf._id === shelfId
+            );
+            // console.log("shelfIndex", shelfIndex);
+
+            if (shelfIndex >= 0) {
+              // find the shelf spot
+              shelfSpotIndex = rackCopy.shelves[
+                shelfIndex
+              ].shelfSpots.findIndex(
+                shelfSpot => shelfSpot._id === shelfSpotId
+              );
+            }
+            // console.log("shelfSpotIndex", shelfSpotIndex);
+
+            if (shelfSpotIndex >= 0) {
+              rackCopy.shelves[shelfIndex].shelfSpots.splice(shelfSpotIndex, 1);
+              // console.log("rackCopy updated", rackCopy.shelves[shelfIndex]);
+            }
           }
           break;
 
@@ -268,13 +285,9 @@ export default (state = initialState, action) => {
       };
 
     case RACK_CREATE_ONE:
-      console.log("RACK_CREATE_ONE", update);
-
+      // console.log("RACK_CREATE_ONE", update);
       storagesCopy = [...state.storages];
       rackCopy = state.rack === null ? null : { ...state.rack };
-
-      // console.log("storagesCopy", storagesCopy);
-      // console.log("rackCopy", rackCopy);
 
       switch (storageType) {
         case "rack":
@@ -295,11 +308,13 @@ export default (state = initialState, action) => {
           break;
 
         case "shelf":
-          // API update = { rack }
+          // API update = { rack, shelfId }
           rackCopy = update.rack;
           break;
 
         case "shelfSpot":
+          // API update = { rack, shelfSpotId }
+          rackCopy = update.rack;
           break;
 
         default:

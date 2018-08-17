@@ -300,7 +300,7 @@ export const startCreateStorage = (
         break;
 
       case "shelfSpot":
-        newItemId = payload[type]._id;
+        newItemId = payload["shelfSpotId"];
         historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`;
         break;
 

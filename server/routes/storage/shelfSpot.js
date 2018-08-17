@@ -1,4 +1,5 @@
 // models
+const Rack = require("../../models/storage/rack");
 const Shelf = require("../../models/storage/shelf");
 const ShelfSpot = require("../../models/storage/shelfSpot");
 // middleware
@@ -57,27 +58,45 @@ module.exports = (app, io) => {
   // Create a new shelfSpot and link it to its shelf
   app.post("/api/shelfSpots/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
-    const shelfSpot = new ShelfSpot(req.body);
-    shelfSpot["shelf"] = shelfId;
+    const newShelfSpot = new ShelfSpot(req.body);
+    newShelfSpot["shelf"] = shelfId;
 
     try {
-      await shelfSpot.save();
+      const [shelfSpot, shelf] = await Promise.all([
+        newShelfSpot.save(),
+        Shelf.findByIdAndUpdate(
+          shelfId,
+          {
+            $addToSet: {
+              shelfSpots: newShelfSpot._id
+            }
+          },
+          { new: true, upsert: true }
+        )
+      ]);
 
-      const shelf = await Shelf.findByIdAndUpdate(
-        shelfId,
-        {
-          $addToSet: {
-            shelfSpots: shelfSpot._id
+      const rackId = shelf.rack;
+
+      const rack = await Rack.findById(rackId)
+        .populate({
+          path: "shelves",
+          populate: {
+            path: "shelfSpots",
+            populate: {
+              path: "storedItems.item ",
+              populate: {
+                path: "storedItems"
+              }
+            }
           }
-        },
-        { new: true, upsert: true }
-      );
+        })
+        .populate("storage");
 
       emit(req.user._id);
 
       const msg = msgObj("The shelf spot was created.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { shelf, shelfSpot });
+      serverRes(res, 200, msg, { shelfSpotId: shelfSpot._id, rack });
     } catch (err) {
       console.log("Err: POST/api/shelfSpots/:shelfId", err);
 
@@ -123,7 +142,7 @@ module.exports = (app, io) => {
         );
         return serverRes(res, 400, msg, spot);
       }
-      // no stored items
+      // no items stored
       const shelfId = shelfSpot.shelf;
 
       await Promise.all([
@@ -137,7 +156,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, { shelfSpotId: shelfSpot._id });
+      serverRes(res, 200, msg, { shelfId, shelfSpotId: shelfSpot._id });
     } catch (err) {
       console.log("Err: DELETE/api/shelfSpots/:shelfSpotId", err);
 

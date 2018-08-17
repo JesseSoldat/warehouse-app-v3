@@ -16,11 +16,13 @@ const BreadCrumb2 = ({ match }) => {
 
   let link1, link2, link3, link4, link5, text;
 
-  const createLink = (link, url) => (
-    <li className="breadcrumb-item site-breadcrumb-link">
-      <Link to={url}>{link}</Link>
-    </li>
-  );
+  const createLink = (link, url) => {
+    return (
+      <li className="breadcrumb-item site-breadcrumb-link">
+        <Link to={url}>{link}</Link>
+      </li>
+    );
+  };
 
   const createText = text => (
     <li className="breadcrumb-item site-breadcrumb-link">{text}</li>
