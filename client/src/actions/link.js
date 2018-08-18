@@ -40,11 +40,9 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
 
     dispatch(resetStorage());
 
-    checkForMsg(msg, dispatch, options);
-
-    dispatch(showOverlay(false));
-
     history.push(obj.historyUrl);
+
+    checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", info);
   }

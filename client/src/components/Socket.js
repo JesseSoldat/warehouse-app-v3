@@ -2,6 +2,12 @@ import React from "react";
 import { connect } from "react-redux";
 import io from "socket.io-client";
 
+// actions
+import { serverMsg } from "../actions/ui";
+
+// helpers
+import buildClientMsg from "../actions/helpers/buildClientMsg";
+
 const socket = io("http://localhost:5000");
 
 const Socket = ({ userId }) => {
@@ -10,10 +16,20 @@ const Socket = ({ userId }) => {
 
     if (senderId === userId) {
       // console.log("senderId matches userId", senderId);
-      return;
+      // return;
     }
 
     switch (msg) {
+      case "database error":
+        console.log("database error", timestamp);
+        const msg = buildClientMsg({
+          info: "Cloud Database is currently offline.",
+          color: "red",
+          code: "hide-3"
+        });
+        this.props.serverMsg(msg);
+        break;
+
       case "product":
         console.log("product updated", timestamp);
 
@@ -52,5 +68,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {}
+  { serverMsg }
 )(Socket);

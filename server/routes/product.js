@@ -246,7 +246,7 @@ module.exports = (app, io) => {
           case "shelfSpot":
             const shelfSpotId = item;
 
-            const shelf = await ShelfSpot.findByIdAndUpdate(
+            await ShelfSpot.findByIdAndUpdate(
               shelfSpotId,
               {
                 $pull: {

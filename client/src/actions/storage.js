@@ -385,8 +385,6 @@ export const startEditStorage = (
 
     checkForMsg(msg, dispatch, options);
 
-    dispatch(showOverlay(false));
-
     history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "patch", `${type}`);

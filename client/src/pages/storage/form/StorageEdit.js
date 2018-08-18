@@ -38,10 +38,11 @@ class StorageEdit extends Component {
   // store / api call -------------------------------
   getFormData() {
     const type = getUrlParameter("type");
-    let location = getUrlParameter("location");
-    location = location === "false" ? false : true;
     const { match, storages, rack } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
+    // box only logic
+    let location = getUrlParameter("location");
+    location = location === "false" ? false : true;
 
     const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
 

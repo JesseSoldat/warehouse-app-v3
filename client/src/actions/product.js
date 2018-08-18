@@ -46,6 +46,7 @@ export const productsLoaded = (productEntity, productOrder, query) => ({
   query
 });
 
+// TODO DEPRECATE
 export const getProducts = ({ products, query }) => ({
   type: PRODUCTS_FETCH_ALL,
   products,

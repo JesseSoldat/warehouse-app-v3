@@ -3,13 +3,13 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const connectToDb = require("./db/mongoose");
 
-connectToDb();
-
 const app = express();
 
 const server = app.listen(process.env.PORT);
 
 const io = require("socket.io")(server);
+
+connectToDb(io);
 
 app.use(bodyParser.json());
 

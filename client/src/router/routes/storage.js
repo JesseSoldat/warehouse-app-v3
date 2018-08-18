@@ -50,12 +50,14 @@ const StorageRoutes = [
     component={StorageCreate}
     exact={true}
   />,
+  // no location
   <PrivateRoute
     key="/box/create"
     path="/box/create"
     component={StorageCreate}
     exact={true}
   />,
+  // have location
   <PrivateRoute
     key="/box/create/location"
     path="/box/create/:storageId/:rackId/:shelfId/:shelfSpotId"
