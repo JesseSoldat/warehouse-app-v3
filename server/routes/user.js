@@ -4,10 +4,11 @@ const crypto = require("crypto");
 const User = require("../models/user");
 const AuthToken = require("../models/tokens/authToken");
 const VerificationToken = require("../models/tokens/verificationToken");
+const ResetPasswordToken = require("../models/tokens/resetPasswordToken");
 // middleware
 const isAuth = require("../middleware/isAuth");
 // utils
-const { errMsg, msgObj, serverRes } = require("../utils/serverRes");
+const { msgObj, serverRes } = require("../utils/serverRes");
 const serverMsg = require("../utils/serverMsg");
 const sendMail = require("../utils/sendMail");
 const isEmail = require("../utils/isEmail");
@@ -140,7 +141,7 @@ module.exports = app => {
   });
   // send mail ----------------------------------------------------
   // verify user with sent email
-  app.get("/api/confirmation/:token", async (req, res, next) => {
+  app.get("/api/confirmation/:token", async (req, res) => {
     const { token } = req.params;
     try {
       if (!token) throw new Error();
@@ -181,7 +182,7 @@ module.exports = app => {
   });
 
   // resend verification email
-  app.post("/api/resendVerification", async (req, res, next) => {
+  app.post("/api/resendVerification", async (req, res) => {
     const { email } = req.body;
 
     if (!isEmail(email)) {
@@ -221,6 +222,53 @@ module.exports = app => {
         }.`,
         "red"
       );
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  // reset password ------------------------------------------
+  // get email to reset password
+  app.get("/api/resetPasswordEmail/:email", async (req, res) => {
+    const { email } = req.params;
+    try {
+      if (!isEmail(email)) {
+        const msg = serverMsg("isEmail");
+        return serverRes(res, 400, msg, null);
+      }
+
+      const user = await User.findOne({ email });
+
+      if (!user) {
+        const msg = serverMsg("noUser");
+        return serverRes(res, 400, msg, null);
+      }
+
+      let resetPasswordToken = await ResetPasswordToken.findOne({
+        user: user._id
+      });
+
+      if (!resetPasswordToken || !resetPasswordToken.token) {
+        //create a reset password token
+        const token = await crypto.randomBytes(16).toString("hex");
+        resetPasswordToken = new ResetPasswordToken({
+          token,
+          user: user._id
+        });
+
+        await resetPasswordToken.save();
+      }
+
+      await sendMail(req, user, resetPasswordToken.token, (type = "reset"));
+
+      const msg = msgObj(
+        `Reset password has been sent to ${user.email}.`,
+        "blue"
+      );
+      serverRes(res, 200, msg, null);
+    } catch (err) {
+      console.log("ERR: GET/resetPasswordEmail", err);
+
+      const msg = serverMsg("error", "reset", "password");
       serverRes(res, 400, msg, null);
     }
   });

@@ -1,20 +1,12 @@
-const generateMsg = (field, type) =>
-  `The ${field} field is required to ${type}`;
+const generateMsg = field => `The ${field} field is required.`;
 
-const registerErrMsg = {
-  usernameErr: generateMsg("username", "register"),
-  emailErr: generateMsg("email", "register"),
+const AuthErrMsg = {
+  usernameErr: generateMsg("username"),
+  emailErr: generateMsg("email"),
   validEmailErr: "Please enter a valid email",
-  passwordErr: generateMsg("password", "register"),
+  passwordErr: generateMsg("password"),
   passwordLength: "Password length must be at least six characters",
-  confirmPasswordErr: "Passwords must match to register"
+  confirmPasswordErr: "Passwords must match"
 };
 
-const loginErrMsg = {
-  emailErr: generateMsg("email", "login"),
-  validEmailErr: "Please enter a valid email",
-  passwordErr: generateMsg("password", "login"),
-  passwordLength: "Password length must be at least six characters"
-};
-
-export { registerErrMsg, loginErrMsg };
+export default AuthErrMsg;

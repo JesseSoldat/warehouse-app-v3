@@ -63,6 +63,18 @@ export const startResendVerification = email => async dispatch => {
   }
 };
 
+export const requestResetPasswordEmail = email => async dispatch => {
+  try {
+    const res = await axios.get(`/api/resetPasswordEmail/${email}`);
+
+    const { msg, options } = res.data;
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "reset", "password");
+  }
+};
+
 export const startLogout = () => async dispatch => {
   try {
     const res = await axios.delete("/api/logout");

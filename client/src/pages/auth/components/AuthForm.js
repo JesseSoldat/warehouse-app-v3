@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { withRouter } from "react-router-dom";
-import { parse } from "qs";
 
 // common components
 import TextInput from "../../../components/inputs/TextInput";
@@ -11,12 +10,14 @@ import Heading from "../../../components/Heading";
 // helpers
 import formIsValid from "../helpers/formIsValid";
 // utils
+import getUrlParameter from "../../../utils/getUrlParameter";
 import isEmail from "../../../utils/validation/isEmail";
 // actions
 import {
   startRegister,
   startLogin,
-  startResendVerification
+  startResendVerification,
+  requestResetPasswordEmail
 } from "../../../actions/auth";
 import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
@@ -35,8 +36,8 @@ class AuthForm extends Component {
 
   componentDidMount() {
     // When a user verifies their email show a message
-    const query = parse(this.props.location.search.substr(1));
-    if (query.verify) {
+    const verify = getUrlParameter("verify");
+    if (verify) {
       this.props.serverMsg({
         heading: "Server Info",
         details: "Your account has been verified. Please login!",
@@ -44,7 +45,8 @@ class AuthForm extends Component {
       });
     }
     // An error occured while trying to verfiy email
-    if (query.verifyErr) {
+    const verifyErr = getUrlParameter("verifyErr");
+    if (verifyErr) {
       this.props.serverMsg({
         heading: "Server Error",
         details:
@@ -106,6 +108,10 @@ class AuthForm extends Component {
 
   resendEmail = () => {
     this.props.startResendVerification(this.state.email);
+  };
+
+  resetPassword = email => {
+    this.props.requestResetPasswordEmail(email);
   };
 
   render() {
@@ -212,6 +218,7 @@ class AuthForm extends Component {
                       <button
                         className="btn btn-outline-dark btn-sm btn-block"
                         disabled={isEmail(email) ? false : true}
+                        onClick={() => this.resetPassword(email)}
                       >
                         Reset your Password
                       </button>
@@ -244,12 +251,18 @@ class AuthForm extends Component {
 
 const mapStateToProps = ({ ui, auth }) => ({
   auth: auth,
-  ui: ui,
   loading: ui.loading,
   msg: ui.msg
 });
 
 export default connect(
   mapStateToProps,
-  { startRegister, startLogin, changeRoute, serverMsg, startResendVerification }
+  {
+    startRegister,
+    startLogin,
+    changeRoute,
+    serverMsg,
+    startResendVerification,
+    requestResetPasswordEmail
+  }
 )(withRouter(AuthForm));

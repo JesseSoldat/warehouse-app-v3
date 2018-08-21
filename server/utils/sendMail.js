@@ -19,16 +19,27 @@ const sendMail = async (req, user, token, type) => {
 
   const content =
     type === "confirm"
-      ? "Please verify your account by clicking the link: \nhttp://"
-      : "Please reset your account's password by clicking the link: \nhttp://";
+      ? "Please verify your account by clicking the link:"
+      : "Please reset your account's password by clicking the link:";
 
-  const url = type === "confirm" ? "/api/confirmation/" : "/api/resetPassword/";
+  const prefix = process.env.NODE_ENV === "production" ? "https://" : "http://";
+
+  const url = type === "confirm" ? "/confirmation/" : "/resetPassword/";
+
+  const link =
+    type === "confirm"
+      ? `${prefix}${req.headers.host}${url}`
+      : `${prefix}${req.headers.host}${url}${token}`;
 
   const mailOptions = {
     from: "no-reply@warehouse-application.com",
     to: user.email,
     subject,
-    text: "Hello,\n\n" + content + req.headers.host + url + token + ".\n"
+    text: `Hello,
+
+    ${content}
+
+    ${link}`
   };
 
   transporter.sendMail(mailOptions, err => {

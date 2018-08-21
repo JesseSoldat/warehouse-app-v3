@@ -2,6 +2,7 @@ const emailRegex = /^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-
 
 const isEmail = email => {
   const isEmail = emailRegex.test(email);
+
   return isEmail;
 };
 

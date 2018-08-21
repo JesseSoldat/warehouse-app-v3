@@ -19,7 +19,10 @@ const isAuth = async (req, res, next) => {
     const user = await User.findByToken(token);
 
     if (!user) {
-      const msg = msgObj("A user with this token could not be found.", "blue");
+      const msg = msgObj(
+        "A user with this token could not be found. Please login again.",
+        "blue"
+      );
       return serverRes(res, 400, msg, null, "tokenError");
     }
 

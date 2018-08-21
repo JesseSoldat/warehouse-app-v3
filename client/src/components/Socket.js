@@ -24,8 +24,7 @@ const Socket = ({ userId }) => {
         console.log("database error", timestamp);
         const msg = buildClientMsg({
           info: "Cloud Database is currently offline.",
-          color: "red",
-          code: "hide-3"
+          color: "red"
         });
         this.props.serverMsg(msg);
         break;

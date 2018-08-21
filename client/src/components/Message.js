@@ -6,9 +6,10 @@ class Message extends Component {
   componentWillUpdate(nextProps) {
     const { msg } = nextProps;
 
+    window.scrollTo(0, 0);
+
     // hide the success message after 3 seconds
     if (msg && msg.code === "hide-3") {
-      window.scrollTo(0, 0);
       setTimeout(() => {
         this.closeMessage();
       }, 3000);
