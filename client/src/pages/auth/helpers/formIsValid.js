@@ -10,14 +10,16 @@ const formIsValid = (form, parent) => {
   const { username, email, password, confirmPassword } = form;
   let errObj = {};
 
+  // all flows ----------------------------------------------------
+  if (!email || !isEmail(email)) {
+    // EMAIL
+    if (!email) errObj["emailErr"] = AuthErrMsg.emailErr;
+    if (email && !isEmail(email)) errObj["emailErr"] = AuthErrMsg.validEmailErr;
+  }
   // login && register flow ----------------------------------------
   if (parent === "login" || parent === "register") {
-    if (!email || !isEmail(email) || !password || password.length < 6) {
-      // email
-      if (!email) errObj["emailErr"] = AuthErrMsg.emailErr;
-      if (email && !isEmail(email))
-        errObj["emailErr"] = AuthErrMsg.validEmailErr;
-      // password
+    // PASSWORD
+    if (!password || password.length < 6) {
       const passErrObj = passwordIsValid(password);
       errObj = { ...errObj, ...passErrObj };
     }
@@ -25,10 +27,10 @@ const formIsValid = (form, parent) => {
 
   // register flow only -----------------------------------------------
   if (parent === "register") {
-    if (!username || !confirmPassword) {
-      // username
-      if (!username) errObj["usernameErr"] = AuthErrMsg.usernameErr;
-      // confirm password
+    // USERNAME
+    if (!username) errObj["usernameErr"] = AuthErrMsg.usernameErr;
+    // CONFIRM PASSWORD
+    if (password) {
       const confirmPassErrObj = confirmPasswordIsValid(
         password,
         confirmPassword
@@ -43,8 +45,13 @@ const formIsValid = (form, parent) => {
     const passErrObj = passwordIsValid(password);
     errObj = { ...errObj, ...passErrObj };
     // confirm password
-    const confirmPassErrObj = confirmPasswordIsValid(password, confirmPassword);
-    errObj = { ...errObj, ...confirmPassErrObj };
+    if (password) {
+      const confirmPassErrObj = confirmPasswordIsValid(
+        password,
+        confirmPassword
+      );
+      errObj = { ...errObj, ...confirmPassErrObj };
+    }
   }
 
   const isValid = isEmpty(errObj);

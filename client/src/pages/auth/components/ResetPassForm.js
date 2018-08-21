@@ -4,14 +4,15 @@ import { withRouter } from "react-router-dom";
 
 // common components
 import TextInput from "../../../components/inputs/TextInput";
-import Message from "../../../components/Message";
 // helpers
 import formIsValid from "../helpers/formIsValid";
-// utils
-import getUrlParameter from "../../../utils/getUrlParameter";
+// actions
+import { startResetPassword } from "../../../actions/auth";
 
 class ResetPassForm extends Component {
   state = {
+    email: "",
+    emailErr: null,
     password: "",
     passwordErr: null,
     confirmPassword: "",
@@ -29,15 +30,34 @@ class ResetPassForm extends Component {
     const { isValid, errObj } = formIsValid(this.state, "resetPassword");
 
     if (!isValid) {
+      console.log("not valid");
+
       this.setState(() => ({ ...errObj }));
       return;
     }
+
+    const { token } = this.props.match.params;
+    const { email, password } = this.state;
+
+    this.props.startResetPassword(
+      { email, password, token },
+      this.props.history
+    );
   };
 
   render() {
     return (
       <div className="col-md-8 mx-auto">
         <form onSubmit={this.onSubmit} noValidate>
+          <TextInput
+            label="Email"
+            placeholder="Email"
+            name="email"
+            type="email"
+            onChange={this.onChange}
+            error={this.state.emailErr}
+            value={this.state.email}
+          />
           <TextInput
             label="New Password"
             placeholder="New Password"
@@ -58,11 +78,16 @@ class ResetPassForm extends Component {
             value={this.state.confirmPassword}
           />
 
-          <button className="btn btn-info btn-block mt-4">Submit</button>
+          <button type="submit" className="btn btn-info btn-block mt-4">
+            Submit
+          </button>
         </form>
       </div>
     );
   }
 }
 
-export default ResetPassForm;
+export default connect(
+  null,
+  { startResetPassword }
+)(withRouter(ResetPassForm));

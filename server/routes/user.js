@@ -273,6 +273,52 @@ module.exports = app => {
     }
   });
 
+  // reset the old password with new password
+  app.patch("/api/resetPassword", async (req, res) => {
+    const { token, email, password } = req.body;
+
+    try {
+      if (!isEmail(email)) {
+        const msg = serverMsg("isEmail");
+        return serverRes(res, 400, msg, null);
+      }
+
+      if (!token) {
+        const msg = msgObj("Token cannot be blank.", "red");
+        return serverRes(res, 400, msg, null);
+      }
+
+      if (password.length < 6) {
+        const msg = serverMsg("passwordLength");
+        return serverRes(res, 400, msg, null);
+      }
+
+      const resetPasswordToken = await ResetPasswordToken.findOne({ token });
+
+      if (!resetPasswordToken) {
+        const msg = msgObj("No token for this email and password.", "red");
+        return serverRes(res, 400, msg, null);
+      }
+
+      // findByIdAndUpdate skips the password hashing
+      const user = await User.findById(resetPasswordToken.user);
+      user["password"] = password;
+
+      await Promise.all([
+        user.save(),
+        ResetPasswordToken.findOneAndRemove({ token })
+      ]);
+
+      const msg = msgObj(
+        "The password has been changed. Please log in.",
+        "blue"
+      );
+      serverRes(res, 200, msg, null);
+    } catch (err) {
+      const msg = serverMsg("error", "change", "password");
+      return serverRes(res, 400, msg, null);
+    }
+  });
   // admin ----------------------------------------------
   // get all of the users of the app
   app.get("/api/users", isAuth, async (req, res) => {

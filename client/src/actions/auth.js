@@ -5,6 +5,8 @@ import setAxiosHeader from "../utils/setAxiosHeader";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
+// actions
+import { showOverlay } from "./ui";
 // types
 export const AUTH_LOGIN = "AUTH_LOGIN";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
@@ -53,6 +55,7 @@ export const startLogin = user => async dispatch => {
 };
 
 export const startResendVerification = email => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.post("/api/resendVerification", { email });
     const { msg, options } = res.data;
@@ -63,13 +66,32 @@ export const startResendVerification = email => async dispatch => {
   }
 };
 
+// RESET PASSWORD --------------------------------------------
+// send reset email
 export const requestResetPasswordEmail = email => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.get(`/api/resetPasswordEmail/${email}`);
 
     const { msg, options } = res.data;
 
     checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "reset", "password");
+  }
+};
+
+// use token from email to reset password
+export const startResetPassword = (passObj, history) => async dispatch => {
+  dispatch(showOverlay(true));
+  try {
+    const res = await axios.patch("/api/resetPassword", passObj);
+
+    const { msg, options } = res.data;
+
+    checkForMsg(msg, dispatch, options);
+
+    history.push("/login");
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "reset", "password");
   }
