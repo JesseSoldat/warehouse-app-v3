@@ -88,6 +88,11 @@ const BreadCrumb = ({ match }) => {
       link1 = createLink("Products");
       text = createText("Create");
       break;
+    case "/products/images/:productId":
+      link1 = createLink("Products");
+      link2 = createLink("Product");
+      text = createText("Image");
+      break;
 
     // PRODUCERS ROUTES
     case "/producers/search":

@@ -16,7 +16,9 @@ const InfoCard = ({
     history.push(`/barcode/create?id=${productId}&type=product`);
   };
 
-  const onManagePictures = productId => {};
+  const onManagePictures = productId => {
+    history.push(`/products/images/${productId}`);
+  };
 
   // render ui -----------------------------
   const renderImage = (productPictures, packagingPictures) => {

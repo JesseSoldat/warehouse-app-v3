@@ -1,6 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
+import firebase from "firebase";
 
 import registerServiceWorker from "./registerServiceWorker";
 
@@ -12,6 +13,16 @@ import AppRouter from "./router/AppRouter";
 import configureStore from "./store/configureStore";
 // utils - auth
 import handleInitialAuth from "./utils/auth/handleInitialAuth";
+
+const config = {
+  apiKey: "AIzaSyBkyPopLr6_O8iIPnEr--ZGcsW1ecxdr3s",
+  authDomain: "file-upload-c3300.firebaseapp.com",
+  databaseURL: "https://file-upload-c3300.firebaseio.com",
+  projectId: "file-upload-c3300",
+  storageBucket: "file-upload-c3300.appspot.com",
+  messagingSenderId: "359118658227"
+};
+firebase.initializeApp(config);
 
 const Loading = () => "loading..";
 const store = configureStore();
