@@ -1,6 +1,5 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 import firebase from "firebase";
 import FileUploader from "react-firebase-file-uploader";
 
@@ -9,6 +8,7 @@ import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
 // actions
+import { showOverlay } from "../../../actions/ui";
 import { productLoaded, startGetProduct } from "../../../actions/product";
 import { uploadImage } from "../../../actions/image";
 
@@ -16,8 +16,8 @@ class ProductImages extends Component {
   state = {
     picture: "",
     isUploading: false,
-    progress: 0,
-    pictureURL: ""
+    pictureURL: "",
+    type: "productPictures"
   };
 
   // lifecycles --------------------------------------------------
@@ -45,23 +45,35 @@ class ProductImages extends Component {
     this.props.startGetProduct(productId);
   };
 
-  handleUploadStart = () => this.setState({ isUploading: true, progress: 0 });
+  // select cb
+  selectType = e => {
+    this.setState({ type: e.target.value });
+  };
 
-  handleProgress = progress => this.setState({ progress });
+  // uploading
+  handleUploadStart = () => {
+    this.props.showOverlay(true);
+    this.setState({ isUploading: true });
+  };
 
   handleUploadError = error => {
+    this.props.showOverlay(false);
     this.setState({ isUploading: false });
     console.error(error);
   };
 
   handleUploadSuccess = filename => {
-    this.setState({ avatar: filename, progress: 100, isUploading: false });
+    const { productId } = this.props.match.params;
+    this.setState({ picture: filename, isUploading: false });
     firebase
       .storage()
       .ref("images")
       .child(filename)
       .getDownloadURL()
-      .then(url => this.setState({ pictureURL: url }));
+      .then(url => {
+        this.props.uploadImage(url, this.state.type, productId);
+        this.setState({ pictureURL: url });
+      });
   };
 
   renderPicsContainer = (title, picArray) => (
@@ -97,21 +109,24 @@ class ProductImages extends Component {
     } else if (product && product._id === productId) {
       content = (
         <form>
-          {this.state.isUploading && <p>Progress: {this.state.progress}</p>}
-          {this.state.pictureURL && (
-            <img
-              src={this.state.pictureURL}
-              style={{ width: "150px", height: "150px" }}
-              className="img-thumbnail m-2"
-            />
-          )}
+          <div className="input-group mb-3 mr-3">
+            <div className="input-group-prepend">
+              <label className="input-group-text">Options</label>
+            </div>
+            <select className="custom-select" onChange={this.selectType}>
+              <option value="productPictures">Product Pictures</option>
+              <option value="packagingPictures">Packaging Pictures</option>
+            </select>
+          </div>
           <label
             style={{
+              display: "block",
               backgroundColor: "steelblue",
               color: "white",
-              padding: 10,
+              padding: 5,
               borderRadius: 4,
-              pointer: "cursor"
+              pointer: "cursor",
+              textAlign: "center"
             }}
           >
             Select an Image
@@ -164,5 +179,5 @@ const mapStateToProps = ({ ui, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { productLoaded, startGetProduct, uploadImage }
-)(withRouter(ProductImages));
+  { showOverlay, productLoaded, startGetProduct, uploadImage }
+)(ProductImages);
