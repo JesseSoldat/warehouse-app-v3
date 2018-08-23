@@ -34,9 +34,6 @@ module.exports = app => {
   app.patch("/api/deleteProductImage/:productId", isAuth, async (req, res) => {
     const { productId } = req.params;
     const { url, type } = req.body;
-    console.log("type", type);
-
-    console.log("url", url);
 
     try {
       const query =
@@ -47,8 +44,6 @@ module.exports = app => {
       const product = await Product.findByIdAndUpdate(productId, query, {
         new: true
       });
-
-      // console.log(product);
 
       const msg = msgObj("The product image was deleted.", "blue", "hide-3");
 

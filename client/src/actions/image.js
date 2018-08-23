@@ -4,7 +4,6 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { showOverlay } from "./ui";
 import { productLoaded } from "./product";
 
 export const uploadImage = (url, type, product) => async dispatch => {
@@ -34,7 +33,6 @@ export const uploadImage = (url, type, product) => async dispatch => {
 
 export const deleteImage = (url, type, product) => async dispatch => {
   try {
-    dispatch(showOverlay(true));
     const res = await axios.patch(`/api/deleteProductImage/${product._id}`, {
       type,
       url

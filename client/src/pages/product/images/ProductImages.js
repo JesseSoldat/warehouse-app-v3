@@ -3,10 +3,12 @@ import { connect } from "react-redux";
 import firebase from "firebase";
 import FileUploader from "react-firebase-file-uploader";
 
-// components
+// common components
 import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
+// custom components
+import ImageCard from "./components/ImageCard";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 // actions
@@ -16,8 +18,7 @@ import { uploadImage, deleteImage } from "../../../actions/image";
 
 class ProductImages extends Component {
   state = {
-    type: "productPictures",
-    showDeleteBtn: "d-none"
+    type: "productPictures"
   };
 
   // lifecycles --------------------------------------------------
@@ -73,15 +74,22 @@ class ProductImages extends Component {
   };
 
   // delete image
-  handleDeleteImage = (url, type) => {
-    const { product } = this.props;
-    this.props.deleteImage(url, type, product);
-  };
+  handleDeleteImage = async (url, type) => {
+    this.props.showOverlay(true);
 
-  toggleDeleteBtn = showDeleteBtn => {
-    showDeleteBtn
-      ? this.setState({ showDeleteBtn: "d-inline-block" })
-      : this.setState({ showDeleteBtn: "d-none" });
+    const { product } = this.props;
+
+    try {
+      if (url.includes("firebasestorage.googleapis.com")) {
+        const deleteRef = firebase.storage().refFromURL(url);
+        await deleteRef.delete();
+      }
+
+      this.props.deleteImage(url, type, product);
+    } catch (err) {
+      this.props.showOverlay(false);
+      console.log("ERR deleting img", err);
+    }
   };
 
   // server msg
@@ -106,28 +114,12 @@ class ProductImages extends Component {
       <div className="row mb-3">
         <div className="col-xs-12 mx-auto pb-3">
           {picArray.map((picUrl, i) => (
-            <div className="d-inline-block" style={{ position: "relative" }}>
-              <img
-                onMouseEnter={() => this.toggleDeleteBtn(true)}
-                onMouseLeave={() => this.toggleDeleteBtn(false)}
-                key={i}
-                src={picUrl}
-                style={{ width: "150px", height: "150px" }}
-                className="img-thumbnail m-2"
-              />
-              <button
-                onMouseEnter={() => this.toggleDeleteBtn(true)}
-                onClick={e => this.handleDeleteImage(picUrl, type)}
-                style={{
-                  position: "absolute",
-                  top: "15px",
-                  right: "15px"
-                }}
-                className={`btn btn-danger btn-sm ${this.state.showDeleteBtn}`}
-              >
-                X
-              </button>
-            </div>
+            <ImageCard
+              key={i}
+              picUrl={picUrl}
+              type={type}
+              handleDeleteImage={this.handleDeleteImage}
+            />
           ))}
         </div>
       </div>
