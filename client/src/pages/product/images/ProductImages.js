@@ -131,6 +131,10 @@ class ProductImages extends Component {
           >
             Select an Image
             <FileUploader
+              beforeUploadStart={file => {
+                if (!/^image\/.*/.test(file.type)) throw Error("Invalid type");
+                if (file.size > 1e6) throw Error("File too large");
+              }}
               hidden
               accept="image/*"
               name="picture"
