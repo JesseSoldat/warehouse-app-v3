@@ -304,6 +304,12 @@ const BreadCrumb = ({ match }) => {
       break;
 
     // create
+    case "/barcode/create/:productId":
+      link1 = createLink("Products");
+      link2 = createLink("Product");
+      text = createText("Barcode");
+      break;
+
     case "/barcode/create/:storageId":
       link1 = createLink("Storage");
       text = createText("Barcode");

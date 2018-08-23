@@ -12,7 +12,7 @@ import getUrlParameter from "../../utils/getUrlParameter";
 class BarcodeCreate extends Component {
   state = {
     type: "",
-    storageId: ""
+    id: ""
   };
   // lifecycles -------------------------------
   componentDidMount() {
@@ -22,41 +22,43 @@ class BarcodeCreate extends Component {
   // setup state with url params
   stateSetup = () => {
     const type = getUrlParameter("type");
-    let storageId;
+    let id;
 
     switch (type) {
       case "storage":
-        storageId = this.props.match.params.storageId;
-        this.setState({ type, storageId });
+        id = this.props.match.params.storageId;
+        this.setState({ type, id });
         break;
 
       case "rack":
-        storageId = this.props.match.params.rackId;
-        this.setState({ type, storageId });
+        id = this.props.match.params.rackId;
+        this.setState({ type, id });
         break;
 
       case "shelf":
-        storageId = this.props.match.params.shelfId;
-        this.setState({ type, storageId });
+        id = this.props.match.params.shelfId;
+        this.setState({ type, id });
         break;
 
       case "shelfSpot":
-        storageId = this.props.match.params.shelfSpotId;
-        this.setState({ type, storageId });
+        id = this.props.match.params.shelfSpotId;
+        this.setState({ type, id });
         break;
 
       default:
+        id = this.props.match.params.productId;
+        this.setState({ type: "product", id });
         break;
     }
   };
 
   render() {
-    const { type, storageId } = this.state;
+    const { type, id } = this.state;
 
     const printBtn = (
       <button
         className="btn btn-info btn-block"
-        onClick={() => PrintBarcode(type, storageId)}
+        onClick={() => PrintBarcode(type, id)}
       >
         <i className="fas fa-print mr-2" /> Print Barcode
       </button>
@@ -72,7 +74,7 @@ class BarcodeCreate extends Component {
               <div className="col-xs-12 col-md-2 mt-3">
                 <QrCode
                   className="my-3 d-block mx-auto"
-                  value={`/${type}/${storageId}`}
+                  value={`/${type}/${id}`}
                 />
               </div>
 
@@ -102,7 +104,7 @@ class BarcodeCreate extends Component {
                     type="text"
                     disabled={true}
                     className="form-control"
-                    value={storageId}
+                    value={id}
                   />
                 </div>
                 <div className="col-12 mx-auto">{printBtn}</div>

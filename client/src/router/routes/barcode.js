@@ -10,6 +10,12 @@ import LinkItems from "../../pages/barcode/LinkItems";
 const BarcodeRoutes = [
   // Create -----------------------------
   <PrivateRoute
+    key="barcode/create/:productId"
+    path="/barcode/create/:productId"
+    component={BarcodeCreate}
+    exact
+  />,
+  <PrivateRoute
     key="barcode/create/:storageId"
     path="/barcode/create/:storageId"
     component={BarcodeCreate}
