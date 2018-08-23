@@ -7,16 +7,15 @@ import FileUploader from "react-firebase-file-uploader";
 import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
+// helpers
+import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 // actions
-import { showOverlay } from "../../../actions/ui";
+import { showOverlay, serverMsg } from "../../../actions/ui";
 import { productLoaded, startGetProduct } from "../../../actions/product";
-import { uploadImage } from "../../../actions/image";
+import { uploadImage, deleteImage } from "../../../actions/image";
 
 class ProductImages extends Component {
   state = {
-    picture: "",
-    isUploading: false,
-    pictureURL: "",
     type: "productPictures"
   };
 
@@ -53,30 +52,43 @@ class ProductImages extends Component {
   // uploading
   handleUploadStart = () => {
     this.props.showOverlay(true);
-    this.setState({ isUploading: true });
   };
 
   handleUploadError = error => {
     this.props.showOverlay(false);
-    this.setState({ isUploading: false });
     console.error(error);
   };
 
   handleUploadSuccess = filename => {
-    const { productId } = this.props.match.params;
-    this.setState({ picture: filename, isUploading: false });
+    const { product } = this.props;
     firebase
       .storage()
       .ref("images")
       .child(filename)
       .getDownloadURL()
       .then(url => {
-        this.props.uploadImage(url, this.state.type, productId);
-        this.setState({ pictureURL: url });
+        this.props.uploadImage(url, this.state.type, product);
       });
   };
 
-  renderPicsContainer = (title, picArray) => (
+  // delete image
+  handleDeleteImage = (url, type) => {
+    const { product } = this.props;
+    this.props.deleteImage(url, type, product);
+  };
+
+  // server msg
+  showServerMsg = key => {
+    const msgs = {
+      size: "The file you are trying to upload is too large.",
+      type: "Only images can be uploaded."
+    };
+    const msg = msgs[key];
+
+    this.props.serverMsg(buildClientMsg({ info: msg, color: "red" }));
+  };
+
+  renderPicsContainer = (title, picArray, type) => (
     <Fragment>
       <div className="row">
         <div className="col-12">
@@ -88,6 +100,7 @@ class ProductImages extends Component {
         <div className="col-xs-12 mx-auto pb-3">
           {picArray.map((picUrl, i) => (
             <img
+              onClick={e => this.handleDeleteImage(picUrl, type)}
               key={i}
               src={picUrl}
               style={{ width: "150px", height: "150px" }}
@@ -132,8 +145,13 @@ class ProductImages extends Component {
             Select an Image
             <FileUploader
               beforeUploadStart={file => {
-                if (!/^image\/.*/.test(file.type)) throw Error("Invalid type");
-                if (file.size > 1e6) throw Error("File too large");
+                if (!/^image\/.*/.test(file.type)) {
+                  this.showServerMsg("type");
+                  throw new Error("Invalid type");
+                } else if (file.size > 1e6) {
+                  this.showServerMsg("size");
+                  throw new Error("File too large");
+                }
               }}
               hidden
               accept="image/*"
@@ -143,7 +161,6 @@ class ProductImages extends Component {
               onUploadStart={this.handleUploadStart}
               onUploadError={this.handleUploadError}
               onUploadSuccess={this.handleUploadSuccess}
-              onProgress={this.handleProgress}
             />
           </label>
         </form>
@@ -153,11 +170,13 @@ class ProductImages extends Component {
 
       prodPicsContainer = this.renderPicsContainer(
         "Product Pictures",
-        productPictures
+        productPictures,
+        "productPictures"
       );
       packPicsContainer = this.renderPicsContainer(
         "Packaging Pictures",
-        packagingPictures
+        packagingPictures,
+        "packagingPictures"
       );
     }
 
@@ -183,5 +202,12 @@ const mapStateToProps = ({ ui, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { showOverlay, productLoaded, startGetProduct, uploadImage }
+  {
+    serverMsg,
+    showOverlay,
+    productLoaded,
+    startGetProduct,
+    uploadImage,
+    deleteImage
+  }
 )(ProductImages);
