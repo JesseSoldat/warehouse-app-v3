@@ -16,7 +16,8 @@ import { uploadImage, deleteImage } from "../../../actions/image";
 
 class ProductImages extends Component {
   state = {
-    type: "productPictures"
+    type: "productPictures",
+    showDeleteBtn: "d-none"
   };
 
   // lifecycles --------------------------------------------------
@@ -77,6 +78,12 @@ class ProductImages extends Component {
     this.props.deleteImage(url, type, product);
   };
 
+  toggleDeleteBtn = showDeleteBtn => {
+    showDeleteBtn
+      ? this.setState({ showDeleteBtn: "d-inline-block" })
+      : this.setState({ showDeleteBtn: "d-none" });
+  };
+
   // server msg
   showServerMsg = key => {
     const msgs = {
@@ -99,13 +106,28 @@ class ProductImages extends Component {
       <div className="row mb-3">
         <div className="col-xs-12 mx-auto pb-3">
           {picArray.map((picUrl, i) => (
-            <img
-              onClick={e => this.handleDeleteImage(picUrl, type)}
-              key={i}
-              src={picUrl}
-              style={{ width: "150px", height: "150px" }}
-              className="img-thumbnail m-2"
-            />
+            <div className="d-inline-block" style={{ position: "relative" }}>
+              <img
+                onMouseEnter={() => this.toggleDeleteBtn(true)}
+                onMouseLeave={() => this.toggleDeleteBtn(false)}
+                key={i}
+                src={picUrl}
+                style={{ width: "150px", height: "150px" }}
+                className="img-thumbnail m-2"
+              />
+              <button
+                onMouseEnter={() => this.toggleDeleteBtn(true)}
+                onClick={e => this.handleDeleteImage(picUrl, type)}
+                style={{
+                  position: "absolute",
+                  top: "15px",
+                  right: "15px"
+                }}
+                className={`btn btn-danger btn-sm ${this.state.showDeleteBtn}`}
+              >
+                X
+              </button>
+            </div>
           ))}
         </div>
       </div>
