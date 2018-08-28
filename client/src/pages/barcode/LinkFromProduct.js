@@ -9,6 +9,7 @@ import Message from "../../components/Message";
 import Heading from "../../components/Heading";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
+import isEmpty from "../../utils/validation/isEmpty";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
@@ -131,12 +132,14 @@ class LinkFromProduct extends Component {
     }
   };
 
+  // linking flow -------------------------------------------------
   linkScannedItems = e => {
     e.preventDefault();
     const {
       productId,
       secondScannedItemId,
-      secondScannedItemType
+      secondScannedItemType,
+      type
     } = this.state;
 
     if (!productId || !secondScannedItemId) return;
@@ -147,6 +150,8 @@ class LinkFromProduct extends Component {
 
     let obj;
 
+    let prevLocation = this.getPrevLocation(type);
+
     switch (type2) {
       case "shelfSpot":
         obj = {
@@ -154,8 +159,10 @@ class LinkFromProduct extends Component {
           productId,
           shelfSpotId: secondScannedItemId
         };
-
-        this.props.linkProduct(obj, "shelfSpot", history);
+        if (isEmpty(prevLocation)) {
+          return this.props.linkProduct(obj, "shelfSpot", history);
+        }
+        this.props.relinkProduct(obj, "shelfSpot", prevLocation, history);
         break;
 
       case "box":
@@ -165,7 +172,11 @@ class LinkFromProduct extends Component {
           boxId: secondScannedItemId
         };
 
-        this.props.linkProduct(obj, "box", history);
+        if (isEmpty(prevLocation)) {
+          return this.props.linkProduct(obj, "box", history);
+        }
+        this.props.relinkProduct(obj, "box", prevLocation, history);
+
         break;
 
       default:
@@ -176,6 +187,25 @@ class LinkFromProduct extends Component {
         this.props.serverMsg(errorMsg);
         break;
     }
+  };
+
+  getPrevLocation = type => {
+    if (type === "restoreProduct") {
+      const { productLocation } = this.props.product;
+
+      let prevLocation = {};
+
+      if (productLocation.kind === "shelfSpot") {
+        prevLocation["kind"] = "shelfSpot";
+        prevLocation["_id"] = productLocation.item._id;
+      }
+      if (productLocation.kind === "box") {
+        prevLocation["kind"] = "box";
+        prevLocation["_id"] = productLocation.item._id;
+      }
+      return prevLocation;
+    }
+    return null;
   };
 
   resetItems = () => {

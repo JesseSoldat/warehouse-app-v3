@@ -116,3 +116,6 @@ export const linkBox = (obj, history) => async dispatch => {
     axiosResponseErrorHandling(err, dispatch, "link", "box to shelf spot");
   }
 };
+
+// Scanning in two items need to check item types and if they are already linked to something
+export const linkTwoItems = (obj, history) => async dispatch => {};
