@@ -304,7 +304,7 @@ const BreadCrumb = ({ match }) => {
       break;
 
     // create
-    case "/barcode/create/:productId":
+    case "/barcode/create/product/:productId":
       link1 = createLink("Products");
       link2 = createLink("Product");
       text = createText("Barcode");
@@ -333,6 +333,20 @@ const BreadCrumb = ({ match }) => {
       link2 = createLink("Rack");
       link3 = createLink("Shelf");
       link4 = createLink("Shelf Spot");
+      text = createText("Barcode");
+      break;
+
+    case "/barcode/create/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId":
+      link1 = createLink("Storage");
+      link2 = createLink("Rack");
+      link3 = createLink("Shelf");
+      link4 = createLink("Shelf Spot");
+      link5 = createLink("Box", "boxLocation");
+      text = createText("Barcode");
+      break;
+
+    case "/barcode/create/box/:boxId":
+      link1 = createLink("Box");
       text = createText("Barcode");
       break;
 

@@ -24,6 +24,7 @@ const BoxTable = ({
   let editUrl = `/box/edit/${boxId}?type=box&location=false`;
   let boxToSpotUrl = `/barcode/scan/box/${boxId}?type=linkBoxToSpot&location=false`;
   let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox&location=false`;
+  let barcodeUrl = `/barcode/create/box/${boxId}?type=box`;
   let notStored;
   if (!location) {
     if (items) {
@@ -56,6 +57,8 @@ const BoxTable = ({
     editUrl = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box&location=true`;
     boxToSpotUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkBoxToSpot&location=true`;
     productToBoxUrl = `/barcode/scan/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox&location=true`;
+    barcodeUrl = `/barcode/create/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
+
     // get the BOX from the RACK object
     shelf = rack.shelves.find(shelf => shelf._id === shelfId);
 
@@ -99,6 +102,11 @@ const BoxTable = ({
         <h2 className="my-2 ml-2">Box {label}</h2>
 
         <div>
+          <Link to={barcodeUrl}>
+            <button className="btn btn-default m-1 mr-2">
+              <i className="fas fa-barcode mr-2" /> Create Barcode
+            </button>
+          </Link>
           <Link to={editUrl}>
             <button className="btn btn-default mr-2">
               <i className="fas fa-edit mr-2" /> Edit Box

@@ -13,7 +13,7 @@ const InfoCard = ({
 }) => {
   // events --------------------------------
   const onCreateBarCode = productId => {
-    history.push(`/barcode/create/${productId}`);
+    history.push(`/barcode/create/product/${productId}`);
   };
 
   const onManagePictures = productId => {

@@ -45,6 +45,11 @@ class BarcodeCreate extends Component {
         this.setState({ type, id });
         break;
 
+      case "box":
+        id = this.props.match.params.boxId;
+        this.setState({ type, id });
+        break;
+
       default:
         id = this.props.match.params.productId;
         this.setState({ type: "product", id });

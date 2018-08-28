@@ -15,11 +15,13 @@ class LinkItems extends Component {
   state = {
     title: "",
     showScan: false,
-    showTabs: false,
     scanning: false,
-    result: ["Scanning, no results so far..."],
-    pastScannedItemId: "",
-    pastScannedItemType: ""
+    result: ["Please Scan the First Item..."],
+    firstScannedItemId: "",
+    firstScannedItemType: "",
+    secondScannedItemId: "",
+    secondScannedItemType: "",
+    scanItem: "1"
   };
 
   // BARCODE ----------------------------------------------
@@ -31,10 +33,28 @@ class LinkItems extends Component {
 
   handleScan = data => {
     if (data) {
-      // console.log(data);
+      const type = data.split("/")[1];
+      const id = data.split("/")[2];
+
+      let stateObj;
+
+      if (this.state.scanItem === "1") {
+        stateObj = {
+          firstScannedItemType: type,
+          firstScannedItemId: id,
+          result: "Please Scan the Second Item...",
+          scanItem: "2"
+        };
+      } else {
+        stateObj = {
+          secondScannedItemType: type,
+          secondScannedItemId: id,
+          result: `Link Items or Rescan Second Item...`
+        };
+      }
 
       this.setState({
-        result: data
+        ...stateObj
       });
     }
   };
@@ -43,7 +63,72 @@ class LinkItems extends Component {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
+  linkScannedItems = e => {
+    e.preventDefault();
+    const { firstScannedItemId, secondScannedItemId } = this.state;
+    if (!firstScannedItemId || !secondScannedItemId) return;
+
+    const apiType = this.chooseScanType();
+    console.log("apiType", apiType);
+  };
+
+  resetItems = () => {
+    this.setState({
+      result: ["Please Scan the First Item..."],
+      firstScannedItemId: "",
+      firstScannedItemType: "",
+      secondScannedItemId: "",
+      secondScannedItemType: "",
+      scanItem: "1"
+    });
+  };
+
+  chooseScanType = () => {
+    const { firstScannedItemType, secondScannedItemType } = this.state;
+    const type1 = firstScannedItemType;
+    const type2 = secondScannedItemType;
+
+    let apiType;
+
+    switch (type1) {
+      case "product":
+        if (type2 === "shelfSpot") {
+          apiType = "productToShelfSpot";
+        } else if (type2 === "box") {
+          apiType = "productToBox";
+        }
+        break;
+
+      case "shelfSpot":
+        if (type2 === "product") {
+          apiType = "productToShelfSpot";
+        } else if (type2 === "box") {
+          apiType = "boxToShelfSpot";
+        }
+        break;
+
+      case "box":
+        if (type2 === "product") {
+          apiType = "productToBox";
+        } else if (type2 === "shelfSpot") {
+          apiType = "boxToShelfSpot";
+        }
+        break;
+
+      default:
+        // TODO ERROR MSG not a supported linking type
+        break;
+    }
+
+    return apiType;
+  };
+
   // Render Content ------------------------------------
+  renderScanResults = () => {
+    <div className="row">
+      <div className="col-12" />
+    </div>;
+  };
   renderScanContent = () => (
     <BarcodeScan
       type={this.state.type}
@@ -52,6 +137,12 @@ class LinkItems extends Component {
       handleClickUseCamera={this.handleClickUseCamera}
       handleErr={this.handleErr}
       handleScan={this.handleScan}
+      linkScannedItems={this.linkScannedItems}
+      resetItems={this.resetItems}
+      firstScannedItemType={this.state.firstScannedItemType}
+      firstScannedItemId={this.state.firstScannedItemId}
+      secondScannedItemType={this.state.secondScannedItemType}
+      secondScannedItemId={this.state.secondScannedItemId}
     />
   );
 
