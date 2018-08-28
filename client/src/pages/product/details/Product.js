@@ -39,17 +39,6 @@ class Product extends Component {
   };
   // lifecycle -------------------------------------
   componentDidMount() {
-    // Redirect to details after saving or updating a product
-    const { msg } = this.props;
-
-    // hide the success message after 3 seconds
-    if (msg && msg.code === "hide-3") {
-      window.scrollTo(0, 0);
-      setTimeout(() => {
-        this.props.serverMsg(null);
-      }, 3000);
-    }
-
     this.getProduct();
   }
 

@@ -8,7 +8,11 @@ import BarcodeScan from "./components/BarcodeScan";
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
 // utils
+// helpers
+import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
+import { serverMsg } from "../../actions/ui";
+
 import { linkProduct, linkBox } from "../../actions/link";
 
 class LinkItems extends Component {
@@ -63,15 +67,6 @@ class LinkItems extends Component {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
-  linkScannedItems = e => {
-    e.preventDefault();
-    const { firstScannedItemId, secondScannedItemId } = this.state;
-    if (!firstScannedItemId || !secondScannedItemId) return;
-
-    const apiType = this.chooseScanType();
-    console.log("apiType", apiType);
-  };
-
   resetItems = () => {
     this.setState({
       result: ["Please Scan the First Item..."],
@@ -83,44 +78,90 @@ class LinkItems extends Component {
     });
   };
 
-  chooseScanType = () => {
-    const { firstScannedItemType, secondScannedItemType } = this.state;
+  linkScannedItems = e => {
+    e.preventDefault();
+    const {
+      firstScannedItemId,
+      secondScannedItemId,
+      firstScannedItemType,
+      secondScannedItemType
+    } = this.state;
+
+    if (!firstScannedItemId || !secondScannedItemId) return;
+
+    const { history } = this.props;
     const type1 = firstScannedItemType;
     const type2 = secondScannedItemType;
 
-    let apiType;
+    let apiType, obj;
 
     switch (type1) {
       case "product":
+        // PRODUCT TO SHELFSPOT
         if (type2 === "shelfSpot") {
-          apiType = "productToShelfSpot";
-        } else if (type2 === "box") {
-          apiType = "productToBox";
+          obj = {
+            historyUrl: `/products/product/${firstScannedItemId}`,
+            productId: firstScannedItemId,
+            shelfSpotId: secondScannedItemId
+          };
+          const productTo = "shelfSpot";
+          this.props.linkProduct(obj, productTo, history);
+        }
+        // PRODUCT TO BOX
+        else if (type2 === "box") {
+          obj = {
+            historyUrl: `/products/product/${firstScannedItemId}`,
+            productId: firstScannedItemId,
+            boxId: secondScannedItemId
+          };
+          const productTo = "box";
+          this.props.linkProduct(obj, productTo, history);
         }
         break;
 
       case "shelfSpot":
+        // SHELFSPOT TO PRODUCT
         if (type2 === "product") {
-          apiType = "productToShelfSpot";
-        } else if (type2 === "box") {
-          apiType = "boxToShelfSpot";
+          obj = {
+            historyUrl: `/products/product/${secondScannedItemId}`,
+            shelfSpotId: firstScannedItemId,
+            productId: secondScannedItemId
+          };
+          const productTo = "shelfSpot";
+          this.props.linkProduct(obj, productTo, history);
+        }
+        // SHELFSPOT TO BOX
+        else if (type2 === "box") {
         }
         break;
 
       case "box":
+        // BOX TO PRODUCT
         if (type2 === "product") {
-          apiType = "productToBox";
-        } else if (type2 === "shelfSpot") {
-          apiType = "boxToShelfSpot";
+          obj = {
+            historyUrl: `/products/product/${secondScannedItemId}`,
+            boxId: firstScannedItemId,
+            productId: secondScannedItemId
+          };
+          const productTo = "box";
+          this.props.linkProduct(obj, productTo, history);
+        }
+        // BOX TO SHELFSPOT
+        else if (type2 === "shelfSpot") {
         }
         break;
 
       default:
         // TODO ERROR MSG not a supported linking type
+        const errorMsg = buildClientMsg({
+          info: "You can only link Products, Boxes and ShelfSpot",
+          color: "red"
+        });
+        this.props.serverMsg(errorMsg);
         break;
     }
 
-    return apiType;
+    console.log("apiType", apiType);
   };
 
   // Render Content ------------------------------------
@@ -165,5 +206,5 @@ const mapStateToProps = ({ ui }) => ({
 
 export default connect(
   mapStateToProps,
-  { linkProduct, linkBox }
+  { serverMsg, linkProduct, linkBox }
 )(withRouter(LinkItems));
