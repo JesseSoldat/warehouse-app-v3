@@ -78,6 +78,9 @@ class Product extends Component {
     } = this.props;
     const { productId } = match.params;
 
+    // check store if single product equal requested product
+    if (product && product._id === productId) return;
+
     // check store for product in productEntity map
     if (productEntity) {
       if (productEntity[productId]) {
@@ -85,9 +88,6 @@ class Product extends Component {
         return;
       }
     }
-
-    // check store if single product equal requested product
-    if (product && product._id === productId) return;
 
     // clear old data
     productLoaded(null);

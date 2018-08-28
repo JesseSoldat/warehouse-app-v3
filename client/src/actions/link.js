@@ -36,7 +36,9 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
     // update store with new product
     const { product } = payload;
 
-    dispatch(productLoaded(product));
+    const updatedProduct = { ...product };
+
+    dispatch(productLoaded(updatedProduct));
 
     dispatch(resetStorage());
 

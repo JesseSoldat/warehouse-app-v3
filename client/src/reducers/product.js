@@ -73,7 +73,30 @@ export default (state = initialState, action) => {
       };
 
     case PRODUCTS_RESET:
-      return { ...initialState };
+      return {
+        ...state,
+        productEntity: null,
+        productOrder: [],
+        products: [],
+        product: null,
+        // All Products
+        productsRequest: false,
+        productsLoaded: false,
+        // Single Product
+        productRequest: false,
+        productLoaded: false,
+        query: {
+          page: 1,
+          skip: 0,
+          limit: 20,
+          count: 0, // can be filtered
+          totalCount: 0, // all of the products
+          keyName: null,
+          value: null,
+          value2: null,
+          searchType: "string"
+        }
+      };
 
     default:
       return { ...state };

@@ -9,7 +9,10 @@ import Message from "../../components/Message";
 import Heading from "../../components/Heading";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
+// helpers
+import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
+import { serverMsg } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
 import { linkProduct, linkBox } from "../../actions/link";
 import { startGetProducts } from "../../actions/product";
@@ -24,9 +27,11 @@ class LinkFromBox extends Component {
     historyUrl: "",
     // scan -------------
     scanning: false,
-    result: ["Scanning, no results so far..."],
-    pastScannedItemId: "",
-    pastScannedItemType: "",
+    result: ["Please Scan the Second Item..."],
+    firstScannedItemId: "",
+    firstScannedItemType: "box",
+    secondScannedItemId: "",
+    secondScannedItemType: "",
     // manual link ---------
     storageId: "",
     rackId: "",
@@ -70,7 +75,8 @@ class LinkFromBox extends Component {
         boxId,
         type,
         historyUrl,
-        location
+        location,
+        firstScannedItemId: boxId
       });
     }
     // BOX to SHELF SPOT ------------------------------------
@@ -83,7 +89,8 @@ class LinkFromBox extends Component {
         title: "Link Box",
         boxId,
         type,
-        location: false
+        location: false,
+        firstScannedItemId: boxId
       });
     }
   };
@@ -114,59 +121,110 @@ class LinkFromBox extends Component {
     console.log(err);
   };
 
-  handleSuccess = () => {};
-
   handleScan = data => {
     if (data) {
-      // console.log(data);
+      const type = data.split("/")[1];
+      const id = data.split("/")[2];
 
-      this.setState({
-        result: data
-      });
+      const stateObj = {
+        secondScannedItemType: type,
+        secondScannedItemId: id,
+        result: "Link Items or Rescan Second Item..."
+      };
+
+      this.setState({ ...stateObj });
     }
+  };
+
+  resetItems = () => {
+    this.setState({
+      result: ["Please Scan the Second Item..."],
+      secondScannedItemId: "",
+      secondScannedItemType: ""
+    });
   };
 
   handleClickUseCamera = () => {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
-  // render DOM elements ----------------------------------
-  renderTabsContent = () => (
-    <Tabs
-      // both -----------------------------
-      type={this.state.type}
-      loading={this.props.loading}
-      formSubmit={this.state.formSubmit}
-      // scan --------------------------------
-      result={this.state.result}
-      scanning={this.state.scanning}
-      handleClickUseCamera={this.handleClickUseCamera}
-      handleErr={this.handleErr}
-      handleScan={this.handleScan}
-      // manual link -----------------------
-      storageIdsEntity={this.props.storageIdsEntity}
-      storageId={this.state.storageId}
-      rackId={this.state.rackId}
-      shelfId={this.state.shelfId}
-      shelfSpotId={this.state.shelfSpotId}
-      boxId={this.state.boxId}
-      handleSelectChange={this.handleSelectChange}
-      handleLink={this.handleLink}
-      // linkProductToBox
-      orphans={this.props.orphans}
-      handleLinkProductToBox={this.handleLinkProductToBox}
-      history={this.props.history}
-    />
-  );
+  // linking flow -------------------------------------------------
+  linkScannedItems = e => {
+    e.preventDefault();
+    const {
+      boxId,
+      secondScannedItemId,
+      secondScannedItemType,
+      type,
+      location,
+      historyUrl
+    } = this.state;
+
+    if (!boxId || !secondScannedItemId) return;
+
+    const { history } = this.props;
+
+    const type2 = secondScannedItemType;
+
+    if (type === "linkProductToBox") {
+      // LINK BOX WITH A PRODUCT
+      if (type2 !== "product") {
+        const errorMsg = buildClientMsg({
+          info: "Please link the box with a product",
+          color: "red"
+        });
+        this.props.serverMsg(errorMsg);
+        return;
+      }
+      const productId = secondScannedItemId;
+
+      if (location) {
+        const obj = { boxId, productId, historyUrl };
+        this.props.linkProduct(obj, "box", history);
+      }
+    }
+    // LINK BOX WITH A SHELF SPOT
+    else if (type === "linkBoxToSpot") {
+    }
+  };
 
   render() {
-    const content = this.renderTabsContent();
-
     return (
       <div className="container">
         <Message />
         <Heading title={this.state.title} />
-        {content}
+        <Tabs
+          // both -----------------------------
+          type={this.state.type}
+          loading={this.props.loading}
+          formSubmit={this.state.formSubmit}
+          // scan --------------------------------
+          result={this.state.result}
+          scanning={this.state.scanning}
+          handleClickUseCamera={this.handleClickUseCamera}
+          handleErr={this.handleErr}
+          // Scan Form ---------------------------
+          resetItems={this.resetItems}
+          linkScannedItems={this.linkScannedItems}
+          firstScannedItemId={this.state.firstScannedItemId}
+          firstScannedItemType={this.state.firstScannedItemType}
+          secondScannedItemId={this.state.secondScannedItemId}
+          secondScannedItemType={this.state.secondScannedItemType}
+          handleScan={this.handleScan}
+          // manual link -----------------------
+          storageIdsEntity={this.props.storageIdsEntity}
+          storageId={this.state.storageId}
+          rackId={this.state.rackId}
+          shelfId={this.state.shelfId}
+          shelfSpotId={this.state.shelfSpotId}
+          boxId={this.state.boxId}
+          handleSelectChange={this.handleSelectChange}
+          handleLink={this.handleLink}
+          // linkProductToBox
+          orphans={this.props.orphans}
+          handleLinkProductToBox={this.handleLinkProductToBox}
+          history={this.props.history}
+        />
       </div>
     );
   }
@@ -180,5 +238,5 @@ const mapStateToProps = ({ ui, storage, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { getStorageIds, linkProduct, linkBox, startGetProducts }
+  { serverMsg, getStorageIds, linkProduct, linkBox, startGetProducts }
 )(withRouter(LinkFromBox));

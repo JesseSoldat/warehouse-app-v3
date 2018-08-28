@@ -48,16 +48,17 @@ class EditProduct extends Component {
     let haveProducers = false;
 
     // PRODUCT ----------------------------------
+
+    // check store if single product equal requested product
+    if (product && product._id === productId) {
+      haveProduct = true;
+    }
     // check store for product in productEntity map
-    if (productEntity) {
+    else if (productEntity) {
       if (productEntity[productId]) {
         this.props.productLoaded(productEntity[productId]);
         haveProduct = true;
       }
-    }
-    // check store if single product equal requested product
-    if (product && product._id === productId) {
-      haveProduct = true;
     }
 
     // CUSTOMERS ----------------------------------

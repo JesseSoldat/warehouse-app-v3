@@ -54,7 +54,20 @@ export default (state = initialState, action) => {
   switch (type) {
     case RESET_STORAGE:
       return {
-        initialState
+        ...state,
+        storages: [],
+        storage: null, // will deprecate
+        storageIdsEntity: null,
+        storageIdsRequsted: false,
+        storageIdsLoaded: false,
+        rack: null,
+        rackRequsted: false,
+        rackLoaded: false,
+        box: null,
+        boxRequsted: false,
+        boxLoaded: false,
+        search: [],
+        storageType: null
       };
 
     case STORAGE_SEARCH:

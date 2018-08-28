@@ -132,6 +132,14 @@ class LinkFromProduct extends Component {
     }
   };
 
+  resetItems = () => {
+    this.setState({
+      result: ["Please Scan the Second Item..."],
+      secondScannedItemId: "",
+      secondScannedItemType: ""
+    });
+  };
+
   // linking flow -------------------------------------------------
   linkScannedItems = e => {
     e.preventDefault();
@@ -206,14 +214,6 @@ class LinkFromProduct extends Component {
       return prevLocation;
     }
     return null;
-  };
-
-  resetItems = () => {
-    this.setState({
-      result: ["Please Scan the Second Item..."],
-      secondScannedItemId: "",
-      secondScannedItemType: ""
-    });
   };
 
   handleClickUseCamera = () => {
