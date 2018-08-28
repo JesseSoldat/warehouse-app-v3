@@ -23,6 +23,13 @@ const Tabs = ({
   handleClickUseCamera,
   handleErr,
   handleScan,
+  // Scan Form
+  linkScannedItems,
+  resetItems,
+  firstScannedItemId,
+  firstScannedItemType,
+  secondScannedItemId,
+  secondScannedItemType,
   // linkProductToBox
   orphans,
   handleLinkProductToBox,
@@ -109,6 +116,13 @@ const Tabs = ({
             handleClickUseCamera={handleClickUseCamera}
             handleErr={handleErr}
             handleScan={handleScan}
+            // Scan Form
+            resetItems={resetItems}
+            linkScannedItems={linkScannedItems}
+            firstScannedItemId={firstScannedItemId}
+            firstScannedItemType={firstScannedItemType}
+            secondScannedItemId={secondScannedItemId}
+            secondScannedItemType={secondScannedItemType}
           />
         </div>
 

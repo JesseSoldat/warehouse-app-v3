@@ -7,12 +7,10 @@ import BarcodeScan from "./components/BarcodeScan";
 // common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
-// utils
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
-
 import { linkProduct, linkBox } from "../../actions/link";
 
 class LinkItems extends Component {
@@ -33,8 +31,6 @@ class LinkItems extends Component {
     console.log(err);
   };
 
-  handleSuccess = () => {};
-
   handleScan = data => {
     if (data) {
       const type = data.split("/")[1];
@@ -53,13 +49,11 @@ class LinkItems extends Component {
         stateObj = {
           secondScannedItemType: type,
           secondScannedItemId: id,
-          result: `Link Items or Rescan Second Item...`
+          result: "Link Items or Rescan Second Item..."
         };
       }
 
-      this.setState({
-        ...stateObj
-      });
+      this.setState({ ...stateObj });
     }
   };
 
@@ -93,14 +87,14 @@ class LinkItems extends Component {
     const type1 = firstScannedItemType;
     const type2 = secondScannedItemType;
 
-    let apiType, obj;
+    let obj;
 
     switch (type1) {
       case "product":
         // PRODUCT TO SHELFSPOT
         if (type2 === "shelfSpot") {
           obj = {
-            historyUrl: `/products/product/${firstScannedItemId}`,
+            historyUrl: `/products/${firstScannedItemId}`,
             productId: firstScannedItemId,
             shelfSpotId: secondScannedItemId
           };
@@ -110,7 +104,7 @@ class LinkItems extends Component {
         // PRODUCT TO BOX
         else if (type2 === "box") {
           obj = {
-            historyUrl: `/products/product/${firstScannedItemId}`,
+            historyUrl: `/products/${firstScannedItemId}`,
             productId: firstScannedItemId,
             boxId: secondScannedItemId
           };
@@ -123,7 +117,7 @@ class LinkItems extends Component {
         // SHELFSPOT TO PRODUCT
         if (type2 === "product") {
           obj = {
-            historyUrl: `/products/product/${secondScannedItemId}`,
+            historyUrl: `/products/${secondScannedItemId}`,
             shelfSpotId: firstScannedItemId,
             productId: secondScannedItemId
           };
@@ -139,7 +133,7 @@ class LinkItems extends Component {
         // BOX TO PRODUCT
         if (type2 === "product") {
           obj = {
-            historyUrl: `/products/product/${secondScannedItemId}`,
+            historyUrl: `/products/${secondScannedItemId}`,
             boxId: firstScannedItemId,
             productId: secondScannedItemId
           };
@@ -160,51 +154,33 @@ class LinkItems extends Component {
         this.props.serverMsg(errorMsg);
         break;
     }
-
-    console.log("apiType", apiType);
   };
-
-  // Render Content ------------------------------------
-  renderScanResults = () => {
-    <div className="row">
-      <div className="col-12" />
-    </div>;
-  };
-  renderScanContent = () => (
-    <BarcodeScan
-      type={this.state.type}
-      result={this.state.result}
-      scanning={this.state.scanning}
-      handleClickUseCamera={this.handleClickUseCamera}
-      handleErr={this.handleErr}
-      handleScan={this.handleScan}
-      linkScannedItems={this.linkScannedItems}
-      resetItems={this.resetItems}
-      firstScannedItemType={this.state.firstScannedItemType}
-      firstScannedItemId={this.state.firstScannedItemId}
-      secondScannedItemType={this.state.secondScannedItemType}
-      secondScannedItemId={this.state.secondScannedItemId}
-    />
-  );
 
   render() {
-    let content = this.renderScanContent();
-
     return (
       <div className="container">
         <Message />
         <Heading title={this.state.title} />
-        {content}
+        <BarcodeScan
+          type={this.state.type}
+          result={this.state.result}
+          scanning={this.state.scanning}
+          handleClickUseCamera={this.handleClickUseCamera}
+          handleErr={this.handleErr}
+          handleScan={this.handleScan}
+          linkScannedItems={this.linkScannedItems}
+          resetItems={this.resetItems}
+          firstScannedItemType={this.state.firstScannedItemType}
+          firstScannedItemId={this.state.firstScannedItemId}
+          secondScannedItemType={this.state.secondScannedItemType}
+          secondScannedItemId={this.state.secondScannedItemId}
+        />
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ ui }) => ({
-  loading: ui.loading
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   { serverMsg, linkProduct, linkBox }
 )(withRouter(LinkItems));

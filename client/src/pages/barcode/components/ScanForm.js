@@ -10,10 +10,10 @@ const ScanForm = ({
 }) => {
   const input1 = firstScannedItemId
     ? `${firstScannedItemType}: ${firstScannedItemId}`
-    : null;
+    : "";
   const input2 = secondScannedItemId
     ? `${secondScannedItemType}: ${secondScannedItemId}`
-    : null;
+    : "";
 
   return (
     <div className="row">
