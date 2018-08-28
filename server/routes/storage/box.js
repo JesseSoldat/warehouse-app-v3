@@ -55,10 +55,41 @@ module.exports = (app, io) => {
     }
   });
 
+  // no location
   app.post("/api/boxes", isAuth, async (req, res) => {
     const box = new Box(req.body);
+
     try {
       await box.save();
+
+      emit(req.user._id);
+
+      const msg = msgObj("Box created.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, box);
+    } catch (err) {
+      console.log("ERR: POST/BOX", err);
+
+      const msg = serverMsg("error", "post", "box");
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  // has location
+  app.post("/api/boxes/:shelfSpotId", isAuth, async (req, res) => {
+    const { shelfSpotId } = req.params;
+    const box = new Box(req.body);
+    try {
+      await Promise.all([
+        box.save(),
+        ShelfSpot.findByIdAndUpdate(
+          shelfSpotId,
+          {
+            $addToSet: { storedItems: { kind: "box", item: box._id } }
+          },
+          { new: true }
+        )
+      ]);
 
       emit(req.user._id);
 
@@ -67,12 +98,31 @@ module.exports = (app, io) => {
     } catch (err) {
       console.log("ERR: POST/BOX", err);
 
-      const msg = serverMsg("error", "post", "boxes");
+      const msg = serverMsg("error", "post", "box");
       serverRes(res, 400, msg, null);
     }
   });
 
-  app.patch("/api/boxes/:boxId", isAuth, async (req, res) => {});
+  app.patch("/api/boxes/:boxId", isAuth, async (req, res) => {
+    const { boxId } = req.params;
+    const update = req.body;
+
+    try {
+      await Box.findByIdAndUpdate(boxId, mergeObjFields("", req.body), {
+        new: true
+      });
+
+      emit(req.user._id);
+
+      const msg = msgObj("Box updated.", "blue", "hide-3");
+      serverRes(res, 200, msg, { ...update, boxId });
+    } catch (err) {
+      console.log("ERR: PATCH/BOX", err);
+
+      const msg = serverMsg("error", "update", "box");
+      serverRes(res, 400, msg, null);
+    }
+  });
 
   app.delete("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
@@ -107,7 +157,7 @@ module.exports = (app, io) => {
 
         const msg = msgObj("Box deleted", "blue", "hide-3");
 
-        serverRes(res, 200, msg, box);
+        serverRes(res, 200, msg, { boxId: box._id });
       }
     } catch (err) {
       console.log("ERR: Delet/box", err);

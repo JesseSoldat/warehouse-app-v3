@@ -204,6 +204,19 @@ export default (state = initialState, action) => {
           }
           break;
 
+        case "box":
+          // API update = { boxId }
+          return {
+            ...state,
+            rack: null,
+            rackRequsted: false,
+            rackLoaded: false,
+            box: null,
+            boxRequsted: false,
+            boxLoaded: false
+          };
+          break;
+
         default:
           break;
       }
@@ -254,7 +267,7 @@ export default (state = initialState, action) => {
       // console.log("update", update);
       // console.log("type:", storageType);
 
-      const rackUpdate = { ...state.rack };
+      let rackUpdate = { ...state.rack };
 
       switch (storageType) {
         case "rack":
@@ -283,6 +296,12 @@ export default (state = initialState, action) => {
           });
           break;
 
+        case "box":
+          // API { update, boxId }
+          //  const { boxId, boxLabel } = update;
+          rackUpdate = null;
+          break;
+
         default:
           break;
       }
@@ -294,6 +313,7 @@ export default (state = initialState, action) => {
         ...state,
         storageType,
         rack: rackUpdate,
+        box: null,
         storageIdsEntity: null
       };
 

@@ -21,6 +21,14 @@ class Storage extends Component {
     this.getStorage();
   }
 
+  componentWillUpdate() {
+    const { match, rack } = this.props;
+    const { rackId } = match.params;
+    if (!rack || rack._id !== rackId) {
+      this.getStorage();
+    }
+  }
+
   componentWillUnmount() {
     const { msg, options, serverMsg } = this.props;
     clearUiMsg(msg, options, serverMsg);
@@ -30,7 +38,7 @@ class Storage extends Component {
   getStorage = () => {
     const { match, rack, startGetRack } = this.props;
 
-    const rackId = match.params.rackId;
+    const { rackId } = match.params;
 
     if (rack && rack._id === rackId) return;
 

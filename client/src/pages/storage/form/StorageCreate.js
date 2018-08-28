@@ -16,8 +16,8 @@ class StorageCreate extends Component {
   // api calls ------------------
   handleSubmit = form => {
     const { match, history, startCreateStorage } = this.props;
-    const { storageId, rackId, shelfId } = match.params;
-    const ids = { storageId, rackId, shelfId };
+    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+    const ids = { storageId, rackId, shelfId, shelfSpotId };
 
     const type = getUrlParameter("type");
     let id;
@@ -36,7 +36,7 @@ class StorageCreate extends Component {
         id = shelfId;
         break;
       case "box":
-        id = "";
+        id = shelfSpotId || "";
         break;
 
       default:

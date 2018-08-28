@@ -317,7 +317,7 @@ module.exports = (app, io) => {
     const { boxId, shelfSpotId } = req.body;
 
     try {
-      const [shelfSpot, box] = await Promise.all([
+      await Promise.all([
         ShelfSpot.findByIdAndUpdate(
           shelfSpotId,
           { $addToSet: { storedItems: { kind: "box", item: boxId } } },
@@ -353,7 +353,7 @@ module.exports = (app, io) => {
         "hide-3"
       );
 
-      serverRes(res, 200, msg, { shelfSpot: updatedShelfSpot, box });
+      serverRes(res, 200, msg, { shelfSpot: updatedShelfSpot });
     } catch (err) {
       console.log("Err: PATCH/boxToShelfSpot,", err);
 

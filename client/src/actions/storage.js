@@ -278,7 +278,7 @@ export const startCreateStorage = (
 
     let newItemId = "";
 
-    const { storageId, rackId, shelfId } = ids;
+    const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
     let historyUrl;
 
@@ -306,7 +306,11 @@ export const startCreateStorage = (
 
       case "box":
         newItemId = payload._id;
-        historyUrl = `/box/${newItemId}?type=${type}`;
+        if (!id) {
+          historyUrl = `/box/${newItemId}?type=${type}`;
+          break;
+        }
+        historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${newItemId}?type=${type}`;
         break;
 
       default:
@@ -354,7 +358,7 @@ export const startEditStorage = (
 
     const { msg, options, payload } = res.data;
 
-    const { storageId, rackId, shelfId, shelfSpotId } = ids;
+    const { storageId, rackId, shelfId, shelfSpotId, boxId } = ids;
 
     let historyUrl;
 
@@ -373,6 +377,14 @@ export const startEditStorage = (
 
       case "shelfSpot":
         historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`;
+        break;
+
+      case "box":
+        if (!shelfSpotId) {
+          historyUrl = `/box/${boxId}?type=${type}`;
+          break;
+        }
+        historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=${type}`;
         break;
 
       default:

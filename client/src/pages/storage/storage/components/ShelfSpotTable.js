@@ -17,6 +17,16 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
   const getTableHead = () => (
     <thead>
       <tr>
+        <th scope="col">
+          <Link
+            to={`/box/create/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=box`}
+          >
+            <button className="btn btn-default">
+              <i className="fas fa-plus-circle mr-2" />
+              New Box
+            </button>
+          </Link>
+        </th>
         {storedItems.length === 0 ? (
           <th scope="col">No Items stored yet</th>
         ) : (

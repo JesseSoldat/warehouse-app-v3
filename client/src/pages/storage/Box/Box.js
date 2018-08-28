@@ -17,6 +17,13 @@ class Box extends Component {
     this.getBox();
   }
 
+  componentWillUpdate() {
+    const { rack, box } = this.props;
+    if (!rack || !box) {
+      this.getBox();
+    }
+  }
+
   // Api calls ----------------------------
   getBox = () => {
     const { match, rack, box } = this.props;
