@@ -98,22 +98,30 @@ export const relinkProduct = (
 };
 
 export const linkBox = (obj, history) => async dispatch => {
-  const { storageId, rackId, shelfId, shelfSpotId, boxId } = obj;
+  const { shelfSpotId, boxId } = obj;
 
   dispatch(showOverlay(true));
 
   try {
     const apiUrl = "/api/link/boxToShelfSpot";
     const res = await axios.patch(apiUrl, { boxId, shelfSpotId });
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
     checkForMsg(msg, dispatch, options);
 
     dispatch(showOverlay(false));
 
-    history.push(
-      `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type="box"`
-    );
+    const { shelfSpot } = payload;
+
+    if (shelfSpot && shelfSpot.shelf) {
+      const shelfId = shelfSpot.shelf._id;
+      const rackId = shelfSpot.shelf.rack._id;
+      const storageId = shelfSpot.shelf.rack.storage._id;
+
+      history.push(
+        `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type="box"`
+      );
+    }
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", "box to shelf spot");
   }

@@ -65,7 +65,7 @@ class LinkFromBox extends Component {
       // No location
       let historyUrl = `/box/${boxId}?type=box`;
       // Have location
-      if (location) {
+      if (location === "true") {
         const { storageId, rackId, shelfId, shelfSpotId } = match.params;
         historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
       }
@@ -185,6 +185,19 @@ class LinkFromBox extends Component {
     }
     // LINK BOX WITH A SHELF SPOT
     else if (type === "linkBoxToSpot") {
+      if (type2 !== "shelfSpot") {
+        const errorMsg = buildClientMsg({
+          info: "Please link the box with a shelf spot",
+          color: "red"
+        });
+        this.props.serverMsg(errorMsg);
+        return;
+      }
+      const shelfSpotId = secondScannedItemId;
+
+      const obj = { shelfSpotId, boxId };
+
+      this.props.linkBox(obj, history);
     }
   };
 

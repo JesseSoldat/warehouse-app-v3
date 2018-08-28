@@ -332,6 +332,19 @@ module.exports = (app, io) => {
         )
       ]);
 
+      const updatedShelfSpot = await ShelfSpot.findById(shelfSpotId).populate({
+        path: "shelf",
+        select: ["_id"],
+        populate: {
+          path: "rack",
+          select: ["_id"],
+          populate: {
+            path: "storage",
+            select: ["_id"]
+          }
+        }
+      });
+
       emit(req.user._id);
 
       const msg = msgObj(
@@ -340,7 +353,7 @@ module.exports = (app, io) => {
         "hide-3"
       );
 
-      serverRes(res, 200, msg, { shelfSpot, box });
+      serverRes(res, 200, msg, { shelfSpot: updatedShelfSpot, box });
     } catch (err) {
       console.log("Err: PATCH/boxToShelfSpot,", err);
 
