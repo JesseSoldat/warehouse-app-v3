@@ -131,7 +131,7 @@ export const linkBox = (obj, history) => async dispatch => {
 
 // Scanning in two items need to check item types and if they are already linked to something
 export const linkTwoItems = (obj, history) => async dispatch => {
-  const { type1, type2, apiUrl, productId } = obj;
+  const { type1, type2, apiUrl, productId, boxId } = obj;
 
   dispatch(showOverlay(true));
 
@@ -161,7 +161,21 @@ export const linkTwoItems = (obj, history) => async dispatch => {
         break;
 
       case "box":
-        // return to box details
+        const { box } = payload;
+
+        if (box && box.shelfSpot && box.shelfSpot._id) {
+          const shelfSpotId = box.shelfSpot._id;
+          const shelfId = box.shelfSpot.shelf._id;
+          const rackId = box.shelfSpot.shelf.rack._id;
+          const storageId = box.shelfSpot.shelf.rack.storage._id;
+
+          history.push(
+            `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`
+          );
+        } else {
+          history.push(`/box/${boxId}?type=box`);
+        }
+
         break;
 
       default:

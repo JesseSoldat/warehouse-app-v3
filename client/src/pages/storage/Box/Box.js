@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { withRouter } from "react-router-dom";
 
 // common components
 import Spinner from "../../../components/Spinner";
@@ -10,6 +11,7 @@ import BoxTable from "./components/BoxTable";
 // actions
 import { serverMsg } from "../../../actions/ui";
 import { startGetRack, startGetBox } from "../../../actions/storage";
+import { unlinkBox } from "../../../actions/unlink";
 
 class Box extends Component {
   // lifecyles -----------------------------
@@ -48,6 +50,13 @@ class Box extends Component {
     }
   };
 
+  // CB
+  removeFromShelfSpot = () => {
+    const { match, history } = this.props;
+    const { shelfSpotId, boxId } = match.params;
+    this.props.unlinkBox({ shelfSpotId, boxId }, history);
+  };
+
   render() {
     // props
     const { loading, rack, box, match } = this.props;
@@ -76,7 +85,14 @@ class Box extends Component {
     // have location
     else if (match.path !== "/box/:boxId") {
       if (rack && rack._id === rackId) {
-        content = <BoxTable ids={ids} rack={rack} location={true} />;
+        content = (
+          <BoxTable
+            ids={ids}
+            rack={rack}
+            location={true}
+            removeFromShelfSpot={this.removeFromShelfSpot}
+          />
+        );
       }
     }
 
@@ -101,5 +117,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetRack, startGetBox }
-)(Box);
+  { unlinkBox, serverMsg, startGetRack, startGetBox }
+)(withRouter(Box));

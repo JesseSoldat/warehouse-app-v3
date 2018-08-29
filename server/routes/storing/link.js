@@ -364,7 +364,8 @@ module.exports = (app, io) => {
     }
   });
 
-  // SCAN TWO UNKOWN ITEMS REMOVING OLD REF
+  // SCAN TWO UNKOWN ITEMS REMOVING OLD REF -------------------------------
+  // PRODUCT
   app.patch("/api/scan/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
@@ -419,19 +420,6 @@ module.exports = (app, io) => {
         })
       ]);
 
-      // const updatedShelfSpot = await ShelfSpot.findById(shelfSpotId).populate({
-      //   path: "shelf",
-      //   select: ["_id"],
-      //   populate: {
-      //     path: "rack",
-      //     select: ["_id"],
-      //     populate: {
-      //       path: "storage",
-      //       select: ["_id"]
-      //     }
-      //   }
-      // });
-
       emit(req.user._id);
 
       const msg = msgObj(
@@ -459,7 +447,6 @@ module.exports = (app, io) => {
     try {
       // Check if Product has a location ---------------------------------------
       const product = await Product.findById(productId);
-      console.log(product);
 
       // Remove old location -------------------------------------------------
       if (product && product.productLocation && product.productLocation.kind) {
@@ -495,7 +482,7 @@ module.exports = (app, io) => {
         item: boxId
       };
 
-      const [updateProduct, shelfSpot] = await Promise.all([
+      const [updateProduct, box] = await Promise.all([
         product.save(),
         Box.findByIdAndUpdate(
           boxId,
@@ -505,18 +492,90 @@ module.exports = (app, io) => {
             }
           },
           { new: true }
-        )
+        ).populate({
+          path: "shelfSpot",
+          select: ["_id"],
+          populate: {
+            path: "shelf",
+            select: ["_id"],
+            populate: {
+              path: "rack",
+              select: ["_id"],
+              populate: {
+                path: "storage",
+                select: ["_id"]
+              }
+            }
+          }
+        })
       ]);
 
       emit(req.user._id);
 
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { product: updateProduct, shelfSpot });
+      serverRes(res, 200, msg, { product: updateProduct, box });
     } catch (err) {
       console.log("Err: PATCH/SCAN/productToBox,", err);
 
       const msg = serverMsg("error", "scan", "product to box");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  // BOX
+  app.patch("/api/scan/boxToShelfSpot", isAuth, async (req, res) => {
+    const { shelfSpotId, boxId } = req.body;
+
+    try {
+      // Check if Box has a location ---------------------------------------
+      const box = await Box.findById(boxId);
+      // Remove the old location ------------------------------------------
+      if (box && box.shelfSpot) {
+        const oldShelfSpotId = box.shelfSpot;
+        await ShelfSpot.findByIdAndUpdate(
+          oldShelfSpotId,
+          { $pull: { storedItems: { item: boxId } } },
+          { new: true }
+        );
+      }
+      // Link the Box with the NEW Shelf Spot ----------------------------
+      box.shelfSpot = shelfSpotId;
+
+      const [updateBox, shelfSpot] = await Promise.all([
+        box.save(),
+        ShelfSpot.findByIdAndUpdate(
+          shelfSpotId,
+          { $addToSet: { storedItems: { kind: "box", item: boxId } } },
+          { new: true }
+        ).populate({
+          path: "shelf",
+          select: ["_id"],
+          populate: {
+            path: "rack",
+            select: ["_id"],
+            populate: {
+              path: "storage",
+              select: ["_id"]
+            }
+          }
+        })
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj(
+        "Box and Shelf Spot are now linked.",
+        "blue",
+        "hide-3"
+      );
+
+      serverRes(res, 200, msg, { box: updateBox, shelfSpot });
+    } catch (err) {
+      console.log("Err: PATCH/SCAN/boxToShelfSpot,", err);
+
+      const msg = serverMsg("error", "scan", "box to shelfSpot");
 
       serverRes(res, 400, msg, null);
     }

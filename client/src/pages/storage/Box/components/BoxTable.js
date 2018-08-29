@@ -15,7 +15,9 @@ const BoxTable = ({
   // no location
   items,
   boxId,
-  boxLabel
+  boxLabel,
+  // cb
+  removeFromShelfSpot
 }) => {
   let storedItems = [];
 
@@ -99,7 +101,16 @@ const BoxTable = ({
   return (
     <div className="card card-body mb-3" style={{ minHeight: "400px" }}>
       <div className="d-flex flex-wrap justify-content-between mb-3">
-        <h2 className="my-2 ml-2">Box {label}</h2>
+        {location ? (
+          <button
+            className="btn btn-default m-1 mr-2"
+            onClick={removeFromShelfSpot}
+          >
+            <i className="fas fa-minus-circle mr-2" /> Remove from Shelf Spot
+          </button>
+        ) : (
+          <h2 className="my-2 ml-2">Box {label}</h2>
+        )}
 
         <div>
           <Link to={barcodeUrl}>
@@ -114,6 +125,14 @@ const BoxTable = ({
           </Link>
         </div>
       </div>
+
+      {location && (
+        <div className="row">
+          <div className="col-12">
+            <h2 className="my-2 ml-2">Box {label}</h2>
+          </div>
+        </div>
+      )}
 
       <div className="table-responsive-xs table-hover table-responsive-sm">
         <table className="table col-12 mt-5">

@@ -88,4 +88,36 @@ module.exports = (app, io) => {
       serverRes(res, 400, msg, null);
     }
   });
+
+  app.patch("/api/unlink/boxFromShelfSpot", isAuth, async (req, res) => {
+    const { boxId, shelfSpotId } = req.body;
+    try {
+      const [box, shelfSpot] = await Promise.all([
+        Box.findByIdAndUpdate(
+          boxId,
+          { $set: { shelfSpot: null } },
+          { new: true }
+        ),
+        ShelfSpot.findByIdAndUpdate(
+          shelfSpotId,
+          {
+            $pull: { storedItems: { item: boxId } }
+          },
+          { new: true }
+        )
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj("Box and Shelf Spot now unlinked.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, { box });
+    } catch (err) {
+      console.log("ERR: Patch/unlink/boxFromShelfSpot", err);
+
+      const msg = serverMsg("error", "unlink", "box from shelf spot");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
 };

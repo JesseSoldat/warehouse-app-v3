@@ -40,7 +40,9 @@ module.exports = (app, io) => {
             path: "shelf",
             populate: {
               path: "rack",
-              populate: "storage"
+              populate: {
+                path: "storage"
+              }
             }
           }
         })

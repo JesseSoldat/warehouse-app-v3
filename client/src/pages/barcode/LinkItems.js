@@ -132,6 +132,14 @@ class LinkItems extends Component {
         }
         // SHELFSPOT TO BOX
         else if (type2 === "box") {
+          obj = {
+            apiUrl: "/api/scan/boxToShelfSpot",
+            shelfSpotId: firstScannedItemId,
+            boxId: secondScannedItemId,
+            type1: "shelfSpot",
+            type2: "box"
+          };
+          this.props.linkTwoItems(obj, history);
         }
         break;
 
@@ -139,12 +147,13 @@ class LinkItems extends Component {
         // BOX TO PRODUCT
         if (type2 === "product") {
           obj = {
-            historyUrl: `/products/${secondScannedItemId}`,
+            apiUrl: "/api/scan/productToBox",
+            productId: secondScannedItemId,
             boxId: firstScannedItemId,
-            productId: secondScannedItemId
+            type1: "box",
+            type2: "product"
           };
-          const productTo = "box";
-          this.props.linkProduct(obj, productTo, history);
+          this.props.linkTwoItems(obj, history);
         }
         // BOX TO SHELFSPOT
         else if (type2 === "shelfSpot") {
