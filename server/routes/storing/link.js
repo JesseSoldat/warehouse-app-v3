@@ -1,14 +1,25 @@
-// models
-const ShelfSpot = require("../../models/storage/shelfSpot");
-const Box = require("../../models/storage/box");
-const Product = require("../../models/product");
 // middleware
 const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 // queries
-const { addProductToShelfSpotPopLocIds } = require("../queries/product");
+const {
+  linkShelfSpotToProductPopLocIds,
+  linkBoxToProductPopLocIds
+} = require("../queries/product");
+const {
+  linkProductToShelfSpot,
+  linkProductToShelfSpotPopIds,
+  unlinkProductFromShelfSpot,
+  unlinkBoxFromShelfSpot
+} = require("../queries/shelfSpot");
+const {
+  linkProductToBox,
+  linkProductToBoxPopIds,
+  linkShelfSpotToBox,
+  unlinkProductFromBox
+} = require("../queries/box");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -19,24 +30,14 @@ module.exports = (app, io) => {
     });
   };
 
+  // Product -> Shelf Spot -----------------------------
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
     try {
       const [product, shelfSpot] = await Promise.all([
-        addProductToShelfSpotPopLocIds(productId, shelfSpotId),
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          {
-            $addToSet: {
-              storedItems: {
-                kind: "product",
-                item: productId
-              }
-            }
-          },
-          { new: true }
-        )
+        linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
+        linkProductToShelfSpot(shelfSpotId, productId)
       ]);
 
       emit(req.user._id);
@@ -60,75 +61,26 @@ module.exports = (app, io) => {
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
     const { obj, prevLocation } = req.body;
     const { productId, shelfSpotId } = obj;
-    const { kind, _id } = prevLocation;
 
     let oldRefQuery;
 
     try {
       // create query to remove old storage ref
+      const { kind, _id } = prevLocation;
+
       if (kind === "shelfSpot") {
-        oldRefQuery = ShelfSpot.findByIdAndUpdate(
-          _id,
-          {
-            $pull: {
-              storedItems: { item: productId }
-            }
-          },
-          { new: true }
-        );
+        const oldShelfSpotId = _id;
+        oldRefQuery = unlinkProductFromShelfSpot(oldShelfSpotId, productId);
       }
       if (kind === "box") {
-        oldRefQuery = Box.findByIdAndUpdate(
-          _id,
-          {
-            $pull: {
-              storedItems: productId
-            }
-          },
-          { new: true }
-        );
+        const oldBoxId = _id;
+        oldRefQuery = unlinkProductFromBox(oldBoxId, productId);
       }
 
       const [oldSpot, product, shelfSpot] = await Promise.all([
         oldRefQuery,
-        Product.findByIdAndUpdate(
-          productId,
-          {
-            $set: {
-              productLocation: {
-                kind: "shelfSpot",
-                item: shelfSpotId
-              }
-            }
-          },
-          { new: true }
-        )
-          .populate("producer customer")
-          .populate({
-            path: "productLocation.item",
-            populate: {
-              path: "shelf shelfSpot",
-              populate: {
-                path: "shelf rack",
-                populate: {
-                  path: "rack storage",
-                  populate: { path: "storage" }
-                }
-              }
-            }
-          }),
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          {
-            $addToSet: {
-              storedItems: {
-                kind: "product",
-                item: productId
-              }
-            }
-          },
-          { new: true }
-        )
+        linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
+        linkProductToShelfSpot(shelfSpotId, productId)
       ]);
 
       emit(req.user._id);
@@ -149,46 +101,14 @@ module.exports = (app, io) => {
     }
   });
 
+  // Product -> Box ---------------------------------
   app.patch("/api/link/productToBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
 
     try {
       const [product, box] = await Promise.all([
-        Product.findByIdAndUpdate(
-          productId,
-          {
-            $set: {
-              productLocation: {
-                kind: "box",
-                item: boxId
-              }
-            }
-          },
-          { new: true }
-        )
-          .populate("producer customer")
-          .populate({
-            path: "productLocation.item",
-            populate: {
-              path: "shelf shelfSpot",
-              populate: {
-                path: "shelf rack",
-                populate: {
-                  path: "rack storage",
-                  populate: { path: "storage" }
-                }
-              }
-            }
-          }),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $addToSet: {
-              storedItems: productId
-            }
-          },
-          { new: true }
-        )
+        linkBoxToProductPopLocIds(productId, boxId),
+        linkProductToBox(boxId, productId)
       ]);
 
       emit(req.user._id);
@@ -208,72 +128,26 @@ module.exports = (app, io) => {
   app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
     const { obj, prevLocation } = req.body;
     const { productId, boxId } = obj;
-    const { kind, _id } = prevLocation;
 
     let oldRefQuery;
 
     try {
       // create query to remove old storage ref
+      const { kind, _id } = prevLocation;
+
       if (kind === "shelfSpot") {
-        oldRefQuery = ShelfSpot.findByIdAndUpdate(
-          _id,
-          {
-            $pull: {
-              storedItems: { item: productId }
-            }
-          },
-          { new: true }
-        );
+        const oldShelfSpotId = _id;
+        oldRefQuery = unlinkProductFromShelfSpot(oldShelfSpotId, productId);
       }
       if (kind === "box") {
-        oldRefQuery = Box.findByIdAndUpdate(
-          _id,
-          {
-            $pull: {
-              storedItems: productId
-            }
-          },
-          { new: true }
-        );
+        const oldBoxId = _id;
+        oldRefQuery = unlinkProductFromBox(oldBoxId, productId);
       }
 
       const [oldSpot, product, box] = await Promise.all([
         oldRefQuery,
-        Product.findByIdAndUpdate(
-          productId,
-          {
-            $set: {
-              productLocation: {
-                kind: "box",
-                item: boxId
-              }
-            }
-          },
-          { new: true }
-        )
-          .populate("producer customer")
-          .populate({
-            path: "productLocation.item",
-            populate: {
-              path: "shelf shelfSpot",
-              populate: {
-                path: "shelf rack",
-                populate: {
-                  path: "rack storage",
-                  populate: { path: "storage" }
-                }
-              }
-            }
-          }),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $addToSet: {
-              storedItems: productId
-            }
-          },
-          { new: true }
-        )
+        linkBoxToProductPopLocIds(productId, boxId),
+        linkProductToBox(boxId, productId)
       ]);
 
       emit(req.user._id);
@@ -290,37 +164,15 @@ module.exports = (app, io) => {
     }
   });
 
+  // Box -> Shelf Spot ---------------------------------
   app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
 
     try {
-      await Promise.all([
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          { $addToSet: { storedItems: { kind: "box", item: boxId } } },
-          { new: true }
-        ),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $set: { shelfSpot: shelfSpotId }
-          },
-          { new: true }
-        )
+      const [shelfSpot, box] = await Promise.all([
+        linkBoxToShelfSpotPopulateIds(shelfSpotId, boxId),
+        linkShelfSpotToBox(boxId, shelfSpotId)
       ]);
-
-      const updatedShelfSpot = await ShelfSpot.findById(shelfSpotId).populate({
-        path: "shelf",
-        select: ["_id"],
-        populate: {
-          path: "rack",
-          select: ["_id"],
-          populate: {
-            path: "storage",
-            select: ["_id"]
-          }
-        }
-      });
 
       emit(req.user._id);
 
@@ -330,7 +182,7 @@ module.exports = (app, io) => {
         "hide-3"
       );
 
-      serverRes(res, 200, msg, { shelfSpot: updatedShelfSpot });
+      serverRes(res, 200, msg, { shelfSpot });
     } catch (err) {
       console.log("Err: PATCH/boxToShelfSpot,", err);
 
@@ -340,8 +192,8 @@ module.exports = (app, io) => {
     }
   });
 
-  // SCAN TWO UNKOWN ITEMS REMOVING OLD REF -------------------------------
-  // PRODUCT
+  // -------------- SCAN TWO UNKOWN ITEMS REMOVING OLD REF -----------------------
+  // Product -> Shelf Spot ---------------------------------------------
   app.patch("/api/scan/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
@@ -353,17 +205,9 @@ module.exports = (app, io) => {
       if (product && product.productLocation && product.productLocation.kind) {
         const { kind, item } = product.productLocation;
         if (kind === "shelfSpot") {
-          await ShelfSpot.findByIdAndUpdate(
-            item,
-            { $pull: { storedItems: { item: productId } } },
-            { new: true }
-          );
+          await unlinkProductFromShelfSpot(item, productId);
         } else if (kind === "box") {
-          await Box.findByIdAndUpdate(
-            item,
-            { $pull: { storedItems: productId } },
-            { new: true }
-          );
+          await unlinkProductFromBox(item, productId);
         }
       }
       // Link Product to NEW Shelf Spot -------------------------------
@@ -374,26 +218,7 @@ module.exports = (app, io) => {
 
       const [updateProduct, shelfSpot] = await Promise.all([
         product.save(),
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          {
-            $addToSet: {
-              storedItems: { kind: "product", item: productId }
-            }
-          },
-          { new: true }
-        ).populate({
-          path: "shelf",
-          select: ["_id"],
-          populate: {
-            path: "rack",
-            select: ["_id"],
-            populate: {
-              path: "storage",
-              select: ["_id"]
-            }
-          }
-        })
+        linkProductToShelfSpotPopIds(shelfSpotId, productId)
       ]);
 
       emit(req.user._id);
@@ -417,6 +242,7 @@ module.exports = (app, io) => {
     }
   });
 
+  // Product -> Box -----------------------------------------------------
   app.patch("/api/scan/productToBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
 
@@ -426,29 +252,12 @@ module.exports = (app, io) => {
 
       // Remove old location -------------------------------------------------
       if (product && product.productLocation && product.productLocation.kind) {
-        const { kind, item: _id } = product.productLocation;
+        const { kind, item } = product.productLocation;
 
         if (kind === "shelfSpot") {
-          await ShelfSpot.findByIdAndUpdate(
-            _id,
-            {
-              $pull: {
-                storedItems: { item: productId }
-              }
-            },
-            { new: true }
-          );
-        }
-        if (kind === "box") {
-          await Box.findByIdAndUpdate(
-            _id,
-            {
-              $pull: {
-                storedItems: productId
-              }
-            },
-            { new: true }
-          );
+          await unlinkProductFromShelfSpot(item, productId);
+        } else if (kind === "box") {
+          await unlinkProductFromBox(item, productId);
         }
       }
 
@@ -460,30 +269,7 @@ module.exports = (app, io) => {
 
       const [updateProduct, box] = await Promise.all([
         product.save(),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $addToSet: {
-              storedItems: productId
-            }
-          },
-          { new: true }
-        ).populate({
-          path: "shelfSpot",
-          select: ["_id"],
-          populate: {
-            path: "shelf",
-            select: ["_id"],
-            populate: {
-              path: "rack",
-              select: ["_id"],
-              populate: {
-                path: "storage",
-                select: ["_id"]
-              }
-            }
-          }
-        })
+        linkProductToBoxPopIds(boxId, productId)
       ]);
 
       emit(req.user._id);
@@ -500,11 +286,9 @@ module.exports = (app, io) => {
     }
   });
 
-  // BOX
+  // Box -> Shelf Spot ----------------------------------------------
   app.patch("/api/scan/boxToShelfSpot", isAuth, async (req, res) => {
     const { shelfSpotId, boxId } = req.body;
-
-    console.log(req.body);
 
     try {
       // Check if Box has a location ---------------------------------------
@@ -512,36 +296,15 @@ module.exports = (app, io) => {
       // Remove the old location ------------------------------------------
       if (box && box.shelfSpot) {
         const oldShelfSpotId = box.shelfSpot;
-        await ShelfSpot.findByIdAndUpdate(
-          oldShelfSpotId,
-          { $pull: { storedItems: { item: boxId } } },
-          { new: true }
-        );
+        await unlinkBoxFromShelfSpot(oldShelfSpotId, boxId);
       }
       // Link the Box with the NEW Shelf Spot ----------------------------
       box.shelfSpot = shelfSpotId;
 
       const [updateBox, shelfSpot] = await Promise.all([
         box.save(),
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          { $addToSet: { storedItems: { kind: "box", item: boxId } } },
-          { new: true }
-        ).populate({
-          path: "shelf",
-          select: ["_id"],
-          populate: {
-            path: "rack",
-            select: ["_id"],
-            populate: {
-              path: "storage",
-              select: ["_id"]
-            }
-          }
-        })
+        linkBoxToShelfSpotPopIds(shelfSpotId, boxId)
       ]);
-
-      console.log("box", updateBox);
 
       emit(req.user._id);
 
@@ -551,7 +314,7 @@ module.exports = (app, io) => {
         "hide-3"
       );
 
-      serverRes(res, 200, msg, { box: updateBox, shelfSpot });
+      serverRes(res, 200, msg, { box, shelfSpot });
     } catch (err) {
       console.log("Err: PATCH/SCAN/boxToShelfSpot,", err);
 
