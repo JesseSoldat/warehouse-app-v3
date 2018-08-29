@@ -36,13 +36,15 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
     // update store with new product
     const { product } = payload;
 
+    console.log(product.productLocation);
+
+    history.push(obj.historyUrl);
+
     const updatedProduct = { ...product };
 
     dispatch(productLoaded(updatedProduct));
 
     dispatch(resetStorage());
-
-    history.push(obj.historyUrl);
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -163,15 +165,16 @@ export const linkTwoItems = (obj, history) => async dispatch => {
       case "box":
         const { box } = payload;
 
-        if (box && box.shelfSpot && box.shelfSpot._id) {
-          const shelfSpotId = box.shelfSpot._id;
-          const shelfId = box.shelfSpot.shelf._id;
-          const rackId = box.shelfSpot.shelf.rack._id;
-          const storageId = box.shelfSpot.shelf.rack.storage._id;
+        if (box && box.shelfSpot) {
+          const { shelfSpot } = payload;
+          const shelfSpotId = shelfSpot._id;
+          const shelfId = shelfSpot.shelf._id;
+          const rackId = shelfSpot.shelf.rack._id;
+          const storageId = shelfSpot.shelf.rack.storage._id;
 
-          history.push(
-            `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`
-          );
+          const historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
+
+          history.push(historyUrl);
         } else {
           history.push(`/box/${boxId}?type=box`);
         }

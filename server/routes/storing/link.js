@@ -7,7 +7,8 @@ const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
-const isEmpty = require("../../utils/isEmpty");
+// queries
+const { addProductToShelfSpotPopLocIds } = require("../queries/product");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -23,32 +24,7 @@ module.exports = (app, io) => {
 
     try {
       const [product, shelfSpot] = await Promise.all([
-        Product.findByIdAndUpdate(
-          productId,
-          {
-            $set: {
-              productLocation: {
-                kind: "shelfSpot",
-                item: shelfSpotId
-              }
-            }
-          },
-          { new: true }
-        )
-          .populate("producer customer")
-          .populate({
-            path: "productLocation.item",
-            populate: {
-              path: "shelf shelfSpot",
-              populate: {
-                path: "shelf rack",
-                populate: {
-                  path: "rack storage",
-                  populate: { path: "storage" }
-                }
-              }
-            }
-          }),
+        addProductToShelfSpotPopLocIds(productId, shelfSpotId),
         ShelfSpot.findByIdAndUpdate(
           shelfSpotId,
           {
@@ -528,6 +504,8 @@ module.exports = (app, io) => {
   app.patch("/api/scan/boxToShelfSpot", isAuth, async (req, res) => {
     const { shelfSpotId, boxId } = req.body;
 
+    console.log(req.body);
+
     try {
       // Check if Box has a location ---------------------------------------
       const box = await Box.findById(boxId);
@@ -562,6 +540,8 @@ module.exports = (app, io) => {
           }
         })
       ]);
+
+      console.log("box", updateBox);
 
       emit(req.user._id);
 

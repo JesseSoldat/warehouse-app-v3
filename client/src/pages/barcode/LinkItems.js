@@ -103,7 +103,6 @@ class LinkItems extends Component {
             type1: "product",
             type2: "shelfSpot"
           };
-          this.props.linkTwoItems(obj, history);
         }
         // PRODUCT TO BOX
         else if (type2 === "box") {
@@ -114,7 +113,6 @@ class LinkItems extends Component {
             type1: "product",
             type2: "box"
           };
-          this.props.linkTwoItems(obj, history);
         }
         break;
 
@@ -128,7 +126,6 @@ class LinkItems extends Component {
             type1: "shelfSpot",
             type2: "product"
           };
-          this.props.linkTwoItems(obj, history);
         }
         // SHELFSPOT TO BOX
         else if (type2 === "box") {
@@ -139,7 +136,6 @@ class LinkItems extends Component {
             type1: "shelfSpot",
             type2: "box"
           };
-          this.props.linkTwoItems(obj, history);
         }
         break;
 
@@ -153,22 +149,28 @@ class LinkItems extends Component {
             type1: "box",
             type2: "product"
           };
-          this.props.linkTwoItems(obj, history);
         }
         // BOX TO SHELFSPOT
         else if (type2 === "shelfSpot") {
+          obj = {
+            apiUrl: "/api/scan/boxToShelfSpot",
+            shelfSpotId: secondScannedItemId,
+            boxId: firstScannedItemId,
+            type1: "box",
+            type2: "shelfSpot"
+          };
         }
         break;
 
       default:
-        // TODO ERROR MSG not a supported linking type
         const errorMsg = buildClientMsg({
           info: "You can only link Products, Boxes and ShelfSpot",
           color: "red"
         });
-        this.props.serverMsg(errorMsg);
-        break;
+        return this.props.serverMsg(errorMsg);
     }
+
+    this.props.linkTwoItems(obj, history);
   };
 
   render() {
