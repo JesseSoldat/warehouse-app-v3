@@ -7,6 +7,7 @@ const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
+const isEmpty = require("../../utils/isEmpty");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -358,6 +359,164 @@ module.exports = (app, io) => {
       console.log("Err: PATCH/boxToShelfSpot,", err);
 
       const msg = serverMsg("error", "link", "box to shelf spot");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  // SCAN TWO UNKOWN ITEMS REMOVING OLD REF
+  app.patch("/api/scan/productToShelfSpot", isAuth, async (req, res) => {
+    const { productId, shelfSpotId } = req.body;
+
+    try {
+      // Check if Product has a location ---------------------------------------
+      const product = await Product.findById(productId);
+
+      // Remove old location
+      if (product && product.productLocation && product.productLocation.kind) {
+        const { kind, item } = product.productLocation;
+        if (kind === "shelfSpot") {
+          await ShelfSpot.findByIdAndUpdate(
+            item,
+            { $pull: { storedItems: { item: productId } } },
+            { new: true }
+          );
+        } else if (kind === "box") {
+          await Box.findByIdAndUpdate(
+            item,
+            { $pull: { storedItems: productId } },
+            { new: true }
+          );
+        }
+      }
+      // Link Product to NEW Shelf Spot -------------------------------
+      product["productLocation"] = {
+        kind: "shelfSpot",
+        item: shelfSpotId
+      };
+
+      const [updateProduct, shelfSpot] = await Promise.all([
+        product.save(),
+        ShelfSpot.findByIdAndUpdate(
+          shelfSpotId,
+          {
+            $addToSet: {
+              storedItems: { kind: "product", item: productId }
+            }
+          },
+          { new: true }
+        ).populate({
+          path: "shelf",
+          select: ["_id"],
+          populate: {
+            path: "rack",
+            select: ["_id"],
+            populate: {
+              path: "storage",
+              select: ["_id"]
+            }
+          }
+        })
+      ]);
+
+      // const updatedShelfSpot = await ShelfSpot.findById(shelfSpotId).populate({
+      //   path: "shelf",
+      //   select: ["_id"],
+      //   populate: {
+      //     path: "rack",
+      //     select: ["_id"],
+      //     populate: {
+      //       path: "storage",
+      //       select: ["_id"]
+      //     }
+      //   }
+      // });
+
+      emit(req.user._id);
+
+      const msg = msgObj(
+        "Product and Shelf Spot are now linked.",
+        "blue",
+        "hide-3"
+      );
+
+      serverRes(res, 200, msg, {
+        product: updateProduct,
+        shelfSpot
+      });
+    } catch (err) {
+      console.log("Err: PATCH/SCAN/productToShelfSpot,", err);
+
+      const msg = serverMsg("error", "scan", "product to shelf spot");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  app.patch("/api/scan/productToBox", isAuth, async (req, res) => {
+    const { productId, boxId } = req.body;
+
+    try {
+      // Check if Product has a location ---------------------------------------
+      const product = await Product.findById(productId);
+      console.log(product);
+
+      // Remove old location -------------------------------------------------
+      if (product && product.productLocation && product.productLocation.kind) {
+        const { kind, item: _id } = product.productLocation;
+
+        if (kind === "shelfSpot") {
+          await ShelfSpot.findByIdAndUpdate(
+            _id,
+            {
+              $pull: {
+                storedItems: { item: productId }
+              }
+            },
+            { new: true }
+          );
+        }
+        if (kind === "box") {
+          await Box.findByIdAndUpdate(
+            _id,
+            {
+              $pull: {
+                storedItems: productId
+              }
+            },
+            { new: true }
+          );
+        }
+      }
+
+      // Link Product to NEW Box -------------------------------
+      product["productLocation"] = {
+        kind: "box",
+        item: boxId
+      };
+
+      const [updateProduct, shelfSpot] = await Promise.all([
+        product.save(),
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $addToSet: {
+              storedItems: productId
+            }
+          },
+          { new: true }
+        )
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, { product: updateProduct, shelfSpot });
+    } catch (err) {
+      console.log("Err: PATCH/SCAN/productToBox,", err);
+
+      const msg = serverMsg("error", "scan", "product to box");
 
       serverRes(res, 400, msg, null);
     }

@@ -98,18 +98,17 @@ export const relinkProduct = (
 };
 
 export const linkBox = (obj, history) => async dispatch => {
-  const { shelfSpotId, boxId } = obj;
-
   dispatch(showOverlay(true));
 
+  const { shelfSpotId, boxId } = obj;
+
   try {
-    const apiUrl = "/api/link/boxToShelfSpot";
-    const res = await axios.patch(apiUrl, { boxId, shelfSpotId });
+    const res = await axios.patch("/api/link/boxToShelfSpot", {
+      boxId,
+      shelfSpotId
+    });
+
     const { msg, options, payload } = res.data;
-
-    checkForMsg(msg, dispatch, options);
-
-    dispatch(showOverlay(false));
 
     const { shelfSpot } = payload;
 
@@ -121,11 +120,56 @@ export const linkBox = (obj, history) => async dispatch => {
       history.push(
         `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type="box"`
       );
+    } else {
+      history.push(`/box/${boxId}?type="box`);
     }
+    checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "link", "box to shelf spot");
   }
 };
 
 // Scanning in two items need to check item types and if they are already linked to something
-export const linkTwoItems = (obj, history) => async dispatch => {};
+export const linkTwoItems = (obj, history) => async dispatch => {
+  const { type1, type2, apiUrl, productId } = obj;
+
+  dispatch(showOverlay(true));
+
+  try {
+    const res = await axios.patch(apiUrl, obj);
+
+    const { msg, options, payload } = res.data;
+
+    console.log(payload);
+
+    switch (type1) {
+      case "product":
+        history.push(`/products/${productId}`);
+        break;
+
+      case "shelfSpot":
+        const { shelfSpot } = payload;
+        const shelfSpotId = shelfSpot._id;
+        const shelfId = shelfSpot.shelf._id;
+        const rackId = shelfSpot.shelf.rack._id;
+        const storageId = shelfSpot.shelf.rack.storage._id;
+
+        history.push(
+          `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
+        );
+
+        break;
+
+      case "box":
+        // return to box details
+        break;
+
+      default:
+        break;
+    }
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "link", `${type1} to ${type2}`);
+  }
+};

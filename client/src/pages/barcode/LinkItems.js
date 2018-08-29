@@ -11,7 +11,7 @@ import Heading from "../../components/Heading";
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
-import { linkProduct, linkBox } from "../../actions/link";
+import { linkTwoItems, linkProduct, linkBox } from "../../actions/link";
 
 class LinkItems extends Component {
   state = {
@@ -35,6 +35,8 @@ class LinkItems extends Component {
     if (data) {
       const type = data.split("/")[1];
       const id = data.split("/")[2];
+
+      if (this.state.firstScannedItemType === type) return;
 
       let stateObj;
 
@@ -95,21 +97,24 @@ class LinkItems extends Component {
         if (type2 === "shelfSpot") {
           obj = {
             historyUrl: `/products/${firstScannedItemId}`,
+            apiUrl: "/api/scan/productToShelfSpot",
             productId: firstScannedItemId,
-            shelfSpotId: secondScannedItemId
+            shelfSpotId: secondScannedItemId,
+            type1: "product",
+            type2: "shelfSpot"
           };
-          const productTo = "shelfSpot";
-          this.props.linkProduct(obj, productTo, history);
+          this.props.linkTwoItems(obj, history);
         }
         // PRODUCT TO BOX
         else if (type2 === "box") {
           obj = {
-            historyUrl: `/products/${firstScannedItemId}`,
+            apiUrl: "/api/scan/productToBox",
             productId: firstScannedItemId,
-            boxId: secondScannedItemId
+            boxId: secondScannedItemId,
+            type1: "product",
+            type2: "box"
           };
-          const productTo = "box";
-          this.props.linkProduct(obj, productTo, history);
+          this.props.linkTwoItems(obj, history);
         }
         break;
 
@@ -117,12 +122,13 @@ class LinkItems extends Component {
         // SHELFSPOT TO PRODUCT
         if (type2 === "product") {
           obj = {
-            historyUrl: `/products/${secondScannedItemId}`,
+            apiUrl: "/api/scan/productToShelfSpot",
             shelfSpotId: firstScannedItemId,
-            productId: secondScannedItemId
+            productId: secondScannedItemId,
+            type1: "shelfSpot",
+            type2: "product"
           };
-          const productTo = "shelfSpot";
-          this.props.linkProduct(obj, productTo, history);
+          this.props.linkTwoItems(obj, history);
         }
         // SHELFSPOT TO BOX
         else if (type2 === "box") {
@@ -160,7 +166,7 @@ class LinkItems extends Component {
     return (
       <div className="container">
         <Message />
-        <Heading title={this.state.title} />
+        <Heading title="Scan Items" />
         <BarcodeScan
           type={this.state.type}
           result={this.state.result}
@@ -182,5 +188,5 @@ class LinkItems extends Component {
 
 export default connect(
   null,
-  { serverMsg, linkProduct, linkBox }
+  { linkTwoItems, serverMsg, linkProduct, linkBox }
 )(withRouter(LinkItems));
