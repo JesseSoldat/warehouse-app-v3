@@ -34,6 +34,22 @@ class Storages extends Component {
 
     if (loading) {
       content = <Spinner />;
+    } else if (storages.length === 0 && !loading) {
+      button = (
+        <div className="row">
+          <div className="col-12">
+            <h4>No Storages created yet.</h4>
+            <hr />
+            <br />
+            <Link to="/storage/create?type=storage">
+              <button className="btn btn-default ml-4">
+                <i className="fas fa-plus-circle mr-2" />
+                Create New Storage
+              </button>
+            </Link>
+          </div>
+        </div>
+      );
     }
     // have storages
     else if (storages && storages.length > 0) {

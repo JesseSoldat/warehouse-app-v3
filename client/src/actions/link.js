@@ -7,6 +7,7 @@ import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
 import { resetStorage } from "./storage";
 
+// Product --------------------------------------------------------------
 export const linkProduct = (obj, productTo, history) => async dispatch => {
   let apiUrl, info;
   dispatch(showOverlay(true));
@@ -36,8 +37,7 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
     // update store with new product
     const { product } = payload;
 
-    console.log(product.productLocation);
-
+    // TODO
     history.push(obj.historyUrl);
 
     const updatedProduct = { ...product };
@@ -99,9 +99,9 @@ export const relinkProduct = (
   }
 };
 
+// Box ---------------------------------------------------------------------
 export const linkBox = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
-
   const { shelfSpotId, boxId } = obj;
 
   try {
@@ -133,9 +133,8 @@ export const linkBox = (obj, history) => async dispatch => {
 
 // Scanning in two items need to check item types and if they are already linked to something
 export const linkTwoItems = (obj, history) => async dispatch => {
-  const { type1, type2, apiUrl, productId, boxId } = obj;
-
   dispatch(showOverlay(true));
+  const { type1, type2, apiUrl, productId, boxId } = obj;
 
   try {
     const res = await axios.patch(apiUrl, obj);

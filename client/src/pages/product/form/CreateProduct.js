@@ -13,7 +13,6 @@ import getInitialState from "./helpers/getInitialState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   productLoaded,
@@ -31,11 +30,9 @@ class CreateProduct extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/products/create");
   }
 
   // load api data --------------------------------------------
@@ -135,7 +132,6 @@ export default connect(
     startGetProducers,
     startGetCustomers,
     startGetClients,
-    serverMsg,
-    changeRoute
+    serverMsg
   }
 )(withRouter(CreateProduct));

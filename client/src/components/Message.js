@@ -6,7 +6,9 @@ class Message extends Component {
   componentWillUpdate(nextProps) {
     const { msg } = nextProps;
 
-    window.scrollTo(0, 0);
+    if (msg) {
+      window.scrollTo(0, 0);
+    }
 
     // hide the success message after 3 seconds
     if (msg && msg.code === "hide-3") {
@@ -67,7 +69,7 @@ class Message extends Component {
       return showMsg;
     } else {
       const showMsgContainer = (
-        <div className="row" id="showMsgContainer" style={{ height: "20px" }} />
+        <div className="row" id="showMsgContainer" style={{ height: "30px" }} />
       );
       return showMsgContainer;
     }

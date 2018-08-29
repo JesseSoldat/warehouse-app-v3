@@ -33,38 +33,15 @@ import {
 import { unlinkProduct } from "../../../actions/unlink";
 
 class Product extends Component {
-  state = {
-    bt1Disable: false,
-    bt2Disable: false
-  };
   // lifecycle -------------------------------------
   componentDidMount() {
     this.getProduct();
   }
 
-  componentDidUpdate(nextProps, state) {
-    const { msg } = nextProps;
-
-    // used for retrieve product button errors
-    if (msg && msg.code === "throw new Error") {
-      window.scrollTo(0, 0);
-    }
-
-    // if there is an error while trying to delete a product
-    // enable the delete btn after the msg is closed
-    if (msg && msg.code === "delete err") {
-      if (state.bt1Disable === true) {
-        this.setState({ bt1Disable: false });
-      }
-    }
-  }
-
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/products/:productId");
   }
 
   // api calls ---------------------------------------
@@ -89,20 +66,14 @@ class Product extends Component {
       }
     }
 
-    // clear old data
-    productLoaded(null);
     // fetch new data from api
     startGetProduct(productId);
   };
 
   // events -----------------------------------------
   onDeleteProduct = () => {
-    // don't let the user click more than once
-    this.setState({ bt1Disable: true });
-    const { deleteProduct, match, history } = this.props;
-    const { productId } = match.params;
-    // api call
-    deleteProduct(productId, history);
+    const { productId } = this.props.match.params;
+    this.props.deleteProduct(productId, this.props.history);
   };
 
   onEditProduct = () => {
@@ -217,8 +188,6 @@ class Product extends Component {
         <Message cb={this.getProduct} />
         {product && (
           <TopRowBtns
-            bt1Disable={this.state.bt1Disable}
-            bt2Disable={this.state.bt2Disable}
             btn1Cb={this.onDeleteProduct}
             btn2Cb={this.onEditProduct}
             showRightBtns={true}

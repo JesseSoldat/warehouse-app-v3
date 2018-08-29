@@ -109,7 +109,7 @@ class EditProduct extends Component {
   };
 
   render() {
-    const { msg, product, loading, producers, customers } = this.props;
+    const { product, loading, producers, customers } = this.props;
 
     let content;
 
@@ -125,7 +125,6 @@ class EditProduct extends Component {
 
       content = (
         <ProductForm
-          msg={msg}
           productObj={productObj}
           producerOptions={producers}
           selectedProducer={selectedProducer}

@@ -322,9 +322,9 @@ export const startCreateStorage = (
       : dispatch(createRack(type, payload));
 
     // ORDER MATTERS
-    history.push(historyUrl);
-
     checkForMsg(msg, dispatch, options);
+
+    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "post", "storages");
   }
@@ -425,14 +425,11 @@ export const startDeleteStorage = (
 
     const { msg, options, payload } = res.data;
 
-    // ORDER HERE IS IMPORTANT
     history.push(historyUrl);
 
     dispatch(deleteStorage(type, payload));
 
     checkForMsg(msg, dispatch, options);
-
-    dispatch(showOverlay(false));
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "delete", `${type}`);
   }

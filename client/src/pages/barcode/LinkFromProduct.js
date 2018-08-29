@@ -73,11 +73,11 @@ class LinkFromProduct extends Component {
     });
   };
 
-  // child component CBs ----------------------------------
+  // child component CBs -------------------------------------------
   handleSelectChange = obj => {
     this.setState({ ...obj, formSubmit: false });
   };
-
+  // MANUAL LINK ---------------------------------------------------
   handleLink = e => {
     e.preventDefault();
     this.setState({ formSubmit: true });
@@ -140,7 +140,7 @@ class LinkFromProduct extends Component {
     });
   };
 
-  // linking flow -------------------------------------------------
+  // SCAN LINK ---------------------------------------------------
   linkScannedItems = e => {
     e.preventDefault();
     const {

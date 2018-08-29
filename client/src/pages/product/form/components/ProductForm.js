@@ -53,8 +53,6 @@ class ProductForm extends Component {
   onSubmit = e => {
     const { handleSendMsg, handleSubmit } = this.props;
     e.preventDefault();
-    // don't allow the user to submit more than once
-    this.refs.submitBtn.setAttribute("disabled", "disabled");
     // clear any messages from the server
     handleSendMsg(null);
 
@@ -65,8 +63,6 @@ class ProductForm extends Component {
     );
 
     if (!isValid) {
-      // allow user to submit form again
-      this.refs.submitBtn.removeAttribute("disabled");
       this.setState(() => ({ ...errObj }));
       // TODO add smooth scrolling
       // scroll to the message since the form is long
@@ -117,7 +113,7 @@ class ProductForm extends Component {
   };
 
   render() {
-    const { msg, producerOptions, customerOptions } = this.props;
+    const { producerOptions, customerOptions } = this.props;
 
     const {
       selectedProducer,
@@ -131,13 +127,6 @@ class ProductForm extends Component {
       producerSelectOptions,
       customerSelectOptions
     } = formatClientSelectOptions(producerOptions, customerOptions);
-
-    // when a message from the server arrives let the user resubmit the form
-    if (msg) {
-      if (this.refs && "submitBtn" in this.refs) {
-        this.refs.submitBtn.removeAttribute("disabled");
-      }
-    }
 
     return (
       <form onSubmit={this.onSubmit}>
@@ -179,7 +168,6 @@ class ProductForm extends Component {
           type="submit"
           className="btn btn-info btn-block mt-4"
           value="Submit"
-          ref="submitBtn"
         />
       </form>
     );

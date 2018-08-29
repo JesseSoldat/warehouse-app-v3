@@ -5,7 +5,7 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import createEntity from "./helpers/createEntity";
 // actions
-import { loading } from "./ui";
+import { loading, showOverlay } from "./ui";
 import { customersRequested, customersLoaded } from "./customer";
 import { producersRequested, producersLoaded } from "./producer";
 import { resetStorage } from "./storage";
@@ -168,6 +168,7 @@ export const startGetProductWithClients = productId => async dispatch => {
 
 // Create Product -----------------------------------------------
 export const createProduct = (newProduct, history) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.post("/api/products", newProduct);
 
@@ -177,9 +178,7 @@ export const createProduct = (newProduct, history) => async dispatch => {
 
     checkForMsg(msg, dispatch, options);
 
-    const productId = payload._id;
-
-    history.push(`/products/${productId}`);
+    history.push(`/products/${payload._id}`);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "save", "product");
   }
@@ -187,6 +186,7 @@ export const createProduct = (newProduct, history) => async dispatch => {
 
 // Edit Product -----------------------------------------------
 export const editProduct = (productId, update, history) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.patch(`/api/products/${productId}`, update);
 
@@ -204,6 +204,7 @@ export const editProduct = (productId, update, history) => async dispatch => {
 
 // Delete Product -----------------------------------------------
 export const deleteProduct = (productId, history) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.delete(`/api/products/${productId}`);
 

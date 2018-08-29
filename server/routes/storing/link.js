@@ -29,7 +29,7 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
-
+  // ------------------------- LINKING -------------------------------------
   // Product -> Shelf Spot -----------------------------
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
@@ -58,6 +58,60 @@ module.exports = (app, io) => {
     }
   });
 
+  // Product -> Box ---------------------------------
+  app.patch("/api/link/productToBox", isAuth, async (req, res) => {
+    const { productId, boxId } = req.body;
+
+    try {
+      const [product, box] = await Promise.all([
+        linkBoxToProductPopLocIds(productId, boxId),
+        linkProductToBox(boxId, productId)
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      serverRes(res, 200, msg, { box, product });
+    } catch (err) {
+      console.log("Err: PATCH/link/productToBox,", err);
+
+      const msg = serverMsg("error", "link", "product to box");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  // Box -> Shelf Spot ---------------------------------
+  app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
+    const { boxId, shelfSpotId } = req.body;
+
+    try {
+      const [shelfSpot, box] = await Promise.all([
+        linkBoxToShelfSpotPopulateIds(shelfSpotId, boxId),
+        linkShelfSpotToBox(boxId, shelfSpotId)
+      ]);
+
+      emit(req.user._id);
+
+      const msg = msgObj(
+        "Box and Shelf Spot are now linked.",
+        "blue",
+        "hide-3"
+      );
+
+      serverRes(res, 200, msg, { shelfSpot });
+    } catch (err) {
+      console.log("Err: PATCH/boxToShelfSpot,", err);
+
+      const msg = serverMsg("error", "link", "box to shelf spot");
+
+      serverRes(res, 400, msg, null);
+    }
+  });
+
+  //-------------------------------- RELINKING ------------------------------------
+  // Product -> Shelf Spot -----------------------------
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
     const { obj, prevLocation } = req.body;
     const { productId, shelfSpotId } = obj;
@@ -102,29 +156,6 @@ module.exports = (app, io) => {
   });
 
   // Product -> Box ---------------------------------
-  app.patch("/api/link/productToBox", isAuth, async (req, res) => {
-    const { productId, boxId } = req.body;
-
-    try {
-      const [product, box] = await Promise.all([
-        linkBoxToProductPopLocIds(productId, boxId),
-        linkProductToBox(boxId, productId)
-      ]);
-
-      emit(req.user._id);
-
-      const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
-
-      serverRes(res, 200, msg, { box, product });
-    } catch (err) {
-      console.log("Err: PATCH/link/productToBox,", err);
-
-      const msg = serverMsg("error", "link", "product to box");
-
-      serverRes(res, 400, msg, null);
-    }
-  });
-
   app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
     const { obj, prevLocation } = req.body;
     const { productId, boxId } = obj;
@@ -164,35 +195,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // Box -> Shelf Spot ---------------------------------
-  app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
-    const { boxId, shelfSpotId } = req.body;
-
-    try {
-      const [shelfSpot, box] = await Promise.all([
-        linkBoxToShelfSpotPopulateIds(shelfSpotId, boxId),
-        linkShelfSpotToBox(boxId, shelfSpotId)
-      ]);
-
-      emit(req.user._id);
-
-      const msg = msgObj(
-        "Box and Shelf Spot are now linked.",
-        "blue",
-        "hide-3"
-      );
-
-      serverRes(res, 200, msg, { shelfSpot });
-    } catch (err) {
-      console.log("Err: PATCH/boxToShelfSpot,", err);
-
-      const msg = serverMsg("error", "link", "box to shelf spot");
-
-      serverRes(res, 400, msg, null);
-    }
-  });
-
-  // -------------- SCAN TWO UNKOWN ITEMS REMOVING OLD REF -----------------------
+  // -------------- SCAN TWO UNKOWN ITEMS CHECK FOR OLD REF -----------------------
   // Product -> Shelf Spot ---------------------------------------------
   app.patch("/api/scan/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
