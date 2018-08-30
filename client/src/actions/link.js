@@ -8,28 +8,12 @@ import { showOverlay } from "./ui";
 import { resetStorage } from "./storage";
 
 // Product --------------------------------------------------------------
-export const linkProduct = (obj, productTo, history) => async dispatch => {
-  let apiUrl, info;
+export const linkProduct = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
 
+  const { apiUrl, historyUrl, info } = obj;
+
   try {
-    switch (productTo) {
-      case "shelfSpot":
-        apiUrl = `/api/link/productToShelfSpot`;
-        info = "product to shelf spot";
-        break;
-
-      case "box":
-        apiUrl = `/api/link/productToBox`;
-        info = "product to box";
-        break;
-
-      default:
-        throw new Error(
-          "Wrong linking type provided. A box or shelf spot type is required"
-        );
-    }
-
     const res = await axios.patch(apiUrl, obj);
 
     const { msg, payload, options } = res.data;
@@ -38,7 +22,7 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
     const { product } = payload;
 
     // TODO
-    history.push(obj.historyUrl);
+    history.push(historyUrl);
 
     const updatedProduct = { ...product };
 
@@ -52,34 +36,12 @@ export const linkProduct = (obj, productTo, history) => async dispatch => {
   }
 };
 
-export const relinkProduct = (
-  obj,
-  productTo,
-  prevLocation,
-  history
-) => async dispatch => {
-  let apiUrl, info;
-
+export const relinkProduct = (obj, prevLocation, history) => async dispatch => {
   dispatch(showOverlay(true));
 
+  const { apiUrl, historyUrl, info } = obj;
+
   try {
-    switch (productTo) {
-      case "shelfSpot":
-        apiUrl = `/api/relink/productToShelfSpot`;
-        info = "product to shelf spot";
-        break;
-
-      case "box":
-        apiUrl = `/api/relink/productToBox`;
-        info = "product to box";
-        break;
-
-      default:
-        throw new Error(
-          "Wrong linking type provided. A box or shelf spot type is required"
-        );
-    }
-
     const res = await axios.patch(apiUrl, { obj, prevLocation });
 
     const { msg, payload, options } = res.data;
@@ -91,9 +53,7 @@ export const relinkProduct = (
 
     checkForMsg(msg, dispatch, options);
 
-    dispatch(showOverlay(false));
-
-    history.push(obj.historyUrl);
+    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "relink", info);
   }
@@ -102,13 +62,10 @@ export const relinkProduct = (
 // Box ---------------------------------------------------------------------
 export const linkBox = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
-  const { shelfSpotId, boxId } = obj;
+  const { apiUrl, shelfSpotId, boxId } = obj;
 
   try {
-    const res = await axios.patch("/api/link/boxToShelfSpot", {
-      boxId,
-      shelfSpotId
-    });
+    const res = await axios.patch(apiUrl, obj);
 
     const { msg, options, payload } = res.data;
 
@@ -131,6 +88,17 @@ export const linkBox = (obj, history) => async dispatch => {
   }
 };
 
+const createHistoryUrl = (shelfSpot, type, boxId) => {
+  const shelfSpotId = shelfSpot._id;
+  const shelfId = shelfSpot.shelf._id;
+  const rackId = shelfSpot.shelf.rack._id;
+  const storageId = shelfSpot.shelf.rack.storage._id;
+
+  if (type === "shelfSpot") {
+    return `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
+  }
+  return `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
+};
 // Scanning in two items need to check item types and if they are already linked to something
 export const linkTwoItems = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
@@ -149,31 +117,14 @@ export const linkTwoItems = (obj, history) => async dispatch => {
         break;
 
       case "shelfSpot":
-        const { shelfSpot } = payload;
-        const shelfSpotId = shelfSpot._id;
-        const shelfId = shelfSpot.shelf._id;
-        const rackId = shelfSpot.shelf.rack._id;
-        const storageId = shelfSpot.shelf.rack.storage._id;
-
-        history.push(
-          `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`
-        );
-
+        history.push(createHistoryUrl(payload.shelfSpot, "shelfSpot"));
         break;
 
       case "box":
-        const { box } = payload;
+        const { box, shelfSpot } = payload;
 
         if (box && box.shelfSpot) {
-          const { shelfSpot } = payload;
-          const shelfSpotId = shelfSpot._id;
-          const shelfId = shelfSpot.shelf._id;
-          const rackId = shelfSpot.shelf.rack._id;
-          const storageId = shelfSpot.shelf.rack.storage._id;
-
-          const historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
-
-          history.push(historyUrl);
+          history.push(createHistoryUrl(shelfSpot, "box", boxId));
         } else {
           history.push(`/box/${boxId}?type=box`);
         }

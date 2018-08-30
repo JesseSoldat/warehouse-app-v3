@@ -20,7 +20,6 @@ import { startGetProduct } from "../../actions/product";
 
 class LinkFromProduct extends Component {
   state = {
-    formSubmit: false,
     type: "",
     title: "",
     productId: "",
@@ -75,24 +74,14 @@ class LinkFromProduct extends Component {
 
   // child component CBs -------------------------------------------
   handleSelectChange = obj => {
-    this.setState({ ...obj, formSubmit: false });
+    this.setState({ ...obj });
   };
-  // MANUAL LINK ---------------------------------------------------
-  handleLink = e => {
-    e.preventDefault();
-    this.setState({ formSubmit: true });
-    const { type, boxId } = this.state;
-    const productTo = boxId ? "box" : "shelfSpot";
 
-    // store in a box or on a shelf spot
-    if (type === "storeProduct") {
-      this.props.linkProduct(this.state, productTo, this.props.history);
-    }
-    // restore in a box or on a shelf spot
-    else if (type === "restoreProduct") {
+  getPrevLocation = type => {
+    if (type === "restoreProduct") {
       const { productLocation } = this.props.product;
 
-      const prevLocation = {};
+      let prevLocation = {};
 
       if (productLocation.kind === "shelfSpot") {
         prevLocation["kind"] = "shelfSpot";
@@ -103,12 +92,46 @@ class LinkFromProduct extends Component {
         prevLocation["_id"] = productLocation.item._id;
       }
 
-      this.props.relinkProduct(
-        this.state,
-        productTo,
-        prevLocation,
-        this.props.history
-      );
+      return prevLocation;
+    }
+    return null;
+  };
+  // MANUAL LINK ---------------------------------------------------
+  handleLink = e => {
+    e.preventDefault();
+    const { type, boxId } = this.state;
+
+    // store in a box or on a shelf spot
+    if (type === "storeProduct") {
+      const linkObj = {
+        historyUrl: this.state.historyUrl,
+        apiUrl: boxId
+          ? "/api/link/productToBox"
+          : "/api/link/productToShelfSpot",
+        info: boxId ? "product to box" : "product to shelf spot",
+        productId: this.state.productId,
+        shelfSpotId: this.state.shelfSpotId,
+        boxId: this.state.boxId
+      };
+
+      this.props.linkProduct(linkObj, this.props.history);
+    }
+    // restore in a box or on a shelf spot
+    else if (type === "restoreProduct") {
+      const relinkObj = {
+        historyUrl: this.state.historyUrl,
+        apiUrl: boxId
+          ? "/api/relink/productToBox"
+          : "/api/relink/productToShelfSpot",
+        info: boxId ? "product to box" : "product to shelf spot",
+        productId: this.state.productId,
+        shelfSpotId: this.state.shelfSpotId,
+        boxId: this.state.boxId
+      };
+
+      const prevLocation = this.getPrevLocation(type);
+
+      this.props.relinkProduct(relinkObj, prevLocation, this.props.history);
     }
   };
 
@@ -197,25 +220,7 @@ class LinkFromProduct extends Component {
     }
   };
 
-  getPrevLocation = type => {
-    if (type === "restoreProduct") {
-      const { productLocation } = this.props.product;
-
-      let prevLocation = {};
-
-      if (productLocation.kind === "shelfSpot") {
-        prevLocation["kind"] = "shelfSpot";
-        prevLocation["_id"] = productLocation.item._id;
-      }
-      if (productLocation.kind === "box") {
-        prevLocation["kind"] = "box";
-        prevLocation["_id"] = productLocation.item._id;
-      }
-      return prevLocation;
-    }
-    return null;
-  };
-
+  // Toggle Camera ----------------------------------------------
   handleClickUseCamera = () => {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
@@ -229,7 +234,6 @@ class LinkFromProduct extends Component {
           // both -----------------------------
           type={this.state.type}
           loading={this.props.loading}
-          formSubmit={this.state.formSubmit}
           // scan --------------------------------
           result={this.state.result}
           scanning={this.state.scanning}

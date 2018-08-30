@@ -43,14 +43,13 @@ export const unlinkProduct = (obj, product) => async dispatch => {
 
 export const unlinkBox = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
-  const { boxId, shelfSpotId } = obj;
 
   try {
     const res = await axios.patch("/api/unlink/boxFromShelfSpot", obj);
 
-    const { msg, options, payload } = res.data;
+    const { msg, options } = res.data;
 
-    history.push(`/box/${boxId}?type=box`);
+    history.push(`/box/${obj.boxId}?type=box`);
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

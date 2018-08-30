@@ -15,8 +15,7 @@ const ManualLink = ({
   shelfId,
   shelfSpotId,
   handleSelectChange,
-  handleLink,
-  formSubmit = false
+  handleLink
 }) => {
   let spinner, text, racks, shelves, shelfSpots, boxes;
 
@@ -298,8 +297,6 @@ const ManualLink = ({
     let shouldDisable = false;
 
     if (shelfSpotId === "") {
-      shouldDisable = true;
-    } else if (formSubmit) {
       shouldDisable = true;
     }
 

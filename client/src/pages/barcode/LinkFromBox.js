@@ -19,7 +19,6 @@ import { startGetProducts } from "../../actions/product";
 
 class LinkFromBox extends Component {
   state = {
-    formSubmit: false,
     type: "",
     location: null,
     title: "",
@@ -95,28 +94,35 @@ class LinkFromBox extends Component {
     }
   };
 
+  // MANUAL LINK ----------------------------------------------------
   handleSelectChange = obj => {
-    this.setState({ ...obj, formSubmit: false });
+    this.setState({ ...obj });
   };
 
   handleLink = e => {
     e.preventDefault();
-    this.setState({ formSubmit: true });
 
-    const { boxId } = this.props.match.params;
-    const newState = { ...this.state, boxId };
+    const linkObj = {
+      apiUrl: this.state.apiUrl,
+      boxId: this.props.match.params,
+      shelfSpotId: this.state.shelfSpotId
+    };
 
-    this.props.linkBox(newState, this.props.history);
+    this.props.linkBox(linkObj, this.props.history);
   };
 
   handleLinkProductToBox = productId => {
-    const { boxId, historyUrl } = this.state;
-    this.setState({ formSubmit: true });
-    const obj = { boxId, productId, historyUrl };
-    this.props.linkProduct(obj, "box", this.props.history);
+    const linkObj = {
+      apiUrl: "/api/link/productToBox",
+      historyUrl: this.state.historyUrl,
+      boxId: this.state.boxId,
+      productId,
+      info: "link product to box"
+    };
+    this.props.linkProduct(linkObj, this.props.history);
   };
 
-  // BARCODE ----------------------------------------------
+  // SCANNED LINK ----------------------------------------------
   handleErr = err => {
     console.log(err);
   };
@@ -144,27 +150,13 @@ class LinkFromBox extends Component {
     });
   };
 
-  handleClickUseCamera = () => {
-    this.setState(({ scanning }) => ({ scanning: !scanning }));
-  };
-
-  // linking flow -------------------------------------------------
   linkScannedItems = e => {
     e.preventDefault();
-    const {
-      boxId,
-      secondScannedItemId,
-      secondScannedItemType,
-      type,
-      location,
-      historyUrl
-    } = this.state;
+    const { secondScannedItemId, type, location } = this.state;
 
-    if (!boxId || !secondScannedItemId) return;
+    if (!this.state.boxId || !secondScannedItemId) return;
 
-    const { history } = this.props;
-
-    const type2 = secondScannedItemType;
+    const type2 = this.state.secondScannedItemType;
 
     if (type === "linkProductToBox") {
       // LINK BOX WITH A PRODUCT
@@ -173,14 +165,19 @@ class LinkFromBox extends Component {
           info: "Please link the box with a product",
           color: "red"
         });
-        this.props.serverMsg(errorMsg);
-        return;
+        return this.props.serverMsg(errorMsg);
       }
-      const productId = secondScannedItemId;
 
       if (location) {
-        const obj = { boxId, productId, historyUrl };
-        this.props.linkProduct(obj, "box", history);
+        const linkObj = {
+          historyUrl: this.state.historyUrl,
+          apiUrl: "/api/link/productToBox",
+          info: "product to box",
+          productId: secondScannedItemId,
+          boxId: this.state.boxId
+        };
+
+        this.props.linkProduct(linkObj, this.props.history);
       }
     }
     // LINK BOX WITH A SHELF SPOT
@@ -190,15 +187,23 @@ class LinkFromBox extends Component {
           info: "Please link the box with a shelf spot",
           color: "red"
         });
-        this.props.serverMsg(errorMsg);
-        return;
+        return this.props.serverMsg(errorMsg);
       }
-      const shelfSpotId = secondScannedItemId;
 
-      const obj = { shelfSpotId, boxId };
+      const linkObj = {
+        apiUrl: "/api/link/boxToShelfSpot",
+        info: "box to shelf spot",
+        shelfSpotId: secondScannedItemId,
+        boxId: this.state.boxId
+      };
 
-      this.props.linkBox(obj, history);
+      this.props.linkBox(linkObj, this.props.history);
     }
+  };
+
+  // Toggle Camera -----------------------------------------------
+  handleClickUseCamera = () => {
+    this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
   render() {

@@ -9,7 +9,6 @@ const Tabs = ({
   // manual link
   type,
   loading,
-  formSubmit,
   storageIdsEntity,
   storageId,
   rackId,
@@ -43,7 +42,6 @@ const Tabs = ({
     case "linkBoxToSpot":
       content = (
         <ManualLink
-          formSubmit={formSubmit}
           type={type}
           storageIdsEntity={storageIdsEntity}
           loading={loading}
