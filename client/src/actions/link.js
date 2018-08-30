@@ -7,6 +7,19 @@ import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
 import { resetStorage } from "./storage";
 
+// helpers --------------------------------------------------------------------
+const createHistoryUrl = (shelfSpot, type, boxId) => {
+  const shelfSpotId = shelfSpot._id;
+  const shelfId = shelfSpot.shelf._id;
+  const rackId = shelfSpot.shelf.rack._id;
+  const storageId = shelfSpot.shelf.rack.storage._id;
+
+  if (type === "shelfSpot") {
+    return `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
+  }
+  return `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
+};
+
 // Product --------------------------------------------------------------
 export const linkProduct = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
@@ -36,33 +49,10 @@ export const linkProduct = (obj, history) => async dispatch => {
   }
 };
 
-export const relinkProduct = (obj, prevLocation, history) => async dispatch => {
-  dispatch(showOverlay(true));
-
-  const { apiUrl, historyUrl, info } = obj;
-
-  try {
-    const res = await axios.patch(apiUrl, { obj, prevLocation });
-
-    const { msg, payload, options } = res.data;
-
-    // update store with new product
-    const { product } = payload;
-
-    dispatch(productLoaded(product));
-
-    checkForMsg(msg, dispatch, options);
-
-    history.push(historyUrl);
-  } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "relink", info);
-  }
-};
-
 // Box ---------------------------------------------------------------------
 export const linkBox = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
-  const { apiUrl, shelfSpotId, boxId } = obj;
+  const { apiUrl, boxId } = obj;
 
   try {
     const res = await axios.patch(apiUrl, obj);
@@ -72,13 +62,7 @@ export const linkBox = (obj, history) => async dispatch => {
     const { shelfSpot } = payload;
 
     if (shelfSpot && shelfSpot.shelf) {
-      const shelfId = shelfSpot.shelf._id;
-      const rackId = shelfSpot.shelf.rack._id;
-      const storageId = shelfSpot.shelf.rack.storage._id;
-
-      history.push(
-        `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type="box"`
-      );
+      history.push(createHistoryUrl(shelfSpot, "box", boxId));
     } else {
       history.push(`/box/${boxId}?type="box`);
     }
@@ -88,19 +72,8 @@ export const linkBox = (obj, history) => async dispatch => {
   }
 };
 
-const createHistoryUrl = (shelfSpot, type, boxId) => {
-  const shelfSpotId = shelfSpot._id;
-  const shelfId = shelfSpot.shelf._id;
-  const rackId = shelfSpot.shelf.rack._id;
-  const storageId = shelfSpot.shelf.rack.storage._id;
-
-  if (type === "shelfSpot") {
-    return `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
-  }
-  return `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
-};
 // Scanning in two items need to check item types and if they are already linked to something
-export const linkTwoItems = (obj, history) => async dispatch => {
+export const linkItems = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
   const { type1, type2, apiUrl, productId, boxId } = obj;
 

@@ -9,13 +9,12 @@ import Message from "../../components/Message";
 import Heading from "../../components/Heading";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
-import isEmpty from "../../utils/validation/isEmpty";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
-import { linkProduct, relinkProduct } from "../../actions/link";
+import { linkItems } from "../../actions/link";
 import { startGetProduct } from "../../actions/product";
 
 class LinkFromProduct extends Component {
@@ -99,40 +98,48 @@ class LinkFromProduct extends Component {
   // MANUAL LINK ---------------------------------------------------
   handleLink = e => {
     e.preventDefault();
-    const { type, boxId } = this.state;
+    const { type, productId, shelfSpotId, boxId } = this.state;
+    const linkTo = boxId ? "box" : "shelfSpot";
 
-    // store in a box or on a shelf spot
-    if (type === "storeProduct") {
-      const linkObj = {
-        historyUrl: this.state.historyUrl,
-        apiUrl: boxId
-          ? "/api/link/productToBox"
-          : "/api/link/productToShelfSpot",
-        info: boxId ? "product to box" : "product to shelf spot",
-        productId: this.state.productId,
-        shelfSpotId: this.state.shelfSpotId,
-        boxId: this.state.boxId
-      };
+    let linkObj, apiUrl;
 
-      this.props.linkProduct(linkObj, this.props.history);
+    switch (linkTo) {
+      case "box":
+        apiUrl =
+          type === "storeProduct"
+            ? "/api/link/productToBox"
+            : "/api/relink/productToBox";
+        linkObj = {
+          apiUrl,
+          productId,
+          boxId,
+          type1: "product",
+          type2: "box",
+          prevLocation: this.getPrevLocation(type)
+        };
+
+        break;
+
+      case "shelfSpot":
+        apiUrl =
+          type === "storeProduct"
+            ? "/api/link/productToShelfSpot"
+            : "/api/relink/productToShelfSpot";
+        linkObj = {
+          apiUrl,
+          productId,
+          shelfSpotId,
+          type1: "product",
+          type2: "shelfSpot",
+          prevLocation: this.getPrevLocation(type)
+        };
+        break;
+
+      default:
+        break;
     }
-    // restore in a box or on a shelf spot
-    else if (type === "restoreProduct") {
-      const relinkObj = {
-        historyUrl: this.state.historyUrl,
-        apiUrl: boxId
-          ? "/api/relink/productToBox"
-          : "/api/relink/productToShelfSpot",
-        info: boxId ? "product to box" : "product to shelf spot",
-        productId: this.state.productId,
-        shelfSpotId: this.state.shelfSpotId,
-        boxId: this.state.boxId
-      };
 
-      const prevLocation = this.getPrevLocation(type);
-
-      this.props.relinkProduct(relinkObj, prevLocation, this.props.history);
-    }
+    this.props.linkItems(linkObj, this.props.history);
   };
 
   // BARCODE ----------------------------------------------
@@ -175,39 +182,31 @@ class LinkFromProduct extends Component {
 
     if (!productId || !secondScannedItemId) return;
 
-    const { history } = this.props;
-
     const type2 = secondScannedItemType;
 
-    let obj;
-
-    let prevLocation = this.getPrevLocation(type);
+    let linkObj;
 
     switch (type2) {
       case "shelfSpot":
-        obj = {
-          historyUrl: `/products/${productId}`,
+        linkObj = {
+          apiUrl: "/api/scan/productToShelfSpot",
           productId,
-          shelfSpotId: secondScannedItemId
+          shelfSpotId: secondScannedItemId,
+          type1: "product",
+          type2: "shelfSpot",
+          prevLocation: this.getPrevLocation(type)
         };
-        if (isEmpty(prevLocation)) {
-          return this.props.linkProduct(obj, "shelfSpot", history);
-        }
-        this.props.relinkProduct(obj, "shelfSpot", prevLocation, history);
         break;
 
       case "box":
-        obj = {
-          historyUrl: `/products/${productId}`,
+        linkObj = {
+          apiUrl: "/api/scan/productToBox",
           productId,
-          boxId: secondScannedItemId
+          boxId: secondScannedItemId,
+          type1: "product",
+          type2: "box",
+          prevLocation: this.getPrevLocation(type)
         };
-
-        if (isEmpty(prevLocation)) {
-          return this.props.linkProduct(obj, "box", history);
-        }
-        this.props.relinkProduct(obj, "box", prevLocation, history);
-
         break;
 
       default:
@@ -215,9 +214,9 @@ class LinkFromProduct extends Component {
           info: "You can only link Products to Boxes and ShelfSpot",
           color: "red"
         });
-        this.props.serverMsg(errorMsg);
-        break;
+        return this.props.serverMsg(errorMsg);
     }
+    this.props.linkItems(linkObj, this.props.history);
   };
 
   // Toggle Camera ----------------------------------------------
@@ -270,5 +269,5 @@ const mapStateToProps = ({ ui, storage, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, getStorageIds, startGetProduct, linkProduct, relinkProduct }
+  { serverMsg, getStorageIds, startGetProduct, linkItems }
 )(withRouter(LinkFromProduct));

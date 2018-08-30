@@ -11,7 +11,7 @@ import Heading from "../../components/Heading";
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
-import { linkTwoItems, linkProduct, linkBox } from "../../actions/link";
+import { linkItems } from "../../actions/link";
 
 class LinkItems extends Component {
   state = {
@@ -26,7 +26,7 @@ class LinkItems extends Component {
     scanItem: "1"
   };
 
-  // BARCODE ----------------------------------------------
+  // SCAN LINK ----------------------------------------------
   handleErr = err => {
     console.log(err);
   };
@@ -57,10 +57,6 @@ class LinkItems extends Component {
 
       this.setState({ ...stateObj });
     }
-  };
-
-  handleClickUseCamera = () => {
-    this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
   resetItems = () => {
@@ -170,7 +166,12 @@ class LinkItems extends Component {
         return this.props.serverMsg(errorMsg);
     }
 
-    this.props.linkTwoItems(obj, history);
+    this.props.linkItems(obj, history);
+  };
+
+  // Toggle Camera ----------------------------------
+  handleClickUseCamera = () => {
+    this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
   render() {
@@ -199,5 +200,5 @@ class LinkItems extends Component {
 
 export default connect(
   null,
-  { linkTwoItems, serverMsg, linkProduct, linkBox }
+  { linkItems, serverMsg }
 )(withRouter(LinkItems));

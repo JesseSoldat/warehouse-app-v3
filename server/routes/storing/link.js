@@ -116,8 +116,7 @@ module.exports = (app, io) => {
   //-------------------------------- RELINKING ------------------------------------
   // Product -> Shelf Spot -----------------------------
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
-    const { obj, prevLocation } = req.body;
-    const { productId, shelfSpotId } = obj;
+    const { prevLocation, productId, shelfSpotId } = obj.req.body;
 
     let oldRefQuery;
 
@@ -160,8 +159,7 @@ module.exports = (app, io) => {
 
   // Product -> Box ---------------------------------
   app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
-    const { obj, prevLocation } = req.body;
-    const { productId, boxId } = obj;
+    const { prevLocation, productId, boxId } = obj.req.body;
 
     let oldRefQuery;
 
