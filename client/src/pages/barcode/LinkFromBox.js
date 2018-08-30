@@ -14,7 +14,7 @@ import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
-import { linkProduct, linkBox } from "../../actions/link";
+import { linkItems } from "../../actions/link";
 import { startGetProducts } from "../../actions/product";
 
 class LinkFromBox extends Component {
@@ -23,7 +23,6 @@ class LinkFromBox extends Component {
     location: null,
     title: "",
     productId: "",
-    historyUrl: "",
     // scan -------------
     scanning: false,
     result: ["Please Scan the Second Item..."],
@@ -61,19 +60,10 @@ class LinkFromBox extends Component {
         page: 0
       });
 
-      // No location
-      let historyUrl = `/box/${boxId}?type=box`;
-      // Have location
-      if (location === "true") {
-        const { storageId, rackId, shelfId, shelfSpotId } = match.params;
-        historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
-      }
-
       this.setState({
         title: "Link Product to Box",
         boxId,
         type,
-        historyUrl,
         location,
         firstScannedItemId: boxId
       });
@@ -99,27 +89,33 @@ class LinkFromBox extends Component {
     this.setState({ ...obj });
   };
 
+  // Link Box to ShelfSpot -------------------------
+  // OK
   handleLink = e => {
     e.preventDefault();
 
     const linkObj = {
-      apiUrl: this.state.apiUrl,
-      boxId: this.props.match.params,
-      shelfSpotId: this.state.shelfSpotId
+      apiUrl: "/api/link/boxToShelfSpot",
+      boxId: this.props.match.params.boxId,
+      shelfSpotId: this.state.shelfSpotId,
+      type1: "box",
+      type2: "shelfSpot"
     };
 
-    this.props.linkBox(linkObj, this.props.history);
+    this.props.linkItems(linkObj, this.props.history);
   };
 
+  // Link Product To Box ---------------------------
+  // OK
   handleLinkProductToBox = productId => {
     const linkObj = {
       apiUrl: "/api/link/productToBox",
-      historyUrl: this.state.historyUrl,
       boxId: this.state.boxId,
       productId,
-      info: "link product to box"
+      type1: "box",
+      type2: "product"
     };
-    this.props.linkProduct(linkObj, this.props.history);
+    this.props.linkItems(linkObj, this.props.history);
   };
 
   // SCANNED LINK ----------------------------------------------
@@ -158,8 +154,9 @@ class LinkFromBox extends Component {
 
     const type2 = this.state.secondScannedItemType;
 
+    // LINK BOX WITH A PRODUCT
+    // OK
     if (type === "linkProductToBox") {
-      // LINK BOX WITH A PRODUCT
       if (type2 !== "product") {
         const errorMsg = buildClientMsg({
           info: "Please link the box with a product",
@@ -170,17 +167,18 @@ class LinkFromBox extends Component {
 
       if (location) {
         const linkObj = {
-          historyUrl: this.state.historyUrl,
           apiUrl: "/api/link/productToBox",
-          info: "product to box",
           productId: secondScannedItemId,
-          boxId: this.state.boxId
+          boxId: this.state.boxId,
+          type1: "box",
+          type2: "product"
         };
 
-        this.props.linkProduct(linkObj, this.props.history);
+        this.props.linkItems(linkObj, this.props.history);
       }
     }
     // LINK BOX WITH A SHELF SPOT
+    // OK
     else if (type === "linkBoxToSpot") {
       if (type2 !== "shelfSpot") {
         const errorMsg = buildClientMsg({
@@ -192,12 +190,13 @@ class LinkFromBox extends Component {
 
       const linkObj = {
         apiUrl: "/api/link/boxToShelfSpot",
-        info: "box to shelf spot",
         shelfSpotId: secondScannedItemId,
-        boxId: this.state.boxId
+        boxId: this.state.boxId,
+        type1: "box",
+        type2: "shelfSpot"
       };
 
-      this.props.linkBox(linkObj, this.props.history);
+      this.props.linkItems(linkObj, this.props.history);
     }
   };
 
@@ -256,5 +255,10 @@ const mapStateToProps = ({ ui, storage, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, getStorageIds, linkProduct, linkBox, startGetProducts }
+  {
+    serverMsg,
+    getStorageIds,
+    linkItems,
+    startGetProducts
+  }
 )(withRouter(LinkFromBox));

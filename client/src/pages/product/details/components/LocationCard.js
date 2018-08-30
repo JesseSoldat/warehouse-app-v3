@@ -12,6 +12,7 @@ const LocationCard = ({
   width = "12"
 }) => {
   // haveLocation true | false
+
   const { haveLocation, data } = productLocationObj;
   const divWidth = `col-xs-12 col-md-${width}`;
 

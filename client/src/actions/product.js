@@ -212,9 +212,7 @@ export const deleteProduct = (productId, history) => async dispatch => {
 
     dispatch(resetProducts());
 
-    if (options && options.update === "storage") {
-      dispatch(resetStorage());
-    }
+    dispatch(resetStorage());
 
     checkForMsg(msg, dispatch, options);
 

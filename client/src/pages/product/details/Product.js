@@ -98,7 +98,6 @@ class Product extends Component {
     else if (kind === "box") {
       const boxId = item._id;
       const obj = { boxId, kind, productId };
-      console.log("shelfSpot", obj);
       unlinkProduct(obj, product);
     }
   };

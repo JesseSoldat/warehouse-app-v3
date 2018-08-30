@@ -51,14 +51,15 @@ const linkBoxToProductPopLocIds = (productId, boxId) => {
       path: "productLocation.item",
       select: ["_id"],
       populate: {
-        path: "shelf",
+        path: "shelf shelfSpot",
         select: ["_id"],
         populate: {
-          path: "rack",
+          path: "shelf rack",
           select: ["_id"],
           populate: {
-            path: "storage",
-            select: ["_id"]
+            path: "rack storage",
+            select: ["_id"],
+            populate: { path: "storage" }
           }
         }
       }
@@ -70,7 +71,7 @@ const removeLocationFromProduct = productId => {
   return Product.findByIdAndUpdate(
     productId,
     {
-      $unset: { productLocation: "" }
+      $set: { productLocation: {} }
     },
     { new: true }
   );

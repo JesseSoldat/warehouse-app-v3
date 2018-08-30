@@ -92,7 +92,6 @@ class LinkItems extends Component {
         // PRODUCT TO SHELFSPOT
         if (type2 === "shelfSpot") {
           obj = {
-            historyUrl: `/products/${firstScannedItemId}`,
             apiUrl: "/api/scan/productToShelfSpot",
             productId: firstScannedItemId,
             shelfSpotId: secondScannedItemId,

@@ -83,10 +83,12 @@ const unlinkProductFromBox = (boxId, productId) => {
 const unlinkShelfSpotFromBox = boxId => {
   return Box.findByIdAndUpdate(
     boxId,
-    { $set: { shelfSpot: null } },
+    { $set: { shelfSpot: "" } },
     { new: true }
   );
 };
+
+// $unset: { productLocation: {} }
 
 module.exports = {
   getSingleBoxWithLocation,

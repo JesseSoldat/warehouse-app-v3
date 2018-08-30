@@ -184,12 +184,17 @@ class LinkFromProduct extends Component {
 
     const type2 = secondScannedItemType;
 
-    let linkObj;
+    let apiUrl, linkObj;
 
     switch (type2) {
+      // OK
       case "shelfSpot":
+        apiUrl =
+          type === "storeProduct"
+            ? "/api/link/productToShelfSpot"
+            : "/api/relink/productToShelfSpot";
         linkObj = {
-          apiUrl: "/api/scan/productToShelfSpot",
+          apiUrl,
           productId,
           shelfSpotId: secondScannedItemId,
           type1: "product",
@@ -197,10 +202,14 @@ class LinkFromProduct extends Component {
           prevLocation: this.getPrevLocation(type)
         };
         break;
-
+      //
       case "box":
+        apiUrl =
+          type === "storeProduct"
+            ? "/api/link/productToBox"
+            : "/api/relink/productToBox";
         linkObj = {
-          apiUrl: "/api/scan/productToBox",
+          apiUrl,
           productId,
           boxId: secondScannedItemId,
           type1: "product",

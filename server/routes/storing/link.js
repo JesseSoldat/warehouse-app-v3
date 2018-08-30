@@ -14,6 +14,7 @@ const {
 const {
   linkProductToShelfSpot,
   linkProductToShelfSpotPopIds,
+  linkBoxToShelfSpotPopIds,
   unlinkProductFromShelfSpot,
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
@@ -34,6 +35,7 @@ module.exports = (app, io) => {
   };
   // ------------------------- LINKING -------------------------------------
   // Product -> Shelf Spot -----------------------------
+  // OK
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
@@ -62,13 +64,14 @@ module.exports = (app, io) => {
   });
 
   // Product -> Box ---------------------------------
+  // OK
   app.patch("/api/link/productToBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
 
     try {
       const [product, box] = await Promise.all([
         linkBoxToProductPopLocIds(productId, boxId),
-        linkProductToBox(boxId, productId)
+        linkProductToBoxPopIds(boxId, productId)
       ]);
 
       emit(req.user._id);
@@ -86,12 +89,13 @@ module.exports = (app, io) => {
   });
 
   // Box -> Shelf Spot ---------------------------------
+  // OK
   app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
 
     try {
       const [shelfSpot, box] = await Promise.all([
-        linkBoxToShelfSpotPopulateIds(shelfSpotId, boxId),
+        linkBoxToShelfSpotPopIds(shelfSpotId, boxId),
         linkShelfSpotToBox(boxId, shelfSpotId)
       ]);
 
@@ -103,7 +107,7 @@ module.exports = (app, io) => {
         "hide-3"
       );
 
-      serverRes(res, 200, msg, { shelfSpot });
+      serverRes(res, 200, msg, { shelfSpot, box });
     } catch (err) {
       console.log("Err: PATCH/boxToShelfSpot,", err);
 
@@ -115,10 +119,9 @@ module.exports = (app, io) => {
 
   //-------------------------------- RELINKING ------------------------------------
   // Product -> Shelf Spot -----------------------------
+  // OK
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
-    const { prevLocation, productId, shelfSpotId } = obj.req.body;
-
-    let oldRefQuery;
+    const { prevLocation, productId, shelfSpotId } = req.body;
 
     try {
       // create query to remove old storage ref
@@ -126,15 +129,14 @@ module.exports = (app, io) => {
 
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
-        oldRefQuery = unlinkProductFromShelfSpot(oldShelfSpotId, productId);
+        await unlinkProductFromShelfSpot(oldShelfSpotId, productId);
       }
       if (kind === "box") {
         const oldBoxId = _id;
-        oldRefQuery = unlinkProductFromBox(oldBoxId, productId);
+        await unlinkProductFromBox(oldBoxId, productId);
       }
 
-      const [oldSpot, product, shelfSpot] = await Promise.all([
-        oldRefQuery,
+      const [product, shelfSpot] = await Promise.all([
         linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
         linkProductToShelfSpot(shelfSpotId, productId)
       ]);
@@ -158,10 +160,9 @@ module.exports = (app, io) => {
   });
 
   // Product -> Box ---------------------------------
+  // OK
   app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
-    const { prevLocation, productId, boxId } = obj.req.body;
-
-    let oldRefQuery;
+    const { prevLocation, productId, boxId } = req.body;
 
     try {
       // create query to remove old storage ref
@@ -169,15 +170,14 @@ module.exports = (app, io) => {
 
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
-        oldRefQuery = unlinkProductFromShelfSpot(oldShelfSpotId, productId);
+        await unlinkProductFromShelfSpot(oldShelfSpotId, productId);
       }
       if (kind === "box") {
         const oldBoxId = _id;
-        oldRefQuery = unlinkProductFromBox(oldBoxId, productId);
+        await unlinkProductFromBox(oldBoxId, productId);
       }
 
-      const [oldSpot, product, box] = await Promise.all([
-        oldRefQuery,
+      const [product, box] = await Promise.all([
         linkBoxToProductPopLocIds(productId, boxId),
         linkProductToBox(boxId, productId)
       ]);

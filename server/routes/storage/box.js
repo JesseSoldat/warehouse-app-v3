@@ -8,8 +8,11 @@ const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 // queries
-const { getSingleBoxWithLocation } = "../queries/box";
-const { linkBoxToShelfSpot, unlinkBoxFromShelfSpot } = "../queries/shelfSpot";
+const { getSingleBoxWithLocation } = require("../queries/box");
+const {
+  linkBoxToShelfSpot,
+  unlinkBoxFromShelfSpot
+} = require("../queries/shelfSpot");
 
 module.exports = (app, io) => {
   const emit = senderId => {

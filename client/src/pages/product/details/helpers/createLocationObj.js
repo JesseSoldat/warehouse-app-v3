@@ -3,6 +3,8 @@ import capitalizeFirstLetter from "../../../../utils/stringManipulation/capitali
 import isEmpty from "../../../../utils/validation/isEmpty";
 
 const createLocationObj = (productLocation, productId) => {
+  console.log(productLocation);
+
   let productLocationObj;
 
   const noProductLocation = {
@@ -11,7 +13,7 @@ const createLocationObj = (productLocation, productId) => {
   };
 
   // No Product Location -----------------------------------------
-  if (isEmpty(productLocation)) {
+  if (isEmpty(productLocation) || isEmpty(productLocation.item)) {
     productLocationObj = noProductLocation;
   }
   // Have a Product Location -----------------------------------------

@@ -8,9 +8,15 @@ const isAuth = require("../../middleware/isAuth");
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 // queries
-const { unlinkProductFromShelfSpot } = "../queries/shelfSpot";
-const { removeLocationFromProduct } = "../queries/product";
-const { unlinkProductFromBox, unlinkShelfSpotFromBox } = "../queries/box";
+const {
+  unlinkProductFromShelfSpot,
+  unlinkBoxFromShelfSpot
+} = require("../queries/shelfSpot");
+const { removeLocationFromProduct } = require("../queries/product");
+const {
+  unlinkProductFromBox,
+  unlinkShelfSpotFromBox
+} = require("../queries/box");
 
 module.exports = (app, io) => {
   const emit = senderId => {

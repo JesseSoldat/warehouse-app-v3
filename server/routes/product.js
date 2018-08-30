@@ -126,8 +126,6 @@ module.exports = (app, io) => {
         .populate({
           path: "productLocation.item",
           populate: {
-            // shelf = shelfSpot
-            // shelfSpot = box
             path: "shelf shelfSpot",
             populate: {
               path: "shelf rack",
