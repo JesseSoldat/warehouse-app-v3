@@ -12,7 +12,6 @@ import producerListData from "./helpers/producerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   startGetProducers,
@@ -20,22 +19,15 @@ import {
 } from "../../../actions/producer";
 
 class Producer extends Component {
-  state = {
-    bt1Disable: false,
-    bt2Disable: false
-  };
-
   // lifecycle --------------------------------------
   componentDidMount() {
     this.getProducers();
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/producers/:producerId");
   }
 
   // api calls ----------------------------------------
@@ -56,7 +48,6 @@ class Producer extends Component {
 
   // events -----------------------------------------
   onDeleteProduct = () => {
-    this.setState({ bt1Disable: true });
     const { startDeleteProducer, match, history } = this.props;
     const { producerId } = match.params;
     // api call
@@ -73,8 +64,7 @@ class Producer extends Component {
     // props
     const { loading, producerEntity, match } = this.props;
     const { producerId } = match.params;
-    // state
-    const { bt1Disable, bt2Disable } = this.state;
+
     let producer, content;
 
     if (producerEntity) {
@@ -92,8 +82,6 @@ class Producer extends Component {
         <Message cb={this.getProducers} />
         {producer && (
           <TopRowBtns
-            bt1Disable={bt1Disable}
-            bt2Disable={bt2Disable}
             btn1Cb={this.onDeleteProduct}
             btn2Cb={this.onEdit}
             showRightBtns={true}
@@ -115,5 +103,5 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetProducers, startDeleteProducer, serverMsg, changeRoute }
+  { startGetProducers, startDeleteProducer, serverMsg }
 )(Producer);

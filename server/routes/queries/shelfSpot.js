@@ -40,6 +40,16 @@ const linkProductToShelfSpotPopIds = (shelfSpotId, productId) => {
   });
 };
 
+const linkBoxToShelfSpot = (shelfSpotId, boxId) => {
+  return ShelfSpot.findByIdAndUpdate(
+    shelfSpotId,
+    {
+      $addToSet: { storedItems: { kind: "box", item: boxId } }
+    },
+    { new: true }
+  );
+};
+
 const linkBoxToShelfSpotPopIds = (shelfSpotId, boxId) => {
   return ShelfSpot.findByIdAndUpdate(
     shelfSpotId,
@@ -83,6 +93,7 @@ const unlinkBoxFromShelfSpot = (shelfSpotId, boxId) => {
 module.exports = {
   linkProductToShelfSpot,
   linkProductToShelfSpotPopIds,
+  linkBoxToShelfSpot,
   linkBoxToShelfSpotPopIds,
   unlinkProductFromShelfSpot,
   unlinkBoxFromShelfSpot

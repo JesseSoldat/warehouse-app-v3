@@ -5,7 +5,7 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import createEntity from "./helpers/createEntity";
 // actions
-import { loading } from "./ui";
+import { loading, showOverlay } from "./ui";
 // types
 export const PRODUCERS_REQUESTED = "PRODUCERS_REQUESTED";
 export const PRODUCERS_LOADED = "PRODUCERS_LOADED";
@@ -52,6 +52,7 @@ export const createProducer = producer => ({
 });
 
 export const startCreateProducer = (data, history) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.post("/api/producers", data);
 
@@ -79,6 +80,7 @@ export const startEditProducer = (
   data,
   history
 ) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.patch(`/api/producers/${producerId}`, data);
 
@@ -100,6 +102,7 @@ export const deleteProducer = producer => ({
 });
 
 export const startDeleteProducer = (producerId, history) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.delete(`/api/producers/${producerId}`);
 

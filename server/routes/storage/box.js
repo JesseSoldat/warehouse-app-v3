@@ -7,6 +7,9 @@ const isAuth = require("../../middleware/isAuth");
 const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
+// queries
+const { getSingleBoxWithLocation } = "../queries/box";
+const { linkBoxToShelfSpot, unlinkBoxFromShelfSpot } = "../queries/shelfSpot";
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -33,20 +36,7 @@ module.exports = (app, io) => {
   app.get("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
     try {
-      const box = await Box.findById(boxId)
-        .populate({
-          path: "shelfSpot",
-          populate: {
-            path: "shelf",
-            populate: {
-              path: "rack",
-              populate: {
-                path: "storage"
-              }
-            }
-          }
-        })
-        .populate("storedItems");
+      const box = await getSingleBoxWithLocation(boxId);
 
       serverRes(res, 200, null, box);
     } catch (err) {
@@ -57,7 +47,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // no location
+  // POST BOX with no location
   app.post("/api/boxes", isAuth, async (req, res) => {
     const box = new Box(req.body);
 
@@ -77,21 +67,12 @@ module.exports = (app, io) => {
     }
   });
 
-  // has location
+  // POST BOX with location
   app.post("/api/boxes/:shelfSpotId", isAuth, async (req, res) => {
     const { shelfSpotId } = req.params;
     const box = new Box(req.body);
     try {
-      await Promise.all([
-        box.save(),
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          {
-            $addToSet: { storedItems: { kind: "box", item: box._id } }
-          },
-          { new: true }
-        )
-      ]);
+      await Promise.all([box.save(), linkBoxToShelfSpot(shelfSpotId, box._id)]);
 
       emit(req.user._id);
 
@@ -145,14 +126,7 @@ module.exports = (app, io) => {
         // check if the box is stored on a shelf spot
         const shelfSpotId = box["shelfSpot"];
         if (shelfSpotId) {
-          await ShelfSpot.findByIdAndUpdate(
-            shelfSpotId,
-            {
-              $pull: { storedItems: { item: boxId } }
-            },
-            { new: true }
-          );
-          // unlink the box from the shelf spot
+          await unlinkBoxFromShelfSpot(shelfSpotId, boxId);
         }
         // delete the box
         box.remove();

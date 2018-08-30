@@ -19,6 +19,7 @@ class ImageCard extends Component {
           onMouseOver={() => this.toggleDeleteBtn(true)}
           onMouseOut={() => this.toggleDeleteBtn(false)}
           src={picUrl}
+          alt="product"
           style={{ width: "150px", height: "150px" }}
           className="img-thumbnail m-2"
         />

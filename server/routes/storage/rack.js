@@ -7,6 +7,9 @@ const isAuth = require("../../middleware/isAuth");
 const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
+// queries
+const { getSingleRack } = require("../queries/rack");
+const { linkRackToStorage } = require("../queries/storage");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -16,38 +19,13 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
-  // Get all of the racks
-  app.get("/api/racks", isAuth, async (req, res) => {
-    try {
-      const racks = await Rack.find({}).populate("shelves");
 
-      serverRes(res, 200, null, racks);
-    } catch (err) {
-      console.log("Err: GET/api/rack", err);
-
-      const msg = serverMsg("error", "fetch", "racks");
-      serverRes(res, 400, msg, null);
-    }
-  });
   // Get a single rack
   app.get("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
 
     try {
-      const rack = await Rack.findById(rackId)
-        .populate({
-          path: "shelves",
-          populate: {
-            path: "shelfSpots",
-            populate: {
-              path: "storedItems.item ",
-              populate: {
-                path: "storedItems"
-              }
-            }
-          }
-        })
-        .populate("storage");
+      const rack = await getSingleRack(rackId);
 
       serverRes(res, 200, null, rack);
     } catch (err) {
@@ -69,15 +47,7 @@ module.exports = (app, io) => {
 
       const [rack, storage] = await Promise.all([
         Rack.findById(newRack._id).populate("storage"),
-        Storage.findByIdAndUpdate(
-          storageId,
-          {
-            $addToSet: {
-              racks: newRack._id
-            }
-          },
-          { new: true }
-        )
+        linkRackToStorage(storageId, newRack._id)
       ]);
 
       const msg = msgObj("The rack was saved.", "blue", "hide-3");
@@ -97,11 +67,9 @@ module.exports = (app, io) => {
     const { rackId } = req.params;
     const update = req.body;
     try {
-      const rack = await Rack.findByIdAndUpdate(
-        rackId,
-        mergeObjFields("", update),
-        { new: true }
-      );
+      await Rack.findByIdAndUpdate(rackId, mergeObjFields("", update), {
+        new: true
+      });
 
       const msg = msgObj("The rack was updated.", "blue", "hide-3");
 

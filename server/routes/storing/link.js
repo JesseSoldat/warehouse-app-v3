@@ -1,3 +1,6 @@
+// models
+const Product = require("../../models/product");
+const Box = require("../../models/storage/box");
 // middleware
 const isAuth = require("../../middleware/isAuth");
 // utils

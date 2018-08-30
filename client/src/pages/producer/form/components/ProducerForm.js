@@ -19,7 +19,6 @@ class ProducerForm extends Component {
   // events ------------------------------------------
   onSubmit = e => {
     e.preventDefault();
-    this.refs.submitBtn.setAttribute("disabled", "disabled");
 
     // check if any of the required fields are empty
     const { isValid, errObj } = validateRequiredFieldsOnSubmit(
@@ -29,7 +28,6 @@ class ProducerForm extends Component {
 
     if (!isValid) {
       this.setState({ ...errObj });
-      this.refs.submitBtn.removeAttribute("disabled");
       return;
     }
 
@@ -66,7 +64,6 @@ class ProducerForm extends Component {
           cb={this.onChange}
         />
         <input
-          ref="submitBtn"
           type="submit"
           value="Submit"
           className="btn btn-info btn-block mt-4"

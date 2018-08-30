@@ -11,7 +11,6 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   startGetProducers,
@@ -25,11 +24,9 @@ class EditProducer extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/producers/edit/:producerId");
   }
 
   // api calls ------------------------------------------
@@ -54,25 +51,6 @@ class EditProducer extends Component {
     this.props.startEditProducer(producerId, formData, this.props.history);
   };
 
-  goBack = () => {
-    const { from, history, match } = this.props;
-    const { producerId } = match.params;
-    // user route reducer FROM property to navigate back
-    switch (from) {
-      case "/producers":
-        history.push("/producers");
-        return;
-
-      case "/producers/:producerId":
-        history.push(`/producers/${producerId}`);
-        return;
-
-      default:
-        history.push("/producers");
-        break;
-    }
-  };
-
   render() {
     const { loading, producerEntity, match } = this.props;
     const { producerId } = match.params;
@@ -85,8 +63,7 @@ class EditProducer extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (!producer) {
-    } else {
+    } else if (producer) {
       content = (
         <ProducerForm handleSubmit={this.handleSubmit} data={producer} />
       );
@@ -104,15 +81,14 @@ class EditProducer extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, router, producer }) => ({
+const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
   options: ui.options,
   loading: ui.loading,
-  from: router.from,
   producerEntity: producer.producerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetProducers, startEditProducer }
+  { serverMsg, startGetProducers, startEditProducer }
 )(withRouter(EditProducer));

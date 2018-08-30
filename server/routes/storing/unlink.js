@@ -7,6 +7,10 @@ const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
+// queries
+const { unlinkProductFromShelfSpot } = "../queries/shelfSpot";
+const { removeLocationFromProduct } = "../queries/product";
+const { unlinkProductFromBox, unlinkShelfSpotFromBox } = "../queries/box";
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -22,20 +26,8 @@ module.exports = (app, io) => {
 
     try {
       const [shelfSpot, product] = await Promise.all([
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          {
-            $pull: { storedItems: { item: productId } }
-          },
-          { new: true }
-        ),
-        Product.findByIdAndUpdate(
-          productId,
-          {
-            $unset: { productLocation: {} }
-          },
-          { new: true }
-        )
+        unlinkProductFromShelfSpot(shelfSpotId, productId),
+        removeLocationFromProduct(productId)
       ]);
 
       emit(req.user._id);
@@ -59,20 +51,8 @@ module.exports = (app, io) => {
     const { productId, boxId } = req.body;
     try {
       const [box, product] = await Promise.all([
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $pull: { storedItems: productId }
-          },
-          { new: true }
-        ),
-        Product.findByIdAndUpdate(
-          productId,
-          {
-            $unset: { productLocation: {} }
-          },
-          { new: true }
-        )
+        unlinkProductFromBox(boxId, productId),
+        removeLocationFromProduct(productId)
       ]);
 
       emit(req.user._id);
@@ -93,18 +73,8 @@ module.exports = (app, io) => {
     const { boxId, shelfSpotId } = req.body;
     try {
       const [box, shelfSpot] = await Promise.all([
-        Box.findByIdAndUpdate(
-          boxId,
-          { $set: { shelfSpot: null } },
-          { new: true }
-        ),
-        ShelfSpot.findByIdAndUpdate(
-          shelfSpotId,
-          {
-            $pull: { storedItems: { item: boxId } }
-          },
-          { new: true }
-        )
+        unlinkShelfSpotFromBox(boxId),
+        unlinkBoxFromShelfSpot(shelfSpotId, boxId)
       ]);
 
       emit(req.user._id);

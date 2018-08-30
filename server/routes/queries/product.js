@@ -64,4 +64,20 @@ const linkBoxToProductPopLocIds = (productId, boxId) => {
       }
     });
 };
-module.exports = { linkShelfSpotToProductPopLocIds, linkBoxToProductPopLocIds };
+
+// UNLINK ----------------------------------------------------------------
+const removeLocationFromProduct = productId => {
+  return Product.findByIdAndUpdate(
+    productId,
+    {
+      $unset: { productLocation: "" }
+    },
+    { new: true }
+  );
+};
+
+module.exports = {
+  linkShelfSpotToProductPopLocIds,
+  linkBoxToProductPopLocIds,
+  removeLocationFromProduct
+};

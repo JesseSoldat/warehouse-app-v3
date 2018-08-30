@@ -12,7 +12,6 @@ import customerListData from "./helpers/customerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   startGetCustomers,
@@ -20,22 +19,15 @@ import {
 } from "../../../actions/customer";
 
 class Customer extends Component {
-  state = {
-    bt1Disable: false,
-    bt2Disable: false
-  };
-
   // lifecycles ----------------------------------
   componentDidMount() {
     this.getCustomer();
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/customers/:customerId");
   }
 
   // api calls ----------------------------
@@ -55,8 +47,6 @@ class Customer extends Component {
 
   // events -------------------------------
   onDeleteCustomer = () => {
-    // don't let the user click more than once
-    this.setState({ bt1Disable: true });
     const { startDeleteCustomer, match, history } = this.props;
     const { customerId } = match.params;
     // api call
@@ -73,8 +63,6 @@ class Customer extends Component {
     // props
     const { loading, customerEntity, match } = this.props;
     const { customerId } = match.params;
-    // state
-    const { bt1Disable, bt2Disable } = this.state;
 
     let customer, content;
 
@@ -84,9 +72,7 @@ class Customer extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (!customer) {
-      content = <Spinner />;
-    } else {
+    } else if (customer) {
       content = <SingleFieldList data={customerListData(customer)} />;
     }
 
@@ -95,8 +81,6 @@ class Customer extends Component {
         <Message cb={this.getCustomer} />
         {customer && (
           <TopRowBtns
-            bt1Disable={bt1Disable}
-            bt2Disable={bt2Disable}
             btn1Cb={this.onDeleteCustomer}
             btn2Cb={this.onEditCustomer}
             showRightBtns={true}
@@ -118,5 +102,5 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetCustomers, startDeleteCustomer }
+  { serverMsg, startGetCustomers, startDeleteCustomer }
 )(Customer);

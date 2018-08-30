@@ -7,6 +7,8 @@ const isAuth = require("../../middleware/isAuth");
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
+// queries
+const { linkShelfToRackPopIds } = require("../queries/rack");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -16,19 +18,7 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
-  // Get all shelves
-  app.get("/api/shelves", isAuth, async (req, res) => {
-    try {
-      const shelves = await Shelf.find({});
 
-      serverRes(res, 200, null, shelves);
-    } catch (err) {
-      console.log("Err: GET/api/shelf", err);
-
-      const msg = serverMsg("error", "fetch", "shelves");
-      serverRes(res, 400, msg, null);
-    }
-  });
   // Get a single shelf
   app.get("/api/shelves/:shelfId", isAuth, async (req, res) => {
     const { shelfId } = req.params;
@@ -64,28 +54,7 @@ module.exports = (app, io) => {
     try {
       const [shelf, rack] = await Promise.all([
         newShelf.save(),
-        Rack.findByIdAndUpdate(
-          rackId,
-          {
-            $addToSet: {
-              shelves: newShelf._id
-            }
-          },
-          { new: true }
-        )
-          .populate({
-            path: "shelves",
-            populate: {
-              path: "shelfSpots",
-              populate: {
-                path: "storedItems.item ",
-                populate: {
-                  path: "storedItems"
-                }
-              }
-            }
-          })
-          .populate("storage")
+        linkShelfToRackPopIds(rackId, newShelf._id)
       ]);
 
       const msg = msgObj("The shelf was saved.", "blue", "hide-3");

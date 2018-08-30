@@ -11,7 +11,6 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   startGetProducers,
@@ -30,8 +29,6 @@ class CreateProducer extends Component {
     const { msg, options, serverMsg, changeRoute } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/producers/create");
   }
 
   // events -----------------------------------------------
@@ -52,7 +49,7 @@ class CreateProducer extends Component {
     let content;
     if (loading) {
       content = <Spinner />;
-    } else {
+    } else if (data) {
       content = <ProducerForm handleSubmit={this.handleSubmit} data={data} />;
     }
 
@@ -77,5 +74,5 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetProducers, startCreateProducer }
+  { serverMsg, startGetProducers, startCreateProducer }
 )(withRouter(CreateProducer));
