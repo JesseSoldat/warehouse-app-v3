@@ -12,7 +12,7 @@ import {
   RACK_REQUESTED,
   RACK_LOADED,
   RACK_UPDATE_ONE,
-  // box  DEPRECATE?
+  // box
   BOX_REQUESTED,
   BOX_LOADED,
   RACK_CREATE_ONE
@@ -20,7 +20,7 @@ import {
 
 const initialState = {
   storages: [],
-  storage: null, // will deprecate
+  storage: null,
   storageIdsEntity: null,
   storageIdsRequsted: false,
   storageIdsLoaded: false,
@@ -39,7 +39,6 @@ export default (state = initialState, action) => {
     type,
     search,
     storages,
-    storage,
     storageIdsEntity,
     rack,
     box,
@@ -56,7 +55,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storages: [],
-        storage: null, // will deprecate
+        storage: null,
         storageIdsEntity: null,
         storageIdsRequsted: false,
         storageIdsLoaded: false,
@@ -86,12 +85,14 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_UPDATE_ONE:
+      // console.log("STORAGE_UPDATE_ONE", update);
       const updateStorages = [...state.storages];
+      // API update = storage
       const updateIndex = updateStorages.findIndex(
-        obj => obj._id === storage._id
+        obj => obj._id === update._id
       );
 
-      updateStorages.splice(updateIndex, 1, storage);
+      updateStorages.splice(updateIndex, 1, update);
 
       return {
         ...state,
@@ -104,8 +105,8 @@ export default (state = initialState, action) => {
       storagesCopy = [...state.storages];
 
       if (storagesCopy.length > 0) {
-        // API update = { storage }
-        storagesCopy.push(update.storage);
+        // API update = storage
+        storagesCopy.push(update);
       }
       return {
         ...state,
@@ -115,7 +116,6 @@ export default (state = initialState, action) => {
 
     case STORAGE_DELETE_ONE:
       // console.log("STORAGE_DELETE_ONE", update);
-
       storagesCopy = [...state.storages];
       rackCopy = state.rack === null ? null : { ...state.rack };
 
@@ -215,7 +215,6 @@ export default (state = initialState, action) => {
             boxRequsted: false,
             boxLoaded: false
           };
-          break;
 
         default:
           break;
@@ -266,7 +265,6 @@ export default (state = initialState, action) => {
       // console.log("prev", state.rack);
       // console.log("update", update);
       // console.log("type:", storageType);
-
       let rackUpdate = { ...state.rack };
 
       switch (storageType) {

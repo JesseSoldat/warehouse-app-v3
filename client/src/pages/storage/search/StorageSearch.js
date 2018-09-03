@@ -39,12 +39,60 @@ class StorageSearch extends Component {
   };
 
   // events -------------------------------
-  onSelect = ({ target: { value } }) => {
-    this.setState({ selection: value });
-  };
+  onSelect = ({ target: { value } }) => this.setState({ selection: value });
 
-  onInput = ({ target: { value } }) => {
+  onInput = ({ target: { value } }) =>
     this.setState({ searchText: value, searchTextErr: null });
+
+  // url for navigation --------------------------------------
+  getlinksUrls = (item, storageType) => {
+    let link, storageId, rackId, shelfId, shelfSpotId, boxId;
+
+    switch (storageType) {
+      case "storage":
+        storageId = item._id;
+        link = `/storage/${storageId}?type=${storageType}`;
+        break;
+
+      case "rack":
+        storageId = item.storage;
+        rackId = item._id;
+        link = `/rack/${storageId}/${rackId}?type=${storageType}`;
+        break;
+
+      case "shelf":
+        storageId = item.rack.storage._id;
+        rackId = item.rack._id;
+        shelfId = item._id;
+        link = `/shelf/${storageId}/${rackId}/${shelfId}?type=${storageType}`;
+        break;
+
+      case "shelfSpot":
+        storageId = item.shelf.rack.storage._id;
+        rackId = item.shelf.rack._id;
+        shelfId = item.shelf._id;
+        shelfSpotId = item._id;
+        link = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${storageType}`;
+        break;
+
+      case "box":
+        boxId = item._id;
+
+        if (item && item.shelfSpot) {
+          storageId = item.shelfSpot.shelf.rack.storage._id;
+          rackId = item.shelfSpot.shelf.rack._id;
+          shelfId = item.shelfSpot.shelf._id;
+          shelfSpotId = item.shelfSpot._id;
+          return (link = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=${storageType}`);
+        }
+        link = `box/${boxId}?type=${storageType}`;
+        break;
+
+      default:
+        break;
+    }
+
+    return link;
   };
 
   render() {
@@ -59,24 +107,20 @@ class StorageSearch extends Component {
     };
 
     let content;
-    const length = search.length;
+    const { length } = search;
 
     if (loading) {
       content = <Spinner />;
     } else if (!loading && length === 0) {
       content = "No Results Found";
     } else if (length > 0) {
-      content = `Found ${length} results`;
-
-      console.log(search);
-
       const label = storageType + "Label";
       content = (
         <ul className="list-group list-group-flush">
           {search.map((item, i) => (
             <li key={i} className="list-group-item">
-              <Link to={`/storages/${item._id}?type=${storageType}`}>
-                {capitalizeFirstLetter(storageType)} {item[label]}
+              <Link to={this.getlinksUrls(item, storageType)}>
+                {item[label]}
               </Link>
             </li>
           ))}

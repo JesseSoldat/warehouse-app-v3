@@ -131,8 +131,7 @@ export const searchStorages = (search, storageType) => ({
 export const startSearchStorages = (
   storageType,
   searchBy,
-  searchText,
-  history
+  searchText
 ) => async dispatch => {
   try {
     const apiUrl = `/api/storages/search/${storageType}/${searchBy}/${searchText}`;
@@ -216,7 +215,6 @@ export const startGetBox = boxId => async dispatch => {
     const { msg, options, payload } = res.data;
 
     dispatch(boxLoaded(payload));
-    dispatch(loading(false));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -331,9 +329,9 @@ export const startCreateStorage = (
 };
 
 // Edit Storage -------------------------------------
-export const editStorage = storage => ({
+export const editStorage = update => ({
   type: STORAGE_UPDATE_ONE,
-  storage
+  update
 });
 
 export const editRack = (storageType, update) => ({

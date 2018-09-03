@@ -77,18 +77,51 @@ module.exports = (app, io) => {
           case "shelf":
             result = await Shelf.find({
               [searchBy]: new RegExp(searchText, "i")
+            }).populate({
+              path: "rack",
+              select: ["_id"],
+              populate: {
+                path: "storage",
+                select: ["_id"]
+              }
             });
             break;
 
           case "shelfSpot":
             result = await ShelfSpot.find({
               [searchBy]: new RegExp(searchText, "i")
+            }).populate({
+              path: "shelf",
+              select: ["_id"],
+              populate: {
+                path: "rack",
+                select: ["_id"],
+                populate: {
+                  path: "storage",
+                  select: ["_id"]
+                }
+              }
             });
             break;
 
           case "box":
             result = await Box.find({
               [searchBy]: new RegExp(searchText, "i")
+            }).populate({
+              path: "shelfSpot",
+              select: ["_id"],
+              populate: {
+                path: "shelf",
+                select: ["_id"],
+                populate: {
+                  path: "rack",
+                  select: ["_id"],
+                  populate: {
+                    path: "storage",
+                    select: ["_id"]
+                  }
+                }
+              }
             });
             break;
 
@@ -155,7 +188,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The storage was created.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { storage });
+      serverRes(res, 200, msg, storage);
     } catch (err) {
       console.log("ERR: POST/api/storage", err);
 
