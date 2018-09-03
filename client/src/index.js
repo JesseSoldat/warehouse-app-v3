@@ -24,7 +24,7 @@ const config = {
 };
 firebase.initializeApp(config);
 
-const Loading = () => "loading..";
+const Loading = () => "";
 const store = configureStore();
 
 const jsx = (

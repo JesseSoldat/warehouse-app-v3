@@ -1,122 +1,67 @@
 import React from "react";
-import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 
+// custom components
+import SiteLink from "./links/SiteLink";
+import MenuLink from "./links/MenuLink";
+import DropdownLink from "./links/DropdownLink";
+// actions
 import { startLogout } from "../actions/auth";
 
 const NavBar = ({ isAuth, startLogout }) => {
-  const brandRoute = isAuth ? "/dashboard" : "/";
   const brand = (
-    <Link className="navbar-brand" to={brandRoute}>
-      Warehouse
-    </Link>
+    <SiteLink
+      text="Warehouse"
+      url={isAuth ? "/dashboard" : "/"}
+      linkCss="navbar-brand"
+    />
   );
+
   const publicRoutes = (
     <ul className="navbar-nav ml-auto">
       <li className="nav-item mr-3 pb-sm-3 pt-sm-3 pt-md-0 pb-md-0">
-        <Link to="/login">
-          <i className="fa fa-sign-in-alt mr-2" />
-          Login
-        </Link>
+        <SiteLink text="Login" icon="fa-sign-in-alt" />
       </li>
       <li className="nav-item pb-sm-3 pb-md-0">
-        <Link to="/register">
-          <i className="fa fa-edit mr-2" />
-          Register
-        </Link>
+        <SiteLink text="Register" icon="fa-edit" />
       </li>
     </ul>
   );
+
   const privateRoutes = (
     <ul className="navbar-nav ml-auto">
       <li className="nav-item dropdown mr-3 pb-sm-3 pt-sm-3 pt-md-0 pb-md-0">
-        <Link
-          className="dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          to="/search"
-        >
-          <i className="fas fa-search mr-2" />
-          Search
-        </Link>
+        <MenuLink text="Search" icon="fa-search" />
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <Link className="dropdown-item" to="/products/search">
-            Products
-          </Link>
-          <Link className="dropdown-item" to="/producers/search">
-            Producers
-          </Link>
-          <Link className="dropdown-item" to="/customers/search">
-            Customers
-          </Link>
-          <Link className="dropdown-item" to="/storages/search">
-            Storages
-          </Link>
+          <DropdownLink text="Products" />
+          <DropdownLink text="Producers" />
+          <DropdownLink text="Customers" />
+          <DropdownLink text="Storages" />
         </div>
       </li>
 
       <li className="nav-item mr-3 pb-sm-3 pb-md-0">
-        <Link to="/barcode/scan">
-          <i className="fas fa-barcode mr-2" />
-          Scan
-        </Link>
+        <SiteLink text="Scan" icon="fa-barcode" />
       </li>
 
       <li className="nav-item dropdown mr-3 pb-sm-3 pb-md-0">
-        <Link
-          className="dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          to="/create"
-        >
-          <i className="fas fa-plus mr-2" />
-          Create
-        </Link>
+        <MenuLink text="Create" icon="fa-plus" />
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <Link className="dropdown-item" to="/products/create">
-            New Product
-          </Link>
-          <Link className="dropdown-item" to="/producers/create">
-            New Producer
-          </Link>
-          <Link className="dropdown-item" to="/customers/create">
-            New Customer
-          </Link>
-          <Link className="dropdown-item" to="/box/create?type=box">
-            New Storage Box
-          </Link>
+          <DropdownLink text="New Product" />
+          <DropdownLink text="New Producer" />
+          <DropdownLink text="New Customer" />
+          <DropdownLink text="New Storage Box" />
         </div>
       </li>
 
       <li className="nav-item mr-3 pb-sm-3 pb-md-0">
-        <Link to="/storages">
-          <i className="fas fa-archive mr-2" /> Storages
-        </Link>
+        <SiteLink text="Storage" icon="fa-archive" />
       </li>
 
       <li className="nav-item dropdown mr-3 pb-sm-3 pb-md-0">
-        <Link
-          className="dropdown-toggle"
-          role="button"
-          data-toggle="dropdown"
-          aria-haspopup="true"
-          aria-expanded="false"
-          to="/admin"
-        >
-          <i className="fas fa-unlock-alt mr-2" />
-          Admin
-        </Link>
+        <MenuLink text="Admin" icon="fa-unlock-alt" />
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <Link className="dropdown-item" to="/admin/manageUsers">
-            Manage User
-          </Link>
-          <Link className="dropdown-item" to="/admin/playground">
-            Playground
-          </Link>
+          <DropdownLink text="Manage User" />
         </div>
       </li>
 

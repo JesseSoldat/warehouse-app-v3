@@ -10,8 +10,6 @@ import ProductRoutes from "./routes/product";
 import ProducerRoutes from "./routes/producer";
 import CustomerRoutes from "./routes/customer";
 import StorageRoutes from "./routes/storage";
-// used to test concepts
-import PlayGroundRoutes from "./routes/playground";
 
 export const history = createHistory();
 
@@ -26,7 +24,6 @@ const AppRouter = () => (
       {ProducerRoutes}
       {CustomerRoutes}
       {StorageRoutes}
-      {PlayGroundRoutes}
     </Switch>
   </Router>
 );
