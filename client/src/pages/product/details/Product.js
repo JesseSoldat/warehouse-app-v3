@@ -23,7 +23,6 @@ import createCustomersArray from "./helpers/createCustomersArray";
 import createObjWithAllPropsAsArrays from "../../../utils/createObjWithAllPropsAsArrays";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   productLoaded,
@@ -212,7 +211,6 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
-    changeRoute,
     productLoaded,
     startGetProduct,
     deleteProduct,

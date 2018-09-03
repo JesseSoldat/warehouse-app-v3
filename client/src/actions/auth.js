@@ -12,6 +12,7 @@ export const AUTH_LOGIN = "AUTH_LOGIN";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
 
 export const startRegister = (user, history) => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.post("/api/register", user);
 
@@ -32,6 +33,7 @@ export const login = (_id, token) => ({
 });
 
 export const startLogin = user => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.post("/api/login", user);
 
@@ -98,6 +100,7 @@ export const startResetPassword = (passObj, history) => async dispatch => {
 };
 
 export const startLogout = () => async dispatch => {
+  dispatch(showOverlay(true));
   try {
     const res = await axios.delete("/api/logout");
     const { msg, options } = res.data;

@@ -8,17 +8,14 @@ import Heading from "../../components/Heading";
 // utils
 import clearUiMsg from "../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../actions/router";
 import { serverMsg } from "../../actions/ui";
 
 class Dashboard extends Component {
   // lifecycle
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg, true);
-    // update this page to be the FROM route
-    changeRoute("/dashboard");
   }
 
   render() {
@@ -82,5 +79,5 @@ const mapStateToProps = ({ ui }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute }
+  { serverMsg }
 )(Dashboard);

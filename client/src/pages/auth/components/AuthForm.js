@@ -19,7 +19,6 @@ import {
   startResendVerification,
   requestResetPasswordEmail
 } from "../../../actions/auth";
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 
 class AuthForm extends Component {
@@ -57,12 +56,8 @@ class AuthForm extends Component {
   }
 
   componentWillUnmount() {
-    const { parent, serverMsg, changeRoute } = this.props;
-    changeRoute(`/${parent}`);
-
-    if (parent === "login") {
-      serverMsg(null);
-    }
+    const { parent, serverMsg } = this.props;
+    if (parent === "login") serverMsg(null);
   }
 
   onChange = e => {
@@ -83,39 +78,22 @@ class AuthForm extends Component {
 
   onSubmit = e => {
     e.preventDefault();
-    this.refs.submitBtn.setAttribute("disabled", "disabled");
     const { isValid, errObj } = formIsValid(this.state, this.props.parent);
 
     if (!isValid) {
-      this.refs.submitBtn.removeAttribute("disabled");
       this.setState(() => ({ ...errObj }));
       return;
     }
 
-    switch (this.props.parent) {
-      case "register":
-        this.registerFlow();
-        break;
-
-      case "login":
-        this.loginFlow();
-        break;
-
-      default:
-        break;
-    }
+    this.props.parent === "register" ? this.registerFlow() : this.loginFlow();
   };
 
-  resendEmail = () => {
-    this.props.startResendVerification(this.state.email);
-  };
+  resendEmail = () => this.props.startResendVerification(this.state.email);
 
-  resetPassword = email => {
-    this.props.requestResetPasswordEmail(email);
-  };
+  resetPassword = email => this.props.requestResetPasswordEmail(email);
 
   render() {
-    const { loading, msg, parent } = this.props;
+    const { loading, parent } = this.props;
 
     const {
       username,
@@ -175,10 +153,9 @@ class AuthForm extends Component {
                 value={confirmPassword}
               />
             )}
-            <button ref="submitBtn" className="btn btn-info btn-block mt-4">
-              Submit
-            </button>
+            <button className="btn btn-info btn-block mt-4">Submit</button>
           </form>
+
           <div className="row">
             <div className="col-12 mt-4">
               <div id="accordion">
@@ -232,13 +209,6 @@ class AuthForm extends Component {
       );
     }
 
-    // when a message from the server arrives let the user resubmit the form
-    if (msg) {
-      if (this.refs && "submitBtn" in this.refs) {
-        this.refs.submitBtn.removeAttribute("disabled");
-      }
-    }
-
     return (
       <div>
         <Message />
@@ -251,8 +221,7 @@ class AuthForm extends Component {
 
 const mapStateToProps = ({ ui, auth }) => ({
   auth: auth,
-  loading: ui.loading,
-  msg: ui.msg
+  loading: ui.loading
 });
 
 export default connect(
@@ -260,7 +229,6 @@ export default connect(
   {
     startRegister,
     startLogin,
-    changeRoute,
     serverMsg,
     startResendVerification,
     requestResetPasswordEmail

@@ -11,7 +11,6 @@ import producerCardData from "./helpers/producerCardData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import { startGetProducers } from "../../../actions/producer";
 
@@ -22,11 +21,9 @@ class Producers extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/producers/search");
   }
 
   // api calls --------------------------------------
@@ -71,5 +68,5 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetProducers }
+  { serverMsg, startGetProducers }
 )(Producers);

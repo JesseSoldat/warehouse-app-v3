@@ -13,7 +13,6 @@ import createEditState from "./helpers/createEditState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import {
   productLoaded,
@@ -31,11 +30,9 @@ class EditProduct extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute } = this.props;
+    const { msg, options, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg(msg, options, serverMsg);
-    // update this page to be the FROM route
-    changeRoute("/products/edit/:productId");
   }
 
   // api calls ----------------------------------------
@@ -163,7 +160,6 @@ const mapStateToProps = ({ ui, router, product, producer, customer }) => {
 export default connect(
   mapStateToProps,
   {
-    changeRoute,
     serverMsg,
     productLoaded,
     startGetProducers,

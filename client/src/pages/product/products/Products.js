@@ -15,7 +15,6 @@ import onSelectBuildNewState from "./helpers/onSelectBuildNewState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { changeRoute } from "../../../actions/router";
 import { serverMsg } from "../../../actions/ui";
 import { startGetProducts, resetProducts } from "../../../actions/product";
 
@@ -39,9 +38,8 @@ class Products extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, changeRoute, resetProducts } = this.props;
+    const { msg, options, serverMsg, resetProducts } = this.props;
     clearUiMsg(msg, options, serverMsg);
-    changeRoute("/products/search");
     // clear reducer query state
     resetProducts();
   }
@@ -187,5 +185,5 @@ const mapStateToProps = ({ ui, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, changeRoute, startGetProducts, resetProducts }
+  { serverMsg, startGetProducts, resetProducts }
 )(Products);
