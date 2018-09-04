@@ -37,10 +37,12 @@ export const changeUserRole = (role, email) => async dispatch => {
 
     const { msg, options, payload } = res.data;
 
-    dispatch({ type: USER_CHANGE_ROLE, payload });
+    dispatch({ type: USER_CHANGE_ROLE, user: payload });
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
+    console.log("err", err);
+
     axiosResponseErrorHandling(err, dispatch, "change", "user-roles");
   }
 };

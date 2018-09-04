@@ -11,7 +11,7 @@ import UserTable from "./components/UserTable";
 import clearUiMsg from "../../utils/clearUiMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
-import { startGetAllUsers } from "../../actions/admin";
+import { startGetAllUsers, changeUserRole } from "../../actions/admin";
 
 class ManageUsers extends Component {
   // lifecycles -----------------------------------------
@@ -25,10 +25,13 @@ class ManageUsers extends Component {
   }
 
   // api calls ---------------------------------------------
-  getAllUser = () => this.props.startGetAllUsers();
+  getAllUser = () => {
+    if (this.props.users.length) return;
+    this.props.startGetAllUsers();
+  };
 
-  handleChange = (email, newRole) => {
-    console.log(email, newRole);
+  handleChange = (email, role) => {
+    this.props.changeUserRole(role, email);
   };
 
   handleDelete = email => {
@@ -72,5 +75,5 @@ const mapStateToProps = ({ ui, admin }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetAllUsers }
+  { serverMsg, startGetAllUsers, changeUserRole }
 )(ManageUsers);

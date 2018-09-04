@@ -14,6 +14,7 @@ connectToDb(io);
 app.use(bodyParser.json());
 
 require("./routes/user")(app);
+require("./routes/admin")(app);
 require("./routes/product")(app, io);
 require("./routes/customer")(app, io);
 require("./routes/producer")(app, io);
