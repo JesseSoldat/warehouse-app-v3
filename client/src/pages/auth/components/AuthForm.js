@@ -7,11 +7,12 @@ import TextInput from "../../../components/inputs/TextInput";
 import Spinner from "../../../components/Spinner";
 import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
+// custom components
+import ManageAccountAccordion from "./ManageAccountAccordion";
 // helpers
 import formIsValid from "../helpers/formIsValid";
 // utils
 import getUrlParameter from "../../../utils/getUrlParameter";
-import isEmail from "../../../utils/validation/isEmail";
 // actions
 import {
   startRegister,
@@ -156,55 +157,11 @@ class AuthForm extends Component {
             <button className="btn btn-info btn-block mt-4">Submit</button>
           </form>
 
-          <div className="row">
-            <div className="col-12 mt-4">
-              <div id="accordion">
-                <div className="card">
-                  <div className="card-header text-center" id="headingOne">
-                    <h5 className="mb-0">
-                      <button
-                        className="btn btn-outline-dark btn-block"
-                        data-toggle="collapse"
-                        data-target="#collapseOne"
-                        aria-expanded="true"
-                        aria-controls="collapseOne"
-                      >
-                        Mangage Your Account
-                      </button>
-                    </h5>
-                  </div>
-
-                  <div
-                    id="collapseOne"
-                    className="collapse"
-                    aria-labelledby="headingOne"
-                    data-parent="#accordion"
-                  >
-                    <div className="card-body">
-                      <small className="form-text text-muted mb-3">
-                        * Fill in your email in the input shown above and click
-                        either button to get started.
-                      </small>
-                      <button
-                        className="btn btn-outline-dark btn-sm btn-block"
-                        onClick={this.resendEmail}
-                        disabled={isEmail(email) ? false : true}
-                      >
-                        Resend verification Email
-                      </button>
-                      <button
-                        className="btn btn-outline-dark btn-sm btn-block"
-                        disabled={isEmail(email) ? false : true}
-                        onClick={() => this.resetPassword(email)}
-                      >
-                        Reset your Password
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
+          <ManageAccountAccordion
+            email={email}
+            resendEmail={this.resendEmail}
+            resetPassword={this.resetPassword}
+          />
         </div>
       );
     }

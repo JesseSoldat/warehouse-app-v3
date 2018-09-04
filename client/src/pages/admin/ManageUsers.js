@@ -25,12 +25,7 @@ class ManageUsers extends Component {
   }
 
   // api calls ---------------------------------------------
-  getAllUser = () => {
-    this.props.startGetAllUsers();
-  };
-
-  // cb for child components
-  createNewUser = () => {};
+  getAllUser = () => this.props.startGetAllUsers();
 
   handleChange = (email, newRole) => {
     console.log(email, newRole);
@@ -42,7 +37,6 @@ class ManageUsers extends Component {
 
   render() {
     const { loading, users } = this.props;
-
     let content;
 
     if (loading) {
@@ -53,7 +47,6 @@ class ManageUsers extends Component {
       content = (
         <UserTable
           users={users}
-          createNewUser={this.createNewUser}
           handleChange={this.handleChange}
           handleDelete={this.handleDelete}
         />

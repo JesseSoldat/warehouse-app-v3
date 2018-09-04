@@ -141,7 +141,7 @@ module.exports = app => {
   });
   // send mail ----------------------------------------------------
   // verify user with sent email
-  app.get("/api/confirmation/:token", async (req, res) => {
+  app.get("/api/comfirmEmail/:token", async (req, res) => {
     const { token } = req.params;
     try {
       if (!token) throw new Error();
@@ -204,11 +204,16 @@ module.exports = app => {
       }
 
       // Create a verification token, save it, and send email
-      const verficationToken = crypto.randomBytes(16).toString("hex");
-      user["verificationToken"].token = verficationToken;
-      await user.save();
+      const token = await crypto.randomBytes(16).toString("hex");
 
-      await sendMail(req, user, verficationToken, (type = "confirm"));
+      const verificationToken = new VerificationToken({
+        user: user._id,
+        token
+      });
+
+      await verificationToken.save();
+
+      await sendMail(req, user, token, (type = "confirm"));
 
       const msg = msgObj(
         `A verification email has been sent to ${user.email}.`,
@@ -216,6 +221,8 @@ module.exports = app => {
       );
       serverRes(res, 200, msg, null);
     } catch (err) {
+      console.log("ERR/resendVerification", err);
+
       const msg = msgObj(
         `An error occured while trying to verify the following email ${
           user.email
@@ -323,7 +330,7 @@ module.exports = app => {
   // get all of the users of the app
   app.get("/api/users", isAuth, async (req, res) => {
     try {
-      const users = await User.find({});
+      const users = await User.find();
       serverRes(res, 200, null, users);
     } catch (err) {
       const msg = serverMsg("error", "fetch", "users");

@@ -24,12 +24,13 @@ const sendMail = async (req, user, token, type) => {
 
   const prefix = process.env.NODE_ENV === "production" ? "https://" : "http://";
 
-  const url = type === "confirm" ? "/confirmation/" : "/resetPassword/";
+  const url = type === "confirm" ? "/api/comfirmEmail/" : "/resetPassword/";
 
-  const link =
-    type === "confirm"
-      ? `${prefix}${req.headers.host}${url}`
-      : `${prefix}${req.headers.host}${url}${token}`;
+  const comfirmUrl = `${prefix}${req.headers.host}${url}${token}`;
+
+  const resetPasswordUrl = `${prefix}${req.headers.host}${url}${token}`;
+
+  const link = type === "confirm" ? comfirmUrl : resetPasswordUrl;
 
   const mailOptions = {
     from: "no-reply@warehouse-application.com",

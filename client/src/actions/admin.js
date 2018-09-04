@@ -4,9 +4,11 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { loading } from "./ui";
+import { loading, showOverlay } from "./ui";
 // types
 export const GET_ALL_USERS = "GET_ALL_USERS";
+export const USER_CHANGE_ROLE = "USER_CHANGE_ROLE";
+export const USER_DELETE = "USER_DELETE";
 
 // Get all users -----------------------------
 export const getAllUsers = payload => ({
@@ -24,5 +26,21 @@ export const startGetAllUsers = () => async dispatch => {
     checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "fetch", "users");
+  }
+};
+
+// Change user role
+export const changeUserRole = (role, email) => async dispatch => {
+  dispatch(showOverlay(true));
+  try {
+    const res = await axios.patch("/api/changeUserRole", { email, role });
+
+    const { msg, options, payload } = res.data;
+
+    dispatch({ type: USER_CHANGE_ROLE, payload });
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "change", "user-roles");
   }
 };

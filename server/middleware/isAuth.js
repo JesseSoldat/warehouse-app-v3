@@ -31,6 +31,8 @@ const isAuth = async (req, res, next) => {
     req.token = token;
     next();
   } catch (err) {
+    console.log("isAuth err:", err);
+
     const msg = msgObj(
       "An error occured while authenticating. Please login again.",
       "blue"

@@ -1,5 +1,6 @@
 import React from "react";
 
+// custom component
 import AuthForm from "./components/AuthForm";
 
 const Auth = ({ location }) => {
