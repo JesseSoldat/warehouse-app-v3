@@ -11,7 +11,11 @@ import UserTable from "./components/UserTable";
 import clearUiMsg from "../../utils/clearUiMsg";
 // actions
 import { serverMsg } from "../../actions/ui";
-import { startGetAllUsers, changeUserRole } from "../../actions/admin";
+import {
+  startGetAllUsers,
+  changeUserRole,
+  deleteUser
+} from "../../actions/admin";
 
 class ManageUsers extends Component {
   // lifecycles -----------------------------------------
@@ -30,13 +34,9 @@ class ManageUsers extends Component {
     this.props.startGetAllUsers();
   };
 
-  handleChange = (email, role) => {
-    this.props.changeUserRole(role, email);
-  };
+  handleChange = (email, role) => this.props.changeUserRole(role, email);
 
-  handleDelete = email => {
-    console.log(email);
-  };
+  handleDelete = email => this.props.deleteUser(email);
 
   render() {
     const { loading, users } = this.props;
@@ -45,7 +45,13 @@ class ManageUsers extends Component {
     if (loading) {
       content = <Spinner />;
     } else if (!loading && !users.length) {
-      content = <h1>No Users</h1>;
+      content = (
+        <div className="row">
+          <div className="col-12">
+            <h3 className="text-center">No Users</h3>
+          </div>
+        </div>
+      );
     } else {
       content = (
         <UserTable
@@ -75,5 +81,5 @@ const mapStateToProps = ({ ui, admin }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetAllUsers, changeUserRole }
+  { serverMsg, startGetAllUsers, changeUserRole, deleteUser }
 )(ManageUsers);

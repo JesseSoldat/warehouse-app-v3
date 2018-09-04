@@ -1,5 +1,6 @@
 // models
 const User = require("../models/user");
+const AuthToken = require("../models/tokens/authToken");
 // middleware
 const isAuth = require("../middleware/isAuth");
 // utils
@@ -38,6 +39,35 @@ module.exports = app => {
     } catch (err) {
       const msg = serverMsg("error", "update", "user role");
       serverRes(res, 400, msg, null);
+    }
+  });
+
+  // delete a user
+  app.patch("/api/deleteUser", async (req, res) => {
+    const { email } = req.body;
+
+    try {
+      const user = await User.findOne({ email });
+
+      const userId = user._id;
+
+      await Promise.all([
+        AuthToken.findOneAndRemove({ user: userId }),
+        user.remove()
+      ]);
+
+      const msg = msgObj(
+        `The user with email ${email} was deleted.`,
+        "blue",
+        "hide-3"
+      );
+
+      serverRes(res, 200, msg, { userId });
+    } catch (err) {
+      console.log("ERR/deleteUser", err);
+
+      const msg = serverMsg("error", "delete", "user");
+      return serverRes(res, 400, msg, null);
     }
   });
 

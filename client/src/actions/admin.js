@@ -46,3 +46,19 @@ export const changeUserRole = (role, email) => async dispatch => {
     axiosResponseErrorHandling(err, dispatch, "change", "user-roles");
   }
 };
+
+// Delete user
+export const deleteUser = email => async dispatch => {
+  dispatch(showOverlay(true));
+  try {
+    const res = await axios.patch("/api/deleteUser", { email });
+
+    const { msg, options, payload } = res.data;
+
+    dispatch({ type: USER_DELETE, userId: payload.userId });
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "delete", "user");
+  }
+};
