@@ -30,9 +30,17 @@ const ManageAccountAccordion = ({ email, resendEmail, resetPassword }) => {
               data-parent="#accordion"
             >
               <div className="card-body">
-                <small className="form-text text-muted mb-3">
+                <small className="form-text text-muted mb-1">
                   * Fill in your email in the input shown above and click either
                   button to get started.
+                </small>
+                <small className="form-text text-muted mb-1">
+                  * If you do not recieve the email first check your spam
+                  folder.
+                </small>
+                <small className="form-text text-muted mb-3">
+                  * Add <b>jlab.development.coding@gmail.com</b> to your
+                  contacts if you still have not revieved the email.
                 </small>
                 <button
                   className="btn btn-outline-dark btn-sm btn-block"

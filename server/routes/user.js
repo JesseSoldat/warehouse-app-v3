@@ -61,7 +61,9 @@ module.exports = app => {
       await sendMail(req, user, token, (type = "confirm"));
 
       const msg = msgObj(
-        `A verification email has been sent to ${user.email}.`,
+        `A verification email has been sent to ${
+          user.email
+        }. If you have not recieved the email try adding jlab.development.coding@gmail.com to your contacts.`,
         "blue",
         "register"
       );
@@ -216,7 +218,9 @@ module.exports = app => {
       await sendMail(req, user, token, (type = "confirm"));
 
       const msg = msgObj(
-        `A verification email has been sent to ${user.email}.`,
+        `A verification email has been sent to ${
+          user.email
+        }. If you have not recieved the email try adding jlab.development.coding@gmail.com to your contacts.`,
         "blue"
       );
       serverRes(res, 200, msg, null);

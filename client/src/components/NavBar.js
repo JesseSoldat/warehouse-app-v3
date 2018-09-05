@@ -17,12 +17,15 @@ const NavBar = ({ isAuth, startLogout }) => {
     />
   );
 
+  // responsive css for all of the navbar links
+  const navLinkClass = "nav-item mr-2 py-2 my-md-0 py-md-0";
+
   const publicRoutes = (
     <ul className="navbar-nav ml-auto">
-      <li className="nav-item mr-3 pb-sm-3 pt-sm-3 pt-md-0 pb-md-0">
+      <li className={`${navLinkClass} mt-2 mt-md-0`}>
         <SiteLink text="Login" icon="fa-sign-in-alt" />
       </li>
-      <li className="nav-item pb-sm-3 pb-md-0">
+      <li className={navLinkClass}>
         <SiteLink text="Register" icon="fa-edit" />
       </li>
     </ul>
@@ -30,7 +33,7 @@ const NavBar = ({ isAuth, startLogout }) => {
 
   const privateRoutes = (
     <ul className="navbar-nav ml-auto">
-      <li className="nav-item dropdown mr-3 pb-sm-3 pt-sm-3 pt-md-0 pb-md-0">
+      <li className={`dropdown ${navLinkClass} mt-2 mt-md-0`}>
         <MenuLink text="Search" icon="fa-search" />
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           <DropdownLink text="Products" />
@@ -40,11 +43,11 @@ const NavBar = ({ isAuth, startLogout }) => {
         </div>
       </li>
 
-      <li className="nav-item mr-3 pb-sm-3 pb-md-0">
+      <li className={navLinkClass}>
         <SiteLink text="Scan" icon="fa-barcode" />
       </li>
 
-      <li className="nav-item dropdown mr-3 pb-sm-3 pb-md-0">
+      <li className={`dropdown ${navLinkClass}`}>
         <MenuLink text="Create" icon="fa-plus" />
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           <DropdownLink text="New Product" />
@@ -54,18 +57,18 @@ const NavBar = ({ isAuth, startLogout }) => {
         </div>
       </li>
 
-      <li className="nav-item mr-3 pb-sm-3 pb-md-0">
+      <li className={navLinkClass}>
         <SiteLink text="Storage" icon="fa-archive" />
       </li>
 
-      <li className="nav-item dropdown mr-3 pb-sm-3 pb-md-0">
+      <li className={`dropdown ${navLinkClass}`}>
         <MenuLink text="Admin" icon="fa-unlock-alt" />
         <div className="dropdown-menu" aria-labelledby="navbarDropdown">
           <DropdownLink text="Manage User" />
         </div>
       </li>
 
-      <li className="nav-item mr-3 pb-sm-3 pb-md-0">
+      <li className={navLinkClass}>
         <a href="" onClick={e => onStartLogout(e)}>
           <i className="fas fa-sign-out-alt mr-2" />
           Logout

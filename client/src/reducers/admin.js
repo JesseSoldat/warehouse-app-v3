@@ -22,7 +22,6 @@ export default (state = initialState, action) => {
       updateAllUsers = [...state.allUsers];
       userIndex = updateAllUsers.findIndex(userObj => userObj._id === userId);
       updateAllUsers.splice(userIndex, 1);
-      console.log(updateAllUsers);
 
       return { ...state, allUsers: updateAllUsers };
 

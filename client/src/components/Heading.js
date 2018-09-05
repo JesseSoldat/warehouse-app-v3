@@ -6,14 +6,14 @@ import capitalizeEachWordOfString from "../utils/stringManipulation/capitalizeEa
 const Heading = ({ title }) => {
   return (
     <div className="row mb-3">
-      <div className="col-12">
+      <div className="col-12 text-center">
         <h1
-          className=" text-center pb-2 d-block d-sm-none"
+          className="pb-2 d-block d-sm-none"
           style={{ fontWeight: "lighter" }}
         >
           {title && capitalizeEachWordOfString(title)}
         </h1>
-        <h1 className="display-4 text-center pb-2 d-none d-sm-block">
+        <h1 className="display-4 pb-2 d-none d-sm-block">
           {title && capitalizeEachWordOfString(title)}
         </h1>
       </div>
