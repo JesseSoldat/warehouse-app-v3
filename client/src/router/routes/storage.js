@@ -5,7 +5,6 @@ import PrivateRoute from "../PrivateRoute";
 import Storages from "../../pages/storage/storages/Storages";
 import Details from "../../pages/storage/storages/Details";
 import Storage from "../../pages/storage/storage/Storage";
-import Box from "../../pages/storage/box/Box";
 import StorageCreate from "../../pages/storage/form/StorageCreate";
 import StorageEdit from "../../pages/storage/form/StorageEdit";
 import StorageSearch from "../../pages/storage/search/StorageSearch";
@@ -128,20 +127,6 @@ const StorageRoutes = [
     key="shelfSpot"
     path="/shelfSpot/:storageId/:rackId/:shelfId/:shelfSpotId"
     component={Storage}
-    exact={true}
-  />,
-  // NO LOCATION
-  <PrivateRoute
-    key="/box/:boxId"
-    path="/box/:boxId"
-    component={Box}
-    exact={true}
-  />,
-  // HAVE LOCATION
-  <PrivateRoute
-    key="/box/location/:boxId"
-    path="/box/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
-    component={Box}
     exact={true}
   />
 ];

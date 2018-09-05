@@ -9,6 +9,7 @@ import { loading, showOverlay } from "./ui";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
+export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
@@ -20,11 +21,6 @@ export const RACK_REQUESTED = "RACK_REQUESTED";
 export const RACK_LOADED = "RACK_LOADED";
 export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
-
-export const BOX_REQUESTED = "BOX_REQUESTED";
-export const BOX_LOADED = "BOX_LOADED";
-
-export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 
 export const RESET_STORAGE = "RESET_STORAGE";
 // RESET Storage -----------------------------
@@ -192,33 +188,6 @@ export const startGetRack = rackId => async dispatch => {
     checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "get", "rack");
-  }
-};
-
-// GET SINGLE BOX
-export const boxRequested = () => ({
-  type: BOX_REQUESTED
-});
-
-export const boxLoaded = box => ({
-  type: BOX_LOADED,
-  storageType: "box",
-  box
-});
-
-export const startGetBox = boxId => async dispatch => {
-  dispatch(loading(true));
-  dispatch(boxRequested());
-  try {
-    const res = await axios.get(`/api/boxes/${boxId}`);
-
-    const { msg, options, payload } = res.data;
-
-    dispatch(boxLoaded(payload));
-
-    checkForMsg(msg, dispatch, options);
-  } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "get", "box");
   }
 };
 

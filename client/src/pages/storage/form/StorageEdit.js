@@ -13,10 +13,10 @@ import getUrlParameter from "../../../utils/getUrlParameter";
 import {
   startGetStorages,
   startGetRack,
-  startGetBox,
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
+import { startGetBox } from "../../../actions/box";
 import { serverMsg } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";

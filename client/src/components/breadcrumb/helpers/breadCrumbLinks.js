@@ -23,6 +23,7 @@ export const breadCrumbLinks = ids => {
     rack: `/rack/${storageId}/${rackId}?type=rack`,
     shelf: `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`,
     shelfspot: `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`,
+    boxes: "/boxes/search",
     box: `/box/${boxId}?type=box`,
     boxLocation: `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`,
     store: "/barcode/scan?type=linkBoxToSpot"

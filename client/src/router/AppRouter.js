@@ -10,6 +10,7 @@ import ProductRoutes from "./routes/product";
 import ProducerRoutes from "./routes/producer";
 import CustomerRoutes from "./routes/customer";
 import StorageRoutes from "./routes/storage";
+import BoxRoutes from "./routes/box";
 
 export const history = createHistory();
 
@@ -24,6 +25,7 @@ const AppRouter = () => (
       {ProducerRoutes}
       {CustomerRoutes}
       {StorageRoutes}
+      {BoxRoutes}
     </Switch>
   </Router>
 );

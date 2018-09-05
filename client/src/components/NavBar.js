@@ -40,6 +40,7 @@ const NavBar = ({ isAuth, startLogout }) => {
           <DropdownLink text="Producers" />
           <DropdownLink text="Customers" />
           <DropdownLink text="Storages" />
+          <DropdownLink text="Boxes" />
         </div>
       </li>
 

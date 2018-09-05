@@ -6,6 +6,7 @@ const linkUrls = {
   Producers: "/producers/search",
   Customers: "/customers/search",
   Storages: "/storages/search",
+  Boxes: "/boxes/search",
   Scan: "/barcode/scan",
   Create: "/create",
   NewProduct: "/products/create",

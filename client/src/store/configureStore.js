@@ -8,6 +8,7 @@ import productReducer from "../reducers/product";
 import customerReducer from "../reducers/customer";
 import producerReducer from "../reducers/producer";
 import storageReducer from "../reducers/storage";
+import boxReducer from "../reducers/box";
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
@@ -20,7 +21,8 @@ export default () => {
       product: productReducer,
       customer: customerReducer,
       producer: producerReducer,
-      storage: storageReducer
+      storage: storageReducer,
+      box: boxReducer
     }),
     {},
     composeEnhancers(applyMiddleware(thunk))

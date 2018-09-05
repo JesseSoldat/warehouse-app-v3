@@ -12,9 +12,6 @@ import {
   RACK_REQUESTED,
   RACK_LOADED,
   RACK_UPDATE_ONE,
-  // box
-  BOX_REQUESTED,
-  BOX_LOADED,
   RACK_CREATE_ONE
 } from "../actions/storage";
 
@@ -27,9 +24,6 @@ const initialState = {
   rack: null,
   rackRequsted: false,
   rackLoaded: false,
-  box: null,
-  boxRequsted: false,
-  boxLoaded: false,
   search: [],
   storageType: null
 };
@@ -41,7 +35,6 @@ export default (state = initialState, action) => {
     storages,
     storageIdsEntity,
     rack,
-    box,
     storageType,
     update
   } = action;
@@ -62,9 +55,6 @@ export default (state = initialState, action) => {
         rack: null,
         rackRequsted: false,
         rackLoaded: false,
-        box: null,
-        boxRequsted: false,
-        boxLoaded: false,
         search: [],
         storageType: null
       };
@@ -204,18 +194,6 @@ export default (state = initialState, action) => {
           }
           break;
 
-        case "box":
-          // API update = { boxId }
-          return {
-            ...state,
-            rack: null,
-            rackRequsted: false,
-            rackLoaded: false,
-            box: null,
-            boxRequsted: false,
-            boxLoaded: false
-          };
-
         default:
           break;
       }
@@ -225,8 +203,7 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         storage: null,
         storageIdsEntity: null,
-        rack: rackCopy,
-        box: null
+        rack: rackCopy
       };
 
     case STORAGE_IDS_REQUESTED:
@@ -294,12 +271,6 @@ export default (state = initialState, action) => {
           });
           break;
 
-        case "box":
-          // API { update, boxId }
-          //  const { boxId, boxLabel } = update;
-          rackUpdate = null;
-          break;
-
         default:
           break;
       }
@@ -311,7 +282,6 @@ export default (state = initialState, action) => {
         ...state,
         storageType,
         rack: rackUpdate,
-        box: null,
         storageIdsEntity: null
       };
 
@@ -358,22 +328,6 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         rack: rackCopy,
         storageIdsEntity: null
-      };
-
-    case BOX_REQUESTED:
-      return {
-        ...state,
-        boxRequsted: true,
-        boxLoaded: false
-      };
-
-    case BOX_LOADED:
-      return {
-        ...state,
-        box,
-        storageType,
-        boxRequsted: false,
-        boxLoaded: true
       };
 
     default:

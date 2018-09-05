@@ -154,6 +154,12 @@ const BreadCrumb = ({ match }) => {
       text = createText("ShelfSpot");
       break;
 
+    // BOXES
+    case "/boxes/search":
+      link1 = createLink("Dashboard");
+      text = createText("Boxes");
+      break;
+
     case "/box/:boxId":
       link1 = createLink("Store");
       text = createText("Box");

@@ -10,7 +10,8 @@ import Heading from "../../../components/Heading";
 import BoxTable from "./components/BoxTable";
 // actions
 import { serverMsg } from "../../../actions/ui";
-import { startGetRack, startGetBox } from "../../../actions/storage";
+import { startGetRack } from "../../../actions/storage";
+import { startGetBox } from "../../../actions/box";
 import { unlinkBox } from "../../../actions/unlink";
 
 class Box extends Component {
