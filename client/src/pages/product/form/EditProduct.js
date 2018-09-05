@@ -145,14 +145,13 @@ class EditProduct extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, router, product, producer, customer }) => {
+const mapStateToProps = ({ ui, product, producer, customer }) => {
   return {
     product: product.product,
     productEntity: product.productEntity,
     loading: ui.loading,
     options: ui.options,
     msg: ui.msg,
-    from: router.from,
     producers: producer.producers,
     customers: customer.customers
   };

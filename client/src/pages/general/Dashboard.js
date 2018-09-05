@@ -1,83 +1,41 @@
-import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import { connect } from "react-redux";
+import React from "react";
 
-// components
+// common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
-// utils
-import clearUiMsg from "../../utils/clearUiMsg";
-// actions
-import { serverMsg } from "../../actions/ui";
+import BasicCard from "../../components/BasicCard";
 
-class Dashboard extends Component {
-  // lifecycle
-  componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg(msg, options, serverMsg, true);
-  }
+const Dashboard = () => {
+  return (
+    <div className="container">
+      <Message />
+      <Heading title="Dashboard" />
+      <div className="row">
+        <div className="col-12 d-flex flex-wrap justify-content-between my-4">
+          <BasicCard
+            title="Search & Edit Products"
+            subtitle="Search and edit products here"
+            link="/products/search"
+            linkText="Search!"
+          />
 
-  render() {
-    return (
-      <div className="container">
-        <Message />
-        <Heading title="Dashboard" />
-        <div className="row">
-          <div className="col-12 d-flex flex-wrap justify-content-between my-4">
-            <div
-              className="card mr-1 ml-1 mb-3 col-xs-12 col-md-5 col-lg-3"
-              style={{ minHeight: "11rem" }}
-            >
-              <div className="card-body d-flex flex-column align-items-center">
-                <h5 className="card-title text-center pt-2">
-                  Search & Edit Products
-                </h5>
-                <p className="card-text">Search and edit products here</p>
-                <Link to="/products/search">Go!</Link>
-              </div>
-            </div>
+          <BasicCard
+            title="Create Product"
+            subtitle="Get starting by adding some products"
+            link="/products/create"
+            linkText="Create Product!"
+          />
 
-            <div
-              className="card mr-1 ml-1 mb-3 col-xs-12 col-md-5 col-lg-3"
-              style={{ minHeight: "11rem" }}
-            >
-              <div className="card-body d-flex flex-column align-items-center">
-                <h5 className="card-title text-center pt-2">Create Product</h5>
-                <p className="card-text">
-                  Get starting by adding some products
-                </p>
-                <Link className="card-link" to="/products/create">
-                  Create Product!
-                </Link>
-              </div>
-            </div>
-
-            <div
-              className="card mr-1 ml-1 mb-3 col-xs-12 col-md-5 col-lg-3"
-              style={{ minHeight: "11rem" }}
-            >
-              <div className="card-body d-flex flex-column align-items-center">
-                <h5 className="card-title text-center pt-2">Maintenance</h5>
-                <p className="card-text">Create and edit Storage places here</p>
-                <Link className="card-link" to="/storages">
-                  Go!
-                </Link>
-              </div>
-            </div>
-          </div>
+          <BasicCard
+            title="Maintenance"
+            subtitle="Create and edit Storage places here"
+            link="/storages"
+            linkText="Go!"
+          />
         </div>
       </div>
-    );
-  }
-}
+    </div>
+  );
+};
 
-const mapStateToProps = ({ ui }) => ({
-  msg: ui.msg,
-  options: ui.options
-});
-
-export default connect(
-  mapStateToProps,
-  { serverMsg }
-)(Dashboard);
+export default Dashboard;

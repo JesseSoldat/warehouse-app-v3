@@ -26,6 +26,8 @@ module.exports = (app, io) => {
   app.get("/api/products", isAuth, async (req, res) => {
     const shouldBeIntegers = ["skip", "limit", "page"];
     const query = stringParamsToIntegers(req.query, shouldBeIntegers);
+    console.log(query);
+
     const mongoQuery = buildProductsQuery(query);
 
     try {

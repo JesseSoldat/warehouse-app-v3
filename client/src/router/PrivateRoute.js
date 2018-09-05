@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import { Route, Redirect } from "react-router-dom";
 
 import NavBar from "../components/NavBar";
-import BreadCrumb from "../components/BreadCrumb";
+import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 import OverlaySpinner from "../components/OverlaySpinner";
 import Socket from "../components/Socket";
 

@@ -32,8 +32,7 @@ class Products extends Component {
   // lifecycles -------------------------------------
   componentDidMount() {
     const { query } = this.props;
-    // fetch the products using inital  query params
-    // stored in product reducer
+    // fetch the products using inital query params stored in product reducer
     this.getProducts(query);
   }
 
@@ -64,19 +63,14 @@ class Products extends Component {
     // every time we change the select options
     // we reset the intial state using specific
     // values for the UI input type
-    this.setState(() => ({
-      ...newState
-    }));
+    this.setState(() => ({ ...newState }));
   };
 
   // Value Changed CB ----------------------------------
-  onChangeSearchValue = e => {
+  onChangeSearchValue = e =>
     this.setState({ value: e.target.value, valueErr: "" });
-  };
 
-  onChangeSearchValue2 = e => {
-    this.setState({ value2: e.target.value });
-  };
+  onChangeSearchValue2 = e => this.setState({ value2: e.target.value });
 
   // Check Box CB - should use second input? ----------
   handleUseValue2 = e => {
@@ -99,8 +93,7 @@ class Products extends Component {
     // search for products without storage locations
     // orphan search does not need a value
     if (!value && !orphanSearch) {
-      this.setState({ valueErr: "This field can not be empty." });
-      return;
+      return this.setState({ valueErr: "This field can not be empty." });
     }
 
     const { query } = this.props;
@@ -139,6 +132,13 @@ class Products extends Component {
     if (loading) {
       content = <Spinner />;
     } else if (!products || !products.length) {
+      content = (
+        <div className="row">
+          <div className="col-12 text-center">
+            <h3 className="mt-3">No products found</h3>
+          </div>
+        </div>
+      );
     } else {
       content = <CardList data={productCardData(products)} />;
     }

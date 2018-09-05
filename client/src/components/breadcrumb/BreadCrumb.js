@@ -1,38 +1,16 @@
 import React from "react";
 import { withRouter, Link } from "react-router-dom";
 
+// helpers
+import breadCrumbLinks from "./helpers/breadCrumbLinks";
+
 const BreadCrumb = ({ match }) => {
   const { params, path } = match;
-  const {
-    productId,
-    producerId,
-    customerId,
-    storageId,
-    rackId,
-    shelfId,
-    shelfSpotId,
-    boxId
-  } = params;
+
+  // params holds all of the ids
+  const allLinks = breadCrumbLinks(params);
 
   let link1, link2, link3, link4, link5, text;
-
-  const allLinks = {
-    dashboard: "/dashboard",
-    products: "/products/search",
-    product: `/products/${productId}`,
-    producers: "/producers/search",
-    producer: `/producers/${producerId}`,
-    customers: "/customers/search",
-    customer: `/customers/${customerId}`,
-    storages: "/storages",
-    storage: `/storage/${storageId}`,
-    rack: `/rack/${storageId}/${rackId}?type=rack`,
-    shelf: `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`,
-    shelfspot: `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`,
-    box: `/box/${boxId}?type=box`,
-    boxLocation: `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`,
-    store: "/barcode/scan?type=linkBoxToSpot"
-  };
 
   const createLink = (name, linkKey = null) => {
     let key = linkKey ? linkKey : name.toLowerCase();

@@ -11,10 +11,13 @@ const buildMongoQuery = query => {
     case "number":
     case "date":
       if (!value2) {
-        mongoQuery[keyName] = value;
-      } else {
-        mongoQuery = { $and: [{ [keyName]: { $gte: value, $lte: value2 } }] };
+        // 86400000 milliseconds in a day
+        // 1 Day = 1 * 24 * 60 * 60 * 1000;
+        value2 = parseInt(value) + 86400000;
       }
+
+      mongoQuery = { $and: [{ [keyName]: { $gte: value, $lte: value2 } }] };
+
       break;
 
     case "string":
