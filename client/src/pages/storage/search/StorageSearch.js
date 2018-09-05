@@ -10,8 +10,6 @@ import Spinner from "../../../components/Spinner";
 import SearchInputs from "./components/SearchInputs";
 // actions
 import { searchStorages, startSearchStorages } from "../../../actions/storage";
-// utils
-import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 
 class StorageSearch extends Component {
   state = {
@@ -102,8 +100,7 @@ class StorageSearch extends Component {
       Storage: "storage",
       Rack: "rack",
       Shelf: "shelf",
-      ShelfSpot: "shelfSpot",
-      Box: "box"
+      ShelfSpot: "shelfSpot"
     };
 
     let content;

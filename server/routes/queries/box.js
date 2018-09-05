@@ -1,8 +1,26 @@
 // models
 const Box = require("../../models/storage/box");
+// utils
+const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
+
 // GET ---------------------------------------------------------
-const getBoxesWithLocation = () => {
-  return Box.find()
+const getBoxesWithLocation = query => {
+  const shouldBeIntegers = ["skip", "limit", "page"];
+  const { skip, limit, page } = stringParamsToIntegers(query, shouldBeIntegers);
+
+  const { value, searchOption } = query;
+
+  const mongoQuery = {};
+
+  if (searchOption === "boxLabel") {
+    mongoQuery[searchOption] = { $regex: new RegExp(value), $options: "i" };
+  } else if (searchOption === "orphans") {
+    mongoQuery["shelfSpot"] = null;
+  }
+
+  return Box.find(mongoQuery)
+    .skip(skip)
+    .limit(limit)
     .populate({
       path: "shelfSpot",
       populate: {

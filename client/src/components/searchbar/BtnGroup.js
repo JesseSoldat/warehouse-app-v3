@@ -1,6 +1,6 @@
 import React from "react";
 
-const BtnGroup = ({ onSearchProduct, onResetFilter }) => {
+const BtnGroup = ({ onSearch, onResetFilter }) => {
   return (
     <div className="d-flex flex-wrap mx-auto pt-3 pt-md-0">
       <span>
@@ -8,7 +8,7 @@ const BtnGroup = ({ onSearchProduct, onResetFilter }) => {
           <small />
         </label>
         <button
-          onClick={onSearchProduct}
+          onClick={onSearch}
           className="btn btn-primary mr-1"
           type="button"
         >

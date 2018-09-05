@@ -9,11 +9,11 @@ const NumberRangeInput = ({
   onChangeSearchValue,
   onChangeSearchValue2,
   handleUseValue2,
-  onSearchProduct
+  onSearch
 }) => {
   const onEnterKey = e => {
     if (e.key === "Enter") {
-      onSearchProduct();
+      onSearch();
     }
   };
 

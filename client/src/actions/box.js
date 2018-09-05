@@ -23,11 +23,11 @@ export const boxesLoaded = boxes => ({
   boxes
 });
 
-export const startGetBoxes = () => async dispatch => {
+export const startGetBoxes = query => async dispatch => {
   dispatch(loading(true));
   dispatch(boxesRequested());
   try {
-    const res = await axios.get(`/api/boxes`);
+    const res = await axios.post(`/api/boxes`, { query });
 
     const { msg, options, payload } = res.data;
 

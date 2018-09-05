@@ -1,14 +1,16 @@
 import React from "react";
 
-// components
-import SelectInput from "./searchBar/SelectInput";
-import FilterTextInput from "./searchBar/FilterTextInput";
+// common components
+import SelectInput from "../../../../components/searchbar/SelectInput";
+import FilterTextInput from "../../../../components/searchbar/FilterTextInput";
+import BlankInput from "../../../../components/searchbar/BlankInput";
+import BtnGroup from "../../../../components/searchbar/BtnGroup";
+// custom components
 import NumberRangeInput from "./searchBar/NumberRangeInput";
 import DateRangeInput from "./searchBar/DateRangeInput";
-import BlankInput from "./searchBar/BlankInput";
-import BtnGroup from "./searchBar/BtnGroup";
 
 const SearchBar = ({
+  searchBarFields,
   // option
   searchOption,
   // option CB
@@ -27,13 +29,14 @@ const SearchBar = ({
   // type
   searchType,
   // btn CB
-  onSearchProduct,
+  onSearch,
   onResetFilter
 }) => {
   return (
     <div className="row mb-3">
       <div className="col-12 d-flex flex-wrap mx-auto align-items-center">
         <SelectInput
+          searchBarFields={searchBarFields}
           searchOption={searchOption}
           info="Select an option to search by."
           onChangeSearchOption={onChangeSearchOption}
@@ -45,7 +48,7 @@ const SearchBar = ({
             valueErr={valueErr}
             info="Enter the text you want to filter by."
             onChangeSearchValue={onChangeSearchValue}
-            onSearchProduct={onSearchProduct}
+            onSearch={onSearch}
           />
         )}
 
@@ -59,7 +62,7 @@ const SearchBar = ({
             onChangeSearchValue={onChangeSearchValue}
             onChangeSearchValue2={onChangeSearchValue2}
             handleUseValue2={handleUseValue2}
-            onSearchProduct={onSearchProduct}
+            onSearch={onSearch}
           />
         )}
 
@@ -83,10 +86,7 @@ const SearchBar = ({
           />
         )}
 
-        <BtnGroup
-          onSearchProduct={onSearchProduct}
-          onResetFilter={onResetFilter}
-        />
+        <BtnGroup onSearch={onSearch} onResetFilter={onResetFilter} />
       </div>
     </div>
   );

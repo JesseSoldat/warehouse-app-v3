@@ -1,9 +1,11 @@
 import React from "react";
 
-// helpers
-import searchBarFields from "../../helpers/searchBarFields";
-
-const SelectInput = ({ searchOption, info, onChangeSearchOption }) => {
+const SelectInput = ({
+  searchBarFields,
+  searchOption,
+  info,
+  onChangeSearchOption
+}) => {
   const options = searchBarFields.map(field => (
     <option key={field.value} value={field.value}>
       {field.name}
@@ -24,7 +26,6 @@ const SelectInput = ({ searchOption, info, onChangeSearchOption }) => {
           </div>
           <select
             className="custom-select"
-            id="productSelect"
             value={searchOption}
             style={{ height: "37.61px" }}
             onChange={onChangeSearchOption}

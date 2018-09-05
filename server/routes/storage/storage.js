@@ -104,27 +104,6 @@ module.exports = (app, io) => {
             });
             break;
 
-          case "box":
-            result = await Box.find({
-              [searchBy]: new RegExp(searchText, "i")
-            }).populate({
-              path: "shelfSpot",
-              select: ["_id"],
-              populate: {
-                path: "shelf",
-                select: ["_id"],
-                populate: {
-                  path: "rack",
-                  select: ["_id"],
-                  populate: {
-                    path: "storage",
-                    select: ["_id"]
-                  }
-                }
-              }
-            });
-            break;
-
           default:
             throw Error("Wrong type provided");
         }

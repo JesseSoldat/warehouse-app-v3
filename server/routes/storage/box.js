@@ -23,9 +23,10 @@ module.exports = (app, io) => {
     });
   };
 
-  app.get("/api/boxes", isAuth, async (req, res) => {
+  app.post("/api/boxes", isAuth, async (req, res) => {
+    const { query } = req.body;
     try {
-      const boxes = await getBoxesWithLocation();
+      const boxes = await getBoxesWithLocation(query);
 
       serverRes(res, 200, null, boxes);
     } catch (err) {

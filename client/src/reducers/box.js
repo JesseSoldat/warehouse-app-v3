@@ -13,7 +13,15 @@ const initialState = {
   box: null,
   boxRequsted: false,
   boxLoaded: false,
-  query: {}
+  query: {
+    page: 1,
+    skip: 0,
+    limit: 20,
+    count: 0, // can be filtered
+    totalCount: 0, // all of the boxes
+    value: null,
+    searchType: "string"
+  }
 };
 
 export default (state = initialState, action) => {

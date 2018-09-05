@@ -10,9 +10,7 @@ const BlankInput = ({ placeholder = "", valueErr = "", info = "" }) => {
         </label>
         <div className="input-group">
           <div className="input-group-prepend">
-            <label className="input-group-text" htmlFor="productInput">
-              Text
-            </label>
+            <label className="input-group-text">Text</label>
           </div>
           <input
             disabled

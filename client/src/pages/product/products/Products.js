@@ -9,6 +9,7 @@ import CardList from "../../../components/CardList";
 import Paginator from "./components/Paginator";
 import SearchBar from "./components/SearchBar";
 // helpers
+import searchBarFields from "./helpers/searchBarFields";
 import productCardData from "./helpers/productCardData";
 import createGetProductsQuery from "./helpers/createGetProductsQuery";
 import onSelectBuildNewState from "./helpers/onSelectBuildNewState";
@@ -88,7 +89,7 @@ class Products extends Component {
   };
 
   // SearchBtn CB ----------------------------------------
-  onSearchProduct = e => {
+  onSearch = e => {
     const { value, orphanSearch } = this.state;
     // search for products without storage locations
     // orphan search does not need a value
@@ -111,7 +112,8 @@ class Products extends Component {
       value: "",
       value2: "",
       valueErr: "",
-      disableValue2: true
+      disableValue2: true,
+      orphanSearch: false
     }));
 
     // set intial query settings
@@ -148,6 +150,7 @@ class Products extends Component {
         <Heading title="Products" />
         <Paginator query={query} cb1={this.getProducts} />
         <SearchBar
+          searchBarFields={searchBarFields}
           // option
           searchOption={this.state.searchOption}
           // value
@@ -164,7 +167,7 @@ class Products extends Component {
           handleDateChange={this.handleDateChange}
           handleDateChange2={this.handleDateChange2}
           handleUseValue2={this.handleUseValue2}
-          onSearchProduct={this.onSearchProduct}
+          onSearch={this.onSearch}
           onResetFilter={this.onResetFilter}
         />
         <div style={{ height: "15px" }} />
