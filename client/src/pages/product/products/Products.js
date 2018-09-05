@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-// components
+// common components
 import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
@@ -125,7 +125,6 @@ class Products extends Component {
   };
 
   render() {
-    // props
     const { loading, products, query } = this.props;
     let content;
 

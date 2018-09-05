@@ -1,7 +1,23 @@
 // models
 const Box = require("../../models/storage/box");
 // GET ---------------------------------------------------------
-const getSingleBoxWithLocation = boxId => {
+const getBoxesWithLocation = () => {
+  return Box.find()
+    .populate({
+      path: "shelfSpot",
+      populate: {
+        path: "shelf",
+        populate: {
+          path: "rack",
+          populate: {
+            path: "storage"
+          }
+        }
+      }
+    })
+    .populate("storedItems");
+};
+const getBoxWithLocation = boxId => {
   return Box.findById(boxId)
     .populate({
       path: "shelfSpot",
@@ -91,7 +107,8 @@ const unlinkShelfSpotFromBox = boxId => {
 // $unset: { productLocation: {} }
 
 module.exports = {
-  getSingleBoxWithLocation,
+  getBoxesWithLocation,
+  getBoxWithLocation,
   linkProductToBox,
   linkProductToBoxPopIds,
   linkShelfSpotToBox,

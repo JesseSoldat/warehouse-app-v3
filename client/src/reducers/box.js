@@ -12,11 +12,12 @@ const initialState = {
   boxesLoaded: false,
   box: null,
   boxRequsted: false,
-  boxLoaded: false
+  boxLoaded: false,
+  query: {}
 };
 
 export default (state = initialState, action) => {
-  const { type, box, boxes } = action;
+  const { type, box, boxes, query } = action;
   switch (type) {
     case BOXES_REQUESTED:
       return {

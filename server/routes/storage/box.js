@@ -8,7 +8,7 @@ const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 // queries
-const { getSingleBoxWithLocation } = require("../queries/box");
+const { getBoxesWithLocation, getBoxWithLocation } = require("../queries/box");
 const {
   linkBoxToShelfSpot,
   unlinkBoxFromShelfSpot
@@ -25,7 +25,7 @@ module.exports = (app, io) => {
 
   app.get("/api/boxes", isAuth, async (req, res) => {
     try {
-      const boxes = await Box.find({});
+      const boxes = await getBoxesWithLocation();
 
       serverRes(res, 200, null, boxes);
     } catch (err) {
@@ -39,7 +39,7 @@ module.exports = (app, io) => {
   app.get("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
     try {
-      const box = await getSingleBoxWithLocation(boxId);
+      const box = await getBoxWithLocation(boxId);
 
       serverRes(res, 200, null, box);
     } catch (err) {

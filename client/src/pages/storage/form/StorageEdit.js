@@ -365,12 +365,12 @@ class StorageEdit extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, storage }) => ({
+const mapStateToProps = ({ ui, storage, box }) => ({
   msg: ui.msg,
   loading: ui.loading,
   storages: storage.storages,
   rack: storage.rack,
-  box: storage.box
+  box: box.box
 });
 
 export default connect(

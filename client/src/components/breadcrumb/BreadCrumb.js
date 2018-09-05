@@ -161,7 +161,7 @@ const BreadCrumb = ({ match }) => {
       break;
 
     case "/box/:boxId":
-      link1 = createLink("Store");
+      link1 = createLink("Boxes");
       text = createText("Box");
       break;
 
@@ -247,7 +247,8 @@ const BreadCrumb = ({ match }) => {
 
     // No location
     case "/box/edit/:boxId":
-      link1 = createLink("Box");
+      link1 = createLink("Boxes");
+      link2 = createLink("Box");
       text = createText("Edit");
       break;
 

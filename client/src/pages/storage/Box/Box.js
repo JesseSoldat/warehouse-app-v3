@@ -109,10 +109,10 @@ class Box extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, storage }) => ({
+const mapStateToProps = ({ ui, storage, box }) => ({
   msg: ui.msg,
   rack: storage.rack,
-  box: storage.box,
+  box: box.box,
   loading: ui.loading
 });
 
