@@ -6,7 +6,8 @@ import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
 import CardList from "../../../components/CardList";
-import Paginator from "./components/Paginator";
+import Paginator from "../../../components/Paginator";
+// custom components
 import SearchBar from "./components/SearchBar";
 // helpers
 import searchBarFields from "./helpers/searchBarFields";
@@ -34,7 +35,7 @@ class Products extends Component {
   componentDidMount() {
     const { query } = this.props;
     // fetch the products using inital query params stored in product reducer
-    this.getProducts(query);
+    this.getApiData(query);
   }
 
   componentWillUnmount() {
@@ -45,7 +46,7 @@ class Products extends Component {
   }
 
   // api calls ----------------------------------
-  getProducts = query => {
+  getApiData = query => {
     // query changes based on where it is called from
     const { startGetProducts } = this.props;
 
@@ -80,13 +81,10 @@ class Products extends Component {
   };
 
   // Date Changed CB -------------------------------------
-  handleDateChange = e => {
+  handleDateChange = e =>
     this.setState({ value: e.startOf("day"), valueErr: "" });
-  };
 
-  handleDateChange2 = e => {
-    this.setState({ value2: e.endOf("day") });
-  };
+  handleDateChange2 = e => this.setState({ value2: e.endOf("day") });
 
   // SearchBtn CB ----------------------------------------
   onSearch = e => {
@@ -100,7 +98,7 @@ class Products extends Component {
     const { query } = this.props;
     query["page"] = 1;
     query["skip"] = 0;
-    this.getProducts(query);
+    this.getApiData(query);
   };
 
   // Reset form and refetch all products -----------------
@@ -123,7 +121,7 @@ class Products extends Component {
       limit: 20
     };
     // fetch all of the products
-    this.getProducts(query);
+    this.getApiData(query);
   };
 
   render() {
@@ -148,7 +146,13 @@ class Products extends Component {
       <div className="container">
         <Message cb={this.getProducts} />
         <Heading title="Products" />
-        <Paginator query={query} cb1={this.getProducts} />
+        <Paginator
+          label1="Product"
+          label2="Products"
+          query={query}
+          getApiData={this.getApiData}
+          cb1={this.getProducts}
+        />
         <SearchBar
           searchBarFields={searchBarFields}
           // option

@@ -1,6 +1,6 @@
 import React from "react";
 
-const Paginator = ({ query, cb1 }) => {
+const Paginator = ({ label1, label2, query, getApiData }) => {
   const { page, skip, limit, count } = query;
 
   const goBack = () => {
@@ -9,7 +9,7 @@ const Paginator = ({ query, cb1 }) => {
     query.skip = skip - 20;
     if (skip === 0) return;
 
-    cb1(query);
+    getApiData(query);
   };
 
   const goFoward = () => {
@@ -18,7 +18,7 @@ const Paginator = ({ query, cb1 }) => {
     query.skip = skip + 20;
     if (skip + limit > count) return;
 
-    cb1(query);
+    getApiData(query);
   };
 
   const renderBtn = direction => {
@@ -60,9 +60,9 @@ const Paginator = ({ query, cb1 }) => {
       <div className="col-12">
         <small className="form-text text-muted mb-2 ml-4 inline-block mr-2">
           <strong>{count + " "}</strong>
-          {count !== 1 ? "products" : "product"} found
+          {count !== 1 ? label2 : label1} found
         </small>
-        <nav aria-label="Products navigation" className="d-inline-block ml-2">
+        <nav className="d-inline-block ml-2">
           <ul className="pagination">
             {leftBtn}
             <li className="page-item">

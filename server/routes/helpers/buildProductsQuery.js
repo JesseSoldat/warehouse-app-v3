@@ -1,11 +1,7 @@
-const buildMongoQuery = query => {
+const buildProductsQuery = query => {
   let { searchType, value, value2, keyName } = query;
 
-  let mongoQuery = {};
-
-  // console.log("keyName:", keyName);
-  // console.log("value:", value);
-  // console.log("value2:", value2);
+  const mongoQuery = {};
 
   switch (searchType) {
     case "number":
@@ -34,4 +30,4 @@ const buildMongoQuery = query => {
   return mongoQuery;
 };
 
-module.exports = buildMongoQuery;
+module.exports = buildProductsQuery;

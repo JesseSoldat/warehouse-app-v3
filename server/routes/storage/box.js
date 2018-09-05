@@ -1,14 +1,16 @@
 // models
 const Box = require("../../models/storage/box");
-const ShelfSpot = require("../../models/storage/shelfSpot");
 // middleware
 const isAuth = require("../../middleware/isAuth");
+// helpers
+const buildBoxesQuery = require("../helpers/buildBoxesQuery");
 // utils
 const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
+const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
-const { getBoxesWithLocation, getBoxWithLocation } = require("../queries/box");
+const { getBoxWithLocation } = require("../queries/box");
 const {
   linkBoxToShelfSpot,
   unlinkBoxFromShelfSpot
@@ -23,12 +25,40 @@ module.exports = (app, io) => {
     });
   };
 
-  app.post("/api/boxes", isAuth, async (req, res) => {
+  app.post("/api/boxes/search", isAuth, async (req, res) => {
     const { query } = req.body;
-    try {
-      const boxes = await getBoxesWithLocation(query);
 
-      serverRes(res, 200, null, boxes);
+    const shouldBeIntegers = ["skip", "limit", "page"];
+    const { skip, limit } = stringParamsToIntegers(query, shouldBeIntegers);
+
+    const mongoQuery = buildBoxesQuery(query);
+
+    try {
+      const [boxes, count, totalCount] = await Promise.all([
+        Box.find(mongoQuery)
+          .skip(skip)
+          .limit(limit)
+          .populate({
+            path: "shelfSpot",
+            populate: {
+              path: "shelf",
+              populate: {
+                path: "rack",
+                populate: {
+                  path: "storage"
+                }
+              }
+            }
+          })
+          .populate("storedItems"),
+        Box.find(mongoQuery).countDocuments(),
+        Box.find({}).countDocuments()
+      ]);
+
+      query.count = count;
+      query.totalCount = totalCount;
+
+      serverRes(res, 200, null, { boxes, query });
     } catch (err) {
       console.log("Err: GET/BOXES", err);
 

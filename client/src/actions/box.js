@@ -4,8 +4,9 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { loading, showOverlay } from "./ui";
+import { loading } from "./ui";
 // types
+export const BOXES_RESET = "BOXES_RESET";
 export const BOXES_REQUESTED = "BOXES_REQUESTED";
 export const BOXES_LOADED = "BOXES_LOADED";
 export const BOX_SEARCH = "BOX_SEARCH";
@@ -13,21 +14,27 @@ export const BOX_REQUESTED = "BOX_REQUESTED";
 export const BOX_LOADED = "BOX_LOADED";
 export const BOX_DELETE_ONE = "BOX_DELETE_ONE";
 
+// Rest Boxes
+export const resetBox = () => ({
+  type: BOXES_RESET
+});
+
 // Get All Boxes
 export const boxesRequested = () => ({
   type: BOXES_REQUESTED
 });
 
-export const boxesLoaded = boxes => ({
+export const boxesLoaded = ({ boxes, query }) => ({
   type: BOXES_LOADED,
-  boxes
+  boxes,
+  query
 });
 
 export const startGetBoxes = query => async dispatch => {
   dispatch(loading(true));
   dispatch(boxesRequested());
   try {
-    const res = await axios.post(`/api/boxes`, { query });
+    const res = await axios.post("/api/boxes/search", { query });
 
     const { msg, options, payload } = res.data;
 

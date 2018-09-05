@@ -1,4 +1,5 @@
 import {
+  BOXES_RESET,
   BOXES_REQUESTED,
   BOXES_LOADED,
   BOX_REQUESTED,
@@ -27,6 +28,25 @@ const initialState = {
 export default (state = initialState, action) => {
   const { type, box, boxes, query } = action;
   switch (type) {
+    case BOXES_RESET:
+      return {
+        ...state,
+        boxes: [],
+        boxesRequsted: false,
+        boxesLoaded: false,
+        box: null,
+        boxRequsted: false,
+        boxLoaded: false,
+        query: {
+          page: 1,
+          skip: 0,
+          limit: 20,
+          count: 0, // can be filtered
+          totalCount: 0, // all of the boxes
+          value: null,
+          searchType: "string"
+        }
+      };
     case BOXES_REQUESTED:
       return {
         ...state,
@@ -39,7 +59,8 @@ export default (state = initialState, action) => {
         ...state,
         boxes,
         boxesRequsted: false,
-        boxesLoaded: true
+        boxesLoaded: true,
+        query
       };
 
     case BOX_REQUESTED:

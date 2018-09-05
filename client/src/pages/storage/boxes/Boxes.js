@@ -5,7 +5,8 @@ import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
 import CardList from "../../../components/CardList";
-// import Paginator from "./components/Paginator";
+import Paginator from "../../../components/Paginator";
+// custom components
 import SearchBar from "./components/SearchBar";
 // helpers
 import boxCardData from "./helpers/boxCardData";
@@ -126,7 +127,12 @@ class Boxes extends Component {
       <div className="container">
         <Message cb={this.getApiData} />
         <Heading title="Boxes" />
-        {/* <Paginator query={query} cb1={this.getProducts} />*/}
+        <Paginator
+          label1="Box"
+          label2="Boxes"
+          query={query}
+          getApiData={this.getApiData}
+        />
         <SearchBar
           searchBarFields={searchBarFields}
           searchOption={this.state.searchOption}

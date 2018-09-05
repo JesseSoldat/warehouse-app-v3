@@ -6,6 +6,7 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import storageApiUrl from "./helpers/storageApiUrl";
 // actions
 import { loading, showOverlay } from "./ui";
+import { resetBox } from "./box";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
@@ -284,9 +285,14 @@ export const startCreateStorage = (
         break;
     }
 
+    const dispatchRackActions = () => {
+      dispatch(createRack(type, payload));
+      dispatch(resetBox());
+    };
+
     type === "storage"
       ? dispatch(createStorage(payload))
-      : dispatch(createRack(type, payload));
+      : dispatchRackActions();
 
     // ORDER MATTERS
     checkForMsg(msg, dispatch, options);

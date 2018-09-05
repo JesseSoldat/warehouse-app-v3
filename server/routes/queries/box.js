@@ -1,40 +1,7 @@
 // models
 const Box = require("../../models/storage/box");
-// utils
-const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 
 // GET ---------------------------------------------------------
-const getBoxesWithLocation = query => {
-  const shouldBeIntegers = ["skip", "limit", "page"];
-  const { skip, limit, page } = stringParamsToIntegers(query, shouldBeIntegers);
-
-  const { value, searchOption } = query;
-
-  const mongoQuery = {};
-
-  if (searchOption === "boxLabel") {
-    mongoQuery[searchOption] = { $regex: new RegExp(value), $options: "i" };
-  } else if (searchOption === "orphans") {
-    mongoQuery["shelfSpot"] = null;
-  }
-
-  return Box.find(mongoQuery)
-    .skip(skip)
-    .limit(limit)
-    .populate({
-      path: "shelfSpot",
-      populate: {
-        path: "shelf",
-        populate: {
-          path: "rack",
-          populate: {
-            path: "storage"
-          }
-        }
-      }
-    })
-    .populate("storedItems");
-};
 const getBoxWithLocation = boxId => {
   return Box.findById(boxId)
     .populate({
@@ -125,7 +92,6 @@ const unlinkShelfSpotFromBox = boxId => {
 // $unset: { productLocation: {} }
 
 module.exports = {
-  getBoxesWithLocation,
   getBoxWithLocation,
   linkProductToBox,
   linkProductToBoxPopIds,
