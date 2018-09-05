@@ -107,8 +107,8 @@ module.exports = app => {
 
       const msg = msgObj(
         `${user.email} has logged in successfully.`,
-        "green",
-        "login"
+        "blue",
+        "hide-3"
       );
       serverRes(res, 200, msg, { _id: user._id, token, expires });
     } catch (err) {
@@ -129,7 +129,7 @@ module.exports = app => {
         { new: true }
       );
 
-      const msg = msgObj("You were successfully logged out.", "blue", "logout");
+      const msg = msgObj("You were successfully logged out.", "blue", "hide-3");
 
       serverRes(res, 200, msg, null);
     } catch (err) {

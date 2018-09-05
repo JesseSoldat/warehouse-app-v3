@@ -6,7 +6,8 @@ const Welcome = () => (
       <div className="container">
         <div className="row">
           <div className="col-12 text-center">
-            <h1 className="display-3 mb-4 mt-5">SaR-Application</h1>
+            <h1 className="display-6 mt-5 d-block d-sm-none">Warehouse App</h1>
+            <h1 className="display-3 mt-5 d-none d-sm-block">Warehouse App</h1>
           </div>
         </div>
       </div>
