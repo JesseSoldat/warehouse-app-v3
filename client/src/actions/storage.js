@@ -371,13 +371,13 @@ export const startEditStorage = (
         break;
     }
 
+    history.push(historyUrl);
+
     type === "storage"
       ? dispatch(editStorage(payload))
       : dispatch(editRack(type, payload));
 
     checkForMsg(msg, dispatch, options);
-
-    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "patch", `${type}`);
   }

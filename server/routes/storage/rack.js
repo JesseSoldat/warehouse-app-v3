@@ -66,6 +66,7 @@ module.exports = (app, io) => {
   app.patch("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
     const update = req.body;
+
     try {
       await Rack.findByIdAndUpdate(rackId, mergeObjFields("", update), {
         new: true
@@ -115,7 +116,7 @@ module.exports = (app, io) => {
     } catch (err) {
       console.log("Err: DELETE/api/racks/:rackId", err);
 
-      const msg = msgObj(errMsg("delete", "rack"), "red");
+      const msg = serverMsg("error", "delete", "rack", "delete error");
       serverRes(res, 400, msg, null);
     }
   });

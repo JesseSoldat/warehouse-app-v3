@@ -3,13 +3,11 @@ const Storage = require("../../models/storage/storage");
 const Rack = require("../../models/storage/rack");
 const Shelf = require("../../models/storage/shelf");
 const ShelfSpot = require("../../models/storage/shelfSpot");
-const Box = require("../../models/storage/box");
 // middleware
 const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
-const mergeObjFields = require("../../utils/mergeObjFields");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -178,11 +176,11 @@ module.exports = (app, io) => {
   // Update a storage
   app.patch("/api/storages/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;
-
+    const { storageLabel, description } = req.body;
     try {
       const storage = await Storage.findByIdAndUpdate(
         storageId,
-        mergeObjFields("", req.body),
+        { $set: { storageLabel, description } },
         { new: true }
       ).populate({
         path: "racks",
@@ -193,7 +191,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The storage was updated.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, storage);
+      serverRes(res, 200, msg, { storage });
     } catch (err) {
       console.log("ERR: PATCH/api/storage/:storageId", err);
 

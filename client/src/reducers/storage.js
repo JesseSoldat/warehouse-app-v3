@@ -18,7 +18,6 @@ import {
 
 const initialState = {
   storages: [],
-  storage: null,
   storageIdsEntity: null,
   storageIdsRequsted: false,
   storageIdsLoaded: false,
@@ -49,7 +48,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storages: [],
-        storage: null,
         storageIdsEntity: null,
         storageIdsRequsted: false,
         storageIdsLoaded: false,
@@ -72,23 +70,22 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storages: [...storages],
-        storage: null,
         storageType: null
       };
 
     case STORAGE_UPDATE_ONE:
       // console.log("STORAGE_UPDATE_ONE", update);
-      const updateStorages = [...state.storages];
-      // API update = storage
-      const updateIndex = updateStorages.findIndex(
-        obj => obj._id === update._id
+      storagesCopy = [...state.storages];
+      // API update = { storage }
+      storageIndex = storagesCopy.findIndex(
+        obj => obj._id === update.storage._id
       );
 
-      updateStorages.splice(updateIndex, 1, update);
+      storagesCopy.splice(storageIndex, 1, update.storage);
 
       return {
         ...state,
-        storages: updateStorages,
+        storages: storagesCopy,
         storageIdsEntity: null
       };
 
@@ -122,7 +119,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storages: storagesCopy,
-        storage: null,
         storageIdsEntity: null,
         rack: rackCopy
       };
@@ -161,18 +157,18 @@ export default (state = initialState, action) => {
       };
 
     case RACK_UPDATE_ONE:
-      // console.log("prev", state.rack);
-      // console.log("update", update);
-      // console.log("type:", storageType);
+      // console.log("RACK_UPDATE_ONE", storageType, update);
       let rackUpdate = { ...state.rack };
 
       switch (storageType) {
         case "rack":
+          // Api update = { rackLabel }
           const { rackLabel } = update;
           rackUpdate["rackLabel"] = rackLabel;
           break;
 
         case "shelf":
+          // Api update = { shelfId, shelfLabel }
           const { shelfId, shelfLabel } = update;
 
           rackUpdate.shelves.forEach(shelf => {
@@ -183,6 +179,7 @@ export default (state = initialState, action) => {
           break;
 
         case "shelfSpot":
+          // Api update = { shelfSpotId, shelfSpotLabel }
           const { shelfSpotId, shelfSpotLabel } = update;
           rackUpdate.shelves.forEach(shelf => {
             shelf.shelfSpots.forEach(spot => {
@@ -196,12 +193,11 @@ export default (state = initialState, action) => {
         default:
           break;
       }
-
       // console.log("rackUpdate");
       // console.log(rackUpdate);
-
       return {
         ...state,
+        storages: [],
         storageType,
         rack: rackUpdate,
         storageIdsEntity: null
@@ -281,7 +277,6 @@ export default (state = initialState, action) => {
               // console.log("updated storageCopy", storagesCopy[storageIndex]);
             }
           }
-
           break;
 
         case "shelf":
@@ -341,7 +336,6 @@ export default (state = initialState, action) => {
       return {
         ...state,
         storages: storagesCopy,
-        storage: null,
         storageIdsEntity: null,
         rack: rackCopy
       };
