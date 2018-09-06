@@ -20,8 +20,9 @@ export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
 
 export const RACK_REQUESTED = "RACK_REQUESTED";
 export const RACK_LOADED = "RACK_LOADED";
-export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
+export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
+export const RACK_DELETE_ONE = "RACK_DELETE_ONE";
 
 export const RESET_STORAGE = "RESET_STORAGE";
 // RESET Storage -----------------------------
@@ -29,7 +30,9 @@ export const resetStorage = () => ({
   type: RESET_STORAGE
 });
 
-// GET Storage IDS -------------------------
+// ----------------------------- STORAGES --------------------------------
+
+// GET All Storage IDS -------------------------
 export const storageIdsRequested = () => ({
   type: STORAGE_IDS_REQUESTED
 });
@@ -145,7 +148,7 @@ export const startSearchStorages = (
   }
 };
 
-// GET Storages ---------------------------
+// GET All Storages ---------------------------
 export const getStorages = (storages = []) => ({
   type: STORAGE_FETCH_ALL,
   storages
@@ -165,6 +168,33 @@ export const startGetStorages = () => async dispatch => {
     axiosResponseErrorHandling(err, dispatch, "get", "storages");
   }
 };
+
+// GET Single Storage ---------------------------
+export const getStorage = (storage = null, storageType = "") => ({
+  type: STORAGE_FETCH_ONE,
+  storage,
+  storageType
+});
+
+export const startGetStorage = (id = "", storageType) => async dispatch => {
+  dispatch(loading(true));
+
+  const apiUrl = `${storageApiUrl(storageType)}/${id}`;
+
+  try {
+    const res = await axios.get(apiUrl);
+
+    const { msg, payload, options } = res.data;
+
+    dispatch(getStorage(payload, storageType));
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "get", `${storageType}`);
+  }
+};
+
+// ----------------------------- RACKS --------------------------------
 
 // GET SINGLE RACK -----------------------------
 export const rackRequested = () => ({
@@ -192,30 +222,7 @@ export const startGetRack = rackId => async dispatch => {
   }
 };
 
-// GET Storage ---------------------------
-export const getStorage = (storage = null, storageType = "") => ({
-  type: STORAGE_FETCH_ONE,
-  storage,
-  storageType
-});
-
-export const startGetStorage = (id = "", storageType) => async dispatch => {
-  dispatch(loading(true));
-
-  const apiUrl = `${storageApiUrl(storageType)}/${id}`;
-
-  try {
-    const res = await axios.get(apiUrl);
-
-    const { msg, payload, options } = res.data;
-
-    dispatch(getStorage(payload, storageType));
-
-    checkForMsg(msg, dispatch, options);
-  } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "get", `${storageType}`);
-  }
-};
+// ---------------------------- UPDATES STORAGES & RACKS ----------------------------------
 
 // New Storage -------------------------------------
 export const createStorage = update => ({
@@ -377,10 +384,15 @@ export const startEditStorage = (
 };
 
 // Delete Storage ----------------------------------
-export const deleteStorage = (storageType, update) => ({
+export const deleteStorage = update => ({
   type: STORAGE_DELETE_ONE,
-  storageType,
   update
+});
+
+export const deleteRack = (type, payload) => ({
+  type: RACK_DELETE_ONE,
+  storageType: type,
+  update: payload
 });
 
 export const startDeleteStorage = (
@@ -400,7 +412,9 @@ export const startDeleteStorage = (
 
     history.push(historyUrl);
 
-    dispatch(deleteStorage(type, payload));
+    type === "storage"
+      ? dispatch(deleteStorage(payload))
+      : dispatch(deleteRack(type, payload));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

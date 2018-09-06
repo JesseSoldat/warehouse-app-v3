@@ -11,8 +11,9 @@ import {
   // rack
   RACK_REQUESTED,
   RACK_LOADED,
+  RACK_CREATE_ONE,
   RACK_UPDATE_ONE,
-  RACK_CREATE_ONE
+  RACK_DELETE_ONE
 } from "../actions/storage";
 
 const initialState = {
@@ -59,6 +60,7 @@ export default (state = initialState, action) => {
         storageType: null
       };
 
+    // ----------------------------- STORAGES ---------------------------------
     case STORAGE_SEARCH:
       return {
         ...state,
@@ -91,12 +93,11 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_CREATE_ONE:
-      // console.log("STORAGE_CREATE_ONE", update);
       storagesCopy = [...state.storages];
 
       if (storagesCopy.length > 0) {
-        // API update = storage
-        storagesCopy.push(update);
+        // API update = { storage }
+        storagesCopy.push(update.storage);
       }
       return {
         ...state,
@@ -105,99 +106,19 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_DELETE_ONE:
-      // console.log("STORAGE_DELETE_ONE", update);
+      // API update = { storageId }
       storagesCopy = [...state.storages];
-      rackCopy = state.rack === null ? null : { ...state.rack };
-
-      switch (storageType) {
-        case "storage":
-          // API update = { storageId }
-          storageId = update.storageId;
-          rackCopy = null;
-
-          // Update Storages in the Store
-          if (storagesCopy.length !== 0) {
-            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
-            // console.log("storageIndex", storageIndex);
-            if (storageIndex >= 0) {
-              storagesCopy.splice(storageIndex, 1);
-              // console.log("updated storageCopy", storagesCopy);
-            }
-          }
-
-          break;
-        case "rack":
-          // API update = { storageId, rackId }
-          rackId = update.rackId;
-          storageId = update.storageId;
-          rackCopy = null;
-
-          // Update Storages in the Store
-          if (storagesCopy.length !== 0) {
-            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
-            // console.log("storageIndex", storageIndex);
-            if (storageIndex >= 0) {
-              let tempRacks = storagesCopy[storageIndex].racks.filter(
-                rack => rack._id !== rackId
-              );
-              storagesCopy[storageIndex].racks = tempRacks;
-              // console.log("updated storageCopy", storagesCopy[storageIndex]);
-            }
-          }
-
-          break;
-
-        case "shelf":
-          // API update = { shelfId }
-          shelfId = update.shelfId;
-          if (rackCopy) {
-            // console.log(rackCopy);
-            // find the shelf and remove it
-            shelfIndex = rackCopy.shelves.findIndex(
-              shelf => shelf._id === shelfId
-            );
-            // console.log("shelfIndex", shelfIndex);
-
-            if (shelfIndex >= 0) {
-              rackCopy.shelves.splice(shelfIndex, 1);
-            }
-            // console.log("updated rackCopy", rackCopy);
-          }
-          break;
-
-        case "shelfSpot":
-          // API update = { shelfId, shelfSpotId }
-          shelfId = update.shelfId;
-          shelfSpotId = update.shelfSpotId;
-          if (rackCopy) {
-            // console.log('rackCopy', rackCopy);
-            // find the shelf
-            shelfIndex = rackCopy.shelves.findIndex(
-              shelf => shelf._id === shelfId
-            );
-            // console.log("shelfIndex", shelfIndex);
-
-            if (shelfIndex >= 0) {
-              // find the shelf spot
-              shelfSpotIndex = rackCopy.shelves[
-                shelfIndex
-              ].shelfSpots.findIndex(
-                shelfSpot => shelfSpot._id === shelfSpotId
-              );
-            }
-            // console.log("shelfSpotIndex", shelfSpotIndex);
-
-            if (shelfSpotIndex >= 0) {
-              rackCopy.shelves[shelfIndex].shelfSpots.splice(shelfSpotIndex, 1);
-              // console.log("rackCopy updated", rackCopy.shelves[shelfIndex]);
-            }
-          }
-          break;
-
-        default:
-          break;
+      storageId = update.storageId;
+      rackCopy = null;
+      // Update Storages in the Store
+      if (storagesCopy.length !== 0) {
+        storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
+        // console.log("storageIndex", storageIndex);
+        if (storageIndex >= 0) {
+          storagesCopy.splice(storageIndex, 1);
+          // console.log("updated storageCopy", storagesCopy);
+        }
       }
-
       return {
         ...state,
         storages: storagesCopy,
@@ -222,6 +143,7 @@ export default (state = initialState, action) => {
         storageIdsLoaded: true
       };
 
+    // --------------------------- RACKS --------------------------------------
     case RACK_REQUESTED:
       return {
         ...state,
@@ -286,36 +208,41 @@ export default (state = initialState, action) => {
       };
 
     case RACK_CREATE_ONE:
-      // console.log("RACK_CREATE_ONE", update);
       storagesCopy = [...state.storages];
-      rackCopy = state.rack === null ? null : { ...state.rack };
+
+      const updateStoragesWithRack = (storageId, rack) => {
+        // check for persisted data in the STORE
+        if (storagesCopy.length !== 0) {
+          // find the correct storage to update
+          storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
+          // console.log("storageIndex", storageIndex);
+          if (storageIndex >= 0) {
+            storagesCopy[storageIndex].racks.push(rack);
+            // console.log("updated storage", storagesCopy[storageIndex]);
+          }
+        }
+      };
 
       switch (storageType) {
         case "rack":
           // API update = { storage, rack }
-          if (storagesCopy.length !== 0) {
-            //[] of storages in store
-            storageId = update.storage._id;
-            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
-            // console.log("storageIndex", storageIndex);
-
-            if (storageIndex >= 0) {
-              storagesCopy[storageIndex].racks.push(update.rack);
-              // console.log("updated storage", storagesCopy[storageIndex]);
-            }
-          }
-
+          storageId = update.storage._id;
           rackCopy = update.rack;
+          updateStoragesWithRack(storageId, rackCopy);
           break;
 
         case "shelf":
           // API update = { rack, shelfId }
+          storageId = update.rack.storage._id;
           rackCopy = update.rack;
+          updateStoragesWithRack(storageId, rackCopy);
           break;
 
         case "shelfSpot":
           // API update = { rack, shelfSpotId }
+          storageId = update.rack.storage._id;
           rackCopy = update.rack;
+          updateStoragesWithRack(storageId, rackCopy);
           break;
 
         default:
@@ -328,6 +255,95 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         rack: rackCopy,
         storageIdsEntity: null
+      };
+
+    case RACK_DELETE_ONE:
+      // console.log("RACK_DELETE_ONE", storageType, update);
+      storagesCopy = [...state.storages];
+      rackCopy = state.rack === null ? null : { ...state.rack };
+
+      switch (storageType) {
+        case "rack":
+          // API update = { storageId, rackId }
+          rackId = update.rackId;
+          storageId = update.storageId;
+          rackCopy = null;
+
+          // Update Storages in the Store
+          if (storagesCopy.length !== 0) {
+            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
+            // console.log("storageIndex", storageIndex);
+            if (storageIndex >= 0) {
+              let tempRacks = storagesCopy[storageIndex].racks.filter(
+                rack => rack._id !== rackId
+              );
+              storagesCopy[storageIndex].racks = tempRacks;
+              // console.log("updated storageCopy", storagesCopy[storageIndex]);
+            }
+          }
+
+          break;
+
+        case "shelf":
+          // API update = { shelfId }
+          shelfId = update.shelfId;
+          // No storageId clear storages array and user will have to refetch
+          storagesCopy = [];
+          if (rackCopy) {
+            // console.log(rackCopy);
+            // find the shelf and remove it
+            shelfIndex = rackCopy.shelves.findIndex(
+              shelf => shelf._id === shelfId
+            );
+            // console.log("shelfIndex", shelfIndex);
+
+            if (shelfIndex >= 0) {
+              rackCopy.shelves.splice(shelfIndex, 1);
+            }
+            // console.log("updated rackCopy", rackCopy);
+          }
+          break;
+
+        case "shelfSpot":
+          // API update = { shelfId, shelfSpotId }
+          shelfId = update.shelfId;
+          shelfSpotId = update.shelfSpotId;
+          // No storageId clear storages array and user will have to refetch
+          storagesCopy = [];
+          if (rackCopy) {
+            // find the shelf
+            shelfIndex = rackCopy.shelves.findIndex(
+              shelf => shelf._id === shelfId
+            );
+            // console.log("shelfIndex", shelfIndex);
+
+            if (shelfIndex >= 0) {
+              // find the shelf spot
+              shelfSpotIndex = rackCopy.shelves[
+                shelfIndex
+              ].shelfSpots.findIndex(
+                shelfSpot => shelfSpot._id === shelfSpotId
+              );
+            }
+            // console.log("shelfSpotIndex", shelfSpotIndex);
+
+            if (shelfSpotIndex >= 0) {
+              rackCopy.shelves[shelfIndex].shelfSpots.splice(shelfSpotIndex, 1);
+              // console.log("rackCopy updated", rackCopy.shelves[shelfIndex]);
+            }
+          }
+          break;
+
+        default:
+          break;
+      }
+
+      return {
+        ...state,
+        storages: storagesCopy,
+        storage: null,
+        storageIdsEntity: null,
+        rack: rackCopy
       };
 
     default:
