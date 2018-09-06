@@ -1,10 +1,16 @@
 const buildProductsQuery = query => {
   let { searchType, value, value2, keyName } = query;
 
-  const mongoQuery = {};
+  let mongoQuery = {};
 
   switch (searchType) {
     case "number":
+      if (!value2) {
+        mongoQuery[keyName] = value;
+      } else {
+        mongoQuery = { $and: [{ [keyName]: { $gte: value, $lte: value2 } }] };
+      }
+      break;
     case "date":
       if (!value2) {
         // 86400000 milliseconds in a day
