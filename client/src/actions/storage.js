@@ -10,7 +10,6 @@ import { resetBox } from "./box";
 // types
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
-export const STORAGE_FETCH_ONE = "STORAGE_FETCH_ONE";
 export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
@@ -166,31 +165,6 @@ export const startGetStorages = () => async dispatch => {
     checkForMsg(msg, dispatch, options);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "get", "storages");
-  }
-};
-
-// GET Single Storage ---------------------------
-export const getStorage = (storage = null, storageType = "") => ({
-  type: STORAGE_FETCH_ONE,
-  storage,
-  storageType
-});
-
-export const startGetStorage = (id = "", storageType) => async dispatch => {
-  dispatch(loading(true));
-
-  const apiUrl = `${storageApiUrl(storageType)}/${id}`;
-
-  try {
-    const res = await axios.get(apiUrl);
-
-    const { msg, payload, options } = res.data;
-
-    dispatch(getStorage(payload, storageType));
-
-    checkForMsg(msg, dispatch, options);
-  } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "get", `${storageType}`);
   }
 };
 

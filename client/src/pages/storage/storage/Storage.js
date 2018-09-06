@@ -12,21 +12,20 @@ import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeF
 import getUrlParameter from "../../../utils/getUrlParameter";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { startGetStorage, startGetRack } from "../../../actions/storage";
+import { startGetRack } from "../../../actions/storage";
 import { serverMsg } from "../../../actions/ui";
 
 class Storage extends Component {
   // lifecyles -----------------------------
   componentDidMount() {
-    this.getStorage();
+    this.getRack();
   }
 
   componentWillUpdate() {
     const { match, rack } = this.props;
     const { rackId } = match.params;
-    if (!rack || rack._id !== rackId) {
-      this.getStorage();
-    }
+
+    if (!rack || rack._id !== rackId) this.getRack();
   }
 
   componentWillUnmount() {
@@ -35,9 +34,8 @@ class Storage extends Component {
   }
 
   // Api calls ----------------------------
-  getStorage = () => {
+  getRack = () => {
     const { match, rack, startGetRack } = this.props;
-
     const { rackId } = match.params;
 
     if (rack && rack._id === rackId) return;
@@ -97,5 +95,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetStorage, startGetRack }
+  { serverMsg, startGetRack }
 )(Storage);
