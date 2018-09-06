@@ -49,21 +49,6 @@ const StorageRoutes = [
     component={StorageCreate}
     exact={true}
   />,
-  // no location
-  <PrivateRoute
-    key="/box/create"
-    path="/box/create"
-    component={StorageCreate}
-    exact={true}
-  />,
-  // have location
-  <PrivateRoute
-    key="/box/create/location"
-    path="/box/create/:storageId/:rackId/:shelfId/:shelfSpotId"
-    component={StorageCreate}
-    exact={true}
-  />,
-
   // EDIT ---------------------
   <PrivateRoute
     key="/storage/edit"
@@ -86,20 +71,6 @@ const StorageRoutes = [
   <PrivateRoute
     key="/shelfSpot/edit"
     path="/shelfSpot/edit/:storageId/:rackId/:shelfId/:shelfSpotId"
-    component={StorageEdit}
-    exact={true}
-  />,
-  // no location
-  <PrivateRoute
-    key="/box/edit"
-    path="/box/edit/:boxId"
-    component={StorageEdit}
-    exact={true}
-  />,
-  // have location
-  <PrivateRoute
-    key="/box/edit/location"
-    path="/box/edit/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
     component={StorageEdit}
     exact={true}
   />,

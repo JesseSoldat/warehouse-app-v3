@@ -17,6 +17,7 @@ import {
 } from "../actions/storage";
 
 const initialState = {
+  search: [],
   storages: [],
   storageIdsEntity: null,
   storageIdsRequsted: false,
@@ -24,7 +25,6 @@ const initialState = {
   rack: null,
   rackRequsted: false,
   rackLoaded: false,
-  search: [],
   storageType: null
 };
 
@@ -71,6 +71,22 @@ export default (state = initialState, action) => {
         ...state,
         storages: [...storages],
         storageType: null
+      };
+
+    case STORAGE_IDS_REQUESTED:
+      return {
+        ...state,
+        storageIdsRequsted: true,
+        storageIdsLoaded: false
+      };
+
+    case STORAGE_IDS_LOADED:
+      const storageIdsCopy = { ...storageIdsEntity };
+      return {
+        ...state,
+        storageIdsEntity: storageIdsCopy,
+        storageIdsRequsted: false,
+        storageIdsLoaded: true
       };
 
     case STORAGE_UPDATE_ONE:
@@ -121,22 +137,6 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         storageIdsEntity: null,
         rack: rackCopy
-      };
-
-    case STORAGE_IDS_REQUESTED:
-      return {
-        ...state,
-        storageIdsRequsted: true,
-        storageIdsLoaded: false
-      };
-
-    case STORAGE_IDS_LOADED:
-      const storageIdsCopy = { ...storageIdsEntity };
-      return {
-        ...state,
-        storageIdsEntity: storageIdsCopy,
-        storageIdsRequsted: false,
-        storageIdsLoaded: true
       };
 
     // --------------------------- RACKS --------------------------------------

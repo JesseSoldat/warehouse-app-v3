@@ -17,10 +17,6 @@ const storageApiUrl = type => {
       apiUrl = "/api/shelfSpots";
       break;
 
-    case "box":
-      apiUrl = "/api/boxes";
-      break;
-
     default:
       apiUrl = "";
   }

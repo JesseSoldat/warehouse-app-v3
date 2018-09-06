@@ -16,7 +16,7 @@ import {
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
-import { startGetBox } from "../../../actions/box";
+import { startGetBox, startEditBox } from "../../../actions/box";
 import { serverMsg } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
@@ -380,6 +380,7 @@ export default connect(
     startGetStorages,
     startGetRack,
     startGetBox,
+    startEditBox,
     startEditStorage,
     startDeleteStorage
   }

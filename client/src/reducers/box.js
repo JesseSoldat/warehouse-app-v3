@@ -5,6 +5,7 @@ import {
   BOX_REQUESTED,
   BOX_LOADED,
   BOX_CREATE_ONE,
+  BOX_UPDATE_ONE,
   BOX_DELETE_ONE
 } from "../actions/box";
 
@@ -80,6 +81,13 @@ export default (state = initialState, action) => {
       };
 
     case BOX_CREATE_ONE:
+      return {
+        ...state,
+        boxes: [],
+        box
+      };
+
+    case BOX_UPDATE_ONE:
       return {
         ...state,
         boxes: [],

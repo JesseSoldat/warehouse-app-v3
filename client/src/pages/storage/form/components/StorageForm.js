@@ -20,21 +20,8 @@ class StorageForm extends Component {
     shelfSpotLabel: this.props.defaultState.shelfSpotLabel,
     shelfSpotLabelErr: "",
     boxLabel: this.props.defaultState.boxLabel,
-    boxLabelErr: "",
-    disableBtn: false
+    boxLabelErr: ""
   };
-
-  // lifecycles -----------------------------
-  componentWillUpdate(nextProps, state) {
-    const { msg } = nextProps;
-
-    // If an error comes back from the server enable button
-    if (msg && msg.color === "danger") {
-      if (state.disableBtn === true) {
-        this.setState({ disableBtn: false });
-      }
-    }
-  }
 
   // cb --------------------------------------
   onSubmit = e => {

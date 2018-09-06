@@ -13,6 +13,7 @@ export const BOX_SEARCH = "BOX_SEARCH";
 export const BOX_REQUESTED = "BOX_REQUESTED";
 export const BOX_LOADED = "BOX_LOADED";
 export const BOX_CREATE_ONE = "BOX_CREATE_ONE";
+export const BOX_UPDATE_ONE = "BOX_UPDATE_ONE";
 export const BOX_DELETE_ONE = "BOX_DELETE_ONE";
 
 // Rest Boxes
@@ -102,4 +103,40 @@ export const startCreateBox = (box, history) => async dispatch => {
   }
 };
 
+// UPDATE BOX
+export const editBox = box => ({
+  type: BOX_UPDATE_ONE,
+  box
+});
+
+export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
+  dispatch(showOverlay(true));
+  try {
+    const res = await axios.patch(`/api/boxes/${boxId}`, obj);
+
+    const { msg, payload, options } = res.data;
+
+    const { storageId, rackId, shelfId, shelfSpotId } = ids;
+
+    let historyUrl;
+
+    shelfSpotId
+      ? (historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`)
+      : (historyUrl = `/box/${boxId}?type=box`);
+
+    history.push(historyUrl);
+
+    dispatch(editBox(payload));
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "post", "box");
+  }
+};
+
 // DELETE BOX
+export const startDeleteBox = (
+  boxId,
+  historyUrl,
+  history
+) => async dispatch => {};

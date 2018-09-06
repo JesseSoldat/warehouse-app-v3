@@ -8,14 +8,15 @@ import storageApiUrl from "./helpers/storageApiUrl";
 import { loading, showOverlay } from "./ui";
 import { resetBox } from "./box";
 // types
+export const RESET_STORAGE = "RESET_STORAGE";
+
+export const STORAGE_IDS_REQUESTED = "STORAGE_IDS_REQUESTED";
+export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
 export const STORAGE_SEARCH = "STORAGE_SEARCH";
 export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
 export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
-
-export const STORAGE_IDS_REQUESTED = "STORAGE_IDS_REQUESTED";
-export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
 
 export const RACK_REQUESTED = "RACK_REQUESTED";
 export const RACK_LOADED = "RACK_LOADED";
@@ -23,7 +24,6 @@ export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
 export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_DELETE_ONE = "RACK_DELETE_ONE";
 
-export const RESET_STORAGE = "RESET_STORAGE";
 // RESET Storage -----------------------------
 export const resetStorage = () => ({
   type: RESET_STORAGE
@@ -227,7 +227,7 @@ export const startCreateStorage = (
 
     let newItemId = "";
 
-    const { storageId, rackId, shelfId, shelfSpotId } = ids;
+    const { storageId, rackId, shelfId } = ids;
 
     let historyUrl;
 
@@ -251,15 +251,6 @@ export const startCreateStorage = (
       case "shelfSpot":
         newItemId = payload["shelfSpotId"];
         historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`;
-        break;
-
-      case "box":
-        newItemId = payload._id;
-        if (!id) {
-          historyUrl = `/box/${newItemId}?type=${type}`;
-          break;
-        }
-        historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${newItemId}?type=${type}`;
         break;
 
       default:
@@ -312,7 +303,7 @@ export const startEditStorage = (
 
     const { msg, options, payload } = res.data;
 
-    const { storageId, rackId, shelfId, shelfSpotId, boxId } = ids;
+    const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
     let historyUrl;
 
@@ -331,14 +322,6 @@ export const startEditStorage = (
 
       case "shelfSpot":
         historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`;
-        break;
-
-      case "box":
-        if (!shelfSpotId) {
-          historyUrl = `/box/${boxId}?type=${type}`;
-          break;
-        }
-        historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=${type}`;
         break;
 
       default:

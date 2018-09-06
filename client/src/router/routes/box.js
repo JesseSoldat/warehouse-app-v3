@@ -2,16 +2,43 @@ import React from "react";
 
 import PrivateRoute from "../PrivateRoute";
 
-import Boxes from "../../pages/storage/boxes/Boxes";
-import Box from "../../pages/storage/box/Box";
+import Boxes from "../../pages/box/boxes/Boxes";
+import Box from "../../pages/box/box/Box";
+import BoxCreate from "../../pages/box/form/BoxCreate";
+import BoxEdit from "../../pages/box/form/BoxEdit";
 
 const BoxRoutes = [
+  // Search -----------------------------------------------
   <PrivateRoute
     key="/boxes/search"
     path="/boxes/search"
     component={Boxes}
     exact={true}
   />,
+  // Create Box -------------------------------------------
+  // no location
+  <PrivateRoute
+    key="/box/create"
+    path="/box/create"
+    component={BoxCreate}
+    exact={true}
+  />,
+  // Edit Box -------------------------------------------
+  // no location
+  <PrivateRoute
+    key="/box/edit"
+    path="/box/edit/:boxId"
+    component={BoxEdit}
+    exact={true}
+  />,
+  // have location
+  <PrivateRoute
+    key="/box/edit/location"
+    path="/box/edit/:storageId/:rackId/:shelfId/:shelfSpotId/:boxId"
+    component={BoxEdit}
+    exact={true}
+  />,
+  // Single Box -----------------------------------------
   // NO LOCATION
   <PrivateRoute
     key="/box/:boxId"

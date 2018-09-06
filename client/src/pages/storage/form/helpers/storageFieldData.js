@@ -36,13 +36,5 @@ export default {
       err: "shelfSpotLabelErr",
       msg: "Shelf spot label is a required field!"
     }
-  ],
-  box: [
-    {
-      placeholder: "* Box Label",
-      name: "boxLabel",
-      err: "boxLabelErr",
-      msg: "Box label is a required field!"
-    }
   ]
 };
