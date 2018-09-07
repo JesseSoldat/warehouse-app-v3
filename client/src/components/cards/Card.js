@@ -27,7 +27,7 @@ const Card = ({ data, cardSize = "240px" }) => {
         {subtitle && <h6 className="card-subtitle mb-2">{subtitle}</h6>}
 
         {link1 && (
-          <div className="d-flex justify-content-between mt-3">
+          <div className="d-flex justify-content-between mt-4">
             {link1 && (
               <Link className="card-link" to={link1}>
                 <IconBtn

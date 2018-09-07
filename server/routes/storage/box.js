@@ -102,7 +102,7 @@ module.exports = (app, io) => {
   });
 
   // POST BOX with location
-  app.post("/api/boxes/:shelfSpotId", isAuth, async (req, res) => {
+  app.post("/api/boxes/link/:shelfSpotId", isAuth, async (req, res) => {
     const { shelfSpotId } = req.params;
     const box = new Box(req.body);
     try {
@@ -113,7 +113,7 @@ module.exports = (app, io) => {
       const msg = msgObj("Box created.", "blue", "hide-3");
       serverRes(res, 200, msg, box);
     } catch (err) {
-      console.log("ERR: POST/BOX", err);
+      console.log("ERR: POST/BOX/WithLocation", err);
 
       const msg = serverMsg("error", "post", "box");
       serverRes(res, 400, msg, null);

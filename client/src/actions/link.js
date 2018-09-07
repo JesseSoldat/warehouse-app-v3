@@ -37,6 +37,7 @@ export const linkItems = (obj, history) => async dispatch => {
 
     switch (type1) {
       case "product":
+        // type2 box | shelfspot
         history.push(`/products/${productId}`);
         const updatedProduct = { ...product };
 

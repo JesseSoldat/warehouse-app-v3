@@ -23,6 +23,13 @@ const BoxRoutes = [
     component={BoxCreate}
     exact={true}
   />,
+  // have location MANUAL LINK we CREATE a box and LINK it
+  <PrivateRoute
+    key="/box/create/location"
+    path="/box/create/:storageId/:rackId/:shelfId/:shelfSpotId"
+    component={BoxCreate}
+    exact={true}
+  />,
   // Edit Box -------------------------------------------
   // no location
   <PrivateRoute

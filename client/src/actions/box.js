@@ -81,12 +81,20 @@ export const createBox = box => ({
   box
 });
 
-export const startCreateBox = (box, history) => async dispatch => {
+export const startCreateBox = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
   try {
-    const apiUrl = "/api/boxes";
+    const { boxLabel, params } = obj;
+    const { storageId, rackId, shelfId, shelfSpotId } = params;
 
-    const res = await axios.post(apiUrl, box);
+    let apiUrl;
+
+    // Manual Link allows a user to create a box and link it
+    shelfSpotId
+      ? (apiUrl = `/api/boxes/link/${shelfSpotId}`)
+      : (apiUrl = "/api/boxes");
+
+    const res = await axios.post(apiUrl, { boxLabel });
 
     const { msg, payload, options } = res.data;
 
@@ -97,7 +105,13 @@ export const startCreateBox = (box, history) => async dispatch => {
     // ORDER MATTERS
     checkForMsg(msg, dispatch, options);
 
-    history.push(`/box/${boxId}?type=box`);
+    let historyUrl;
+
+    shelfSpotId
+      ? (historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`)
+      : (historyUrl = `/box/${boxId}?type=box`);
+
+    history.push(historyUrl);
   } catch (err) {
     axiosResponseErrorHandling(err, dispatch, "post", "box");
   }

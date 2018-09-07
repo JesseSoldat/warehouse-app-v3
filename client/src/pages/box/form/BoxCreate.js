@@ -10,9 +10,12 @@ import BoxForm from "./components/BoxForm";
 // actions
 import { startCreateBox } from "../../../actions/box";
 
-const BoxCreate = ({ startCreateBox, history }) => {
+const BoxCreate = ({ startCreateBox, history, match }) => {
   // api calls ------------------
-  const handleSubmit = boxLabel => startCreateBox({ boxLabel }, history);
+  const handleSubmit = boxLabel => {
+    const { params } = match;
+    startCreateBox({ boxLabel, params }, history);
+  };
 
   return (
     <div className="container">
