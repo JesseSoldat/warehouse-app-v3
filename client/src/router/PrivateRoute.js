@@ -6,6 +6,7 @@ import NavBar from "../components/NavBar";
 import BreadCrumb from "../components/breadcrumb/BreadCrumb";
 import OverlaySpinner from "../components/OverlaySpinner";
 import Socket from "../components/Socket";
+import RouteChanged from "../components/RouteChanged";
 
 const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
   return (
@@ -14,6 +15,7 @@ const PrivateRoute = ({ isAuth, component: Component, ...restOfProps }) => {
       component={props =>
         isAuth ? (
           <div>
+            <RouteChanged />
             <Socket />
             <NavBar />
             <BreadCrumb />
