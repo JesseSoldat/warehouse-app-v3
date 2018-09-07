@@ -1,5 +1,8 @@
 import React from "react";
 
+// common components
+import IconBtn from "../../../../components/buttons/IconBtn";
+
 const SearchInputs = ({
   searchOptions,
   selection,
@@ -33,7 +36,7 @@ const SearchInputs = ({
       </div>
 
       <div className="col-12">
-        <div className="input-group mb-3">
+        <div className="input-group mb-2">
           <div className="col-12 input-group-prepend">
             <label className="input-group-text" htmlFor="labelInput">
               Label
@@ -58,9 +61,12 @@ const SearchInputs = ({
 
       <div className="col-12">
         <div className="col-12">
-          <button className="btn btn-primary btn-block" onClick={onSearch}>
-            <i className="fas fa-search mr-2" />Search
-          </button>
+          <IconBtn
+            btnClass="btn-primary btn-block"
+            iconClass="fa-trash-alt mr-1"
+            text="Search"
+            cb={onSearch}
+          />
         </div>
       </div>
     </div>

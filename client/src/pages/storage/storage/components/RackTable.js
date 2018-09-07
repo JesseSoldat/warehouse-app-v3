@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// common components
+import IconBtn from "../../../../components/buttons/IconBtn";
+
 const RackTable = ({ rack }) => {
   const storageId = rack.storage._id;
   const { _id: rackId, rackLabel, shelves = [] } = rack;
@@ -17,10 +20,11 @@ const RackTable = ({ rack }) => {
       <tr>
         <th scope="col">
           <Link to={`/shelf/create/${storageId}/${rackId}?type=shelf`}>
-            <button className="btn btn-default">
-              <i className="fas fa-plus-circle mr-2" />
-              New Shelf
-            </button>
+            <IconBtn
+              btnClass="btn-default"
+              iconClass="fa-plus-circle mr-1"
+              text="New Shelf"
+            />
           </Link>
         </th>
         {max === 0 ? (
@@ -84,15 +88,19 @@ const RackTable = ({ rack }) => {
 
         <div>
           <Link to={`/barcode/create/${storageId}/${rackId}?type=rack`}>
-            <button className="btn btn-default m-1 mr-2">
-              <i className="fas fa-barcode mr-2" /> Create Barcode
-            </button>
+            <IconBtn
+              btnClass="btn-default m-1"
+              iconClass="fa-barcode mr-1"
+              text="Create Barcode"
+            />
           </Link>
 
           <Link to={`/rack/edit/${storageId}/${rackId}?type=rack`}>
-            <button className="btn btn-default m-1">
-              <i className="fas fa-edit mr-2" /> Edit Rack
-            </button>
+            <IconBtn
+              btnClass="btn-default m-1"
+              iconClass="fa-edit mr-1"
+              text="Edit Rack"
+            />
           </Link>
         </div>
       </div>

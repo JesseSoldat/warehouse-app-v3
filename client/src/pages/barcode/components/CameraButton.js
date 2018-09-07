@@ -13,7 +13,7 @@ const CameraButton = ({ scanning, handleClickUseCamera }) => {
 
         <IconBtn
           btnClass="btn-primary btn-block mt-3 mb-3 d-block d-sm-none"
-          iconClass="fa-camera-retro"
+          iconClass="fa-camera-retro mr-1"
           text={text}
           cb={handleClickUseCamera}
         />
@@ -22,7 +22,7 @@ const CameraButton = ({ scanning, handleClickUseCamera }) => {
 
         <IconBtn
           btnClass="btn-primary mt-3 mb-3 float-right d-none d-sm-block"
-          iconClass="fa-camera-retro"
+          iconClass="fa-camera-retro mr-1"
           text={text}
           cb={handleClickUseCamera}
         />

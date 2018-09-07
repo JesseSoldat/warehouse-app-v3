@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
 import Heading from "../../../components/Heading";
+import IconBtn from "../../../components/buttons/IconBtn";
 // custom components
 import BoxForm from "./components/BoxForm";
 // utils
@@ -126,9 +127,12 @@ class BoxEdit extends Component {
     const button = (
       <div className="row">
         <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
-          <button className="btn btn-danger mt-4" onClick={this.handleDelete}>
-            <i className="far fa-trash-alt mr-2" /> Delete
-          </button>
+          <IconBtn
+            btnClass="btn-danger mt-4"
+            iconClass="fa-trash-alt mr-1"
+            text="Delete"
+            cb={this.handleDelete}
+          />
         </div>
       </div>
     );

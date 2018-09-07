@@ -4,7 +4,7 @@ import { connect } from "react-redux";
 import Heading from "../../../components/Heading";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
-import CardList from "../../../components/CardList";
+import CardList from "../../../components/cards/CardList";
 import Paginator from "../../../components/Paginator";
 // custom components
 import SearchBar from "./components/SearchBar";

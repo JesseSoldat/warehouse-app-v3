@@ -1,9 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-import truncateStr from "../utils/stringManipulation/truncateStr";
+// common components
+import IconBtn from "../buttons/IconBtn";
+// utils
+import truncateStr from "../../utils/stringManipulation/truncateStr";
 
-const Card = ({ data, cardSize = "240px" }) => {
+const ImageCard = ({ data, cardSize = "240px" }) => {
   const {
     id = "",
     title = "",
@@ -45,13 +48,21 @@ const Card = ({ data, cardSize = "240px" }) => {
           <div className="d-flex justify-content-between mt-2">
             {link1 && (
               <Link className="card-link" to={link1}>
-                <button className="btn btn-default">{linkText1}</button>
+                <IconBtn
+                  btnClass="btn-default"
+                  iconClass="fa-eye mr-1"
+                  text={linkText1}
+                />
               </Link>
             )}
 
             {link2 && (
               <Link className="card-link" to={link2}>
-                <button className="btn btn-default">{linkText2}</button>
+                <IconBtn
+                  btnClass="btn-default"
+                  iconClass="fa-edit mr-1"
+                  text={linkText2}
+                />
               </Link>
             )}
           </div>
@@ -83,4 +94,4 @@ const Card = ({ data, cardSize = "240px" }) => {
   );
 };
 
-export default Card;
+export default ImageCard;

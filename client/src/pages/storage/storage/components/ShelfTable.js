@@ -1,6 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// common components
+import IconBtn from "../../../../components/buttons/IconBtn";
+
 const ShelfTable = ({ rack, shelfId }) => {
   const storageId = rack.storage._id;
   const { _id: rackId, shelves } = rack;
@@ -69,9 +72,11 @@ const ShelfTable = ({ rack, shelfId }) => {
           <Link
             to={`/shelfSpot/create/${storageId}/${rackId}/${shelfId}?type=shelfSpot`}
           >
-            <button className="btn btn-default m-1 ml-3">
-              <i className="fas fa-plus-circle mr-2" /> New Shelf Spot
-            </button>
+            <IconBtn
+              btnClass="btn-default m-1 ml-3"
+              iconClass="fa-plus-circle mr-1"
+              text="New Shelf Spot"
+            />
           </Link>
         </div>
 
@@ -79,15 +84,19 @@ const ShelfTable = ({ rack, shelfId }) => {
           <Link
             to={`/barcode/create/${storageId}/${rackId}/${shelfId}?type=shelf`}
           >
-            <button className="btn btn-default m-1 mr-2">
-              <i className="fas fa-barcode mr-2" /> Create Barcode
-            </button>
+            <IconBtn
+              btnClass="btn-default m-1 ml-2"
+              iconClass="fa-barcode mr-1"
+              text="Create Barcode"
+            />
           </Link>
 
           <Link to={`/shelf/edit/${storageId}/${rackId}/${shelfId}?type=shelf`}>
-            <button className="btn btn-default m-1">
-              <i className="fas fa-edit mr-2" /> Edit Shelf
-            </button>
+            <IconBtn
+              btnClass="btn-default m-1"
+              iconClass="fa-edit mr-1"
+              text="Edit Shelf"
+            />
           </Link>
         </div>
       </div>

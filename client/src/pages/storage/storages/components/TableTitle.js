@@ -1,5 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
+// common components
+import IconBtn from "../../../../components/buttons/IconBtn";
 
 const TableTitle = ({
   storageLabel = "",
@@ -10,22 +12,27 @@ const TableTitle = ({
   const renderBtn = type ? (
     <div>
       <Link to={`/barcode/create/${storageId}?type=storage`}>
-        <button className="btn btn-default m-1 mr-2">
-          <i className="fas fa-barcode mr-2" /> Create Barcode
-        </button>
+        <IconBtn
+          btnClass="btn-default m-1 mr-2"
+          iconClass="fa-barcode mr-1"
+          text="Create Barcode"
+        />
       </Link>
       <Link to={`/storage/edit/${storageId}?type=storage`} className="mr-3">
-        <button className="btn btn-default m-1">
-          <i className="fas fa-edit mr-2" /> Edit Storage
-        </button>
+        <IconBtn
+          btnClass="btn-default m-1"
+          iconClass="fa-edit mr-1"
+          text="Edit Storage"
+        />
       </Link>
     </div>
   ) : (
     <Link to={`/storage/${storageId}`} className="pr-3">
-      <button className="btn btn-default">
-        <i className="fas fa-eye mr-2" />
-        View Storage
-      </button>
+      <IconBtn
+        btnClass="btn-default"
+        iconClass="fa-eye mr-1"
+        text="View Storage"
+      />
     </Link>
   );
 

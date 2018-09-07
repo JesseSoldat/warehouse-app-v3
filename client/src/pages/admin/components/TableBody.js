@@ -26,7 +26,7 @@ const TableBody = ({ users, handleChange, handleDelete }) => {
       <td>
         <IconBtn
           btnClass="btn-danger"
-          iconClass="fa-trash-alt"
+          iconClass="fa-trash-alt mr-1"
           text="Delete User"
           cb={() => handleDelete(user.email)}
         />

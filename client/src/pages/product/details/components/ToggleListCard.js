@@ -21,7 +21,7 @@ class ToggleListCard extends Component {
       <div className={`col-12 ${css}`}>
         <IconBtn
           btnClass={`btn-primary ${btnCss}`}
-          iconClass="fa-eye d-none d-sm-inline"
+          iconClass="fa-eye d-none d-sm-inline mr-1"
           text={`All ${label}`}
           cb={this.viewAll}
         />
@@ -34,7 +34,7 @@ class ToggleListCard extends Component {
       <div className={`col-12 ${css}`}>
         <IconBtn
           btnClass={`btn-primary ${btnCss}`}
-          iconClass="fa-eye-slash d-none d-sm-inline"
+          iconClass="fa-eye-slash d-none d-sm-inline mr-1"
           text={`Hide ${label}`}
           cb={this.hide}
         />

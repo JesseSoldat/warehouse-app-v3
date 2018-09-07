@@ -74,7 +74,12 @@ class Producer extends Component {
     if (loading) {
       content = <Spinner />;
     } else if (producer) {
-      content = <SingleFieldList data={producerListData(producer)} />;
+      content = (
+        <SingleFieldList
+          data={producerListData(producer)}
+          listCss="col-md-12"
+        />
+      );
     }
 
     return (

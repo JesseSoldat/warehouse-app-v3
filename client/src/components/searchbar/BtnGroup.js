@@ -12,14 +12,14 @@ const BtnGroup = ({ onSearch, onResetFilter }) => {
         </label>
         <IconBtn
           btnClass="btn-primary mr-1"
-          iconClass="fa-search"
+          iconClass="fa-search mr-1"
           text="Search"
           cb={onSearch}
         />
 
         <IconBtn
           btnClass="btn-danger"
-          iconClass="fa-sync-alt"
+          iconClass="fa-sync-alt mr-1"
           text="Reset Filter"
           cb={onResetFilter}
         />

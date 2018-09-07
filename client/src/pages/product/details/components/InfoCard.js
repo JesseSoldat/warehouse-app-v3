@@ -49,14 +49,14 @@ const InfoCard = ({
       <div className={`col-12 ${css}`}>
         <IconBtn
           btnClass={`btn-secondary ${btnCss}`}
-          iconClass="fa-chevron-right d-none d-sm-inline"
+          iconClass="fa-chevron-right d-none d-sm-inline mr-1"
           text="Manage Pictures"
           cb={() => onManagePictures(productId)}
         />
 
         <IconBtn
           btnClass={`btn-primary ${btnCss}`}
-          iconClass="fa-barcode d-none d-sm-inline"
+          iconClass="fa-barcode d-none d-sm-inline mr-1"
           text="Create Barcode"
           cb={() => onCreateBarCode(productId)}
         />

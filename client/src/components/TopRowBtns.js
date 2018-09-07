@@ -19,7 +19,7 @@ const TopRowBtns = ({
           <div className="float-left">
             <IconBtn
               btnClass="btn-primary mr-1"
-              iconClass="fa-chevron-left d-none d-sm-inline"
+              iconClass="fa-chevron-left d-none d-sm-inline mr-1"
               text="Go Back"
               cb={btn0Cb}
             />
@@ -30,7 +30,7 @@ const TopRowBtns = ({
           <div className="float-right">
             <IconBtn
               btnClass="btn-danger mr-1"
-              iconClass="fa-trash-alt d-none d-sm-inline"
+              iconClass="fa-trash-alt d-none d-sm-inline mr-1"
               text="Delete"
               cb={btn1Cb}
               disabled={bt1Disable}
@@ -38,7 +38,7 @@ const TopRowBtns = ({
 
             <IconBtn
               btnClass="btn-primary"
-              iconClass="fa-edit d-none d-sm-inline"
+              iconClass="fa-edit d-none d-sm-inline mr-1"
               text="Edit"
               cb={btn2Cb}
               disabled={btn2Disable}

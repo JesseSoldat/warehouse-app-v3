@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
-const BasicCard = ({ title, subtitle, link, linkText }) => {
+const TileCard = ({ title, subtitle, link, linkText }) => {
   return (
     <div
       className="card mr-1 ml-1 mb-3 col-xs-12 col-md-5 col-lg-3"
@@ -16,4 +16,4 @@ const BasicCard = ({ title, subtitle, link, linkText }) => {
   );
 };
 
-export default BasicCard;
+export default TileCard;

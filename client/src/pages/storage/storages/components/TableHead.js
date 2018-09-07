@@ -1,15 +1,20 @@
 import React from "react";
 import { Link } from "react-router-dom";
 
+// common components
+import IconBtn from "../../../../components/buttons/IconBtn";
+
 const TableHead = ({ storageId, maxShelves = 0 }) => {
   return (
     <thead>
       <tr style={{ width: 95 }}>
         <td>
           <Link to={`/rack/create/${storageId}?type=rack`}>
-            <button className="btn btn-default">
-              <i className="fas fa-plus-circle mr-2" /> New Rack
-            </button>
+            <IconBtn
+              btnClass="btn-default"
+              iconClass="fa-plus-circle mr-1"
+              text="New Rack"
+            />
           </Link>
         </td>
         {maxShelves === 0 ? (

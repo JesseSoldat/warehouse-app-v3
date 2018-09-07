@@ -73,7 +73,12 @@ class Customer extends Component {
     if (loading) {
       content = <Spinner />;
     } else if (customer) {
-      content = <SingleFieldList data={customerListData(customer)} />;
+      content = (
+        <SingleFieldList
+          data={customerListData(customer)}
+          listCss="col-md-12"
+        />
+      );
     }
 
     return (

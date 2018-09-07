@@ -3,7 +3,7 @@ import React from "react";
 // common components
 import Message from "../../components/Message";
 import Heading from "../../components/Heading";
-import BasicCard from "../../components/BasicCard";
+import TileCard from "../../components/cards/TileCard";
 
 const Dashboard = () => {
   return (
@@ -12,21 +12,21 @@ const Dashboard = () => {
       <Heading title="Dashboard" />
       <div className="row">
         <div className="col-12 d-flex flex-wrap justify-content-between my-4">
-          <BasicCard
+          <TileCard
             title="Search & Edit Products"
             subtitle="Search and edit products here"
             link="/products/search"
             linkText="Search!"
           />
 
-          <BasicCard
+          <TileCard
             title="Create Product"
             subtitle="Get starting by adding some products"
             link="/products/create"
             linkText="Create Product!"
           />
 
-          <BasicCard
+          <TileCard
             title="Maintenance"
             subtitle="Create and edit Storage places here"
             link="/storages"

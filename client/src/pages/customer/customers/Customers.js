@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import Spinner from "../../../components/Spinner";
 import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
-import CardList from "../../../components/CardList";
+import CardList from "../../../components/cards/CardList";
 // helpers
 import customerCardData from "./helpers/customerCardData";
 // utils
@@ -43,7 +43,9 @@ class Customers extends Component {
     if (loading) {
       content = <Spinner />;
     } else {
-      content = <CardList data={customerCardData(customers)} />;
+      content = (
+        <CardList data={customerCardData(customers)} cardType="basic" />
+      );
     }
     return (
       <div className="container">

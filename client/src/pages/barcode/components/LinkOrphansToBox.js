@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 // common components
 import Spinner from "../../../components/Spinner";
-import CardList from "../../../components/CardList";
+import CardList from "../../../components/cards/CardList";
 // helpers
 import productCardData from "../helpers/productCardData";
 

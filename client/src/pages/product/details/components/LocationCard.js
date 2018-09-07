@@ -36,7 +36,7 @@ const LocationCard = ({
       <div className={`col-12 ${css}`}>
         <IconBtn
           btnClass={`btn-primary ${btnCss}`}
-          iconClass="fa-archive d-none d-sm-inline"
+          iconClass="fa-archive d-none d-sm-inline mr-1"
           text="Store Product"
           cb={() => onLink(productId, "storeProduct")}
         />
@@ -149,13 +149,13 @@ const LocationCard = ({
         <div className={`col-12 ${css}`}>
           <IconBtn
             btnClass={`btn-secondary ${btnCss}`}
-            iconClass="fa-archive d-none d-sm-inline"
+            iconClass="fa-archive d-none d-sm-inline mr-1"
             text="Restore Product"
             cb={() => onLink(productId, "restoreProduct")}
           />
           <IconBtn
             btnClass={`btn-primary ${btnCss}`}
-            iconClass="fa-hand-paper d-none d-sm-inline"
+            iconClass="fa-hand-paper d-none d-sm-inline mr-1"
             text="Retrieve Product"
             cb={() => onUnLink(productId, kind)}
           />

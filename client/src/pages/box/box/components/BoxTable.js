@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 // common components
-import CardList from "../../../../components/CardList";
+import CardList from "../../../../components/cards/CardList";
 // helpers
 import productCardData from "../helpers/productCardData";
 

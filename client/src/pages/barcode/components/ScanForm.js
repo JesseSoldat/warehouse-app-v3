@@ -44,14 +44,14 @@ const ScanForm = ({
           </div>
           <IconBtn
             btnClass="btn-primary mr-2"
-            iconClass="fa-link"
+            iconClass="fa-link mr-1"
             text="Link Items"
             disabled={!firstScannedItemId || !secondScannedItemId}
             type="submit"
           />
           <IconBtn
             btnClass="btn-danger mr-2"
-            iconClass="fa-sync-alt"
+            iconClass="fa-sync-alt mr-1"
             text="Reset Items"
             cb={resetItems}
           />

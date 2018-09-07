@@ -153,6 +153,7 @@ class StorageEdit extends Component {
     }
   };
 
+  // render HTML
   renderContent = (type, defaultState) => (
     <StorageForm
       storageType={type}
@@ -221,7 +222,7 @@ class StorageEdit extends Component {
             {!loading && (
               <IconBtn
                 btnClass="btn-danger mt-4"
-                iconClass="fa-trash-alt"
+                iconClass="fa-trash-alt mr-1"
                 text="Delete"
                 cb={this.handleDelete}
               />
