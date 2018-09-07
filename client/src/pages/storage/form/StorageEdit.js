@@ -5,6 +5,7 @@ import { connect } from "react-redux";
 import Message from "../../../components/Message";
 import Spinner from "../../../components/Spinner";
 import Heading from "../../../components/Heading";
+import IconBtn from "../../../components/buttons/IconBtn";
 // custom components
 import StorageForm from "./components/StorageForm";
 // utils
@@ -152,35 +153,21 @@ class StorageEdit extends Component {
     }
   };
 
-  renderContent = (type, defaultState) => {
-    const button = (
-      <div className="row">
-        <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
-          <button className="btn btn-danger mt-4" onClick={this.handleDelete}>
-            <i className="far fa-trash-alt mr-2" /> Delete
-          </button>
-        </div>
-      </div>
-    );
-
-    const content = (
-      <StorageForm
-        storageType={type}
-        formType="edit"
-        handleSubmit={this.handleSubmit}
-        defaultState={defaultState}
-      />
-    );
-
-    return { content, button };
-  };
+  renderContent = (type, defaultState) => (
+    <StorageForm
+      storageType={type}
+      formType="edit"
+      handleSubmit={this.handleSubmit}
+      defaultState={defaultState}
+    />
+  );
 
   render() {
     const { loading, storages, rack } = this.props;
     const { type, ids } = this.state;
     const { storageId, shelfId, shelfSpotId } = ids;
 
-    let storage, content, button;
+    let storage, content;
 
     const title = type === "shelfSpot" ? "Shelf Spot" : type;
 
@@ -202,29 +189,19 @@ class StorageEdit extends Component {
 
       defaultState.storageLabel = storage.storageLabel;
       defaultState.description = storage.description;
-
-      const contentObj = this.renderContent(type, defaultState);
-      content = contentObj.content;
-      button = contentObj.button;
+      content = this.renderContent(type, defaultState);
     }
     // Type is Rack
     else if (rack && type === "rack") {
       defaultState.rackLabel = rack.rackLabel;
-
-      const contentObj = this.renderContent(type, defaultState);
-      content = contentObj.content;
-      button = contentObj.button;
+      content = this.renderContent(type, defaultState);
     }
     // Type is Shelf
     else if (rack && type === "shelf") {
       const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
 
       defaultState.shelfLabel = shelf.shelfLabel;
-
-      const contentObj = this.renderContent(type, defaultState);
-
-      content = contentObj.content;
-      button = contentObj.button;
+      content = this.renderContent(type, defaultState);
     }
     // Type is Shelf Spot
     else if (rack && type === "shelfSpot") {
@@ -233,17 +210,24 @@ class StorageEdit extends Component {
       const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
 
       defaultState.shelfSpotLabel = shelfSpot.shelfSpotLabel;
-
-      const contentObj = this.renderContent(type, defaultState);
-
-      content = contentObj.content;
-      button = contentObj.button;
+      content = this.renderContent(type, defaultState);
     }
 
     return (
       <div className="container">
         <Message />
-        {button}
+        <div className="row">
+          <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
+            {!loading && (
+              <IconBtn
+                btnClass="btn-danger mt-4"
+                iconClass="fa-trash-alt"
+                text="Delete"
+                cb={this.handleDelete}
+              />
+            )}
+          </div>
+        </div>
         <Heading title={title} />
         {content}
       </div>

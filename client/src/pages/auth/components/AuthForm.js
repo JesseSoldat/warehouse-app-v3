@@ -4,7 +4,6 @@ import { withRouter } from "react-router-dom";
 
 // common components
 import TextInput from "../../../components/inputs/TextInput";
-import Spinner from "../../../components/Spinner";
 import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
 // custom components
@@ -81,10 +80,7 @@ class AuthForm extends Component {
     e.preventDefault();
     const { isValid, errObj } = formIsValid(this.state, this.props.parent);
 
-    if (!isValid) {
-      this.setState(() => ({ ...errObj }));
-      return;
-    }
+    if (!isValid) return this.setState(() => ({ ...errObj }));
 
     this.props.parent === "register" ? this.registerFlow() : this.loginFlow();
   };
@@ -94,7 +90,7 @@ class AuthForm extends Component {
   resetPassword = email => this.props.requestResetPasswordEmail(email);
 
   render() {
-    const { loading, parent } = this.props;
+    const { parent } = this.props;
 
     const {
       username,
@@ -107,12 +103,10 @@ class AuthForm extends Component {
       confirmPasswordErr
     } = this.state;
 
-    let content;
-
-    if (loading) {
-      content = <Spinner />;
-    } else {
-      content = (
+    return (
+      <div>
+        <Message />
+        <Heading title={parent} />
         <div className="col-md-8 mx-auto">
           <form onSubmit={this.onSubmit} noValidate>
             {parent === "register" && (
@@ -163,14 +157,6 @@ class AuthForm extends Component {
             resetPassword={this.resetPassword}
           />
         </div>
-      );
-    }
-
-    return (
-      <div>
-        <Message />
-        <Heading title={parent} />
-        {content}
       </div>
     );
   }

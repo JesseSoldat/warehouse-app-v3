@@ -1,5 +1,8 @@
 import React from "react";
 
+// common components
+import IconBtn from "../../../components/buttons/IconBtn";
+
 const TableBody = ({ users, handleChange, handleDelete }) => {
   const selectBox = ({ email, role }) => (
     <div className="input-group mb-3">
@@ -14,19 +17,19 @@ const TableBody = ({ users, handleChange, handleDelete }) => {
     </div>
   );
 
-  const tableData = users.map((user, i) => (
+  const tableData = users.map(user => (
     <tr key={user._id}>
       <td> </td>
       <td>{user.username}</td>
       <td>{user.email}</td>
       <td style={{ display: "inline-block", width: 150 }}>{selectBox(user)}</td>
       <td>
-        <button
-          className="btn btn-danger"
-          onClick={() => handleDelete(user.email)}
-        >
-          <i className="fas fa-trash-alt mr-2" /> Delete User
-        </button>
+        <IconBtn
+          btnClass="btn-danger"
+          iconClass="fa-trash-alt"
+          text="Delete User"
+          cb={() => handleDelete(user.email)}
+        />
       </td>
     </tr>
   ));
