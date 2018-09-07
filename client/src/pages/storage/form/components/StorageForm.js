@@ -4,6 +4,7 @@ import React, { Component } from "react";
 import FieldList from "./FieldList";
 // helpers
 import validateForm from "../helpers/validateForm";
+import storageFieldData from "../helpers/storageFieldData";
 // utils
 import capitalizeFirstLetter from "../../../../utils/stringManipulation/capitalizeFirstLetter";
 
@@ -18,15 +19,12 @@ class StorageForm extends Component {
     shelfLabel: this.props.defaultState.shelfLabel,
     shelfLabelErr: "",
     shelfSpotLabel: this.props.defaultState.shelfSpotLabel,
-    shelfSpotLabelErr: "",
-    boxLabel: this.props.defaultState.boxLabel,
-    boxLabelErr: ""
+    shelfSpotLabelErr: ""
   };
 
   // cb --------------------------------------
   onSubmit = e => {
     e.preventDefault();
-    this.setState({ disableBtn: true });
     const { storageType, formType, handleSubmit } = this.props;
 
     const { isValid, errsObj, form } = validateForm(
@@ -35,10 +33,7 @@ class StorageForm extends Component {
       this.state
     );
 
-    if (!isValid) {
-      this.setState({ ...errsObj, disableBtn: false });
-      return;
-    }
+    if (!isValid) return this.setState({ ...errsObj });
 
     handleSubmit(form);
   };
@@ -47,28 +42,25 @@ class StorageForm extends Component {
   onChange = e => {
     const { name, value } = e.target;
     const err = `${name}Err`;
-    this.setState({ [name]: value, [err]: null, disableBtn: false });
+    this.setState({ [name]: value, [err]: null });
   };
 
   render() {
-    const { formType, storageType } = this.props;
-
     return (
       <form
         className="col-xs-12 col-sm-10 col-md-8 mx-auto"
         onSubmit={this.onSubmit}
       >
         <FieldList
+          storageFieldData={storageFieldData}
           state={this.state}
-          storageType={storageType}
-          formType={formType}
+          storageType={this.props.storageType}
           onChange={this.onChange}
         />
 
         <input
           type="submit"
-          disabled={this.state.disableBtn}
-          value={capitalizeFirstLetter(formType)}
+          value={capitalizeFirstLetter(this.props.formType)}
           className="btn btn-info btn-block mt-4"
         />
       </form>

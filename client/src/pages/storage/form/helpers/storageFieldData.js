@@ -4,13 +4,15 @@ export default {
       placeholder: "* Storage Label",
       name: "storageLabel",
       err: "storageLabelErr",
-      msg: "Storage label is a required field!"
+      msg: "Storage label is a required field!",
+      required: true
     },
     {
       placeholder: "* Storage Description",
       name: "description",
       err: "descriptionErr",
-      msg: "Storage description is a required field!"
+      msg: "Storage description is a required field!",
+      required: true
     }
   ],
   rack: [
@@ -18,7 +20,8 @@ export default {
       placeholder: "* Rack Label",
       name: "rackLabel",
       err: "rackLabelErr",
-      msg: "Rack label is a required field!"
+      msg: "Rack label is a required field!",
+      required: true
     }
   ],
   shelf: [
@@ -26,7 +29,8 @@ export default {
       placeholder: "* Shelf Label",
       name: "shelfLabel",
       err: "shelfLabelErr",
-      msg: "Shelf label is a required field!"
+      msg: "Shelf label is a required field!",
+      required: true
     }
   ],
   shelfSpot: [
@@ -34,7 +38,8 @@ export default {
       placeholder: "* Shelf Spot Label",
       name: "shelfSpotLabel",
       err: "shelfSpotLabelErr",
-      msg: "Shelf spot label is a required field!"
+      msg: "Shelf spot label is a required field!",
+      required: true
     }
   ]
 };

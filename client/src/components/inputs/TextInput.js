@@ -10,7 +10,8 @@ const TextInput = ({
   info,
   type,
   onChange,
-  disabled
+  disabled = false,
+  required = false
 }) => {
   const inputClass = error
     ? "form-control form-control-lg mb-2 is-invalid"
@@ -21,6 +22,12 @@ const TextInput = ({
         <label className="p-0 m-0 pl-1">
           <small>{label}</small>
         </label>
+      )}
+
+      {required && (
+        <small className="d-block pb-3 float-right">
+          <strong>* = required fields</strong>
+        </small>
       )}
       <input
         className={inputClass}
@@ -43,7 +50,8 @@ TextInput.propTypes = {
   text: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   info: PropTypes.string,
   onChange: PropTypes.func.isRequired,
-  disabled: PropTypes.string
+  disabled: PropTypes.bool,
+  required: PropTypes.bool
 };
 
 TextInput.defaultProps = {

@@ -135,8 +135,29 @@ export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
 };
 
 // DELETE BOX
+export const deleteBox = update => ({
+  type: BOX_DELETE_ONE,
+  update
+});
+
 export const startDeleteBox = (
   boxId,
   historyUrl,
   history
-) => async dispatch => {};
+) => async dispatch => {
+  try {
+    dispatch(showOverlay(true));
+
+    const res = await axios.delete(`/api/boxes/${boxId}`);
+
+    const { msg, options, payload } = res.data;
+
+    history.push(historyUrl);
+
+    dispatch(deleteBox(payload));
+
+    checkForMsg(msg, dispatch, options);
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "delete", "box");
+  }
+};

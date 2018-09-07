@@ -28,7 +28,7 @@ const initialState = {
 };
 
 export default (state = initialState, action) => {
-  const { type, box, boxes, query } = action;
+  const { type, box, boxes, update, query } = action;
   switch (type) {
     case BOXES_RESET:
       return {
@@ -95,6 +95,7 @@ export default (state = initialState, action) => {
       };
 
     case BOX_DELETE_ONE:
+      // Api update = { boxId }
       return {
         ...state,
         boxes: [],

@@ -50,6 +50,7 @@ class BoxEdit extends Component {
     } else {
       historyUrl = `/storages`;
     }
+
     this.setState({ historyUrl, location, boxId, ids });
 
     // Type is Box and No Location -----------------------
@@ -78,6 +79,15 @@ class BoxEdit extends Component {
     startEditBox({ boxLabel }, boxId, ids, history);
   };
 
+  sendServerMsg = () => {
+    const msg = buildClientMsg({
+      info: "Delete or relink all products of this box first.",
+      color: "red",
+      code: "hide-3"
+    });
+    this.props.serverMsg(msg);
+  };
+
   handleDelete = () => {
     const { startDeleteBox, rack, box, history } = this.props;
     const { historyUrl, location, boxId, ids } = this.state;
@@ -88,12 +98,7 @@ class BoxEdit extends Component {
       if (storedItems.length === 0) {
         startDeleteBox(boxId, historyUrl, history);
       } else {
-        const msg = buildClientMsg({
-          info: "Delete or relink all products of this box first.",
-          color: "red",
-          code: "hide-3"
-        });
-        this.props.serverMsg(msg);
+        this.sendServerMsg();
       }
     }
     // Have Location ---------------------------------
@@ -112,17 +117,12 @@ class BoxEdit extends Component {
       if (storedItems && storedItems.length === 0) {
         startDeleteBox(boxId, historyUrl, history);
       } else {
-        const msg = buildClientMsg({
-          info: "Delete or relink all products of this box first.",
-          color: "red",
-          code: "hide-3"
-        });
-        this.props.serverMsg(msg);
+        this.sendServerMsg();
       }
     }
   };
 
-  renderContent = defaultState => {
+  renderContent = boxLabel => {
     const button = (
       <div className="row">
         <div className="col-xs-12 col-sm-10 col-md-8 mx-auto  d-flex justify-content-end">
@@ -137,7 +137,7 @@ class BoxEdit extends Component {
       <BoxForm
         formType="edit"
         handleSubmit={this.handleSubmit}
-        defaultState={defaultState}
+        boxLabel={boxLabel}
       />
     );
 
@@ -152,15 +152,6 @@ class BoxEdit extends Component {
 
     let content, button;
 
-    const defaultState = {
-      storageLabel: "",
-      description: "",
-      rackLabel: "",
-      shelfLabel: "",
-      spotLabel: "",
-      boxLabel: ""
-    };
-
     if (loading) {
       content = <Spinner />;
     }
@@ -173,18 +164,14 @@ class BoxEdit extends Component {
         storedItem => storedItem.item._id === boxId
       );
 
-      defaultState.boxLabel = box.item.boxLabel;
-
-      const contentObj = this.renderContent(defaultState);
+      const contentObj = this.renderContent(box.item.boxLabel);
       content = contentObj.content;
       button = contentObj.button;
     }
 
-    // Type is Box with No Location
+    // BOX NO LOCATION
     else if (box && location === false) {
-      defaultState.boxLabel = box.boxLabel;
-
-      const contentObj = this.renderContent(defaultState);
+      const contentObj = this.renderContent(box.boxLabel);
       content = contentObj.content;
       button = contentObj.button;
     }

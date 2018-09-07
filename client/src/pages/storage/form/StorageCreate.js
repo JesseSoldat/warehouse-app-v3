@@ -3,7 +3,6 @@ import { connect } from "react-redux";
 
 // common components
 import Message from "../../../components/Message";
-import Spinner from "../../../components/Spinner";
 import Heading from "../../../components/Heading";
 // custom components
 import StorageForm from "./components/StorageForm";
@@ -35,9 +34,6 @@ class StorageCreate extends Component {
       case "shelfSpot":
         id = shelfId;
         break;
-      case "box":
-        id = shelfSpotId || "";
-        break;
 
       default:
         break;
@@ -47,8 +43,6 @@ class StorageCreate extends Component {
   };
 
   render() {
-    const { loading } = this.props;
-
     const type = getUrlParameter("type");
 
     const defaultState = {
@@ -56,44 +50,27 @@ class StorageCreate extends Component {
       description: "",
       rackLabel: "",
       shelfLabel: "",
-      shelfSpotLabel: "",
-      boxLabel: ""
+      shelfSpotLabel: ""
     };
 
-    let content;
-
-    if (loading) {
-      content = <Spinner />;
-    } else {
-      content = (
+    return (
+      <div className="container">
+        <Message />
+        <Heading title={`Create ${type}`} />
         <div className="row">
           <StorageForm
             storageType={type}
             formType="create"
             handleSubmit={this.handleSubmit}
             defaultState={defaultState}
-            msg={this.props.msg}
           />
         </div>
-      );
-    }
-
-    return (
-      <div className="container">
-        <Message />
-        <Heading title={`Create ${type}`} />
-        {content}
       </div>
     );
   }
 }
 
-const mapStateToProps = ({ ui }) => ({
-  loading: ui.loading,
-  msg: ui.msg
-});
-
 export default connect(
-  mapStateToProps,
+  null,
   { startCreateStorage }
 )(StorageCreate);

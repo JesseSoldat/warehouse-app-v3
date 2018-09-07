@@ -12,29 +12,14 @@ import { startCreateBox } from "../../../actions/box";
 
 const BoxCreate = ({ startCreateBox, history }) => {
   // api calls ------------------
-  const handleSubmit = boxLabel => {
-    startCreateBox({ boxLabel }, history);
-  };
-
-  const defaultState = {
-    storageLabel: "",
-    description: "",
-    rackLabel: "",
-    shelfLabel: "",
-    shelfSpotLabel: "",
-    boxLabel: ""
-  };
+  const handleSubmit = boxLabel => startCreateBox({ boxLabel }, history);
 
   return (
     <div className="container">
       <Message />
       <Heading title="Create Box" />
       <div className="row">
-        <BoxForm
-          formType="Create"
-          handleSubmit={handleSubmit}
-          defaultState={defaultState}
-        />
+        <BoxForm formType="Create" handleSubmit={handleSubmit} boxLabel="" />
       </div>
     </div>
   );

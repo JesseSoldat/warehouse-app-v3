@@ -1,13 +1,13 @@
 import React, { Component } from "react";
 
 // common components
-import Field from "../../../../components/inputs/Field";
+import TextInput from "../../../../components/inputs/TextInput";
 // utils
 import isEmpty from "../../../../utils/validation/isEmpty";
 
 class BoxForm extends Component {
   state = {
-    boxLabel: this.props.defaultState.boxLabel,
+    boxLabel: this.props.boxLabel,
     boxLabelErr: ""
   };
 
@@ -23,32 +23,26 @@ class BoxForm extends Component {
   };
 
   // events ---------------------------------------
-  onChange = e => {
-    const { value } = e.target;
-    this.setState({ boxLabel: value, boxLabelErr: null });
-  };
+  onChange = e =>
+    this.setState({ boxLabel: e.target.value, boxLabelErr: null });
 
   render() {
     const { formType } = this.props;
-
-    const fieldObj = {
-      placeholder: "* Box Label",
-      name: "boxLabel",
-      err: "boxLabelErr",
-      msg: "Box label is a required field!"
-    };
 
     return (
       <form
         className="col-xs-12 col-sm-10 col-md-8 mx-auto"
         onSubmit={this.onSubmit}
       >
-        <Field
-          field={fieldObj}
-          state={this.state}
-          storageType="box"
-          formType={formType}
+        <TextInput
+          name="boxLabel"
+          placeholder="* Box Label"
+          value={this.state.boxLabel}
+          label="* Box Label"
+          error={this.state.boxLabelErr}
           onChange={this.onChange}
+          disabled={false}
+          required={true}
         />
 
         <input

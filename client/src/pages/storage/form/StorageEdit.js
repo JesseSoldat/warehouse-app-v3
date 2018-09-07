@@ -16,7 +16,6 @@ import {
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
-import { startGetBox, startEditBox } from "../../../actions/box";
 import { serverMsg } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
@@ -24,7 +23,6 @@ import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 class StorageEdit extends Component {
   state = {
     historyUrl: "",
-    location: true,
     type: "",
     id: "",
     ids: {}
@@ -39,12 +37,8 @@ class StorageEdit extends Component {
   getFormData() {
     const type = getUrlParameter("type");
     const { match, storages, rack } = this.props;
-    const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
-    // box only logic
-    let location = getUrlParameter("location");
-    location = location === "false" ? false : true;
-
-    const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
+    const { storageId, rackId, shelfId, shelfSpotId } = match.params;
+    const ids = { storageId, rackId, shelfId, shelfSpotId };
 
     let historyUrl;
 
@@ -69,39 +63,20 @@ class StorageEdit extends Component {
         this.setState({ historyUrl, type, id: shelfSpotId, ids });
         break;
 
-      case "box":
-        if (location) {
-          historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
-        } else {
-          historyUrl = `/storages`;
-        }
-        this.setState({ historyUrl, location, type, id: boxId, ids });
-        break;
-
       default:
         break;
     }
 
-    // Type is Box and No Location -----------------------
-    if (type === "box" && !location) {
-      this.props.startGetBox(boxId);
-    }
     // Type is storage -----------------------------------
-    else if (type === "storage") {
+    if (type === "storage") {
       // Check store first for storages in the STORE
-      if (storages.length === 0) {
-        // fetch storages from API
-        this.props.startGetStorages();
-      }
+      if (storages.length === 0) this.props.startGetStorages();
     }
     // Type is either rack, shelf, shelfSpot -------------
     // Rack is present in the STORE
     else if (rack) {
       // Fetch Rack from Store || API call
-      if (rack._id !== rackId) {
-        this.props.startGetRack(rackId);
-        return;
-      }
+      if (rack._id !== rackId) this.props.startGetRack(rackId);
     }
     // Rack is null in the Store / do API call
     else {
@@ -115,9 +90,18 @@ class StorageEdit extends Component {
     startEditStorage(form, type, id, ids, history);
   };
 
+  createServeMsg = (type1, type2) => {
+    const msg = buildClientMsg({
+      info: `Delete or relink all ${type1} of this ${type2} first.`,
+      color: "red",
+      code: "hide-3"
+    });
+    this.props.serverMsg(msg);
+  };
+
   handleDelete = () => {
-    const { startDeleteStorage, storages, rack, box, history } = this.props;
-    const { historyUrl, location, type, id, ids } = this.state;
+    const { startDeleteStorage, storages, rack, history } = this.props;
+    const { historyUrl, type, id, ids } = this.state;
     let shelf;
 
     switch (type) {
@@ -125,31 +109,17 @@ class StorageEdit extends Component {
         const storage = storages.find(obj => obj._id === id);
 
         if (storage.racks.length === 0) {
-          startDeleteStorage(type, id, historyUrl, history);
-        } else {
-          const msg = buildClientMsg({
-            info: "Delete or relink all racks of this storage first.",
-            color: "red",
-            code: "hide-3"
-          });
-          this.props.serverMsg(msg);
+          return startDeleteStorage(type, id, historyUrl, history);
         }
-
+        this.createServeMsg("racks", "storage");
         break;
 
       case "rack":
         const { shelves } = rack;
         if (shelves && shelves.length === 0) {
-          startDeleteStorage(type, id, historyUrl, history);
-        } else {
-          const msg = buildClientMsg({
-            info: "Delete or relink all shelves of this rack first.",
-            color: "red",
-            code: "hide-3"
-          });
-          this.props.serverMsg(msg);
+          return startDeleteStorage(type, id, historyUrl, history);
         }
-
+        this.createServeMsg("shelves", "rack");
         break;
 
       case "shelf":
@@ -157,16 +127,9 @@ class StorageEdit extends Component {
         const { shelfSpots } = shelf;
 
         if (shelfSpots && shelfSpots.length === 0) {
-          startDeleteStorage(type, id, historyUrl, history);
-        } else {
-          const msg = buildClientMsg({
-            info: "Delete or relink all shelf spots of this shelf first.",
-            color: "red",
-            code: "hide-3"
-          });
-          this.props.serverMsg(msg);
+          return startDeleteStorage(type, id, historyUrl, history);
         }
-
+        this.createServeMsg("shelf spots", "shelf");
         break;
 
       case "shelfSpot":
@@ -179,66 +142,14 @@ class StorageEdit extends Component {
         const { storedItems } = shelfSpot;
 
         if (storedItems.length === 0) {
-          startDeleteStorage(type, id, historyUrl, history);
-        } else {
-          const msg = buildClientMsg({
-            info:
-              "Delete or relink all products or boxes of this shelf spot first.",
-            color: "red",
-            code: "hide-3"
-          });
-          this.props.serverMsg(msg);
+          return startDeleteStorage(type, id, historyUrl, history);
         }
-
-        break;
-
-      case "box":
-        // No Location ---------------------------------
-        if (box && location === false && type === "box") {
-          const { storedItems } = box;
-          if (storedItems.length === 0) {
-            startDeleteStorage(type, id, historyUrl, history);
-          } else {
-            const msg = buildClientMsg({
-              info: "Delete or relink all products of this box first.",
-              color: "red",
-              code: "hide-3"
-            });
-            this.props.serverMsg(msg);
-          }
-        }
-        // Have Location ---------------------------------
-        else {
-          const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
-
-          const shelfSpot = shelf.shelfSpots.find(
-            ({ _id }) => _id === ids.shelfSpotId
-          );
-          const box = shelfSpot.storedItems.find(
-            storedItem => storedItem.item._id === ids.boxId
-          );
-
-          const { storedItems } = box.item;
-
-          if (storedItems && storedItems.length === 0) {
-            startDeleteStorage(type, id, historyUrl, history);
-          } else {
-            const msg = buildClientMsg({
-              info: "Delete or relink all products of this box first.",
-              color: "red",
-              code: "hide-3"
-            });
-            this.props.serverMsg(msg);
-          }
-        }
-
+        this.createServeMsg("products or boxes", "shelf spot");
         break;
 
       default:
         break;
     }
-
-    // startDeleteStorage(type, id, ids, history);
   };
 
   renderContent = (type, defaultState) => {
@@ -258,7 +169,6 @@ class StorageEdit extends Component {
         formType="edit"
         handleSubmit={this.handleSubmit}
         defaultState={defaultState}
-        msg={this.props.msg}
       />
     );
 
@@ -266,10 +176,9 @@ class StorageEdit extends Component {
   };
 
   render() {
-    // props
-    const { loading, storages, rack, box } = this.props;
-    const { location, type, ids } = this.state;
-    const { storageId, shelfId, shelfSpotId, boxId } = ids;
+    const { loading, storages, rack } = this.props;
+    const { type, ids } = this.state;
+    const { storageId, shelfId, shelfSpotId } = ids;
 
     let storage, content, button;
 
@@ -280,8 +189,7 @@ class StorageEdit extends Component {
       description: "",
       rackLabel: "",
       shelfLabel: "",
-      spotLabel: "",
-      boxLabel: ""
+      spotLabel: ""
     };
 
     if (loading) {
@@ -331,29 +239,7 @@ class StorageEdit extends Component {
       content = contentObj.content;
       button = contentObj.button;
     }
-    // BOX HAS LOCATION
-    else if (rack && type === "box" && location === true) {
-      const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
-      const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
-      const box = shelfSpot.storedItems.find(
-        storedItem => storedItem.item._id === boxId
-      );
 
-      defaultState.boxLabel = box.item.boxLabel;
-
-      const contentObj = this.renderContent(type, defaultState);
-      content = contentObj.content;
-      button = contentObj.button;
-    }
-
-    // Type is Box with No Location
-    else if (box && location === false && type === "box") {
-      defaultState.boxLabel = box.boxLabel;
-
-      const contentObj = this.renderContent(type, defaultState);
-      content = contentObj.content;
-      button = contentObj.button;
-    }
     return (
       <div className="container">
         <Message />
@@ -365,12 +251,11 @@ class StorageEdit extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, storage, box }) => ({
+const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
   loading: ui.loading,
   storages: storage.storages,
-  rack: storage.rack,
-  box: box.box
+  rack: storage.rack
 });
 
 export default connect(
@@ -379,8 +264,6 @@ export default connect(
     serverMsg,
     startGetStorages,
     startGetRack,
-    startGetBox,
-    startEditBox,
     startEditStorage,
     startDeleteStorage
   }
