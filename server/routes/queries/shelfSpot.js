@@ -17,6 +17,7 @@ const linkProductToShelfSpot = (shelfSpotId, productId) => {
   );
 };
 
+// EXAMPLE OF WORKING QUERY
 const linkProductToShelfSpotPopIds = (shelfSpotId, productId) => {
   return ShelfSpot.findByIdAndUpdate(
     shelfSpotId,

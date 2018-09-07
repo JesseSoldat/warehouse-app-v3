@@ -84,7 +84,7 @@ const RackTable = ({ rack }) => {
   return (
     <div className="card card-body mb-3" key={`table-${rackLabel}`}>
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-2">
-        <h2>Rack {rackLabel}</h2>
+        <h2>{rackLabel}</h2>
 
         <div>
           <Link to={`/barcode/create/${storageId}/${rackId}?type=rack`}>

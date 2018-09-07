@@ -33,7 +33,7 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
-  // ------------------------- LINKING -------------------------------------
+  // ------------------------- LINKING ---------------------------------
   // Product -> Shelf Spot -----------------------------
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;

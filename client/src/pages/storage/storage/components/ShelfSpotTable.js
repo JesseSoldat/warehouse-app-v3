@@ -95,7 +95,7 @@ const ShelfSpotTable = ({ rack, shelfId, shelfSpotId }) => {
   return (
     <div className="card card-body mb-3" key={`table-${shelfSpotLabel}`}>
       <div className="d-flex flex-wrap justify-content-between align-items-center mb-3">
-        <h2>Shelf Spot {shelfSpotLabel}</h2>
+        <h2>{shelfSpotLabel}</h2>
 
         <div>
           <Link

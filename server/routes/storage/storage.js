@@ -8,6 +8,8 @@ const isAuth = require("../../middleware/isAuth");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
+// queries
+const { getAllStorages, getAllStorageIds } = require("../queries/storage");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -20,27 +22,7 @@ module.exports = (app, io) => {
   // storage ids
   app.get("/api/storages/ids", isAuth, async (req, res) => {
     try {
-      const storages = await Storage.find({}).populate({
-        path: "racks",
-        select: ["_id", "rackLabel"],
-        populate: {
-          path: "shelves",
-          select: ["_id", "shelfLabel"],
-          populate: {
-            path: "shelfSpots",
-            select: [
-              "_id",
-              "shelfSpotLabel",
-              "storedItems.kind",
-              "storedItems._id"
-            ],
-            populate: {
-              path: "storedItems.item",
-              select: ["boxLabel", "_id"]
-            }
-          }
-        }
-      });
+      const storages = await getAllStorageIds();
 
       serverRes(res, 200, null, storages);
     } catch (err) {
@@ -118,10 +100,7 @@ module.exports = (app, io) => {
   // Get all storages
   app.get("/api/storages", isAuth, async (req, res) => {
     try {
-      const storages = await Storage.find({}).populate({
-        path: "racks",
-        populate: { path: "shelves" }
-      });
+      const storages = await getAllStorages();
 
       serverRes(res, 200, null, storages);
     } catch (err) {
@@ -131,6 +110,7 @@ module.exports = (app, io) => {
       serverRes(res, 400, msg, null);
     }
   });
+
   // Get a single storage by storageId
   app.get("/api/storages/:storageId", isAuth, async (req, res) => {
     const { storageId } = req.params;

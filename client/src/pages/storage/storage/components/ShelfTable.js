@@ -68,7 +68,7 @@ const ShelfTable = ({ rack, shelfId }) => {
     <div className="card card-body mb-3">
       <div className="d-flex flex-wrap justify-content-between mb-3">
         <div className="ml-2">
-          <h2 className="py-1 ml-3">Shelf {shelfLabel}</h2>
+          <h2 className="py-1 ml-3">{shelfLabel}</h2>
           <Link
             to={`/shelfSpot/create/${storageId}/${rackId}/${shelfId}?type=shelfSpot`}
           >
