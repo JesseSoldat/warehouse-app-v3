@@ -15,6 +15,7 @@ import {
   RACK_UPDATE_ONE,
   RACK_DELETE_ONE
 } from "../actions/storage";
+import { LINK_PRODUCT_TO_SHELFSPOT } from "../actions/link";
 
 const initialState = {
   search: [],
@@ -39,9 +40,40 @@ export default (state = initialState, action) => {
     update
   } = action;
 
-  let storageIndex, shelfIndex, shelfSpotIndex;
+  let storageIndex, rackIndex, shelfIndex, shelfSpotIndex;
   let storagesCopy, rackCopy;
   let storageId, rackId, shelfId, shelfSpotId;
+
+  const getStorageIndex = (storages, storageId) => {
+    console.log("storageId", storageId);
+    const storageIndex = storages.findIndex(
+      storage => storage._id === storageId
+    );
+    console.log("storageIndex", storageIndex);
+    return storageIndex;
+  };
+
+  const getRackIndex = (racks, rackId) => {
+    const rackIndex = racks.findIndex(rack => rack._id === rackId);
+    console.log("rackIndex", rackIndex);
+    return rackIndex;
+  };
+
+  const getShelfIndex = (shelves, shelfId) => {
+    console.log("shelfId", shelfId);
+    const shelfIndex = shelves.findIndex(shelf => shelf._id === shelfId);
+    console.log("shelfIndex", shelfIndex);
+    return shelfIndex;
+  };
+
+  const getShelfSpotIndex = (shelfSpots, shelfSpotId) => {
+    console.log("shelfSpotId", shelfSpotId);
+    const shelfSpotIndex = shelfSpots.findIndex(
+      shelfSpot => shelfSpot._id === shelfSpotId
+    );
+    console.log("shelfSpotIndex", shelfSpotIndex);
+    return shelfSpotIndex;
+  };
 
   switch (type) {
     case RESET_STORAGE:
@@ -332,6 +364,72 @@ export default (state = initialState, action) => {
         default:
           break;
       }
+
+      return {
+        ...state,
+        storages: storagesCopy,
+        storageIdsEntity: null,
+        rack: rackCopy
+      };
+
+    // ----------------------------- LINKING -------------------------------
+    case LINK_PRODUCT_TO_SHELFSPOT:
+      // console.log("LINK_PRODUCT_TO_SHELFSPOT", update);
+      // API update = shelfSpot
+      // ----------- get copies of the state ---------------------
+      storagesCopy = [...state.storages];
+      state.rack ? (rackCopy = { ...state.rack }) : null;
+
+      // ----------------- replace shelfSpot in rack -------------
+      rackId = update.shelf.rack._id;
+      console.log("rackId", rackId);
+      if (rackCopy && rackCopy._id === rackId) {
+        // console.log("rackCopy", rackCopy);
+        // get the index of the shelf
+        shelfId = update.shelf._id;
+        shelfIndex = getShelfIndex(rackCopy.shelves, shelfId);
+
+        // get the index of the shelfspot
+        if (shelfIndex >= 0) {
+          shelfSpotId = update._id;
+          shelfSpotIndex = getShelfSpotIndex(
+            rackCopy.shelves[shelfIndex].shelfSpots,
+            shelfSpotId
+          );
+        }
+
+        if (shelfSpotIndex >= 0) {
+          rackCopy.shelves[shelfIndex].shelfSpots.splice(
+            shelfSpotIndex,
+            1,
+            update
+          );
+          console.log(
+            "rackCopy shelfspot after update",
+            rackCopy.shelves[shelfIndex].shelfSpots[shelfSpotIndex]
+          );
+
+          // ------------- replace rack in storages ----------------------
+          if (storagesCopy) {
+            storageId = rackCopy.storage._id;
+            storageIndex = getStorageIndex(storagesCopy, storageId);
+
+            if (storageIndex >= 0) {
+              rackIndex = getRackIndex(
+                storagesCopy[storageIndex].racks,
+                rackId
+              );
+
+              if (rackIndex >= 0) {
+                // update storages array with updated rack
+                storagesCopy[storageIndex].racks[rackIndex] = rackCopy;
+              }
+            }
+          }
+        }
+      }
+
+      console.log("storagesCopy[rackIndex]", storagesCopy[rackIndex]);
 
       return {
         ...state,

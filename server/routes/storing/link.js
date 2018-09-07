@@ -35,14 +35,13 @@ module.exports = (app, io) => {
   };
   // ------------------------- LINKING -------------------------------------
   // Product -> Shelf Spot -----------------------------
-  // OK
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
     try {
       const [product, shelfSpot] = await Promise.all([
         linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
-        linkProductToShelfSpot(shelfSpotId, productId)
+        linkProductToShelfSpotPopIds(shelfSpotId, productId)
       ]);
 
       emit(req.user._id);
@@ -64,7 +63,6 @@ module.exports = (app, io) => {
   });
 
   // Product -> Box ---------------------------------
-  // OK
   app.patch("/api/link/productToBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
 
@@ -89,7 +87,6 @@ module.exports = (app, io) => {
   });
 
   // Box -> Shelf Spot ---------------------------------
-  // OK
   app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
 
@@ -119,7 +116,6 @@ module.exports = (app, io) => {
 
   //-------------------------------- RELINKING ------------------------------------
   // Product -> Shelf Spot -----------------------------
-  // OK
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
     const { prevLocation, productId, shelfSpotId } = req.body;
 
@@ -160,7 +156,6 @@ module.exports = (app, io) => {
   });
 
   // Product -> Box ---------------------------------
-  // OK
   app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
     const { prevLocation, productId, boxId } = req.body;
 

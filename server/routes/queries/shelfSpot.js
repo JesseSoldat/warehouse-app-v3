@@ -26,18 +26,25 @@ const linkProductToShelfSpotPopIds = (shelfSpotId, productId) => {
       }
     },
     { new: true }
-  ).populate({
-    path: "shelf",
-    select: ["_id"],
-    populate: {
-      path: "rack",
-      select: ["_id"],
+  )
+    .populate({
+      path: "shelf",
+      select: ["_id", "shelfLabel"],
       populate: {
-        path: "storage",
-        select: ["_id"]
+        path: "rack",
+        select: ["_id", "rackLabel"],
+        populate: {
+          path: "storage",
+          select: ["_id", "storageLabel", "description"]
+        }
       }
-    }
-  });
+    })
+    .populate({
+      path: "storedItems.item",
+      populate: {
+        path: "storedItems"
+      }
+    });
 };
 
 const linkBoxToShelfSpot = (shelfSpotId, boxId) => {
