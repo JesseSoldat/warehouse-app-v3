@@ -6,6 +6,7 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
 import { resetStorage } from "./storage";
+import { resetBox } from "./box";
 
 // helpers --------------------------------------------------------------------
 const createHistoryUrl = (shelfSpot, type, boxId) => {
@@ -64,6 +65,7 @@ export const linkItems = (obj, history) => async dispatch => {
     }
 
     dispatch(resetStorage());
+    dispatch(resetBox());
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

@@ -189,7 +189,6 @@ class Product extends Component {
             btn1Cb={this.onDeleteProduct}
             btn2Cb={this.onEditProduct}
             showRightBtns={true}
-            headingTitle="Product Details"
           />
         )}
         <Heading title="Product Details" />

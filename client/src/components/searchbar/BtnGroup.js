@@ -1,5 +1,8 @@
 import React from "react";
 
+// common components
+import IconBtn from "../buttons/IconBtn";
+
 const BtnGroup = ({ onSearch, onResetFilter }) => {
   return (
     <div className="d-flex flex-wrap mx-auto pt-3 pt-md-0">
@@ -7,22 +10,19 @@ const BtnGroup = ({ onSearch, onResetFilter }) => {
         <label className="mt-3">
           <small />
         </label>
-        <button
-          onClick={onSearch}
-          className="btn btn-primary mr-1"
-          type="button"
-        >
-          <i className="fas fa-search mr-2 " />
-          Search
-        </button>
-        <button
-          onClick={onResetFilter}
-          className="btn btn-danger"
-          type="button"
-        >
-          <i className="fas fa-sync-alt mr-2 " />
-          Reset Filter
-        </button>
+        <IconBtn
+          btnClass="btn-primary mr-1"
+          iconClass="fa-search"
+          text="Search"
+          cb={onSearch}
+        />
+
+        <IconBtn
+          btnClass="btn-danger"
+          iconClass="fa-sync-alt"
+          text="Reset Filter"
+          cb={onResetFilter}
+        />
       </span>
     </div>
   );

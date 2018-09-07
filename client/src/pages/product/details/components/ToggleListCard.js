@@ -1,5 +1,8 @@
 import React, { Component } from "react";
 
+// common components
+import IconBtn from "../../../../components/buttons/IconBtn";
+
 class ToggleListCard extends Component {
   state = {
     viewAll: false
@@ -16,10 +19,12 @@ class ToggleListCard extends Component {
   renderShowBtn = (css = "", btnCss = "", label) => {
     return (
       <div className={`col-12 ${css}`}>
-        <button className={`btn btn-primary ${btnCss}`} onClick={this.viewAll}>
-          <i className="fas fa-eye mr-2  d-none d-sm-inline " />
-          All {label}
-        </button>
+        <IconBtn
+          btnClass={`btn-primary ${btnCss}`}
+          iconClass="fa-eye d-none d-sm-inline"
+          text={`All ${label}`}
+          cb={this.viewAll}
+        />
       </div>
     );
   };
@@ -27,10 +32,12 @@ class ToggleListCard extends Component {
   renderHideBtn = (css = "", btnCss = "", label) => {
     return (
       <div className={`col-12 ${css}`}>
-        <button className={`btn btn-primary ${btnCss}`} onClick={this.hide}>
-          <i className="fas fa-eye-slash mr-2 d-none d-sm-inline " />
-          Hide {label}
-        </button>
+        <IconBtn
+          btnClass={`btn-primary ${btnCss}`}
+          iconClass="fa-eye-slash d-none d-sm-inline"
+          text={`Hide ${label}`}
+          cb={this.hide}
+        />
       </div>
     );
   };

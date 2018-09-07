@@ -1,6 +1,7 @@
 import React from "react";
 
 // common components
+import IconBtn from "../../../../components/buttons/IconBtn";
 import Carousel from "../../../../components/Carousel";
 import SingleField from "../../../../components/SingleField";
 
@@ -46,20 +47,19 @@ const InfoCard = ({
   const renderBtns = (css = "", btnCss = "") => {
     return (
       <div className={`col-12 ${css}`}>
-        <button
-          className={`btn btn-secondary ${btnCss}`}
-          onClick={() => onManagePictures(productId)}
-        >
-          <i className="fas fa-chevron-right mr-2 d-none d-sm-inline" />
-          Manage Pictures
-        </button>
-        <button
-          className={`btn btn-primary ${btnCss}`}
-          onClick={() => onCreateBarCode(productId)}
-        >
-          <i className="fas fa-barcode mr-2 d-none d-sm-inline" />
-          Create Barcode
-        </button>
+        <IconBtn
+          btnClass={`btn-secondary ${btnCss}`}
+          iconClass="fa-chevron-right d-none d-sm-inline"
+          text="Manage Pictures"
+          cb={() => onManagePictures(productId)}
+        />
+
+        <IconBtn
+          btnClass={`btn-primary ${btnCss}`}
+          iconClass="fa-barcode d-none d-sm-inline"
+          text="Create Barcode"
+          cb={() => onCreateBarCode(productId)}
+        />
       </div>
     );
   };

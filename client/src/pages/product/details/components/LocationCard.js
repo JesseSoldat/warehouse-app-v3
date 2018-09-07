@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 
 // common components
 import SingleField from "../../../../components/SingleField";
+import IconBtn from "../../../../components/buttons/IconBtn";
 
 const LocationCard = ({
   productLocationObj,
@@ -33,13 +34,12 @@ const LocationCard = ({
   const renderOnLinkBtn = (css = "", btnCss = "") => {
     return (
       <div className={`col-12 ${css}`}>
-        <button
-          className={`btn btn-primary ${btnCss}`}
-          onClick={() => onLink(productId, "storeProduct")}
-        >
-          <i className="fas fa-archive mr-2 d-none d-sm-inline" />
-          Store Product
-        </button>
+        <IconBtn
+          btnClass={`btn-primary ${btnCss}`}
+          iconClass="fa-archive d-none d-sm-inline"
+          text="Store Product"
+          cb={() => onLink(productId, "storeProduct")}
+        />
       </div>
     );
   };
@@ -147,21 +147,18 @@ const LocationCard = ({
     const renderOnUnLinkBtn = (css = "", btnCss = "") => {
       return (
         <div className={`col-12 ${css}`}>
-          <button
-            className={`btn btn-secondary ${btnCss}`}
-            onClick={() => onLink(productId, "restoreProduct")}
-          >
-            <i className="fas fa-archive mr-2 d-none d-sm-inline" />
-            Restore Product
-          </button>
-
-          <button
-            className={`btn btn-primary ${btnCss}`}
-            onClick={() => onUnLink(productId, kind)}
-          >
-            <i className="fas fa-hand-paper mr-2 d-none d-sm-inline" />
-            Retrieve Product
-          </button>
+          <IconBtn
+            btnClass={`btn-secondary ${btnCss}`}
+            iconClass="fa-archive d-none d-sm-inline"
+            text="Restore Product"
+            cb={() => onLink(productId, "restoreProduct")}
+          />
+          <IconBtn
+            btnClass={`btn-primary ${btnCss}`}
+            iconClass="fa-hand-paper d-none d-sm-inline"
+            text="Retrieve Product"
+            cb={() => onUnLink(productId, kind)}
+          />
         </div>
       );
     };

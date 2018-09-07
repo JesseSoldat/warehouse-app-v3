@@ -1,30 +1,32 @@
 import React from "react";
 
+// common components
+import IconBtn from "../../../components/buttons/IconBtn";
+
 const CameraButton = ({ scanning, handleClickUseCamera }) => {
-  const cameraButton = (
-    <div>
-      {/* small screens */}
-      <button
-        className="btn btn-primary btn-block mt-3 mb-3 d-block d-sm-none"
-        onClick={handleClickUseCamera}
-      >
-        <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
-        {scanning ? "Off" : "On"}
-      </button>
-      {/* large screens */}
-      <button
-        className="btn btn-primary mt-3 mb-3 float-right d-none d-sm-block"
-        onClick={handleClickUseCamera}
-      >
-        <i className="fas fa-camera-retro mr-2" /> Turn Camera{" "}
-        {scanning ? "Off" : "On"}
-      </button>
-    </div>
-  );
+  const text = `Turn Camera ${scanning ? "Off" : "On"}`;
 
   return (
     <div className="row">
-      <div className="col-12">{cameraButton}</div>
+      <div className="col-12">
+        {/* small screens */}
+
+        <IconBtn
+          btnClass="btn-primary btn-block mt-3 mb-3 d-block d-sm-none"
+          iconClass="fa-camera-retro"
+          text={text}
+          cb={handleClickUseCamera}
+        />
+
+        {/* large screens */}
+
+        <IconBtn
+          btnClass="btn-primary mt-3 mb-3 float-right d-none d-sm-block"
+          iconClass="fa-camera-retro"
+          text={text}
+          cb={handleClickUseCamera}
+        />
+      </div>
     </div>
   );
 };

@@ -1,5 +1,8 @@
 import React from "react";
 
+// common components
+import IconBtn from "../../../components/buttons/IconBtn";
+
 const ScanForm = ({
   linkScannedItems,
   resetItems,
@@ -39,17 +42,19 @@ const ScanForm = ({
               />
             </div>
           </div>
-
-          <button
-            type="submit"
-            className="btn btn-primary mr-2"
+          <IconBtn
+            btnClass="btn-primary mr-2"
+            iconClass="fa-link"
+            text="Link Items"
             disabled={!firstScannedItemId || !secondScannedItemId}
-          >
-            Link Items
-          </button>
-          <button onClick={resetItems} type="button" className="btn btn-danger">
-            Reset Items
-          </button>
+            type="submit"
+          />
+          <IconBtn
+            btnClass="btn-danger mr-2"
+            iconClass="fa-sync-alt"
+            text="Reset Items"
+            cb={resetItems}
+          />
         </form>
       </div>
     </div>
