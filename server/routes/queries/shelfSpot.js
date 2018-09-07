@@ -41,8 +41,10 @@ const linkProductToShelfSpotPopIds = (shelfSpotId, productId) => {
     })
     .populate({
       path: "storedItems.item",
+      select: ["_id", "boxLabel", "productName"],
       populate: {
-        path: "storedItems"
+        path: "storedItems",
+        select: ["_id", "productName", "productPictures", "packagingPictures"]
       }
     });
 };

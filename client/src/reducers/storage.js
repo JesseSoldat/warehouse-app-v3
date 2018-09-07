@@ -180,6 +180,8 @@ export default (state = initialState, action) => {
       };
 
     case RACK_LOADED:
+      console.log("RACK_LOADED", rack);
+
       return {
         ...state,
         rack,

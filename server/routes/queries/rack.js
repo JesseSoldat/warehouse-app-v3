@@ -2,20 +2,32 @@ const Rack = require("../../models/storage/rack");
 
 // GET ----------------------------------------------------------------
 const getSingleRack = rackId => {
-  return Rack.findById(rackId)
+  return Rack.findById(rackId, ["_id", "rackLabel"])
     .populate({
       path: "shelves",
+      select: ["_id", "shelfLabel"],
       populate: {
         path: "shelfSpots",
+        select: ["_id", "shelfSpotLabel", "storedItems"],
         populate: {
-          path: "storedItems.item ",
+          path: "storedItems.item",
+          select: ["_id", "boxLabel", "productName"],
           populate: {
-            path: "storedItems"
+            path: "storedItems",
+            select: [
+              "_id",
+              "productName",
+              "productPictures",
+              "packagingPictures"
+            ]
           }
         }
       }
     })
-    .populate("storage");
+    .populate({
+      path: "storage",
+      select: ["_id"]
+    });
 };
 
 // LINK ----------------------------------------------------------------
