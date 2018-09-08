@@ -12,7 +12,7 @@ const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
 const { getAllBoxesWithLocations, getBox } = require("../queries/box");
 const {
-  linkBoxToShelfSpot,
+  linkItemToShelfSpotPopIds,
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
 
@@ -93,7 +93,10 @@ module.exports = (app, io) => {
     const { shelfSpotId } = req.params;
     const box = new Box(req.body);
     try {
-      await Promise.all([box.save(), linkBoxToShelfSpot(shelfSpotId, box._id)]);
+      await Promise.all([
+        box.save(),
+        linkItemToShelfSpotPopIds(shelfSpotId, "box", box._id)
+      ]);
 
       emit(req.user._id);
 
@@ -159,7 +162,7 @@ module.exports = (app, io) => {
         serverRes(res, 200, msg, { boxId: box._id });
       }
     } catch (err) {
-      console.log("ERR: Delet/box", err);
+      console.log("ERR: Delete/box", err);
 
       const msg = serverMsg("error", "delete", "boxes");
       serverRes(res, 400, msg, null);

@@ -26,31 +26,17 @@ const getAllBoxesWithLocations = (skip, limit, mongoQuery = {}) => {
     .populate("storedItems");
 };
 
-// NO LOCATION
+// Box with NO LOCATION
 const getBox = boxId => {
   return Box.findById(boxId, ["_id", "boxLabel"]).populate("storedItems");
 };
 
 // LINK --------------------------------------------------------
-const linkProductToBox = (boxId, productId) => {
+const linkItemToBoxPopIds = (boxId, item, itemId) => {
   return Box.findByIdAndUpdate(
     boxId,
     {
-      $addToSet: {
-        storedItems: productId
-      }
-    },
-    { new: true }
-  );
-};
-
-const linkProductToBoxPopIds = (boxId, productId) => {
-  return Box.findByIdAndUpdate(
-    boxId,
-    {
-      $addToSet: {
-        storedItems: productId
-      }
+      $set: { [item]: itemId }
     },
     { new: true }
   )
@@ -71,16 +57,6 @@ const linkProductToBoxPopIds = (boxId, productId) => {
       }
     })
     .populate("storedItems");
-};
-
-const linkShelfSpotToBox = (boxId, shelfSpotId) => {
-  return Box.findByIdAndUpdate(
-    boxId,
-    {
-      $set: { shelfSpot: shelfSpotId }
-    },
-    { new: true }
-  );
 };
 
 // UNLINK ------------------------------------------------------
@@ -104,14 +80,10 @@ const unlinkShelfSpotFromBox = boxId => {
   );
 };
 
-// $unset: { productLocation: {} }
-
 module.exports = {
   getAllBoxesWithLocations,
   getBox,
-  linkProductToBox,
-  linkProductToBoxPopIds,
-  linkShelfSpotToBox,
+  linkItemToBoxPopIds,
   unlinkProductFromBox,
   unlinkShelfSpotFromBox
 };

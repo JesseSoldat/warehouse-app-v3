@@ -1,7 +1,3 @@
-// models
-const ShelfSpot = require("../../models/storage/shelfSpot");
-const Box = require("../../models/storage/box");
-const Product = require("../../models/product");
 // middleware
 const isAuth = require("../../middleware/isAuth");
 // utils
@@ -43,13 +39,13 @@ module.exports = (app, io) => {
         "blue",
         "hide-3"
       );
-      serverRes(res, 200, msg, null);
+      serverRes(res, 200, msg, { shelfSpot, product });
     } catch (err) {
       console.log("ERR: Patch/unlink/productFromShelfSpot", err);
 
       const msg = serverMsg("error", "unlink", "product from shelf spot");
 
-      serverRes(res, 400, msg, { shelfSpot, product });
+      serverRes(res, 400, msg, null);
     }
   });
 

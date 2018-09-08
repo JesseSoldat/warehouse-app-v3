@@ -8,7 +8,7 @@ import {
   BOX_UPDATE_ONE,
   BOX_DELETE_ONE
 } from "../actions/box";
-import { LINK_PRODUCT_TO_BOX } from "../actions/link";
+import { LINK_BOX_TO_SHELFSPOT, LINK_PRODUCT_TO_BOX } from "../actions/link";
 
 const initialState = {
   boxes: [],
@@ -109,8 +109,9 @@ export default (state = initialState, action) => {
       };
 
     // ------------------------ LINKING ---------------------------
+    case LINK_BOX_TO_SHELFSPOT:
     case LINK_PRODUCT_TO_BOX:
-      console.log("LINK_PRODUCT_TO_BOX", update);
+      console.log("LINK_PRODUCT_TO_BOX & || LINK_BOX_TO_SHELFSPOT", update);
       // API update = { box }
       return {
         ...state,

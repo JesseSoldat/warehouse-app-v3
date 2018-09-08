@@ -15,7 +15,10 @@ import {
   RACK_UPDATE_ONE,
   RACK_DELETE_ONE
 } from "../actions/storage";
-import { LINK_PRODUCT_TO_SHELFSPOT } from "../actions/link";
+import {
+  LINK_BOX_TO_SHELFSPOT,
+  LINK_PRODUCT_TO_SHELFSPOT
+} from "../actions/link";
 
 const getIndexFromArray = (array, id) => array.findIndex(obj => obj._id === id);
 
@@ -328,6 +331,20 @@ export default (state = initialState, action) => {
       };
 
     // ----------------------------- LINKING -------------------------------
+    case LINK_BOX_TO_SHELFSPOT:
+      // console.log("LINK_BOX_TO_SHELFSPOT", update);
+      // API update = { shelfSpot }
+      // ----------- get copies of the state ---------------------
+      storagesCopy = [...state.storages];
+      state.rack ? (rackCopy = { ...state.rack }) : null;
+
+      // ------------- replace shelfSpot in rack -------------
+      rackId = update.shelf.rack._id;
+
+      return {
+        ...state
+      };
+
     case LINK_PRODUCT_TO_SHELFSPOT:
       // console.log("LINK_PRODUCT_TO_SHELFSPOT", update);
       // API update = shelfSpot

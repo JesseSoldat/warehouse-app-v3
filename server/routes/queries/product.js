@@ -1,14 +1,14 @@
 const Product = require("../../models/product");
 
 // LINK --------------------------------------------------------------
-const linkShelfSpotToProductPopLocIds = (productId, shelfSpotId) => {
+const linkItemToProductPopIds = (productId, item, itemId) => {
   return Product.findByIdAndUpdate(
     productId,
     {
       $set: {
         productLocation: {
-          kind: "shelfSpot",
-          item: shelfSpotId
+          kind: item,
+          item: itemId
         }
       }
     },
@@ -33,39 +33,6 @@ const linkShelfSpotToProductPopLocIds = (productId, shelfSpotId) => {
     });
 };
 
-const linkBoxToProductPopLocIds = (productId, boxId) => {
-  return Product.findByIdAndUpdate(
-    productId,
-    {
-      $set: {
-        productLocation: {
-          kind: "box",
-          item: boxId
-        }
-      }
-    },
-    { new: true }
-  )
-    .populate("producer customer")
-    .populate({
-      path: "productLocation.item",
-      select: ["_id"],
-      populate: {
-        path: "shelf shelfSpot",
-        select: ["_id"],
-        populate: {
-          path: "shelf rack",
-          select: ["_id"],
-          populate: {
-            path: "rack storage",
-            select: ["_id"],
-            populate: { path: "storage" }
-          }
-        }
-      }
-    });
-};
-
 // UNLINK ----------------------------------------------------------------
 const removeLocationFromProduct = productId => {
   return Product.findByIdAndUpdate(
@@ -78,7 +45,6 @@ const removeLocationFromProduct = productId => {
 };
 
 module.exports = {
-  linkShelfSpotToProductPopLocIds,
-  linkBoxToProductPopLocIds,
+  linkItemToProductPopIds,
   removeLocationFromProduct
 };

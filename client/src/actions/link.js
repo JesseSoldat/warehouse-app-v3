@@ -5,11 +5,12 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
-import { resetStorage } from "./storage";
-import { resetBox } from "./box";
+// import { resetStorage } from "./storage";
+// import { resetBox } from "./box";
 // types
 export const LINK_PRODUCT_TO_SHELFSPOT = "LINK_PRODUCT_TO_SHELFSPOT";
 export const LINK_PRODUCT_TO_BOX = "LINK_PRODUCT_TO_BOX";
+export const LINK_BOX_TO_SHELFSPOT = "LINK_BOX_TO_SHELFSPOT";
 
 // helpers --------------------------------------------------------------------
 const createHistoryUrl = (shelfSpot, type, boxId) => {
@@ -34,6 +35,11 @@ export const linkProductToBox = update => ({
   update
 });
 
+export const linkBoxToShelfSpot = update => ({
+  type: LINK_BOX_TO_SHELFSPOT,
+  update
+});
+
 // Scanning in two items need to check item types and if they are already linked to something
 export const linkItems = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
@@ -44,7 +50,7 @@ export const linkItems = (obj, history) => async dispatch => {
 
     const { msg, options, payload } = res.data;
 
-    console.log("action payload", payload);
+    // console.log("action payload", payload);
 
     const { product, shelfSpot, box } = payload;
 
@@ -53,14 +59,14 @@ export const linkItems = (obj, history) => async dispatch => {
         history.push(`/products/${productId}`);
 
         switch (apiUrl) {
+          // --------------- FROM PRODUCT DETAILS -----------------
           // ------- API = { shelfSpot, product } --------------
-          // FROM PRODUCT DETAILS
           case "/api/link/productToShelfSpot":
           case "/api/relink/productToShelfSpot":
             dispatch(linkProductToShelfSpot(shelfSpot));
             dispatch(productLoaded(product));
             break;
-
+          // ------- API = { box, product } --------------
           case "/api/link/productToBox":
           case "/api/relink/productToBox":
             dispatch(linkProductToBox({ box }));
@@ -71,63 +77,47 @@ export const linkItems = (obj, history) => async dispatch => {
           default:
             break;
         }
-        // ---------- API = { box, product } ----------------
-        // "/api/link/productToBox"
-        // "/api/relink/productToBox"
+        // ---------------- SCAN -------------------------
         // "/api/scan/productToBox"
-
-        // update product
-        // update rack with update shelfspot
-
         // "/api/scan/productToShelfSpot"
+        // "/api/scan/boxToShelfSpot"
 
-        // const updatedProduct = { ...product };
-
-        // ------------- Box has location ---------------------
-        // update box
-        // boxes = []
-        // find rack with the box and update the box
-
-        // ------------- Box no location ---------------------
-        // update box
-        // boxes = []
-
-        // ------------- ShelfSpot --------------------------
-        // populate the shelfspot
-        // find rack with the shelfspot update product info
         break;
 
       case "shelfSpot":
         history.push(createHistoryUrl(shelfSpot, "shelfSpot"));
+
+        // ------------- ShelfSpot --------------------------
+        // populate the shelfspot
+        // find rack with the shelfspot update product info
+
         break;
 
       case "box":
         switch (apiUrl) {
+          // --------------- FROM BOX DETAILS ----------------------
+          // ------- API = { box, product } --------------
           case "/api/link/productToBox":
-            dispatch(linkProductToBox({ box }));
-            dispatch(productLoaded(product));
+            dispatch(linkBoxToShelfSpot({ box }));
             break;
+          // ------- API = { shelfSpot, box } --------------
+          case "/api/link/boxToShelfSpot":
+            dispatch(linkBoxToShelfSpot({ box, shelfSpot }));
+            break;
+          // ------------- Box has location ---------------------
+          // update box
+          // boxes = []
+          // find rack with the box and update the box
+
+          // ------------- Box no location ---------------------
+          // update box
+          // boxes = []
 
           default:
             break;
         }
-        // ------- API = { shelfSpot, box } --------------
-        // "/api/link/boxToShelfSpot"
-        // "/api/scan/boxToShelfSpot"
 
-        // ------------- Box has location ---------------------
-        // update box
-        // boxes = []
-        // find rack from shelfspot info and update the box
-
-        // ------------- Box no location ---------------------
-        // update box
-        // boxes = []
-
-        // ------------- ShelfSpot --------------------------
-        // populate the shelfspot
-        // find rack with the shelfspot update box info
-
+        // ---------------- CREATE BOX HISTORY URL -----------------------
         if (box && box.shelfSpot) {
           if (shelfSpot) {
             history.push(createHistoryUrl(shelfSpot, "box", boxId));
@@ -141,11 +131,11 @@ export const linkItems = (obj, history) => async dispatch => {
         break;
 
       default:
+        console.log(
+          "ERROR: linkItems action was not provided with a correct TYPE1 property of product | box | shelfSpot"
+        );
         break;
     }
-
-    // dispatch(resetStorage());
-    // dispatch(resetBox());
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

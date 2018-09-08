@@ -7,23 +7,13 @@ const isAuth = require("../../middleware/isAuth");
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 // queries
+const { linkItemToProductPopIds } = require("../queries/product");
 const {
-  linkShelfSpotToProductPopLocIds,
-  linkBoxToProductPopLocIds
-} = require("../queries/product");
-const {
-  linkProductToShelfSpot,
-  linkProductToShelfSpotPopIds,
-  linkBoxToShelfSpotPopIds,
+  linkItemToShelfSpotPopIds,
   unlinkProductFromShelfSpot,
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
-const {
-  linkProductToBox,
-  linkProductToBoxPopIds,
-  linkShelfSpotToBox,
-  unlinkProductFromBox
-} = require("../queries/box");
+const { linkItemToBoxPopIds, unlinkProductFromBox } = require("../queries/box");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -40,8 +30,8 @@ module.exports = (app, io) => {
 
     try {
       const [product, shelfSpot] = await Promise.all([
-        linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
-        linkProductToShelfSpotPopIds(shelfSpotId, productId)
+        linkItemToProductPopIds(productId, "shelfSpot", shelfSpotId),
+        linkItemToShelfSpotPopIds(shelfSpotId, "product", productId)
       ]);
 
       emit(req.user._id);
@@ -68,8 +58,8 @@ module.exports = (app, io) => {
 
     try {
       const [product, box] = await Promise.all([
-        linkBoxToProductPopLocIds(productId, boxId),
-        linkProductToBoxPopIds(boxId, productId)
+        linkItemToProductPopIds(productId, "box", boxId),
+        linkItemToBoxPopIds(boxId, "product", productId)
       ]);
 
       emit(req.user._id);
@@ -92,8 +82,8 @@ module.exports = (app, io) => {
 
     try {
       const [shelfSpot, box] = await Promise.all([
-        linkBoxToShelfSpotPopIds(shelfSpotId, boxId),
-        linkShelfSpotToBox(boxId, shelfSpotId)
+        linkItemToShelfSpotPopIds(shelfSpotId, "box", boxId),
+        linkItemToBoxPopIds(boxId, "shelfSpot", shelfSpotId)
       ]);
 
       emit(req.user._id);
@@ -133,8 +123,8 @@ module.exports = (app, io) => {
       }
 
       const [product, shelfSpot] = await Promise.all([
-        linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
-        linkProductToShelfSpotPopIds(shelfSpotId, productId)
+        linkItemToProductPopIds(productId, "shelfSpot", shelfSpotId),
+        linkItemToShelfSpotPopIds(shelfSpotId, "product", productId)
       ]);
 
       emit(req.user._id);
@@ -173,8 +163,8 @@ module.exports = (app, io) => {
       }
 
       const [product, box] = await Promise.all([
-        linkBoxToProductPopLocIds(productId, boxId),
-        linkProductToBox(boxId, productId)
+        linkItemToProductPopIds(productId, "box", boxId),
+        linkItemToBoxPopIds(boxId, "product", productId)
       ]);
 
       emit(req.user._id);
@@ -212,8 +202,8 @@ module.exports = (app, io) => {
 
       // update product and shelfspot
       const [updateProduct, shelfSpot] = await Promise.all([
-        linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
-        linkProductToShelfSpotPopIds(shelfSpotId, productId)
+        linkItemToProductPopIds(productId, "shelfSpot", shelfSpotId),
+        linkItemToShelfSpotPopIds(shelfSpotId, "product", productId)
       ]);
 
       emit(req.user._id);
@@ -256,15 +246,9 @@ module.exports = (app, io) => {
         }
       }
 
-      // Link Product to NEW Box -------------------------------
-      product["productLocation"] = {
-        kind: "box",
-        item: boxId
-      };
-
       const [updateProduct, box] = await Promise.all([
-        product.save(),
-        linkProductToBoxPopIds(boxId, productId)
+        linkItemToProductPopIds(productId, "box", boxId),
+        linkItemToBoxPopIds(boxId, "product", productId)
       ]);
 
       emit(req.user._id);
@@ -293,12 +277,10 @@ module.exports = (app, io) => {
         const oldShelfSpotId = box.shelfSpot;
         await unlinkBoxFromShelfSpot(oldShelfSpotId, boxId);
       }
-      // Link the Box with the NEW Shelf Spot ----------------------------
-      box.shelfSpot = shelfSpotId;
-
+      // update items
       const [updateBox, shelfSpot] = await Promise.all([
-        box.save(),
-        linkBoxToShelfSpotPopIds(shelfSpotId, boxId)
+        linkItemToBoxPopIds(boxId, "shelfSpot", shelfSpotId),
+        linkItemToShelfSpotPopIds(shelfSpotId, "box", boxId)
       ]);
 
       emit(req.user._id);
