@@ -50,7 +50,33 @@ const unlinkProductFromShelfSpot = (shelfSpotId, productId) => {
       }
     },
     { new: true }
-  );
+  )
+    .populate({
+      path: "shelf",
+      select: ["_id", "shelfLabel"],
+      populate: {
+        path: "rack",
+        select: ["_id", "rackLabel"],
+        populate: {
+          path: "storage",
+          select: ["_id", "storageLabel", "description"]
+        }
+      }
+    })
+    .populate({
+      path: "storedItems.item",
+      select: ["_id", "boxLabel", "productName"],
+      populate: {
+        path: "storedItems",
+        select: [
+          "_id",
+          "boxLabel",
+          "productName",
+          "productPictures",
+          "packagingPictures"
+        ]
+      }
+    });
 };
 
 const unlinkBoxFromShelfSpot = (shelfSpotId, boxId) => {

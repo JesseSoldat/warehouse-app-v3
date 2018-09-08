@@ -19,6 +19,7 @@ import {
   LINK_BOX_TO_SHELFSPOT,
   LINK_PRODUCT_TO_SHELFSPOT
 } from "../actions/link";
+import { UNLINK_PRODUCT_FROM_SHELFSPOT } from "../actions/unlink";
 
 const getIndexFromArray = (array, id) => array.findIndex(obj => obj._id === id);
 
@@ -333,9 +334,13 @@ export default (state = initialState, action) => {
         rack: rackCopy
       };
 
+    // ----------------------------- UN-LINKING ----------------------------
+    case UNLINK_PRODUCT_FROM_SHELFSPOT:
+      // API update = { shelfSpot }
+      console.log("UNLINK_PRODUCT_FROM_SHELFSPOT", update);
     // ----------------------------- LINKING -------------------------------
     case LINK_BOX_TO_SHELFSPOT:
-      console.log("LINK_BOX_TO_SHELFSPOT", update);
+    // console.log("LINK_BOX_TO_SHELFSPOT", update);
     // API update = { shelfSpot }
     case LINK_PRODUCT_TO_SHELFSPOT:
       // console.log("LINK_PRODUCT_TO_SHELFSPOT", update);

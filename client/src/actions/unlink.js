@@ -5,6 +5,14 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
+import { resetBox } from "./box";
+
+export const UNLINK_PRODUCT_FROM_SHELFSPOT = "UNLINK_PRODUCT_FROM_SHELFSPOT";
+
+export const unlinkProductFromShelfSpot = update => ({
+  type: UNLINK_PRODUCT_FROM_SHELFSPOT,
+  update
+});
 
 export const unlinkProduct = (obj, product) => async dispatch => {
   let apiUrl, errMsg;
@@ -27,13 +35,16 @@ export const unlinkProduct = (obj, product) => async dispatch => {
 
     const res = await axios.patch(apiUrl, obj);
 
-    // update store with new data
+    const { msg, options, payload } = res.data;
+
+    const { shelfSpot } = payload;
+
     const updatedProduct = { ...product };
     updatedProduct.productLocation = {};
 
     dispatch(productLoaded(updatedProduct));
-
-    const { msg, options } = res.data;
+    dispatch(unlinkProductFromShelfSpot({ shelfSpot }));
+    dispatch(resetBox());
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

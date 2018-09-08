@@ -14,21 +14,18 @@ const Socket = ({ userId }) => {
   socket.on("update", data => {
     const { msg, senderId, timestamp } = data;
 
-    if (senderId === userId) {
-      // console.log("senderId matches userId", senderId);
-      // return;
+    if (msg === "database error") {
+      console.log("database error", timestamp);
+      const msg = buildClientMsg({
+        info: "Cloud Database is currently offline.",
+        color: "red"
+      });
+      this.props.serverMsg(msg);
     }
 
-    switch (msg) {
-      case "database error":
-        console.log("database error", timestamp);
-        const msg = buildClientMsg({
-          info: "Cloud Database is currently offline.",
-          color: "red"
-        });
-        this.props.serverMsg(msg);
-        break;
+    if (senderId === userId) return;
 
+    switch (msg) {
       case "product":
         console.log("product updated", timestamp);
 

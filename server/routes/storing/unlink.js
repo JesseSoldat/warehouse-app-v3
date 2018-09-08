@@ -39,7 +39,7 @@ module.exports = (app, io) => {
         "blue",
         "hide-3"
       );
-      serverRes(res, 200, msg, { shelfSpot, product });
+      serverRes(res, 200, msg, { shelfSpot });
     } catch (err) {
       console.log("ERR: Patch/unlink/productFromShelfSpot", err);
 
