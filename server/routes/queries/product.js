@@ -1,5 +1,21 @@
 const Product = require("../../models/product");
 
+const productLocationQuery = {
+  path: "productLocation.item",
+  select: ["_id"],
+  populate: {
+    path: "shelf",
+    select: ["_id"],
+    populate: {
+      path: "rack",
+      select: ["_id"],
+      populate: {
+        path: "storage",
+        select: ["_id"]
+      }
+    }
+  }
+};
 // LINK --------------------------------------------------------------
 const linkItemToProductPopIds = (productId, item, itemId) => {
   return Product.findByIdAndUpdate(
@@ -15,31 +31,14 @@ const linkItemToProductPopIds = (productId, item, itemId) => {
     { new: true }
   )
     .populate("producer customer")
-    .populate({
-      path: "productLocation.item",
-      select: ["_id"],
-      populate: {
-        path: "shelf",
-        select: ["_id"],
-        populate: {
-          path: "rack",
-          select: ["_id"],
-          populate: {
-            path: "storage",
-            select: ["_id"]
-          }
-        }
-      }
-    });
+    .populate(productLocationQuery);
 };
 
 // UNLINK ----------------------------------------------------------------
 const removeLocationFromProduct = productId => {
   return Product.findByIdAndUpdate(
     productId,
-    {
-      $set: { productLocation: {} }
-    },
+    { $set: { productLocation: {} } },
     { new: true }
   );
 };

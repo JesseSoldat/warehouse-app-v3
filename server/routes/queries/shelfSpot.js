@@ -1,6 +1,34 @@
 // models
 const ShelfSpot = require("../../models/storage/shelfSpot");
 
+const shelfRackStorageQuery = {
+  path: "shelf",
+  select: ["_id", "shelfLabel"],
+  populate: {
+    path: "rack",
+    select: ["_id", "rackLabel"],
+    populate: {
+      path: "storage",
+      select: ["_id", "storageLabel", "description"]
+    }
+  }
+};
+
+const storedItemsQuery = {
+  path: "storedItems.item",
+  select: ["_id", "boxLabel", "productName"],
+  populate: {
+    path: "storedItems",
+    select: [
+      "_id",
+      "boxLabel",
+      "productName",
+      "productPictures",
+      "packagingPictures"
+    ]
+  }
+};
+
 // LINK -------------------------------------------------------
 const linkItemToShelfSpotPopIds = (shelfSpotId, item, itemId) => {
   return ShelfSpot.findByIdAndUpdate(
@@ -12,83 +40,19 @@ const linkItemToShelfSpotPopIds = (shelfSpotId, item, itemId) => {
     },
     { new: true }
   )
-    .populate({
-      path: "shelf",
-      select: ["_id", "shelfLabel"],
-      populate: {
-        path: "rack",
-        select: ["_id", "rackLabel"],
-        populate: {
-          path: "storage",
-          select: ["_id", "storageLabel", "description"]
-        }
-      }
-    })
-    .populate({
-      path: "storedItems.item",
-      select: ["_id", "boxLabel", "productName"],
-      populate: {
-        path: "storedItems",
-        select: [
-          "_id",
-          "boxLabel",
-          "productName",
-          "productPictures",
-          "packagingPictures"
-        ]
-      }
-    });
+    .populate(shelfRackStorageQuery)
+    .populate(storedItemsQuery);
 };
 
 // UNLINK ------------------------------------------------------
-const unlinkProductFromShelfSpot = (shelfSpotId, productId) => {
+const unlinkItemFromShelfSpot = (shelfSpotId, itemId) => {
   return ShelfSpot.findByIdAndUpdate(
     shelfSpotId,
-    {
-      $pull: {
-        storedItems: { item: productId }
-      }
-    },
+    { $pull: { storedItems: { item: itemId } } },
     { new: true }
   )
-    .populate({
-      path: "shelf",
-      select: ["_id", "shelfLabel"],
-      populate: {
-        path: "rack",
-        select: ["_id", "rackLabel"],
-        populate: {
-          path: "storage",
-          select: ["_id", "storageLabel", "description"]
-        }
-      }
-    })
-    .populate({
-      path: "storedItems.item",
-      select: ["_id", "boxLabel", "productName"],
-      populate: {
-        path: "storedItems",
-        select: [
-          "_id",
-          "boxLabel",
-          "productName",
-          "productPictures",
-          "packagingPictures"
-        ]
-      }
-    });
+    .populate(shelfRackStorageQuery)
+    .populate(storedItemsQuery);
 };
 
-const unlinkBoxFromShelfSpot = (shelfSpotId, boxId) => {
-  return ShelfSpot.findByIdAndUpdate(
-    shelfSpotId,
-    { $pull: { storedItems: { item: boxId } } },
-    { new: true }
-  );
-};
-
-module.exports = {
-  linkItemToShelfSpotPopIds,
-  unlinkProductFromShelfSpot,
-  unlinkBoxFromShelfSpot
-};
+module.exports = { linkItemToShelfSpotPopIds, unlinkItemFromShelfSpot };

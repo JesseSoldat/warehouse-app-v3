@@ -12,9 +12,9 @@ const seedDb = async () => {
 
   try {
     //#1 first step ----------------------------
-    // await seedProducer();
-    // await seedCustomer();
-    // await seedProducts();
+    await seedProducer();
+    await seedCustomer();
+    await seedProducts();
 
     // await storageSeed();
     // await boxSeed();

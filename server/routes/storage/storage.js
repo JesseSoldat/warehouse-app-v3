@@ -111,29 +111,6 @@ module.exports = (app, io) => {
     }
   });
 
-  // Get a single storage by storageId
-  app.get("/api/storages/:storageId", isAuth, async (req, res) => {
-    const { storageId } = req.params;
-
-    try {
-      const storage = await Storage.findById(storageId).populate({
-        path: "racks",
-        populate: {
-          path: "shelves",
-          populate: {
-            path: "shelfSpots"
-          }
-        }
-      });
-
-      serverRes(res, 200, null, storage);
-    } catch (err) {
-      console.log("ERR: GET/api/storage/:storageId", err);
-
-      const msg = serverMsg("error", "fetch", "storage");
-      serverRes(res, 400, msg, null);
-    }
-  });
   // Create new warehouse storage
   app.post("/api/storages", isAuth, async (req, res) => {
     const storage = new Storage(req.body);

@@ -9,6 +9,7 @@ import {
   BOX_DELETE_ONE
 } from "../actions/box";
 import { LINK_BOX_TO_SHELFSPOT, LINK_PRODUCT_TO_BOX } from "../actions/link";
+import { UNLINK_BOX_FROM_SHELFSPOT } from "../actions/unlink";
 
 const initialState = {
   boxes: [],
@@ -105,9 +106,13 @@ export default (state = initialState, action) => {
         box: null
       };
 
+    // -----------------------UN-LINKING -------------------------
+    case UNLINK_BOX_FROM_SHELFSPOT:
+      console.log("UNLINK_BOX_FROM_SHELFSPOT", update);
+    // API update = { box }
     // ------------------------ LINKING ---------------------------
     case LINK_BOX_TO_SHELFSPOT:
-      console.log("LINK_BOX_TO_SHELFSPOT", update);
+    // console.log("LINK_BOX_TO_SHELFSPOT", update);
     case LINK_PRODUCT_TO_BOX:
       // console.log("LINK_PRODUCT_TO_BOX", update);
       // API update = { box }

@@ -19,7 +19,10 @@ import {
   LINK_BOX_TO_SHELFSPOT,
   LINK_PRODUCT_TO_SHELFSPOT
 } from "../actions/link";
-import { UNLINK_PRODUCT_FROM_SHELFSPOT } from "../actions/unlink";
+import {
+  UNLINK_BOX_FROM_SHELFSPOT,
+  UNLINK_PRODUCT_FROM_SHELFSPOT
+} from "../actions/unlink";
 
 const getIndexFromArray = (array, id) => array.findIndex(obj => obj._id === id);
 
@@ -120,7 +123,6 @@ export default (state = initialState, action) => {
 
     case STORAGE_CREATE_ONE:
       storagesCopy = [...state.storages];
-
       if (storagesCopy.length > 0) {
         // API update = { storage }
         storagesCopy.push(update.storage);
@@ -225,8 +227,16 @@ export default (state = initialState, action) => {
           storageIndex = getIndexFromArray(storagesCopy, storageId);
           // console.log("storageIndex", storageIndex);
           if (storageIndex >= 0) {
+            rackId = rack._id;
+            rackIndex = storagesCopy[storageIndex].racks.findIndex(
+              r => r._id === rackId
+            );
+            // update old rack
+            if (rackIndex >= 0) {
+              return (storagesCopy[storageIndex].racks[rackIndex] = rack);
+            }
+            // New rack is added
             storagesCopy[storageIndex].racks.push(rack);
-            // console.log("updated storage", storagesCopy[storageIndex]);
           }
         }
       };
@@ -335,9 +345,12 @@ export default (state = initialState, action) => {
       };
 
     // ----------------------------- UN-LINKING ----------------------------
-    case UNLINK_PRODUCT_FROM_SHELFSPOT:
+    case UNLINK_BOX_FROM_SHELFSPOT:
       // API update = { shelfSpot }
-      console.log("UNLINK_PRODUCT_FROM_SHELFSPOT", update);
+      console.log("UNLINK_BOX_FROM_SHELFSPOT", update);
+    case UNLINK_PRODUCT_FROM_SHELFSPOT:
+    // API update = { shelfSpot }
+    // console.log("UNLINK_PRODUCT_FROM_SHELFSPOT", update);
     // ----------------------------- LINKING -------------------------------
     case LINK_BOX_TO_SHELFSPOT:
     // console.log("LINK_BOX_TO_SHELFSPOT", update);

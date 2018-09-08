@@ -8,9 +8,15 @@ import { showOverlay } from "./ui";
 import { resetBox } from "./box";
 
 export const UNLINK_PRODUCT_FROM_SHELFSPOT = "UNLINK_PRODUCT_FROM_SHELFSPOT";
+export const UNLINK_BOX_FROM_SHELFSPOT = "UNLINK_BOX_FROM_SHELFSPOT";
 
 export const unlinkProductFromShelfSpot = update => ({
   type: UNLINK_PRODUCT_FROM_SHELFSPOT,
+  update
+});
+
+export const unlinkBoxFromShelfSpot = update => ({
+  type: UNLINK_BOX_FROM_SHELFSPOT,
   update
 });
 
@@ -58,9 +64,13 @@ export const unlinkBox = (obj, history) => async dispatch => {
   try {
     const res = await axios.patch("/api/unlink/boxFromShelfSpot", obj);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
+
+    const { box, shelfSpot } = payload;
 
     history.push(`/box/${obj.boxId}?type=box`);
+
+    dispatch(unlinkBoxFromShelfSpot({ box, shelfSpot }));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

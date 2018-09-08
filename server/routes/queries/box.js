@@ -1,6 +1,23 @@
 // models
 const Box = require("../../models/storage/box");
 
+const boxLocationQuery = {
+  path: "shelfSpot",
+  select: ["_id"],
+  populate: {
+    path: "shelf",
+    select: ["_id"],
+    populate: {
+      path: "rack",
+      select: ["_id"],
+      populate: {
+        path: "storage",
+        select: ["_id"]
+      }
+    }
+  }
+};
+
 // GET ---------------------------------------------------------
 // BOXES with and without a LOCATION
 const getAllBoxesWithLocations = (skip, limit, mongoQuery = {}) => {
@@ -35,27 +52,10 @@ const getBox = boxId => {
 const linkItemToBoxPopIds = (boxId, item, itemId) => {
   return Box.findByIdAndUpdate(
     boxId,
-    {
-      $set: { [item]: itemId }
-    },
+    { $set: { [item]: itemId } },
     { new: true }
   )
-    .populate({
-      path: "shelfSpot",
-      select: ["_id"],
-      populate: {
-        path: "shelf",
-        select: ["_id"],
-        populate: {
-          path: "rack",
-          select: ["_id"],
-          populate: {
-            path: "storage",
-            select: ["_id"]
-          }
-        }
-      }
-    })
+    .populate(boxLocationQuery)
     .populate("storedItems");
 };
 
@@ -63,11 +63,7 @@ const linkItemToBoxPopIds = (boxId, item, itemId) => {
 const unlinkProductFromBox = (boxId, productId) => {
   return Box.findByIdAndUpdate(
     boxId,
-    {
-      $pull: {
-        storedItems: productId
-      }
-    },
+    { $pull: { storedItems: productId } },
     { new: true }
   );
 };
@@ -75,7 +71,7 @@ const unlinkProductFromBox = (boxId, productId) => {
 const unlinkShelfSpotFromBox = boxId => {
   return Box.findByIdAndUpdate(
     boxId,
-    { $set: { shelfSpot: "" } },
+    { $set: { shelfSpot: null } },
     { new: true }
   );
 };

@@ -10,7 +10,7 @@ const randomDate = require("./helpers/randomDates");
 const dropCollections = require("./helpers/dropCollections");
 const generateArray = require("./helpers/generateArray");
 
-const PRODUCTS_TO_ADD = 500;
+const PRODUCTS_TO_ADD = 20;
 
 const createProducts = () => ({
   // string

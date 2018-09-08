@@ -4,10 +4,7 @@ const isAuth = require("../../middleware/isAuth");
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 // queries
-const {
-  unlinkProductFromShelfSpot,
-  unlinkBoxFromShelfSpot
-} = require("../queries/shelfSpot");
+const { unlinkItemFromShelfSpot } = require("../queries/shelfSpot");
 const { removeLocationFromProduct } = require("../queries/product");
 const {
   unlinkProductFromBox,
@@ -28,7 +25,7 @@ module.exports = (app, io) => {
 
     try {
       const [shelfSpot, product] = await Promise.all([
-        unlinkProductFromShelfSpot(shelfSpotId, productId),
+        unlinkItemFromShelfSpot(shelfSpotId, productId),
         removeLocationFromProduct(productId)
       ]);
 
@@ -73,17 +70,18 @@ module.exports = (app, io) => {
 
   app.patch("/api/unlink/boxFromShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
+
     try {
       const [box, shelfSpot] = await Promise.all([
         unlinkShelfSpotFromBox(boxId),
-        unlinkBoxFromShelfSpot(shelfSpotId, boxId)
+        unlinkItemFromShelfSpot(shelfSpotId, boxId)
       ]);
 
       emit(req.user._id);
 
       const msg = msgObj("Box and Shelf Spot now unlinked.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { box });
+      serverRes(res, 200, msg, { box, shelfSpot });
     } catch (err) {
       console.log("ERR: Patch/unlink/boxFromShelfSpot", err);
 
