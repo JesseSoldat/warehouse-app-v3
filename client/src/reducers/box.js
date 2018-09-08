@@ -8,6 +8,7 @@ import {
   BOX_UPDATE_ONE,
   BOX_DELETE_ONE
 } from "../actions/box";
+import { LINK_PRODUCT_TO_BOX } from "../actions/link";
 
 const initialState = {
   boxes: [],
@@ -26,6 +27,9 @@ const initialState = {
     searchType: "string"
   }
 };
+
+let boxCopy;
+let boxId;
 
 export default (state = initialState, action) => {
   const { type, box, boxes, update, query } = action;
@@ -57,6 +61,7 @@ export default (state = initialState, action) => {
       };
 
     case BOXES_LOADED:
+      console.log("BOXES_LOADED", boxes[1]);
       return {
         ...state,
         boxes,
@@ -73,6 +78,7 @@ export default (state = initialState, action) => {
       };
 
     case BOX_LOADED:
+      console.log("BOX_LOADED", box);
       return {
         ...state,
         box,
@@ -100,6 +106,16 @@ export default (state = initialState, action) => {
         ...state,
         boxes: [],
         box: null
+      };
+
+    // ------------------------ LINKING ---------------------------
+    case LINK_PRODUCT_TO_BOX:
+      console.log("LINK_PRODUCT_TO_BOX", update);
+      // API update = { box }
+      return {
+        ...state,
+        boxes: [],
+        box: update.box
       };
 
     default:

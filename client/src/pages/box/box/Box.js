@@ -21,29 +21,24 @@ class Box extends Component {
   }
 
   componentWillUpdate() {
-    const { rack, box } = this.props;
-    if (!rack || !box) {
-      this.getBox();
-    }
+    if (!this.props.rack || !this.props.box) this.getBox();
   }
 
   // Api calls ----------------------------
   getBox = () => {
     const { match, rack, box } = this.props;
 
-    // Box has NO location
+    // -------------- Box has NO location ----------------
     if (match.path === "/box/:boxId") {
       const { boxId } = match.params;
       // check for box in the store
-      if (box && box._id === boxId) {
-        return;
-      }
+      if (box && box._id === boxId) return;
+
       this.props.startGetBox(boxId);
-      return;
     }
-    // Box has a Location
+    // ----------------- Box has a Location ----------------
     else {
-      const rackId = match.params.rackId;
+      const { rackId } = match.params;
 
       if (rack && rack._id === rackId) return;
 

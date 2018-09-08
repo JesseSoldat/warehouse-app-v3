@@ -209,14 +209,10 @@ module.exports = (app, io) => {
           await unlinkProductFromBox(item, productId);
         }
       }
-      // Link Product to NEW Shelf Spot -------------------------------
-      product["productLocation"] = {
-        kind: "shelfSpot",
-        item: shelfSpotId
-      };
 
+      // update product and shelfspot
       const [updateProduct, shelfSpot] = await Promise.all([
-        product.save(),
+        linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
         linkProductToShelfSpotPopIds(shelfSpotId, productId)
       ]);
 

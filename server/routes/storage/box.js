@@ -10,7 +10,7 @@ const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
-const { getBoxWithLocation } = require("../queries/box");
+const { getAllBoxesWithLocations, getBox } = require("../queries/box");
 const {
   linkBoxToShelfSpot,
   unlinkBoxFromShelfSpot
@@ -35,22 +35,7 @@ module.exports = (app, io) => {
 
     try {
       const [boxes, count, totalCount] = await Promise.all([
-        Box.find(mongoQuery)
-          .skip(skip)
-          .limit(limit)
-          .populate({
-            path: "shelfSpot",
-            populate: {
-              path: "shelf",
-              populate: {
-                path: "rack",
-                populate: {
-                  path: "storage"
-                }
-              }
-            }
-          })
-          .populate("storedItems"),
+        getAllBoxesWithLocations(skip, limit, mongoQuery),
         Box.find(mongoQuery).countDocuments(),
         Box.find({}).countDocuments()
       ]);
@@ -67,20 +52,22 @@ module.exports = (app, io) => {
     }
   });
 
+  // Box with NO location
   app.get("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
     try {
-      const box = await getBoxWithLocation(boxId);
+      const box = await getBox(boxId);
 
       serverRes(res, 200, null, box);
     } catch (err) {
-      console.log("Err: GET/SINGLE BOX", err);
+      console.log("Err: GET/SINGLE BOX NO LOCATION", err);
 
       const msg = serverMsg("error", "fetch", "box");
       serverRes(res, 400, msg, null);
     }
   });
 
+  // -------------------------- CREATE NEW BOX --------------------------------
   // POST BOX with no location
   app.post("/api/boxes", isAuth, async (req, res) => {
     const box = new Box(req.body);
@@ -120,6 +107,7 @@ module.exports = (app, io) => {
     }
   });
 
+  // -------------------------- EDIT BOX --------------------------------
   app.patch("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
     const update = req.body;
@@ -141,6 +129,7 @@ module.exports = (app, io) => {
     }
   });
 
+  // -------------------------- DELETE BOX --------------------------------
   app.delete("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
     try {

@@ -9,6 +9,7 @@ import { resetStorage } from "./storage";
 import { resetBox } from "./box";
 // types
 export const LINK_PRODUCT_TO_SHELFSPOT = "LINK_PRODUCT_TO_SHELFSPOT";
+export const LINK_PRODUCT_TO_BOX = "LINK_PRODUCT_TO_BOX";
 
 // helpers --------------------------------------------------------------------
 const createHistoryUrl = (shelfSpot, type, boxId) => {
@@ -25,6 +26,11 @@ const createHistoryUrl = (shelfSpot, type, boxId) => {
 
 export const linkProductToShelfSpot = update => ({
   type: LINK_PRODUCT_TO_SHELFSPOT,
+  update
+});
+
+export const linkProductToBox = update => ({
+  type: LINK_PRODUCT_TO_BOX,
   update
 });
 
@@ -52,6 +58,14 @@ export const linkItems = (obj, history) => async dispatch => {
           case "/api/link/productToShelfSpot":
           case "/api/relink/productToShelfSpot":
             dispatch(linkProductToShelfSpot(shelfSpot));
+            dispatch(productLoaded(product));
+            break;
+
+          case "/api/link/productToBox":
+          case "/api/relink/productToBox":
+            dispatch(linkProductToBox({ box }));
+            dispatch(productLoaded(product));
+
             break;
 
           default:
@@ -68,8 +82,6 @@ export const linkItems = (obj, history) => async dispatch => {
         // "/api/scan/productToShelfSpot"
 
         // const updatedProduct = { ...product };
-
-        dispatch(productLoaded(product));
 
         // ------------- Box has location ---------------------
         // update box
@@ -90,6 +102,15 @@ export const linkItems = (obj, history) => async dispatch => {
         break;
 
       case "box":
+        switch (apiUrl) {
+          case "/api/link/productToBox":
+            dispatch(linkProductToBox({ box }));
+            dispatch(productLoaded(product));
+            break;
+
+          default:
+            break;
+        }
         // ------- API = { shelfSpot, box } --------------
         // "/api/link/boxToShelfSpot"
         // "/api/scan/boxToShelfSpot"
