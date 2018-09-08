@@ -45,8 +45,11 @@ export default (state = initialState, action) => {
     update
   } = action;
 
+  // INDEXS -------------------------------------------
   let storageIndex, rackIndex, shelfIndex, shelfSpotIndex;
+  // COPIES OF STATE --------------------------------
   let storagesCopy, rackCopy;
+  // IDS -----------------------------------------------
   let storageId, rackId, shelfId, shelfSpotId;
 
   switch (type) {
@@ -332,38 +335,29 @@ export default (state = initialState, action) => {
 
     // ----------------------------- LINKING -------------------------------
     case LINK_BOX_TO_SHELFSPOT:
-      // console.log("LINK_BOX_TO_SHELFSPOT", update);
+      console.log("LINK_BOX_TO_SHELFSPOT", update);
+    // API update = { shelfSpot }
+    case LINK_PRODUCT_TO_SHELFSPOT:
+      // console.log("LINK_PRODUCT_TO_SHELFSPOT", update);
       // API update = { shelfSpot }
       // ----------- get copies of the state ---------------------
       storagesCopy = [...state.storages];
       state.rack ? (rackCopy = { ...state.rack }) : null;
 
+      const { shelfSpot } = update;
+      const { shelf } = shelfSpot;
       // ------------- replace shelfSpot in rack -------------
-      rackId = update.shelf.rack._id;
-
-      return {
-        ...state
-      };
-
-    case LINK_PRODUCT_TO_SHELFSPOT:
-      // console.log("LINK_PRODUCT_TO_SHELFSPOT", update);
-      // API update = shelfSpot
-      // ----------- get copies of the state ---------------------
-      storagesCopy = [...state.storages];
-      state.rack ? (rackCopy = { ...state.rack }) : null;
-
-      // ------------- replace shelfSpot in rack -------------
-      rackId = update.shelf.rack._id;
+      rackId = shelf.rack._id;
 
       if (rackCopy && rackCopy._id === rackId) {
         // console.log("rackCopy", rackCopy);
         // get the index of the shelf
-        shelfId = update.shelf._id;
+        shelfId = shelf._id;
         shelfIndex = getIndexFromArray(rackCopy.shelves, shelfId);
 
         // get the index of the shelfspot
         if (shelfIndex >= 0) {
-          shelfSpotId = update._id;
+          shelfSpotId = shelfSpot._id;
           shelfSpotIndex = getIndexFromArray(
             rackCopy.shelves[shelfIndex].shelfSpots,
             shelfSpotId
@@ -374,7 +368,7 @@ export default (state = initialState, action) => {
           rackCopy.shelves[shelfIndex].shelfSpots.splice(
             shelfSpotIndex,
             1,
-            update
+            shelfSpot
           );
 
           // ------------- replace rack in storages ----------------------

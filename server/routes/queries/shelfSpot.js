@@ -29,7 +29,13 @@ const linkItemToShelfSpotPopIds = (shelfSpotId, item, itemId) => {
       select: ["_id", "boxLabel", "productName"],
       populate: {
         path: "storedItems",
-        select: ["_id", "productName", "productPictures", "packagingPictures"]
+        select: [
+          "_id",
+          "boxLabel",
+          "productName",
+          "productPictures",
+          "packagingPictures"
+        ]
       }
     });
 };

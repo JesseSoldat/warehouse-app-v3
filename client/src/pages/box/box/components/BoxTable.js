@@ -52,8 +52,7 @@ const BoxTable = ({
   let shelf, shelfSpot, box;
 
   if (location) {
-    const { storageId, rackId, shelfId, shelfSpotId } = ids;
-    boxId = ids.boxId;
+    const { storageId, rackId, shelfId, shelfSpotId, boxId } = ids;
 
     // change the URL for a box with a location
     editUrl = `/box/edit/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box&location=true`;
@@ -70,8 +69,10 @@ const BoxTable = ({
       storedItem => storedItem.item._id === boxId
     );
 
-    label = box.item.boxLabel;
-    storedItems = box.item.storedItems;
+    if (box && box.item) {
+      label = box.item.boxLabel;
+      storedItems = box.item.storedItems || [];
+    }
   }
 
   // have products --------------------------------------------

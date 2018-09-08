@@ -28,9 +28,6 @@ const initialState = {
   }
 };
 
-let boxCopy;
-let boxId;
-
 export default (state = initialState, action) => {
   const { type, box, boxes, update, query } = action;
   switch (type) {
@@ -61,7 +58,7 @@ export default (state = initialState, action) => {
       };
 
     case BOXES_LOADED:
-      console.log("BOXES_LOADED", boxes[1]);
+      // console.log("BOXES_LOADED", boxes[1]);
       return {
         ...state,
         boxes,
@@ -78,7 +75,7 @@ export default (state = initialState, action) => {
       };
 
     case BOX_LOADED:
-      console.log("BOX_LOADED", box);
+      // console.log("BOX_LOADED", box);
       return {
         ...state,
         box,
@@ -110,8 +107,9 @@ export default (state = initialState, action) => {
 
     // ------------------------ LINKING ---------------------------
     case LINK_BOX_TO_SHELFSPOT:
+      console.log("LINK_BOX_TO_SHELFSPOT", update);
     case LINK_PRODUCT_TO_BOX:
-      console.log("LINK_PRODUCT_TO_BOX & || LINK_BOX_TO_SHELFSPOT", update);
+      // console.log("LINK_PRODUCT_TO_BOX", update);
       // API update = { box }
       return {
         ...state,

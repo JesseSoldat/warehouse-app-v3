@@ -25,6 +25,16 @@ const createHistoryUrl = (shelfSpot, type, boxId) => {
   return `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
 };
 
+const checkBoxUrlType = (shelfSpot, box, boxId, history) => {
+  let url = `/box/${boxId}?type=box`;
+  if (box && box.shelfSpot) {
+    shelfSpot
+      ? (url = createHistoryUrl(shelfSpot, "box", boxId))
+      : (url = createHistoryUrl(box.shelfSpot, "box", boxId));
+  }
+  history.push(url);
+};
+
 export const linkProductToShelfSpot = update => ({
   type: LINK_PRODUCT_TO_SHELFSPOT,
   update
@@ -40,7 +50,7 @@ export const linkBoxToShelfSpot = update => ({
   update
 });
 
-// Scanning in two items need to check item types and if they are already linked to something
+// SCAN || MANUAL LINK two items - check item types - arre already linked?
 export const linkItems = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
   const { type1, type2, apiUrl, productId, boxId } = obj;
@@ -50,7 +60,7 @@ export const linkItems = (obj, history) => async dispatch => {
 
     const { msg, options, payload } = res.data;
 
-    // console.log("action payload", payload);
+    console.log("linkItems action", payload);
 
     const { product, shelfSpot, box } = payload;
 
@@ -63,7 +73,7 @@ export const linkItems = (obj, history) => async dispatch => {
           // ------- API = { shelfSpot, product } --------------
           case "/api/link/productToShelfSpot":
           case "/api/relink/productToShelfSpot":
-            dispatch(linkProductToShelfSpot(shelfSpot));
+            dispatch(linkProductToShelfSpot({ shelfSpot }));
             dispatch(productLoaded(product));
             break;
           // ------- API = { box, product } --------------
@@ -94,6 +104,9 @@ export const linkItems = (obj, history) => async dispatch => {
         break;
 
       case "box":
+        // ---------------- CREATE BOX HISTORY URL -----------------------
+        checkBoxUrlType(shelfSpot, box, boxId, history);
+
         switch (apiUrl) {
           // --------------- FROM BOX DETAILS ----------------------
           // ------- API = { box, product } --------------
@@ -104,29 +117,9 @@ export const linkItems = (obj, history) => async dispatch => {
           case "/api/link/boxToShelfSpot":
             dispatch(linkBoxToShelfSpot({ box, shelfSpot }));
             break;
-          // ------------- Box has location ---------------------
-          // update box
-          // boxes = []
-          // find rack with the box and update the box
-
-          // ------------- Box no location ---------------------
-          // update box
-          // boxes = []
 
           default:
             break;
-        }
-
-        // ---------------- CREATE BOX HISTORY URL -----------------------
-        if (box && box.shelfSpot) {
-          if (shelfSpot) {
-            history.push(createHistoryUrl(shelfSpot, "box", boxId));
-          } else {
-            // No ShelfSpot in the payload get it from the Box
-            history.push(createHistoryUrl(box.shelfSpot, "box", boxId));
-          }
-        } else {
-          history.push(`/box/${boxId}?type=box`);
         }
         break;
 
@@ -136,6 +129,7 @@ export const linkItems = (obj, history) => async dispatch => {
         );
         break;
     }
+    console.log("FINISHED ACTION CODE");
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
