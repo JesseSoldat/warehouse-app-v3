@@ -209,6 +209,7 @@ export default (state = initialState, action) => {
     case RACK_CREATE_ONE:
       // console.log('RACK_CREATE_ONE', update);
       storagesCopy = [...state.storages];
+      rackCopy = update.rack;
 
       const updateStoragesWithRack = (storageId, rack) => {
         // check for persisted data in the STORE
@@ -227,26 +228,22 @@ export default (state = initialState, action) => {
         case "rack":
           // API update = { storage, rack }
           storageId = update.storage._id;
-          rackCopy = update.rack;
           updateStoragesWithRack(storageId, rackCopy);
           break;
 
         case "shelf":
           // API update = { rack, shelfId }
           storageId = update.rack.storage._id;
-          rackCopy = update.rack;
           updateStoragesWithRack(storageId, rackCopy);
           break;
 
         case "shelfSpot":
           // API update = { rack, shelfSpotId }
           storageId = update.rack.storage._id;
-          rackCopy = update.rack;
           updateStoragesWithRack(storageId, rackCopy);
           break;
 
         default:
-          rackCopy = null;
           break;
       }
       return {
@@ -271,13 +268,12 @@ export default (state = initialState, action) => {
 
           // Update Storages in the Store
           if (storagesCopy.length !== 0) {
-            storageIndex = storagesCopy.findIndex(obj => obj._id === storageId);
-            // console.log("storageIndex", storageIndex);
+            storageIndex = getIndexFromArray(storagesCopy, storageId);
+
             if (storageIndex >= 0) {
-              let tempRacks = storagesCopy[storageIndex].racks.filter(
-                rack => rack._id !== rackId
-              );
-              storagesCopy[storageIndex].racks = tempRacks;
+              storagesCopy[storageIndex].racks = storagesCopy[
+                storageIndex
+              ].racks.filter(rack => rack._id !== rackId);
               // console.log("updated storageCopy", storagesCopy[storageIndex]);
             }
           }
@@ -285,50 +281,37 @@ export default (state = initialState, action) => {
 
         case "shelf":
           // API update = { shelfId }
-          shelfId = update.shelfId;
-          // No storageId clear storages array and user will have to refetch
+          // No storageId user will have to refetch
           storagesCopy = [];
+
           if (rackCopy) {
-            // console.log(rackCopy);
-            // find the shelf and remove it
-            shelfIndex = rackCopy.shelves.findIndex(
-              shelf => shelf._id === shelfId
-            );
-            // console.log("shelfIndex", shelfIndex);
+            shelfIndex = getIndexFromArray(rackCopy.shelves, update.shelfId);
 
             if (shelfIndex >= 0) {
               rackCopy.shelves.splice(shelfIndex, 1);
             }
-            // console.log("updated rackCopy", rackCopy);
           }
           break;
 
         case "shelfSpot":
           // API update = { shelfId, shelfSpotId }
-          shelfId = update.shelfId;
-          shelfSpotId = update.shelfSpotId;
-          // No storageId clear storages array and user will have to refetch
+          // No storageId  user will have to refetch
           storagesCopy = [];
+
           if (rackCopy) {
             // find the shelf
-            shelfIndex = rackCopy.shelves.findIndex(
-              shelf => shelf._id === shelfId
-            );
-            // console.log("shelfIndex", shelfIndex);
+            shelfIndex = getIndexFromArray(rackCopy.shelves, update.shelfId);
 
             if (shelfIndex >= 0) {
               // find the shelf spot
-              shelfSpotIndex = rackCopy.shelves[
-                shelfIndex
-              ].shelfSpots.findIndex(
-                shelfSpot => shelfSpot._id === shelfSpotId
+              shelfSpotIndex = getIndexFromArray(
+                rackCopy.shelves[shelfIndex].shelfSpots,
+                update.shelfSpotId
               );
             }
-            // console.log("shelfSpotIndex", shelfSpotIndex);
 
             if (shelfSpotIndex >= 0) {
               rackCopy.shelves[shelfIndex].shelfSpots.splice(shelfSpotIndex, 1);
-              // console.log("rackCopy updated", rackCopy.shelves[shelfIndex]);
             }
           }
           break;

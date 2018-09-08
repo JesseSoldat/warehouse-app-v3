@@ -45,25 +45,31 @@ export const linkItems = (obj, history) => async dispatch => {
     switch (type1) {
       case "product":
         history.push(`/products/${productId}`);
+
+        switch (apiUrl) {
+          // ------- API = { shelfSpot, product } --------------
+          // FROM PRODUCT DETAILS
+          case "/api/link/productToShelfSpot":
+          case "/api/relink/productToShelfSpot":
+            dispatch(linkProductToShelfSpot(shelfSpot));
+            break;
+
+          default:
+            break;
+        }
         // ---------- API = { box, product } ----------------
         // "/api/link/productToBox"
         // "/api/relink/productToBox"
         // "/api/scan/productToBox"
 
-        // ------- API = { shelfSpot, product } --------------
-        // FROM PRODUCT DETAILS
-        // "/api/link/productToShelfSpot"
-        // "/api/relink/productToShelfSpot"
-
         // update product
         // update rack with update shelfspot
-        dispatch(linkProductToShelfSpot(shelfSpot));
 
         // "/api/scan/productToShelfSpot"
 
-        const updatedProduct = { ...product };
+        // const updatedProduct = { ...product };
 
-        dispatch(productLoaded(updatedProduct));
+        dispatch(productLoaded(product));
 
         // ------------- Box has location ---------------------
         // update box

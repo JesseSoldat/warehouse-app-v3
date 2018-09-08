@@ -134,7 +134,7 @@ module.exports = (app, io) => {
 
       const [product, shelfSpot] = await Promise.all([
         linkShelfSpotToProductPopLocIds(productId, shelfSpotId),
-        linkProductToShelfSpot(shelfSpotId, productId)
+        linkProductToShelfSpotPopIds(shelfSpotId, productId)
       ]);
 
       emit(req.user._id);

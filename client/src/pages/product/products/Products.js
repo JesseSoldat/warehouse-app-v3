@@ -41,27 +41,21 @@ class Products extends Component {
   componentWillUnmount() {
     const { msg, options, serverMsg, resetProducts } = this.props;
     clearUiMsg(msg, options, serverMsg);
-    // clear reducer query state
-    resetProducts();
   }
 
   // api calls ----------------------------------
   getApiData = query => {
     // query changes based on where it is called from
-    const { startGetProducts } = this.props;
-
     // take current query and update if with state values
     const updatedQuery = createGetProductsQuery(query, this.state);
-
     // send query to the server
-    startGetProducts(updatedQuery);
+    this.props.startGetProducts(updatedQuery);
   };
 
   // UI Events--------------------------------------------
   // SearchBar CB --------------------------------------
   onChangeSearchOption = e => {
     const newState = onSelectBuildNewState(e.target.value);
-
     // every time we change the select options
     // we reset the intial state using specific
     // values for the UI input type

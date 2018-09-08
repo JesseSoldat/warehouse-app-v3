@@ -42,7 +42,6 @@ export default (state = initialState, action) => {
 
     case PRODUCTS_LOADED:
       const products = [];
-
       // product order is only the IDS
       // products needs to be populated with the productEntity in the correct order
       productOrder.forEach(id => products.push(productEntity[id]));
