@@ -13,8 +13,10 @@ export const BOX_SEARCH = "BOX_SEARCH";
 export const BOX_REQUESTED = "BOX_REQUESTED";
 export const BOX_LOADED = "BOX_LOADED";
 export const BOX_CREATE_ONE = "BOX_CREATE_ONE";
+export const BOX_CREATE_ONE_LINK = "BOX_CREATE_ONE_LINK";
 export const BOX_UPDATE_ONE = "BOX_UPDATE_ONE";
 export const BOX_DELETE_ONE = "BOX_DELETE_ONE";
+export const BOX_DELETE_ONE_WITH_LOCATION = "BOX_DELETE_ONE_WITH_LOCATION";
 
 // Rest Boxes
 export const resetBox = () => ({
@@ -81,6 +83,11 @@ export const createBox = box => ({
   box
 });
 
+export const createBoxAndLink = update => ({
+  type: BOX_CREATE_ONE_LINK,
+  update
+});
+
 export const startCreateBox = (obj, history) => async dispatch => {
   dispatch(showOverlay(true));
   try {
@@ -100,7 +107,9 @@ export const startCreateBox = (obj, history) => async dispatch => {
 
     const boxId = payload._id;
 
-    dispatch(createBox(payload));
+    shelfSpotId
+      ? dispatch(createBoxAndLink(payload))
+      : dispatch(createBox(payload));
 
     // ORDER MATTERS
     checkForMsg(msg, dispatch, options);
@@ -154,21 +163,34 @@ export const deleteBox = update => ({
   update
 });
 
+export const deleteBoxWithLocation = update => ({
+  type: BOX_DELETE_ONE_WITH_LOCATION,
+  update
+});
+
 export const startDeleteBox = (
   boxId,
   historyUrl,
+  shelfSpotId,
   history
 ) => async dispatch => {
   try {
     dispatch(showOverlay(true));
 
-    const res = await axios.delete(`/api/boxes/${boxId}`);
+    // No Location
+    let apiUrl = `/api/boxes/${boxId}`;
+    // Location
+    if (shelfSpotId) apiUrl = `/api/boxes/${shelfSpotId}/${boxId}`;
+
+    const res = await axios.delete(apiUrl);
 
     const { msg, options, payload } = res.data;
 
     history.push(historyUrl);
 
-    dispatch(deleteBox(payload));
+    shelfSpotId
+      ? dispatch(deleteBoxWithLocation(payload))
+      : dispatch(deleteBox(payload));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

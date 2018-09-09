@@ -210,7 +210,7 @@ const BreadCrumb = ({ match }) => {
       link2 = createLink("Storage");
       link3 = createLink("Rack");
       link4 = createLink("Shelf");
-      link4 = createLink("Shelf Spot");
+      link4 = createLink("ShelfSpot");
       text = createText("Create");
       break;
 

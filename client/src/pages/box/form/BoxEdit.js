@@ -8,8 +8,6 @@ import Heading from "../../../components/Heading";
 import IconBtn from "../../../components/buttons/IconBtn";
 // custom components
 import BoxForm from "./components/BoxForm";
-// utils
-import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
 import { startGetRack } from "../../../actions/storage";
 import {
@@ -24,7 +22,6 @@ import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 class BoxEdit extends Component {
   state = {
     historyUrl: "",
-    location: true,
     boxId: "",
     ids: {}
   };
@@ -34,52 +31,7 @@ class BoxEdit extends Component {
     this.getFormData();
   }
 
-  // store / api call -------------------------------
-  getFormData() {
-    const { match, rack, box } = this.props;
-    const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
-    // box only logic
-    let location = getUrlParameter("location");
-    location = location === "false" ? false : true;
-
-    const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
-
-    let historyUrl;
-
-    if (location) {
-      historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
-    } else {
-      historyUrl = `/storages`;
-    }
-
-    this.setState({ historyUrl, location, boxId, ids });
-
-    // Type is Box and No Location -----------------------
-    if (!location) {
-      this.props.startGetBox(boxId);
-    }
-
-    // Rack is present in the STORE
-    else if (rack) {
-      // Fetch Rack from Store || API call
-      if (rack._id !== rackId) {
-        this.props.startGetRack(rackId);
-        return;
-      }
-    }
-    // Rack is null in the Store / do API call
-    else {
-      this.props.startGetRack(rackId);
-    }
-  }
-
-  // cb ---------------------------------------------
-  handleSubmit = boxLabel => {
-    const { startEditBox, history } = this.props;
-    const { boxId, ids } = this.state;
-    startEditBox({ boxLabel }, boxId, ids, history);
-  };
-
+  // helpers ---------------------------------------
   sendServerMsg = () => {
     const msg = buildClientMsg({
       info: "Delete or relink all products of this box first.",
@@ -89,34 +41,61 @@ class BoxEdit extends Component {
     this.props.serverMsg(msg);
   };
 
+  findBoxInRack = (rack, ids) => {
+    const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
+    const shelfSpot = shelf.shelfSpots.find(
+      ({ _id }) => _id === ids.shelfSpotId
+    );
+    const box = shelfSpot.storedItems.find(
+      storedItem => storedItem.item._id === ids.boxId
+    );
+    return box;
+  };
+
+  // store / api call -------------------------------
+  getFormData() {
+    const { match, rack } = this.props;
+    const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
+    const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
+
+    let historyUrl = `/storages`;
+
+    if (shelfSpotId)
+      historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=shelfSpot`;
+
+    this.setState({ historyUrl, boxId, ids });
+
+    // Box and No Location -----------------------
+    if (!shelfSpotId) this.props.startGetBox(boxId);
+    // Box with Location -------------------------
+    // Rack is NOT present in the STORE or rackId does not match
+    else if (!rack || rack._id !== rackId) this.props.startGetRack(rackId);
+  }
+
+  // DOM cb ---------------------------------------------
+  handleSubmit = boxLabel => {
+    const { startEditBox, history } = this.props;
+    const { boxId, ids } = this.state;
+    startEditBox({ boxLabel }, boxId, ids, history);
+  };
+
   handleDelete = () => {
     const { startDeleteBox, rack, box, history } = this.props;
-    const { historyUrl, location, boxId, ids } = this.state;
+    const { historyUrl, boxId, ids } = this.state;
 
     // No Location ---------------------------------
-    if (box && location === false) {
-      const { storedItems } = box;
-      if (storedItems.length === 0) {
-        startDeleteBox(boxId, historyUrl, history);
-      } else {
-        this.sendServerMsg();
-      }
+    if (box && !ids.shelfSpotId) {
+      box.storedItems.length === 0
+        ? startDeleteBox(boxId, historyUrl, null, history)
+        : this.sendServerMsg();
     }
     // Have Location ---------------------------------
     else {
-      const shelf = rack.shelves.find(({ _id }) => _id === ids.shelfId);
-
-      const shelfSpot = shelf.shelfSpots.find(
-        ({ _id }) => _id === ids.shelfSpotId
-      );
-      const box = shelfSpot.storedItems.find(
-        storedItem => storedItem.item._id === ids.boxId
-      );
-
+      const box = this.findBoxInRack(rack, ids);
       const { storedItems } = box.item;
 
       if (storedItems && storedItems.length === 0) {
-        startDeleteBox(boxId, historyUrl, history);
+        startDeleteBox(boxId, historyUrl, ids.shelfSpotId, history);
       } else {
         this.sendServerMsg();
       }
@@ -149,10 +128,9 @@ class BoxEdit extends Component {
   };
 
   render() {
-    // props
-    const { loading, rack, box } = this.props;
-    const { location, boxId, ids } = this.state;
-    const { storageId, shelfId, shelfSpotId } = ids;
+    const { loading, match, rack, box } = this.props;
+    const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
+    const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
 
     let content, button;
 
@@ -161,20 +139,15 @@ class BoxEdit extends Component {
     }
 
     // BOX HAS LOCATION
-    else if (rack && location === true) {
-      const shelf = rack.shelves.find(({ _id }) => _id === shelfId);
-      const shelfSpot = shelf.shelfSpots.find(({ _id }) => _id === shelfSpotId);
-      const box = shelfSpot.storedItems.find(
-        storedItem => storedItem.item._id === boxId
-      );
-
+    else if (rack && shelfSpotId) {
+      const box = this.findBoxInRack(rack, ids);
       const contentObj = this.renderContent(box.item.boxLabel);
       content = contentObj.content;
       button = contentObj.button;
     }
 
     // BOX NO LOCATION
-    else if (box && location === false) {
+    else if (box && !shelfSpotId) {
       const contentObj = this.renderContent(box.boxLabel);
       content = contentObj.content;
       button = contentObj.button;

@@ -8,6 +8,8 @@ const isAuth = require("../../middleware/isAuth");
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
+// queries
+const { getSingleRack } = require("../queries/rack");
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -67,9 +69,7 @@ module.exports = (app, io) => {
         Shelf.findByIdAndUpdate(
           shelfId,
           {
-            $addToSet: {
-              shelfSpots: newShelfSpot._id
-            }
+            $addToSet: { shelfSpots: newShelfSpot._id }
           },
           { new: true, upsert: true }
         )
@@ -77,26 +77,13 @@ module.exports = (app, io) => {
 
       const rackId = shelf.rack;
 
-      const rack = await Rack.findById(rackId)
-        .populate({
-          path: "shelves",
-          populate: {
-            path: "shelfSpots",
-            populate: {
-              path: "storedItems.item ",
-              populate: {
-                path: "storedItems"
-              }
-            }
-          }
-        })
-        .populate("storage");
+      const rack = await getSingleRack(rackId);
 
       emit(req.user._id);
 
       const msg = msgObj("The shelf spot was created.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { shelfSpotId: shelfSpot._id, rack });
+      serverRes(res, 200, msg, { rack, shelfSpotId: shelfSpot._id });
     } catch (err) {
       console.log("Err: POST/api/shelfSpots/:shelfId", err);
 

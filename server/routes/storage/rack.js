@@ -54,7 +54,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, { storage, rack });
+      serverRes(res, 200, msg, { rack });
     } catch (err) {
       console.log("Err: POST/api/rack/:storageId", err);
 
@@ -96,7 +96,7 @@ module.exports = (app, io) => {
           "red",
           "hide-3"
         );
-        return serverRes(res, 400, msg, rack);
+        return serverRes(res, 400, msg, null);
       }
 
       const storageId = rack.storage;
