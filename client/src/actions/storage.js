@@ -24,6 +24,7 @@ export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
 export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_DELETE_ONE = "RACK_DELETE_ONE";
 
+// Redirect URL after EDIT
 const mapTypeToHistoryUrl = (type, ids) => {
   const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
@@ -32,6 +33,19 @@ const mapTypeToHistoryUrl = (type, ids) => {
     rack: `/rack/${storageId}/${rackId}?type=${type}`,
     shelf: `/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`,
     shelfSpot: `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`
+  };
+  return historyUrlObj[type];
+};
+
+// Redirect URL after DELETE
+const mapTypeToParentHistoryUrl = (type, ids) => {
+  const { storageId, rackId, shelfId, shelfSpotId } = ids;
+
+  const historyUrlObj = {
+    storage: "/storages",
+    rack: `/storage/${storageId}?type=storage`,
+    shelf: `/rack/${storageId}/${rackId}?type=rack`,
+    shelfSpot: `/shelf/${storageId}/${rackId}/${shelfId}?type=shelf`
   };
   return historyUrlObj[type];
 };
@@ -356,7 +370,7 @@ export const startDeleteStorage = (
 
     const { msg, options, payload } = res.data;
 
-    const historyUrl = mapTypeToHistoryUrl(type, ids);
+    const historyUrl = mapTypeToParentHistoryUrl(type, ids);
 
     history.push(historyUrl);
 
