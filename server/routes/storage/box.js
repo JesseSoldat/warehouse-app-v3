@@ -134,7 +134,7 @@ module.exports = (app, io) => {
       emit(req.user._id);
 
       const msg = msgObj("Box updated.", "blue", "hide-3");
-      serverRes(res, 200, msg, { ...update, boxId });
+      serverRes(res, 200, msg, { box: { ...update, boxId } });
     } catch (err) {
       console.log("ERR: PATCH/BOX", err);
 

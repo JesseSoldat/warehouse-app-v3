@@ -61,6 +61,7 @@ export default (state = initialState, action) => {
   const getIndexFromArray = (array, id) =>
     array.findIndex(obj => obj._id === id);
 
+  // FIND RACK in STORAGE --------------------------------
   const findRackInStoragesAndUpdate = () => {
     // Needs rackCopy
     console.log("----------findRackInStoragesAndUpdate-----------");
@@ -88,13 +89,24 @@ export default (state = initialState, action) => {
     }
   };
 
-  const findShelfInRackAndUpdate = shelfSpot => {
-    const { shelf } = shelfSpot;
-    rackId = shelf.rack._id;
-    shelfId = shelf._id;
+  // FIND SHELFSPOT in RACK --------------------------------
+  const getIdsFromShelfSpot = shelfSpot => {
     shelfSpotId = shelfSpot._id;
+    shelfId = shelfSpot.shelf._id;
+    rackId = shelfSpot.shelf.rack._id;
+    storageId = shelfSpot.shelf.rack.storage._id;
 
+    console.log("--- getIdsFromShelfSpot ---");
+    console.log("shelfSpotId", shelfSpotId);
+    console.log("shelfId", shelfId);
+    console.log("rackId", rackId);
+    console.log("storageId", storageId);
+  };
+
+  const findShelfSpotInRackAndUpdate = shelfSpot => {
     console.log("----------findItemInRackAndUpdate-----------");
+    getIdsFromShelfSpot(shelfSpot);
+
     state.rack ? (rackCopy = { ...state.rack }) : null;
 
     if (!rackCopy && rackCopy._id !== rackId) {
@@ -154,13 +166,12 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_FETCH_ALL:
-      // console.log("STORAGE_FETCH_ALL", storages);
       return {
         ...state,
         storages: [...storages],
         storageType: null
       };
-
+    // -------------------- STORAGE IDS -------------------------------
     case STORAGE_IDS_REQUESTED:
       return {
         ...state,
@@ -176,18 +187,15 @@ export default (state = initialState, action) => {
         storageIdsRequsted: false,
         storageIdsLoaded: true
       };
-
+    // --------------------------- STORAGE UPDATE
     case STORAGE_UPDATE_ONE:
-      // console.log("STORAGE_UPDATE_ONE", update);
-      storagesCopy = [...state.storages];
       // API update = { storage }
+      storagesCopy = [...state.storages];
       storageIndex = getIndexFromArray(storagesCopy, update.storage._id);
 
-      if (storageIndex > 0) {
-        storagesCopy.splice(storageIndex, 1, update.storage);
-      } else {
-        storagesCopy = [];
-      }
+      storageIndex > 0
+        ? storagesCopy.splice(storageIndex, 1, update.storage)
+        : (storagesCopy = []);
 
       return {
         ...state,
@@ -196,11 +204,11 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_CREATE_ONE:
+      // API update = { storage }
       storagesCopy = [...state.storages];
-      if (storagesCopy.length > 0) {
-        // API update = { storage }
-        storagesCopy.push(update.storage);
-      }
+
+      if (storagesCopy.length > 0) storagesCopy.push(update.storage);
+
       return {
         ...state,
         storages: storagesCopy,
@@ -210,16 +218,13 @@ export default (state = initialState, action) => {
     case STORAGE_DELETE_ONE:
       // API update = { storageId }
       storagesCopy = [...state.storages];
-      // Update Storages in the Store
+
       if (storagesCopy.length !== 0) {
         storageIndex = getIndexFromArray(storagesCopy, update.storageId);
 
-        if (storageIndex >= 0) {
-          storagesCopy.splice(storageIndex, 1);
-          // console.log("updated storageCopy", storagesCopy);
-        } else {
-          storagesCopy = [];
-        }
+        storageIndex >= 0
+          ? storagesCopy.splice(storageIndex, 1)
+          : (storagesCopy = []);
       }
       return {
         ...state,
@@ -237,7 +242,6 @@ export default (state = initialState, action) => {
       };
 
     case RACK_LOADED:
-      // console.log("RACK_LOADED", rack);
       return {
         ...state,
         rack,
@@ -247,7 +251,6 @@ export default (state = initialState, action) => {
       };
 
     case RACK_UPDATE_ONE:
-      // console.log("RACK_UPDATE_ONE", storageType, update);
       rackCopy = { ...state.rack };
 
       switch (storageType) {
@@ -389,7 +392,7 @@ export default (state = initialState, action) => {
     case LINK_PRODUCT_TO_SHELFSPOT:
       console.log("UPDATE STORE Storages and Rack with ShelfSpot", update);
 
-      findShelfInRackAndUpdate(update.shelfSpot);
+      findShelfSpotInRackAndUpdate(update.shelfSpot);
 
       return {
         ...state,

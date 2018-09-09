@@ -34,21 +34,6 @@ const initialState = {
 export default (state = initialState, action) => {
   const { type, box, boxes, update, query } = action;
 
-  let storageId, rackId, shelfId, shelfSpotId;
-  let boxCopy;
-
-  const getStorageIdsFromShelfSpot = shelfSpot => {
-    shelfSpotId = shelfSpot._id;
-    shelfId = shelfSpot.shelf._id;
-    rackId = shelfSpot.shelf.rack._id;
-    storageId = shelfSpot.shelf.rack.storage._id;
-
-    console.log("shelfSpotId", shelfSpotId);
-    console.log("shelfId", shelfId);
-    console.log("rackId", rackId);
-    console.log("storageId", storageId);
-  };
-
   switch (type) {
     case BOXES_RESET:
       return {
@@ -69,6 +54,7 @@ export default (state = initialState, action) => {
           searchType: "string"
         }
       };
+    // --------------------- GET BOXES ----------------------
     case BOXES_REQUESTED:
       return {
         ...state,
@@ -85,7 +71,7 @@ export default (state = initialState, action) => {
         boxesLoaded: true,
         query
       };
-
+    // ----------------------- GET BOX ----------------------
     case BOX_REQUESTED:
       return {
         ...state,
@@ -94,14 +80,13 @@ export default (state = initialState, action) => {
       };
 
     case BOX_LOADED:
-      // console.log("BOX_LOADED", box);
       return {
         ...state,
         box,
         boxRequsted: false,
         boxLoaded: true
       };
-
+    // ----------------------- CREATE ----------------------
     case BOX_CREATE_ONE:
       return {
         ...state,
@@ -111,24 +96,22 @@ export default (state = initialState, action) => {
 
     case BOX_CREATE_ONE_LINK:
       // API update = { shelfSpot, box }
-      // box is NOT populated with location
+      // BOX is now fetched from RACK
       return {
         ...state,
         boxes: [],
         box: null
       };
-
+    // ----------------------- UPDATE ----------------------
     case BOX_UPDATE_ONE:
       return {
         ...state,
         boxes: [],
-        box
+        box: update.box
       };
-
+    // ------------------- DELETE -----------------------------
     case BOX_DELETE_ONE:
-    // Api update = { boxId }
     case BOX_DELETE_ONE_WITH_LOCATION:
-      // Api update = { shelfSpot }
       return {
         ...state,
         boxes: [],
@@ -136,16 +119,11 @@ export default (state = initialState, action) => {
       };
 
     // -----------------------UN-LINKING -------------------------
-    case UNLINK_BOX_FROM_SHELFSPOT:
-      console.log("UNLINK_BOX_FROM_SHELFSPOT", update);
     // API update = { box }
+    case UNLINK_BOX_FROM_SHELFSPOT:
     // ------------------------ LINKING ---------------------------
     case LINK_BOX_TO_SHELFSPOT:
-    // console.log("LINK_BOX_TO_SHELFSPOT", update);
     case LINK_PRODUCT_TO_BOX:
-      // console.log("LINK_PRODUCT_TO_BOX", update);
-      // API update = { box }
-
       return {
         ...state,
         boxes: [],

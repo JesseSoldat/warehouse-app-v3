@@ -24,6 +24,18 @@ export const RACK_UPDATE_ONE = "RACK_UPDATE_ONE";
 export const RACK_CREATE_ONE = "RACK_CREATE_ONE";
 export const RACK_DELETE_ONE = "RACK_DELETE_ONE";
 
+const mapTypeToHistoryUrl = (type, ids) => {
+  const { storageId, rackId, shelfId, shelfSpotId } = ids;
+
+  const historyUrlObj = {
+    storage: `/storage/${storageId}?type=${type}`,
+    rack: `/rack/${storageId}/${rackId}?type=${type}`,
+    shelf: `/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`,
+    shelfSpot: `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`
+  };
+  return historyUrlObj[type];
+};
+
 // RESET Storage -----------------------------
 export const resetStorage = () => ({
   type: RESET_STORAGE
@@ -303,30 +315,7 @@ export const startEditStorage = (
 
     const { msg, options, payload } = res.data;
 
-    const { storageId, rackId, shelfId, shelfSpotId } = ids;
-
-    let historyUrl;
-
-    switch (type) {
-      case "storage":
-        historyUrl = `/storage/${storageId}?type=${type}`;
-        break;
-
-      case "rack":
-        historyUrl = `/rack/${storageId}/${rackId}?type=${type}`;
-        break;
-
-      case "shelf":
-        historyUrl = `/shelf/${storageId}/${rackId}/${shelfId}?type=${type}`;
-        break;
-
-      case "shelfSpot":
-        historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${shelfSpotId}?type=${type}`;
-        break;
-
-      default:
-        break;
-    }
+    const historyUrl = mapTypeToHistoryUrl(type, ids);
 
     history.push(historyUrl);
 
@@ -355,7 +344,7 @@ export const deleteRack = (type, payload) => ({
 export const startDeleteStorage = (
   type,
   id,
-  historyUrl,
+  ids,
   history
 ) => async dispatch => {
   try {
@@ -366,6 +355,8 @@ export const startDeleteStorage = (
     const res = await axios.delete(apiUrl);
 
     const { msg, options, payload } = res.data;
+
+    const historyUrl = mapTypeToHistoryUrl(type, ids);
 
     history.push(historyUrl);
 

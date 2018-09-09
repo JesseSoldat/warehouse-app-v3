@@ -1,5 +1,4 @@
 // models
-const Rack = require("../../models/storage/rack");
 const Shelf = require("../../models/storage/shelf");
 const ShelfSpot = require("../../models/storage/shelfSpot");
 // middleware

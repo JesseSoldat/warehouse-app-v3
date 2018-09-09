@@ -127,9 +127,9 @@ export const startCreateBox = (obj, history) => async dispatch => {
 };
 
 // UPDATE BOX
-export const editBox = box => ({
+export const editBox = update => ({
   type: BOX_UPDATE_ONE,
-  box
+  update
 });
 
 export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
