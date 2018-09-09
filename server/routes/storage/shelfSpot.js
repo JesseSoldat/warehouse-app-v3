@@ -82,7 +82,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The shelf spot was created.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { rack, shelfSpotId: shelfSpot._id });
+      serverRes(res, 200, msg, { rack, shelfSpot: { _id: shelfSpot._id } });
     } catch (err) {
       console.log("Err: POST/api/shelfSpots/:shelfId", err);
 

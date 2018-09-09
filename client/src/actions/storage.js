@@ -51,21 +51,85 @@ const mapTypeToParentHistoryUrl = (type, ids) => {
 };
 
 // RESET Storage -----------------------------
-export const resetStorage = () => ({
-  type: RESET_STORAGE
-});
+export const resetStorage = () => ({ type: RESET_STORAGE });
 
 // ----------------------------- STORAGES --------------------------------
 
 // GET All Storage IDS -------------------------
-export const storageIdsRequested = () => ({
-  type: STORAGE_IDS_REQUESTED
-});
+export const storageIdsRequested = () => ({ type: STORAGE_IDS_REQUESTED });
 
 export const storageIdsLoaded = storageIdsEntity => ({
   type: STORAGE_IDS_LOADED,
   storageIdsEntity
 });
+
+const createEntity = storagesArray => {
+  const storageIdsEntity = {};
+
+  storagesArray.forEach(storageObj => {
+    // storages --------------------------------------
+    const storageId = storageObj._id;
+
+    const storage = {
+      _id: storageId,
+      storageLabel: storageObj.storageLabel,
+      racks: {}
+    };
+
+    // racks ------------------------------------------
+    storageObj.racks.forEach(rackObj => {
+      const rackId = rackObj._id;
+
+      const rack = {
+        _id: rackId,
+        rackLabel: rackObj.rackLabel,
+        shelves: {}
+      };
+      storage.racks[rackId] = rack;
+
+      // shelves ----------------------------------------
+      rackObj.shelves.forEach(shelfObj => {
+        const shelfId = shelfObj._id;
+
+        const shelf = {
+          _id: shelfId,
+          shelfLabel: shelfObj.shelfLabel,
+          shelfSpots: {}
+        };
+
+        storage.racks[rackId].shelves[shelfId] = shelf;
+
+        // shelfSpots ----------------------------------------
+        shelfObj.shelfSpots.forEach(shelfSpotObj => {
+          const shelfSpotId = shelfSpotObj._id;
+
+          const shelfSpot = {
+            _id: shelfSpotId,
+            shelfSpotLabel: shelfSpotObj.shelfSpotLabel,
+            boxes: []
+          };
+
+          storage.racks[rackId].shelves[shelfId].shelfSpots[
+            shelfSpotId
+          ] = shelfSpot;
+
+          // boxes ---------------------------------------------
+          shelfSpotObj.storedItems.forEach(storedItem => {
+            if (storedItem.kind === "box") {
+              const box = {
+                _id: storedItem.item._id,
+                boxLabel: storedItem.item.boxLabel
+              };
+              shelfSpot.boxes.push(box);
+            }
+          });
+        });
+      });
+    });
+    storageIdsEntity[storageObj._id] = storage;
+  });
+  return storageIdsEntity;
+};
 
 export const getStorageIds = () => async dispatch => {
   dispatch(storageIdsRequested());
@@ -75,76 +139,15 @@ export const getStorageIds = () => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
-    const storageIdsEntity = {};
-
-    payload.forEach(storageObj => {
-      // storages --------------------------------------
-      const storageId = storageObj._id;
-
-      const storage = {
-        _id: storageId,
-        storageLabel: storageObj.storageLabel,
-        racks: {}
-      };
-
-      // racks ------------------------------------------
-      storageObj.racks.forEach(rackObj => {
-        const rackId = rackObj._id;
-
-        const rack = {
-          _id: rackId,
-          rackLabel: rackObj.rackLabel,
-          shelves: {}
-        };
-        storage.racks[rackId] = rack;
-
-        // shelves ----------------------------------------
-        rackObj.shelves.forEach(shelfObj => {
-          const shelfId = shelfObj._id;
-
-          const shelf = {
-            _id: shelfId,
-            shelfLabel: shelfObj.shelfLabel,
-            shelfSpots: {}
-          };
-
-          storage.racks[rackId].shelves[shelfId] = shelf;
-
-          // shelfSpots ----------------------------------------
-          shelfObj.shelfSpots.forEach(shelfSpotObj => {
-            const shelfSpotId = shelfSpotObj._id;
-
-            const shelfSpot = {
-              _id: shelfSpotId,
-              shelfSpotLabel: shelfSpotObj.shelfSpotLabel,
-              boxes: []
-            };
-
-            storage.racks[rackId].shelves[shelfId].shelfSpots[
-              shelfSpotId
-            ] = shelfSpot;
-
-            // boxes ---------------------------------------------
-            shelfSpotObj.storedItems.forEach(storedItem => {
-              if (storedItem.kind === "box") {
-                const box = {
-                  _id: storedItem.item._id,
-                  boxLabel: storedItem.item.boxLabel
-                };
-                shelfSpot.boxes.push(box);
-              }
-            });
-          });
-        });
-      });
-
-      storageIdsEntity[storageObj._id] = storage;
-    });
+    const storageIdsEntity = createEntity(payload);
+    // console.log("storageIdsEntity", storageIdsEntity);
 
     dispatch(storageIdsLoaded(storageIdsEntity));
 
     checkForMsg(msg, dispatch, options);
-  } catch (err) {}
+  } catch (err) {
+    axiosResponseErrorHandling(err, dispatch, "fetching", "storage ids");
+  }
 };
 // Search Storages -------------------------
 export const searchStorages = (search, storageType) => ({
@@ -251,37 +254,12 @@ export const startCreateStorage = (
 
     const { msg, payload, options } = res.data;
 
-    let newItemId = "";
+    const newItemId = payload[type]._id;
+    const typeId = type + "Id";
 
-    const { storageId, rackId, shelfId } = ids;
+    ids[typeId] = newItemId;
 
-    let historyUrl;
-
-    switch (type) {
-      case "storage":
-        newItemId = payload["storage"]._id;
-        historyUrl = `/storage/${newItemId}`;
-        break;
-
-      case "rack":
-        newItemId = payload["rack"]._id;
-        historyUrl = `/rack/${storageId}/${newItemId}?type=${type}`;
-
-        break;
-
-      case "shelf":
-        newItemId = payload["shelfId"];
-        historyUrl = `/shelf/${storageId}/${rackId}/${newItemId}?type=${type}`;
-        break;
-
-      case "shelfSpot":
-        newItemId = payload["shelfSpotId"];
-        historyUrl = `/shelfSpot/${storageId}/${rackId}/${shelfId}/${newItemId}?type=${type}`;
-        break;
-
-      default:
-        break;
-    }
+    const historyUrl = mapTypeToHistoryUrl(type, ids);
 
     const dispatchRackActions = () => {
       dispatch(createRack(type, payload));
@@ -292,7 +270,6 @@ export const startCreateStorage = (
       ? dispatch(createStorage(payload))
       : dispatchRackActions();
 
-    // ORDER MATTERS
     checkForMsg(msg, dispatch, options);
 
     history.push(historyUrl);

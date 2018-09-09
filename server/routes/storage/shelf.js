@@ -61,7 +61,7 @@ module.exports = (app, io) => {
 
       emit(req.user._id);
 
-      serverRes(res, 200, msg, { shelfId: shelf._id, rack });
+      serverRes(res, 200, msg, { shelf: { _id: shelf._id }, rack });
     } catch (err) {
       console.log("Err: POST/api/shelf/:rackId", err);
 
