@@ -24,8 +24,6 @@ import {
   UNLINK_PRODUCT_FROM_SHELFSPOT
 } from "../actions/unlink";
 
-const getIndexFromArray = (array, id) => array.findIndex(obj => obj._id === id);
-
 const initialState = {
   search: [],
   storages: [],
@@ -52,9 +50,36 @@ export default (state = initialState, action) => {
   // INDEXS -------------------------------------------
   let storageIndex, rackIndex, shelfIndex, shelfSpotIndex;
   // COPIES OF STATE --------------------------------
-  let storagesCopy, rackCopy;
+  let storageIdsCopy, storagesCopy, rackCopy;
   // IDS -----------------------------------------------
   let storageId, rackId, shelfId, shelfSpotId;
+
+  const getIndexFromArray = (array, id) =>
+    array.findIndex(obj => obj._id === id);
+
+  const findRackInStoragesAndUpdate = () => {
+    if (storagesCopy.length === 0) return;
+    console.log("----------findRackInStorages-----------");
+    // FIND Rack in Storages in the STORE
+    storageId = rackCopy.storage._id;
+    console.log("storageId", storageId);
+
+    storageIndex = getIndexFromArray(storagesCopy, storageId);
+    console.log("storageIndex", storageIndex);
+
+    if (storageIndex >= 0) {
+      rackId = rackCopy._id;
+      console.log("rackId", rackId);
+
+      rackIndex = getIndexFromArray(storagesCopy[storageIndex].racks, rackId);
+      console.log("rackIndex", rackIndex);
+
+      // Update old Rack || Add new Rack to Storages
+      rackIndex >= 0
+        ? (storagesCopy[storageIndex].racks[rackIndex] = rackCopy)
+        : storagesCopy[storageIndex].racks.push(rackCopy);
+    }
+  };
 
   switch (type) {
     case RESET_STORAGE:
@@ -95,7 +120,7 @@ export default (state = initialState, action) => {
       };
 
     case STORAGE_IDS_LOADED:
-      const storageIdsCopy = { ...storageIdsEntity };
+      storageIdsCopy = { ...storageIdsEntity };
       return {
         ...state,
         storageIdsEntity: storageIdsCopy,
@@ -217,52 +242,12 @@ export default (state = initialState, action) => {
 
     case RACK_CREATE_ONE:
       // console.log('RACK_CREATE_ONE', update);
-      storagesCopy = [...state.storages];
+      // API update = { rack }
       rackCopy = update.rack;
+      storagesCopy = [...state.storages];
 
-      const updateStoragesWithRack = (storageId, rack) => {
-        // check for persisted data in the STORE
-        if (storagesCopy.length !== 0) {
-          // find the correct storage to update
-          storageIndex = getIndexFromArray(storagesCopy, storageId);
-          // console.log("storageIndex", storageIndex);
-          if (storageIndex >= 0) {
-            rackId = rack._id;
-            rackIndex = storagesCopy[storageIndex].racks.findIndex(
-              r => r._id === rackId
-            );
-            // update old rack
-            if (rackIndex >= 0) {
-              return (storagesCopy[storageIndex].racks[rackIndex] = rack);
-            }
-            // New rack is added
-            storagesCopy[storageIndex].racks.push(rack);
-          }
-        }
-      };
+      findRackInStoragesAndUpdate();
 
-      switch (storageType) {
-        case "rack":
-          // API update = { storage, rack }
-          storageId = update.storage._id;
-          updateStoragesWithRack(storageId, rackCopy);
-          break;
-
-        case "shelf":
-          // API update = { rack, shelfId }
-          storageId = update.rack.storage._id;
-          updateStoragesWithRack(storageId, rackCopy);
-          break;
-
-        case "shelfSpot":
-          // API update = { rack, shelfSpotId }
-          storageId = update.rack.storage._id;
-          updateStoragesWithRack(storageId, rackCopy);
-          break;
-
-        default:
-          break;
-      }
       return {
         ...state,
         storageType,
@@ -298,12 +283,12 @@ export default (state = initialState, action) => {
 
         case "shelf":
           // API update = { shelfId }
-          // No storageId user will have to refetch
-          storagesCopy = [];
+          storagesCopy = [...state.storages];
 
+          // -------------- FIND ShelfSpot index in Rack -------------------
           if (rackCopy) {
             shelfIndex = getIndexFromArray(rackCopy.shelves, update.shelfId);
-
+            // DELETE Shelfspot
             if (shelfIndex >= 0) {
               rackCopy.shelves.splice(shelfIndex, 1);
             }
@@ -312,23 +297,22 @@ export default (state = initialState, action) => {
 
         case "shelfSpot":
           // API update = { shelfId, shelfSpotId }
-          // No storageId  user will have to refetch
-          storagesCopy = [];
-
+          // -------------- FIND ShelfSpot index in Rack -------------------
           if (rackCopy) {
-            // find the shelf
             shelfIndex = getIndexFromArray(rackCopy.shelves, update.shelfId);
-
             if (shelfIndex >= 0) {
-              // find the shelf spot
               shelfSpotIndex = getIndexFromArray(
                 rackCopy.shelves[shelfIndex].shelfSpots,
                 update.shelfSpotId
               );
             }
 
+            // DELETE Shelfspot
             if (shelfSpotIndex >= 0) {
               rackCopy.shelves[shelfIndex].shelfSpots.splice(shelfSpotIndex, 1);
+
+              // ---------- FIND Rack index in Storages & UPDATE ---------------
+              findRackInStoragesAndUpdate();
             }
           }
           break;
