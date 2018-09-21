@@ -16,7 +16,7 @@ const generateArray = (times, method) => {
         break;
 
       case "image":
-        array.push(faker.image.image());
+        array.push(faker.image.avatar());
         break;
 
       case "avatar":

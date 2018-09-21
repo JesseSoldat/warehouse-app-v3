@@ -12,9 +12,9 @@ const seedDb = async () => {
 
   try {
     //#1 first step ----------------------------
-    await seedProducer();
-    await seedCustomer();
-    await seedProducts();
+    // await seedProducer();
+    // await seedCustomer();
+    // await seedProducts();
 
     // await storageSeed();
     // await boxSeed();
@@ -22,9 +22,9 @@ const seedDb = async () => {
     // TODO set it up so they can all run
     // BUG products are not linked to box only shelf spot
     // unless ran in two steps
-    //#2 second step ---------------------------
+    // #2 second step ---------------------------
     // await linkBoxesToShelfSpots();
-    // NOT NEEDED? await linkProductsToCustomerAndProducer();
+    // #3 third step ---------------------------
     // await linkProductsToBoxAndSpot();
     console.log("done with seed");
   } catch (err) {
