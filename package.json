@@ -29,12 +29,12 @@
     "nodemailer": "^4.6.7",
     "npm": "^6.4.1",
     "socket.io": "^2.1.1",
-    "validator": "^10.3.0"
+    "validator": "^10.3.0",
+    "faker": "^4.1.0"
   },
   "devDependencies": {
     "axios": "^0.18.0",
     "concurrently": "^3.5.1",
-    "faker": "^4.1.0",
     "nodemon": "^1.17.5"
   }
 }
