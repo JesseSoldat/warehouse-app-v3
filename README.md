@@ -20,6 +20,12 @@ RENAME
 https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
 heroku apps:rename jlab-warehouse-app
 
+Check that the app is running
+heroku ps:scale web=1
+
+Logs
+heroku logs --tail
+
 Git
 git branch
 

@@ -45,7 +45,7 @@ const sendMail = async (req, user, token, type) => {
 
   transporter.sendMail(mailOptions, err => {
     if (err) {
-      throw Error(err);
+      console.log("Send Mail Err:", err);
     }
   });
 };
