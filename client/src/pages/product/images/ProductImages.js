@@ -1,6 +1,8 @@
 import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
-import firebase from "firebase";
+import * as firebase from "firebase/app";
+import "firebase/storage";
+
 import FileUploader from "react-firebase-file-uploader";
 
 // common components

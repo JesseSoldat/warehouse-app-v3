@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
-import firebase from "firebase";
+import * as firebase from "firebase/app";
 
 // import registerServiceWorker from "./registerServiceWorker";
 
@@ -22,6 +22,7 @@ const config = {
   storageBucket: "file-upload-c3300.appspot.com",
   messagingSenderId: "359118658227"
 };
+
 firebase.initializeApp(config);
 
 const Loading = () => "";
