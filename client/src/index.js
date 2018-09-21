@@ -43,6 +43,6 @@ const renderApp = () => {
 };
 
 ReactDOM.render(<Loading />, document.getElementById("root"));
-registerServiceWorker();
+// registerServiceWorker();
 
 handleInitialAuth(store, renderApp);

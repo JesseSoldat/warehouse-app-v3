@@ -12,3 +12,6 @@ CLIENT package.json
 
 1 heroku create
 2 git push heroku master
+
+Git
+git branch
