@@ -8,13 +8,14 @@ import { serverMsg } from "../actions/ui";
 // helpers
 import buildClientMsg from "../actions/helpers/buildClientMsg";
 
+const port = process.env.PORT || 5000;
+
 let socket;
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   // dev code
   socket = io("http://localhost:5000");
 } else {
   // production code
-  const port = process.env.PORT;
   const prodUrl = `jlab-warehouse-app.herokuapp.com:${port}`;
   console.log("Production:", prodUrl);
 
