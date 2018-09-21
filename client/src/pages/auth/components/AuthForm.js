@@ -151,11 +151,11 @@ class AuthForm extends Component {
             <button className="btn btn-info btn-block mt-4">Submit</button>
           </form>
 
-          <ManageAccountAccordion
+          {/* <ManageAccountAccordion
             email={email}
             resendEmail={this.resendEmail}
             resetPassword={this.resetPassword}
-          />
+          /> */}
         </div>
       </div>
     );
