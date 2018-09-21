@@ -1,3 +1,6 @@
+Deploy
+https://daveceddia.com/deploy-react-express-app-heroku/
+
 Heroku
 
 SERVER package.json
@@ -13,5 +16,12 @@ CLIENT package.json
 1 heroku create
 2 git push heroku master
 
+RENAME
+https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
+heroku apps:rename jlab-warehouse-app
+
 Git
 git branch
+
+Firebase
+https://medium.com/@zwacky/using-firebase-you-might-be-able-to-save-220kb-744269f845cc
