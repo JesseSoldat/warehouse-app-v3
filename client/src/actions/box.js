@@ -35,7 +35,6 @@ export const boxesLoaded = ({ boxes, query }) => ({
 });
 
 export const startGetBoxes = query => async dispatch => {
-  dispatch(loading());
   dispatch(boxesRequested());
   try {
     const res = await axios.post("/api/boxes/search", { query });
@@ -62,7 +61,6 @@ export const boxLoaded = box => ({
 });
 
 export const startGetBox = boxId => async dispatch => {
-  dispatch(loading());
   dispatch(boxRequested());
   try {
     const res = await axios.get(`/api/boxes/${boxId}`);

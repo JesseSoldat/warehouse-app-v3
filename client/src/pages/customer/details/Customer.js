@@ -12,7 +12,7 @@ import customerListData from "./helpers/customerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import {
   startGetCustomers,
   startDeleteCustomer
@@ -32,9 +32,10 @@ class Customer extends Component {
 
   // api calls ----------------------------
   getCustomer = () => {
-    const { customerEntity, match, startGetCustomers } = this.props;
+    const { customerEntity, match } = this.props;
     const { customerId } = match.params;
 
+    // Load from the STORE
     if (customerEntity) {
       const customer = customerEntity[customerId];
       if (customer && customer._id === customerId) {
@@ -42,7 +43,9 @@ class Customer extends Component {
       }
     }
 
-    startGetCustomers();
+    // Load from the API
+    this.props.startLoading({ from: "customerDetailsLoading" });
+    this.props.startGetCustomers();
   };
 
   // events -------------------------------
@@ -100,12 +103,11 @@ class Customer extends Component {
 
 const mapStateToProps = ({ ui, customer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   customerEntity: customer.customerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetCustomers, startDeleteCustomer }
+  { sendServerMsg, startLoading, startGetCustomers, startDeleteCustomer }
 )(Customer);

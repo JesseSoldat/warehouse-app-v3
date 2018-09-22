@@ -63,7 +63,6 @@ class Customers extends Component {
 
 const mapStateToProps = ({ ui, customer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   customers: customer.customers
 });

@@ -11,7 +11,7 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import {
   startGetProducers,
   startEditProducer
@@ -34,6 +34,7 @@ class EditProducer extends Component {
     const { producerEntity, match, startGetProducers } = this.props;
     const { producerId } = match.params;
 
+    // Load from the STORE
     if (producerEntity) {
       const producer = producerEntity[producerId];
       if (producer._id === producerId) {
@@ -41,6 +42,8 @@ class EditProducer extends Component {
       }
     }
 
+    // Load from the API
+    this.props.startLoading({ from: "producersEditLoading" });
     startGetProducers();
   };
 
@@ -89,5 +92,5 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetProducers, startEditProducer }
+  { sendServerMsg, startLoading, startGetProducers, startEditProducer }
 )(withRouter(EditProducer));

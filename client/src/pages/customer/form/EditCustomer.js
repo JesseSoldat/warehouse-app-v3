@@ -11,7 +11,7 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import {
   startGetCustomers,
   startEditCustomer
@@ -29,11 +29,12 @@ class EditCustomer extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "editCustomerClearMsg" });
   }
 
-  // api calls ----------------------------------
+  // API Calls ----------------------------------
   getCustomer = () => {
     const { customerEntity, match } = this.props;
     const { customerId } = match.params;
 
+    // Load from the STORE
     if (customerEntity) {
       const customer = customerEntity[customerId];
       if (customer._id === customerId) {
@@ -41,6 +42,8 @@ class EditCustomer extends Component {
       }
     }
 
+    // Load from the API
+    this.props.startLoading({ from: "customerEditLoading" });
     this.props.startGetCustomers();
   };
 
@@ -85,12 +88,11 @@ class EditCustomer extends Component {
 
 const mapStateToProps = ({ ui, customer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   customerEntity: customer.customerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetCustomers, startEditCustomer }
+  { sendServerMsg, startLoading, startGetCustomers, startEditCustomer }
 )(withRouter(EditCustomer));

@@ -15,7 +15,7 @@ import {
   startEditBox,
   startDeleteBox
 } from "../../../actions/box";
-import { serverMsg } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
@@ -66,10 +66,16 @@ class BoxEdit extends Component {
     this.setState({ historyUrl, boxId, ids });
 
     // Box and No Location -----------------------
-    if (!shelfSpotId) this.props.startGetBox(boxId);
+    if (!shelfSpotId) {
+      this.props.startLoading({ from: "boxEditLoadingBox" });
+      this.props.startGetBox(boxId);
+    }
     // Box with Location -------------------------
     // Rack is NOT present in the STORE or rackId does not match
-    else if (!rack || rack._id !== rackId) this.props.startGetRack(rackId);
+    else if (!rack || rack._id !== rackId) {
+      this.props.startLoading({ from: "boxEditLoadingRack" });
+      this.props.startGetRack(rackId);
+    }
   }
 
   // DOM cb ---------------------------------------------
@@ -175,6 +181,7 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
+    startLoading,
     startGetRack,
     startGetBox,
     startEditBox,

@@ -11,7 +11,7 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import {
   startGetCustomers,
   startCreateCustomer
@@ -19,15 +19,23 @@ import {
 
 class CreateCustomer extends Component {
   componentDidMount() {
-    if (this.props.customers.length === 0) {
-      this.props.startGetCustomers();
-    }
+    this.getCustomers();
   }
 
   componentWillUnmount() {
     const { msg, sendServerMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg({ msg, sendServerMsg, from: "createCustomerClearMsg" });
+  }
+
+  // API Calls
+  getCustomers() {
+    // Load from the STORE
+    if (this.props.customers.length > 0) return;
+
+    // Load from the API
+    this.props.startLoading({ from: "customerCreateLoading" });
+    this.props.startGetCustomers();
   }
 
   // events ---------------------------------
@@ -74,5 +82,5 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetCustomers, startCreateCustomer }
+  { sendServerMsg, startLoading, startGetCustomers, startCreateCustomer }
 )(withRouter(CreateCustomer));

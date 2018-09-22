@@ -23,7 +23,19 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.editProductLoading:
     case UI_ACTION_TYPES.createProductLoading:
     case UI_ACTION_TYPES.producersLoading:
+    case UI_ACTION_TYPES.producerDetailsLoading:
+    case UI_ACTION_TYPES.producersEditLoading:
+    case UI_ACTION_TYPES.producersCreateLoading:
     case UI_ACTION_TYPES.customersLoading:
+    case UI_ACTION_TYPES.customerDetailsLoading:
+    case UI_ACTION_TYPES.customerCreateLoading:
+    case UI_ACTION_TYPES.customerEditLoading:
+    case UI_ACTION_TYPES.manageUserLoading:
+    case UI_ACTION_TYPES.boxLoadingBox:
+    case UI_ACTION_TYPES.boxLoadingRack:
+    case UI_ACTION_TYPES.boxesLoading:
+    case UI_ACTION_TYPES.boxEditLoadingBox:
+    case UI_ACTION_TYPES.boxEditLoadingRack:
       return { ...state, loading };
 
     // ---------------- MSG ---------------------
@@ -72,6 +84,8 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.productOnDeleteProductOverlay:
     case UI_ACTION_TYPES.createProductOverlay:
     case UI_ACTION_TYPES.startShowOverlay:
+    case UI_ACTION_TYPES.manageUserUpdateShowOverlay:
+    case UI_ACTION_TYPES.manageUserDeleteShowOverlay:
       return { ...state, showOverlay };
 
     default:

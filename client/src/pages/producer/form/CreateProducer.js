@@ -11,7 +11,7 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import {
   startGetProducers,
   startCreateProducer
@@ -20,15 +20,23 @@ import {
 class CreateProducer extends Component {
   // lifecycle ----------------------------------------------
   componentDidMount() {
-    if (this.props.producers.length === 0) {
-      this.props.startGetProducers();
-    }
+    this.getProducers();
   }
 
   componentWillUnmount() {
     const { msg, sendServerMsg } = this.props;
     // check to see if the UiMsg should be cleared
     clearUiMsg({ msg, sendServerMsg, from: "createProducerClearMsg" });
+  }
+
+  // API Calls
+  getProducers() {
+    // Load from the STORE
+    if (this.props.producers.length > 0) return;
+
+    // Load from the API
+    this.props.startLoading({ from: "producersCreateLoading" });
+    this.props.startGetProducers();
   }
 
   // events -----------------------------------------------
@@ -73,5 +81,5 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetProducers, startCreateProducer }
+  { sendServerMsg, startLoading, startGetProducers, startCreateProducer }
 )(withRouter(CreateProducer));

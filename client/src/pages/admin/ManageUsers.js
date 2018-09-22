@@ -10,7 +10,11 @@ import UserTable from "./components/UserTable";
 // utils
 import clearUiMsg from "../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../actions/ui";
 import {
   startGetAllUsers,
   changeUserRole,
@@ -31,13 +35,23 @@ class ManageUsers extends Component {
 
   // api calls ---------------------------------------------
   getAllUser = () => {
+    // Load from the STORE
     if (this.props.users.length) return;
+
+    // Load from the API
+    this.props.startLoading({ from: "manageUserLoading" });
     this.props.startGetAllUsers();
   };
 
-  handleChange = (email, role) => this.props.changeUserRole(role, email);
+  handleChange = (email, role) => {
+    this.props.startShowOverlay({ from: "manageUserUpdateShowOverlay" });
+    this.props.changeUserRole(role, email);
+  };
 
-  handleDelete = email => this.props.deleteUser(email);
+  handleDelete = email => {
+    this.props.startShowOverlay({ from: "manageUserDeleteShowOverlay" });
+    this.props.deleteUser(email);
+  };
 
   render() {
     const { loading, users } = this.props;
@@ -76,11 +90,17 @@ class ManageUsers extends Component {
 const mapStateToProps = ({ ui, admin }) => ({
   msg: ui.msg,
   users: admin.allUsers,
-  loading: ui.loading,
-  options: ui.options
+  loading: ui.loading
 });
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetAllUsers, changeUserRole, deleteUser }
+  {
+    sendServerMsg,
+    startLoading,
+    startShowOverlay,
+    startGetAllUsers,
+    changeUserRole,
+    deleteUser
+  }
 )(ManageUsers);

@@ -13,6 +13,7 @@ import boxCardData from "./helpers/boxCardData";
 import searchBarFields from "./helpers/searchBarFields";
 // actions
 import { startGetBoxes } from "../../../actions/box";
+import { startLoading } from "../../../actions/ui";
 
 class Boxes extends Component {
   state = {
@@ -29,6 +30,7 @@ class Boxes extends Component {
   }
   // api calls ----------------------------------------------
   getApiData = () => {
+    this.props.startLoading({ from: "boxesLoading" });
     this.props.startGetBoxes(this.props.query);
   };
   //-------------------------- search bar ---------------------------------------
@@ -77,13 +79,14 @@ class Boxes extends Component {
       orphanSearch: false
     }));
 
-    // set intial query settings
+    // set initial query settings
     const query = {
       page: 1,
       skip: 0,
       limit: 20
     };
-    // fetch all of the products
+
+    this.props.startLoading({ from: "boxesLoading" });
     this.props.startGetBoxes(query);
   };
 
@@ -101,6 +104,8 @@ class Boxes extends Component {
     query["skip"] = 0;
     query["searchOption"] = searchOption;
     query["value"] = value;
+
+    this.props.startLoading({ from: "boxesLoading" });
     this.props.startGetBoxes(query);
   };
 
@@ -160,5 +165,5 @@ const mapStateToProps = ({ ui, box }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetBoxes }
+  { startGetBoxes, startLoading }
 )(Boxes);

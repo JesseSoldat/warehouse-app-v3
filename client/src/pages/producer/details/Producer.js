@@ -12,7 +12,7 @@ import producerListData from "./helpers/producerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import {
   startGetProducers,
   startDeleteProducer
@@ -35,14 +35,15 @@ class Producer extends Component {
     const { producerEntity, match, startGetProducers } = this.props;
     const { producerId } = match.params;
 
-    // producerEntity = null to start with
+    // Load from the STORE
     if (producerEntity) {
       const producer = producerEntity[producerId];
       if (producer && producer._id === producerId) {
         return;
       }
     }
-
+    // Load from the API
+    this.props.startLoading({ from: "producerDetailsLoading" });
     startGetProducers();
   };
 
@@ -101,12 +102,11 @@ class Producer extends Component {
 
 const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   producerEntity: producer.producerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { startGetProducers, startDeleteProducer, sendServerMsg }
+  { startGetProducers, startDeleteProducer, sendServerMsg, startLoading }
 )(Producer);

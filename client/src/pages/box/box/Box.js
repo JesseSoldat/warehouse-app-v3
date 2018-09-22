@@ -9,7 +9,7 @@ import Heading from "../../../components/Heading";
 // custom components
 import BoxTable from "./components/BoxTable";
 // actions
-import { serverMsg } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetRack } from "../../../actions/storage";
 import { startGetBox } from "../../../actions/box";
 import { unlinkBox } from "../../../actions/unlink";
@@ -33,7 +33,7 @@ class Box extends Component {
       const { boxId } = match.params;
       // check for box in the store
       if (box && box._id === boxId) return;
-
+      this.props.startLoading({ from: "boxLoadingBox" });
       this.props.startGetBox(boxId);
     }
     // ----------------- Box has a Location ----------------
@@ -41,7 +41,7 @@ class Box extends Component {
       const { rackId } = match.params;
 
       if (rack && rack._id === rackId) return;
-
+      this.props.startLoading({ from: "boxLoadingRack" });
       this.props.startGetRack(rackId);
     }
   };
@@ -113,5 +113,5 @@ const mapStateToProps = ({ ui, storage, box }) => ({
 
 export default connect(
   mapStateToProps,
-  { unlinkBox, serverMsg, startGetRack, startGetBox }
+  { unlinkBox, serverMsg, startLoading, startGetRack, startGetBox }
 )(withRouter(Box));

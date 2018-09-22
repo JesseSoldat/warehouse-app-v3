@@ -60,6 +60,10 @@ export const UI_ACTION_TYPES = {
     "[SHOW_OVERLAY Product Details Page] Delete a Product",
   createProductOverlay: "[SHOW_OVERLAY Create Product Page] Create a Product",
   editProductOverlay: "[SHOW_OVERLAY Edit Product Page] Edit a Product",
+  // Admin
+  manageUserUpdateShowOverlay:
+    "[SHOW_OVERLAY Manage User Page] Change user role",
+  manageUserDeleteShowOverlay: "[SHOW_OVERLAY Manage User Page] Delete User",
 
   // ------------------- LOADING ------------------------
   // Products
@@ -67,8 +71,22 @@ export const UI_ACTION_TYPES = {
   createProductLoading: "[LOADING Create Product Page] Fetch Data",
   // Producers
   producersLoading: "[LOADING Producers Page] Fetch Data",
+  producerDetailsLoading: "[LOADING Producer Details Page] Fetch Data",
+  producersCreateLoading: "[LOADING Producer Create Page] Fetch Data",
+  producersEditLoading: "[LOADING Producer Edit Page] Fetch Data",
   // Customers
-  customersLoading: "[LOADING Customers Page] Fetch Data"
+  customersLoading: "[LOADING Customers Page] Fetch Data",
+  customerDetailsLoading: "[LOADING Customer Details Page] Fetch Data",
+  customerCreateLoading: "[LOADING Customer Create Page] Fetch Data",
+  customerEditLoading: "[LOADING Customer Edit Page] Fetch Data",
+  // Admin
+  manageUserLoading: "[LOADING Manage User Page] Fetch Data",
+  // Box
+  boxesLoading: "[LOADING Boxes Page] Fetch Boxes Data",
+  boxLoadingBox: "[LOADING Box Page] Fetch Box Data",
+  boxLoadingRack: "[LOADING Box Page] Fetch Rack to populate Box Data",
+  boxEditLoadingBox: "[LOADING Box Edit Page] Fetch Box Data",
+  boxEditLoadingRack: "[LOADING Box Edit Page] Fetch Rack to populate Box Data"
 };
 
 // ------------------- MSG ------------------------

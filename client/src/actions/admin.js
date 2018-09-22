@@ -3,8 +3,6 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
-// actions
-import { loading, showOverlay } from "./ui";
 // types
 export const GET_ALL_USERS = "GET_ALL_USERS";
 export const USER_CHANGE_ROLE = "USER_CHANGE_ROLE";
@@ -17,7 +15,6 @@ export const getAllUsers = payload => ({
 });
 
 export const startGetAllUsers = () => async dispatch => {
-  dispatch(loading());
   try {
     const res = await axios.get("/api/users");
     const { msg, payload, options } = res.data;
@@ -31,7 +28,6 @@ export const startGetAllUsers = () => async dispatch => {
 
 // Change user role
 export const changeUserRole = (role, email) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.patch("/api/changeUserRole", { email, role });
 
@@ -41,15 +37,12 @@ export const changeUserRole = (role, email) => async dispatch => {
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
-    console.log("err", err);
-
     axiosResponseErrorHandling(err, dispatch, "change", "user-roles");
   }
 };
 
 // Delete user
 export const deleteUser = email => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.patch("/api/deleteUser", { email });
 
