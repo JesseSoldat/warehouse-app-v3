@@ -168,7 +168,7 @@ export const startGetProductWithClients = productId => async dispatch => {
 
 // Create Product -----------------------------------------------
 export const createProduct = (newProduct, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.post("/api/products", newProduct);
 
@@ -186,7 +186,7 @@ export const createProduct = (newProduct, history) => async dispatch => {
 
 // Edit Product -----------------------------------------------
 export const editProduct = (productId, update, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/products/${productId}`, update);
 
@@ -204,7 +204,7 @@ export const editProduct = (productId, update, history) => async dispatch => {
 
 // Delete Product -----------------------------------------------
 export const deleteProduct = (productId, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.delete(`/api/products/${productId}`);
 

@@ -89,7 +89,7 @@ export const createBoxAndLink = update => ({
 });
 
 export const startCreateBox = (obj, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const { boxLabel, params } = obj;
     const { storageId, rackId, shelfId, shelfSpotId } = params;
@@ -133,7 +133,7 @@ export const editBox = update => ({
 });
 
 export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/boxes/${boxId}`, obj);
 
@@ -175,7 +175,7 @@ export const startDeleteBox = (
   history
 ) => async dispatch => {
   try {
-    dispatch(showOverlay(true));
+    dispatch(showOverlay());
 
     // No Location
     let apiUrl = `/api/boxes/${boxId}`;

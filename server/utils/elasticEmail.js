@@ -42,8 +42,6 @@ const sendMail = async (req, user, token, type) => {
 
       `;
 
-  console.log("user email:", user.email);
-
   const msg = {
     from: "jlab.development.coding@gmail.com",
     from_name: "JLab Warehouse App",
@@ -57,7 +55,7 @@ const sendMail = async (req, user, token, type) => {
       return console.error("Err:", err);
     }
 
-    console.log(result);
+    console.log("Send MSG Success:", result);
   });
 };
 

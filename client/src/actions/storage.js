@@ -246,7 +246,7 @@ export const startCreateStorage = (
   ids,
   history
 ) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const apiUrl = `${storageApiUrl(type)}/${id}`;
 
@@ -297,7 +297,7 @@ export const startEditStorage = (
   ids,
   history
 ) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
 
   const apiUrl = `${storageApiUrl(type)}/${id}`;
 
@@ -339,7 +339,7 @@ export const startDeleteStorage = (
   history
 ) => async dispatch => {
   try {
-    dispatch(showOverlay(true));
+    dispatch(showOverlay());
 
     const apiUrl = `${storageApiUrl(type)}/${id}`;
 

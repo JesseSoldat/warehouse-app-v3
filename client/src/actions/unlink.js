@@ -23,7 +23,7 @@ export const unlinkBoxFromShelfSpot = update => ({
 export const unlinkProduct = (obj, product) => async dispatch => {
   let apiUrl, errMsg;
 
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
 
   try {
     switch (obj.kind) {
@@ -59,7 +59,7 @@ export const unlinkProduct = (obj, product) => async dispatch => {
 };
 
 export const unlinkBox = (obj, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
 
   try {
     const res = await axios.patch("/api/unlink/boxFromShelfSpot", obj);

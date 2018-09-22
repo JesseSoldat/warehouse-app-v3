@@ -19,7 +19,7 @@ import {
   startResendVerification,
   requestResetPasswordEmail
 } from "../../../actions/auth";
-import { serverMsg } from "../../../actions/ui";
+import { serverMsg, startShowOverlay } from "../../../actions/ui";
 
 class AuthForm extends Component {
   state = {
@@ -57,7 +57,7 @@ class AuthForm extends Component {
 
   componentWillUnmount() {
     const { parent, serverMsg } = this.props;
-    if (parent === "login") serverMsg(null);
+    if (parent === "login") serverMsg(null, "loginDestroyMsg");
   }
 
   onChange = e => {
@@ -68,11 +68,13 @@ class AuthForm extends Component {
 
   registerFlow = () => {
     const { username, email, password } = this.state;
+    this.props.startShowOverlay({ from: "registerShowOverlay" });
     this.props.startRegister({ username, email, password }, this.props.history);
   };
 
   loginFlow = () => {
     const { email, password } = this.state;
+    this.props.startShowOverlay({ from: "loginShowOverlay" });
     this.props.startLogin({ email, password });
   };
 
@@ -87,7 +89,10 @@ class AuthForm extends Component {
 
   resendEmail = () => this.props.startResendVerification(this.state.email);
 
-  resetPassword = email => this.props.requestResetPasswordEmail(email);
+  resetPassword = email => {
+    this.props.startShowOverlay({ from: "passwordResetShowOverlay" });
+    this.props.requestResetPasswordEmail(email);
+  };
 
   render() {
     const { parent } = this.props;
@@ -173,6 +178,7 @@ export default connect(
     startRegister,
     startLogin,
     serverMsg,
+    startShowOverlay,
     startResendVerification,
     requestResetPasswordEmail
   }

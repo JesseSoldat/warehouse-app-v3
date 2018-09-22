@@ -14,7 +14,7 @@ const axiosLog = (status, data) => {
 const errMsg = (method, target) =>
   `An unknown error occured while trying to ${method} the ${target}.`;
 
-const axiosResponseErrorHandling = (error, dispatch, method, target) => {
+const axiosResponseErrorHandling = (error, dispatch, method, target, from) => {
   let info, color, code;
 
   // check for axios response object any response other than 2xx
@@ -25,6 +25,9 @@ const axiosResponseErrorHandling = (error, dispatch, method, target) => {
       const { msg, options } = data;
       // --------------------  check for data options --------------------------
       if (options) {
+        console.log("axiosResponseErrorHandling");
+        console.log("OPTIONS", options);
+
         switch (options) {
           case "tokenError":
             if (msg) {
@@ -88,7 +91,8 @@ const axiosResponseErrorHandling = (error, dispatch, method, target) => {
         info,
         color,
         code
-      })
+      }),
+      from
     )
   );
 };

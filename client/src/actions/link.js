@@ -52,7 +52,7 @@ export const linkBoxToShelfSpot = update => ({
 
 // SCAN || MANUAL LINK two items - check item types - arre already linked?
 export const linkItems = (obj, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   const { type1, type2, apiUrl, productId, boxId } = obj;
 
   try {

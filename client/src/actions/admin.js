@@ -31,7 +31,7 @@ export const startGetAllUsers = () => async dispatch => {
 
 // Change user role
 export const changeUserRole = (role, email) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.patch("/api/changeUserRole", { email, role });
 
@@ -49,7 +49,7 @@ export const changeUserRole = (role, email) => async dispatch => {
 
 // Delete user
 export const deleteUser = email => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.patch("/api/deleteUser", { email });
 

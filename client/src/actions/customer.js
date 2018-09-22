@@ -55,7 +55,7 @@ export const createCustomer = customer => ({
 });
 
 export const startCreateCustomer = (data, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.post("/api/customers", data);
 
@@ -83,7 +83,7 @@ export const startEditCustomer = (
   data,
   history
 ) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/customers/${customerId}`, data);
 
@@ -105,7 +105,7 @@ export const deleteCustomer = customer => ({
 });
 
 export const startDeleteCustomer = (customerId, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.delete(`/api/customers/${customerId}`);
 

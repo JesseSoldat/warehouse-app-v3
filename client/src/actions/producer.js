@@ -52,7 +52,7 @@ export const createProducer = producer => ({
 });
 
 export const startCreateProducer = (data, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.post("/api/producers", data);
 
@@ -80,7 +80,7 @@ export const startEditProducer = (
   data,
   history
 ) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/producers/${producerId}`, data);
 
@@ -102,7 +102,7 @@ export const deleteProducer = producer => ({
 });
 
 export const startDeleteProducer = (producerId, history) => async dispatch => {
-  dispatch(showOverlay(true));
+  dispatch(showOverlay());
   try {
     const res = await axios.delete(`/api/producers/${producerId}`);
 
