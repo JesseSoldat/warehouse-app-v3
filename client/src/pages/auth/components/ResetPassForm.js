@@ -7,7 +7,8 @@ import TextInput from "../../../components/inputs/TextInput";
 // helpers
 import formIsValid from "../helpers/formIsValid";
 // actions
-import { startResetPassword } from "../../../actions/auth";
+import { startShowOverlay } from "../../../actions/ui";
+import { startResetPasswordWithToken } from "../../../actions/auth";
 
 class ResetPassForm extends Component {
   state = {
@@ -30,20 +31,23 @@ class ResetPassForm extends Component {
     const { isValid, errObj } = formIsValid(this.state, "resetPassword");
 
     if (!isValid) {
-      console.log("not valid");
-
-      this.setState(() => ({ ...errObj }));
-      return;
+      return this.setState(() => ({ ...errObj }));
     }
 
+    this.resetPasswordWithToken();
+  };
+
+  resetPasswordWithToken() {
     const { token } = this.props.match.params;
     const { email, password } = this.state;
 
-    this.props.startResetPassword(
+    this.props.startShowOverlay({ from: "passwordResetWithTokenShowOverlay" });
+
+    this.props.startResetPasswordWithToken(
       { email, password, token },
       this.props.history
     );
-  };
+  }
 
   render() {
     return (
@@ -89,5 +93,5 @@ class ResetPassForm extends Component {
 
 export default connect(
   null,
-  { startResetPassword }
+  { startShowOverlay, startResetPasswordWithToken }
 )(withRouter(ResetPassForm));

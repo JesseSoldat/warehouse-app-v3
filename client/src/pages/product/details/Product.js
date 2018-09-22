@@ -23,7 +23,7 @@ import createCustomersArray from "./helpers/createCustomersArray";
 import createObjWithAllPropsAsArrays from "../../../utils/createObjWithAllPropsAsArrays";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg } from "../../../actions/ui";
+import { startShowOverlay, serverMsg } from "../../../actions/ui";
 import {
   productLoaded,
   startGetProduct,
@@ -72,6 +72,7 @@ class Product extends Component {
   // events -----------------------------------------
   onDeleteProduct = () => {
     const { productId } = this.props.match.params;
+    this.props.startShowOverlay({ from: "productOnDeleteProductOverlay" });
     this.props.deleteProduct(productId, this.props.history);
   };
 
@@ -102,12 +103,12 @@ class Product extends Component {
   };
 
   render() {
-    const { product, loading, match, history } = this.props;
+    const { product, match, history } = this.props;
     const { productId } = match.params;
 
     let content;
 
-    if (loading) {
+    if (!product) {
       content = <Spinner />;
     } else if (product) {
       const {
@@ -209,6 +210,7 @@ const mapStateToProps = ({ ui, product }) => ({
 export default connect(
   mapStateToProps,
   {
+    startShowOverlay,
     serverMsg,
     productLoaded,
     startGetProduct,

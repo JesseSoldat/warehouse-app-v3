@@ -39,7 +39,7 @@ class Storage extends Component {
 
   // Api calls ----------------------------
   getRack = () => {
-    const { match, rack, startGetRack, rackRequsted } = this.props;
+    const { match, rack, startGetRack } = this.props;
     const { rackId } = match.params;
 
     if (rack && rack._id === rackId) return;

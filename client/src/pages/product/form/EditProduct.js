@@ -13,7 +13,7 @@ import createEditState from "./helpers/createEditState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 import {
   productLoaded,
   startGetClients,
@@ -37,6 +37,7 @@ class EditProduct extends Component {
 
   // api calls ----------------------------------------
   getFormData = () => {
+    this.props.startLoading({ from: "editProductLoading" });
     const { productEntity, product, customers, producers, match } = this.props;
     const { productId } = match.params;
 
@@ -160,6 +161,7 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
+    startLoading,
     productLoaded,
     startGetProducers,
     startGetCustomers,

@@ -17,7 +17,7 @@ export const getAllUsers = payload => ({
 });
 
 export const startGetAllUsers = () => async dispatch => {
-  dispatch(loading(true));
+  dispatch(loading());
   try {
     const res = await axios.get("/api/users");
     const { msg, payload, options } = res.data;

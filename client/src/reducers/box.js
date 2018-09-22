@@ -118,10 +118,9 @@ export default (state = initialState, action) => {
         box: null
       };
 
-    // -----------------------UN-LINKING -------------------------
+    // ---------------- UN-LINKING & LINKING ----------------
     // API update = { box }
     case UNLINK_BOX_FROM_SHELFSPOT:
-    // ------------------------ LINKING ---------------------------
     case LINK_BOX_TO_SHELFSPOT:
     case LINK_PRODUCT_TO_BOX:
       return {

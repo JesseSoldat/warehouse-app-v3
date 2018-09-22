@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import io from "socket.io-client";
 
 // actions
-import { serverMsg } from "../actions/ui";
+import { sendServerMsg } from "../actions/ui";
 
 // helpers
 import buildClientMsg from "../actions/helpers/buildClientMsg";
@@ -11,6 +11,7 @@ import buildClientMsg from "../actions/helpers/buildClientMsg";
 const port = process.env.PORT || 5000;
 
 let socket;
+
 if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   // dev code
   socket = io("http://localhost:5000");
@@ -22,17 +23,18 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   socket = io(prodUrl);
 }
 
-const Socket = ({ userId }) => {
+const Socket = ({ userId, sendServerMsg }) => {
   socket.on("update", data => {
     const { msg, senderId, timestamp } = data;
 
     if (msg === "database error") {
-      console.log("database error", timestamp);
+      console.log("Database Error issued at:", timestamp);
       const msg = buildClientMsg({
         info: "Cloud Database is currently offline.",
         color: "red"
       });
-      this.props.serverMsg(msg);
+
+      sendServerMsg({ msg, from: "socketDatabaseOffline" });
     }
 
     if (senderId === userId) return;
@@ -76,5 +78,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg }
+  { sendServerMsg }
 )(Socket);

@@ -39,7 +39,7 @@ const mapTypeToHistoryUrl = (type, ids) => {
 
 // Redirect URL after DELETE
 const mapTypeToParentHistoryUrl = (type, ids) => {
-  const { storageId, rackId, shelfId, shelfSpotId } = ids;
+  const { storageId, rackId, shelfId } = ids;
 
   const historyUrlObj = {
     storage: "/storages",
@@ -133,7 +133,7 @@ const createEntity = storagesArray => {
 
 export const getStorageIds = () => async dispatch => {
   dispatch(storageIdsRequested());
-  dispatch(loading(true));
+  dispatch(loading());
   try {
     const res = await axios.get("/api/storages/ids");
 
@@ -183,7 +183,7 @@ export const getStorages = (storages = []) => ({
 });
 
 export const startGetStorages = () => async dispatch => {
-  dispatch(loading(true));
+  dispatch(loading());
   try {
     const res = await axios.get("/api/storages");
 
@@ -211,7 +211,7 @@ export const rackLoaded = rack => ({
 
 export const startGetRack = rackId => async dispatch => {
   dispatch(rackRequested());
-  dispatch(loading(true));
+  dispatch(loading());
   try {
     const res = await axios.get(`/api/racks/${rackId}`);
 

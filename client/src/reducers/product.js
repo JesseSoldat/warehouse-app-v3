@@ -1,8 +1,11 @@
 import {
+  // All Products
   PRODUCTS_REQUESTED,
   PRODUCTS_LOADED,
+  // Single Product
   PRODUCT_REQUESTED,
   PRODUCT_LOADED,
+  // Reset
   PRODUCTS_RESET
 } from "../actions/product";
 
@@ -33,6 +36,7 @@ const initialState = {
 export default (state = initialState, action) => {
   const { type, productEntity, productOrder, product, query } = action;
   switch (type) {
+    // All Products
     case PRODUCTS_REQUESTED:
       return {
         ...state,
@@ -56,6 +60,7 @@ export default (state = initialState, action) => {
         productsLoaded: true
       };
 
+    // Single Product
     case PRODUCT_REQUESTED:
       return {
         ...state,
@@ -71,6 +76,7 @@ export default (state = initialState, action) => {
         productsLoaded: true
       };
 
+    // Reset Products State
     case PRODUCTS_RESET:
       return {
         ...state,

@@ -6,6 +6,7 @@ import SiteLink from "./links/SiteLink";
 import MenuLink from "./links/MenuLink";
 import DropdownLink from "./links/DropdownLink";
 // actions
+import { startShowOverlay } from "../actions/ui";
 import { startLogout } from "../actions/auth";
 
 const NavBar = ({ isAuth, startLogout }) => {
@@ -80,6 +81,7 @@ const NavBar = ({ isAuth, startLogout }) => {
 
   const onStartLogout = e => {
     e.preventDefault();
+    this.props.startShowOverlay({ from: "navBarLogoutShowOverlay" });
     startLogout();
   };
 
@@ -108,5 +110,5 @@ const mapStateToProps = ({ auth }) => ({
 
 export default connect(
   mapStateToProps,
-  { startLogout }
+  { startShowOverlay, startLogout }
 )(NavBar);

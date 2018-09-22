@@ -39,7 +39,7 @@ class Products extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg, resetProducts } = this.props;
+    const { msg, options, serverMsg } = this.props;
     clearUiMsg(msg, options, serverMsg);
   }
 
@@ -119,12 +119,12 @@ class Products extends Component {
   };
 
   render() {
-    const { loading, products, query } = this.props;
+    const { products, productsRequest, productsLoaded, query } = this.props;
     let content;
 
-    if (loading) {
+    if (productsRequest) {
       content = <Spinner />;
-    } else if (!products || !products.length) {
+    } else if (productsLoaded && !products.length) {
       content = (
         <div className="row">
           <div className="col-12 text-center">
@@ -132,7 +132,7 @@ class Products extends Component {
           </div>
         </div>
       );
-    } else {
+    } else if (productsLoaded) {
       content = <CardList data={productCardData(products)} />;
     }
 
@@ -178,8 +178,9 @@ class Products extends Component {
 const mapStateToProps = ({ ui, product }) => ({
   msg: ui.msg,
   options: ui.options,
-  loading: ui.loading,
   products: product.products,
+  productsRequest: product.productsRequest,
+  productsLoaded: product.productsLoaded,
   query: product.query
 });
 

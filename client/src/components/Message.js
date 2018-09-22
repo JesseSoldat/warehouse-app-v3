@@ -6,9 +6,7 @@ class Message extends Component {
   componentWillUpdate(nextProps) {
     const { msg } = nextProps;
 
-    if (msg) {
-      window.scrollTo(0, 0);
-    }
+    if (msg) window.scrollTo(0, 0);
 
     // hide the success message after 3 seconds
     if (msg && msg.code === "hide-3") {
@@ -19,7 +17,7 @@ class Message extends Component {
   }
 
   closeMessage = () => {
-    this.props.serverMsg(null);
+    this.props.serverMsg(null, "msgComponentAutomaticClearMsg");
   };
 
   renderMsg = () => {

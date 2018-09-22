@@ -17,8 +17,6 @@ export const PRODUCTS_LOADED = "PRODUCTS_LOADED";
 export const PRODUCT_REQUESTED = "PRODUCT_REQUESTED";
 export const PRODUCT_LOADED = "PRODUCT_LOADED";
 
-export const PRODUCTS_FETCH_ALL = "PRODUCTS_FETCH_ALL";
-export const PRODUCTS_FETCH_ONE = "PRODUCTS_FETCH_ONE";
 export const PRODUCTS_RESET = "PRODUCTS_RESET";
 
 const getProductsQueryUrl = query => {
@@ -46,16 +44,8 @@ export const productsLoaded = (productEntity, productOrder, query) => ({
   query
 });
 
-// TODO DEPRECATE
-export const getProducts = ({ products, query }) => ({
-  type: PRODUCTS_FETCH_ALL,
-  products,
-  query
-});
-
 export const startGetProducts = query => async dispatch => {
   dispatch(productsRequested());
-  dispatch(loading(true));
 
   try {
     const res = await axios.get(getProductsQueryUrl(query));
@@ -88,7 +78,7 @@ export const productLoaded = product => ({
 
 export const startGetProduct = productId => async dispatch => {
   dispatch(productRequested());
-  dispatch(loading(true));
+
   try {
     const res = await axios.get(`/api/products/${productId}`);
 
@@ -106,7 +96,7 @@ export const startGetProduct = productId => async dispatch => {
 export const startGetClients = () => async dispatch => {
   dispatch(customersRequested());
   dispatch(producersRequested());
-  dispatch(loading(true));
+  dispatch(loading());
   try {
     const res = await axios.get("/api/products/clients");
 
@@ -136,7 +126,7 @@ export const startGetClients = () => async dispatch => {
 export const startGetProductWithClients = productId => async dispatch => {
   dispatch(customersRequested());
   dispatch(producersRequested());
-  dispatch(loading(true));
+  dispatch(loading());
   try {
     const res = await axios.get(
       `/api/products/productWithClients/${productId}`
@@ -204,7 +194,6 @@ export const editProduct = (productId, update, history) => async dispatch => {
 
 // Delete Product -----------------------------------------------
 export const deleteProduct = (productId, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.delete(`/api/products/${productId}`);
 
@@ -214,10 +203,16 @@ export const deleteProduct = (productId, history) => async dispatch => {
 
     dispatch(resetStorage());
 
-    checkForMsg(msg, dispatch, options);
+    checkForMsg(msg, dispatch, options, "productActionDeleteProduct");
 
     history.push("/products/search");
   } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "delete", "product");
+    axiosResponseErrorHandling(
+      err,
+      dispatch,
+      "delete",
+      "product",
+      "productActionDeleteProductMsg"
+    );
   }
 };

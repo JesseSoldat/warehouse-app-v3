@@ -14,7 +14,7 @@ import ImageCard from "./components/ImageCard";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 // actions
-import { showOverlay, serverMsg } from "../../../actions/ui";
+import { showOverlay, hideOverlay, serverMsg } from "../../../actions/ui";
 import { productLoaded, startGetProduct } from "../../../actions/product";
 import { uploadImage, deleteImage } from "../../../actions/image";
 
@@ -55,11 +55,11 @@ class ProductImages extends Component {
 
   // uploading
   handleUploadStart = () => {
-    this.props.showOverlay(true);
+    this.props.showOverlay();
   };
 
   handleUploadError = error => {
-    this.props.showOverlay(false);
+    this.props.hideOverlay();
     console.error(error);
   };
 
@@ -77,7 +77,7 @@ class ProductImages extends Component {
 
   // delete image
   handleDeleteImage = async (url, type) => {
-    this.props.showOverlay(true);
+    this.props.showOverlay();
 
     const { product } = this.props;
 
@@ -221,6 +221,7 @@ export default connect(
   {
     serverMsg,
     showOverlay,
+    hideOverlay,
     productLoaded,
     startGetProduct,
     uploadImage,

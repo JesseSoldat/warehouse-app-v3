@@ -107,7 +107,7 @@ export default (state = initialState, action) => {
     console.log("----------findItemInRackAndUpdate-----------");
     getIdsFromShelfSpot(shelfSpot);
 
-    state.rack ? (rackCopy = { ...state.rack }) : null;
+    rackCopy = state.rack ? { ...state.rack } : null;
 
     if (!rackCopy && rackCopy._id !== rackId) {
       console.log("STORE Rack is null || rackId does not match");
@@ -382,11 +382,10 @@ export default (state = initialState, action) => {
 
     // ---------- UPDATE STORE Storages and Rack with ShelfSpot ---------
     // API returns update = { shelfSpot }
-    // ----------------------------- UNLINK ----------------------------
+    // ------------------------ UNLINK & LINK ----------------------------
     case UNLINK_BOX_FROM_SHELFSPOT:
     case UNLINK_PRODUCT_FROM_SHELFSPOT:
     case BOX_DELETE_ONE_WITH_LOCATION:
-    // ----------------------------- LINK ----------------------------
     case BOX_CREATE_ONE_LINK:
     case LINK_BOX_TO_SHELFSPOT:
     case LINK_PRODUCT_TO_SHELFSPOT:

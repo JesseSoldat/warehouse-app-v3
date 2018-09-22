@@ -1,4 +1,4 @@
-import { serverMsg, serverOptions } from "../ui";
+import { serverMsg, serverOptions, clearUIAfterAsync } from "../ui";
 import buildClientMsg from "./buildClientMsg";
 
 // dispatches either a msg && options || just the options
@@ -7,16 +7,21 @@ const checkForMsg = (msg, dispatch, options = null, from = null) => {
   if (msg) {
     // Have MSG and OPTIONS
     if (options) {
-      dispatch(serverOptions(options));
+      return dispatch(serverOptions(options));
     }
     // Have MSG but no OPTIONS
     const msgFrom = from ? from + "Msg" : null;
     console.log("msgFrom:", msgFrom);
 
     return dispatch(serverMsg(buildClientMsg(msg), msgFrom));
+  } else {
+    // NO MSG and have OPTIONS
+    if (options) {
+      return dispatch(serverOptions(options));
+    }
+    // NO MSG or OPTIONS
+    return dispatch(clearUIAfterAsync());
   }
-  // NO MSG
-  dispatch(serverOptions(options));
 };
 
 export default checkForMsg;
