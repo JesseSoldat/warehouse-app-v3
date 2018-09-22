@@ -42,10 +42,12 @@ const sendMail = async (req, user, token, type) => {
 
       `;
 
+  console.log("user email:", user.email);
+
   const msg = {
-    from: "jessesoldat@gmail.com",
+    from: "jlab.development.coding@gmail.com",
     from_name: "JLab Warehouse App",
-    to: "jessesoldat@gmail.com",
+    to: user.email,
     subject,
     body_text
   };
