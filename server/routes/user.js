@@ -10,7 +10,7 @@ const isAuth = require("../middleware/isAuth");
 // utils
 const { msgObj, serverRes } = require("../utils/serverRes");
 const serverMsg = require("../utils/serverMsg");
-const sendMail = require("../utils/sendMail");
+const sendMail = require("../utils/elasticEmail");
 const isEmail = require("../utils/isEmail");
 
 module.exports = app => {

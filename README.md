@@ -31,3 +31,10 @@ git branch
 
 Firebase
 https://medium.com/@zwacky/using-firebase-you-might-be-able-to-save-220kb-744269f845cc
+
+Surge
+surge teardown https://movie-buddy.surge.sh
+surge list
+
+Elastic Email
+https://github.com/julianduque/node-elasticemail#readme
