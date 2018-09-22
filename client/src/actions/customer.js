@@ -24,7 +24,7 @@ export const customersLoaded = (customerEntity, customerOrder) => ({
 });
 
 export const startGetCustomers = () => async dispatch => {
-  dispatch(loading());
+  dispatch(customersRequested());
 
   try {
     const res = await axios.get("/api/customers");

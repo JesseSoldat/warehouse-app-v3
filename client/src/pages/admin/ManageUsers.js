@@ -10,7 +10,7 @@ import UserTable from "./components/UserTable";
 // utils
 import clearUiMsg from "../../utils/clearUiMsg";
 // actions
-import { serverMsg } from "../../actions/ui";
+import { sendServerMsg } from "../../actions/ui";
 import {
   startGetAllUsers,
   changeUserRole,
@@ -24,8 +24,9 @@ class ManageUsers extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
-    clearUiMsg(msg, options, serverMsg);
+    const { msg, sendServerMsg } = this.props;
+    // check to see if the UiMsg should be cleared
+    clearUiMsg({ msg, sendServerMsg, from: "manageUserClearMsg" });
   }
 
   // api calls ---------------------------------------------
@@ -81,5 +82,5 @@ const mapStateToProps = ({ ui, admin }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetAllUsers, changeUserRole, deleteUser }
+  { sendServerMsg, startGetAllUsers, changeUserRole, deleteUser }
 )(ManageUsers);

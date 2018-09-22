@@ -12,7 +12,7 @@ import customerListData from "./helpers/customerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg } from "../../../actions/ui";
+import { sendServerMsg } from "../../../actions/ui";
 import {
   startGetCustomers,
   startDeleteCustomer
@@ -25,9 +25,9 @@ class Customer extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
+    const { msg, sendServerMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg(msg, options, serverMsg);
+    clearUiMsg({ msg, sendServerMsg, from: "customerDetailsClearMsg" });
   }
 
   // api calls ----------------------------
@@ -107,5 +107,5 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetCustomers, startDeleteCustomer }
+  { sendServerMsg, startGetCustomers, startDeleteCustomer }
 )(Customer);

@@ -26,7 +26,6 @@ export const producersLoaded = (producerEntity, producerOrder) => ({
 
 export const startGetProducers = () => async dispatch => {
   dispatch(producersRequested());
-  dispatch(loading());
 
   try {
     const res = await axios.get("/api/producers");

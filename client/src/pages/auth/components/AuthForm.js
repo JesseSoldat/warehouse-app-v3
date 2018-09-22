@@ -57,7 +57,7 @@ class AuthForm extends Component {
 
   componentWillUnmount() {
     const { parent, serverMsg } = this.props;
-    if (parent === "login") serverMsg(null, "loginDestroyMsg");
+    if (parent === "login") serverMsg(null, "loginClearMsg");
   }
 
   onChange = e => {

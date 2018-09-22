@@ -96,7 +96,7 @@ export const startGetProduct = productId => async dispatch => {
 export const startGetClients = () => async dispatch => {
   dispatch(customersRequested());
   dispatch(producersRequested());
-  dispatch(loading());
+
   try {
     const res = await axios.get("/api/products/clients");
 
@@ -126,7 +126,7 @@ export const startGetClients = () => async dispatch => {
 export const startGetProductWithClients = productId => async dispatch => {
   dispatch(customersRequested());
   dispatch(producersRequested());
-  dispatch(loading());
+
   try {
     const res = await axios.get(
       `/api/products/productWithClients/${productId}`
@@ -158,7 +158,6 @@ export const startGetProductWithClients = productId => async dispatch => {
 
 // Create Product -----------------------------------------------
 export const createProduct = (newProduct, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.post("/api/products", newProduct);
 
@@ -166,17 +165,22 @@ export const createProduct = (newProduct, history) => async dispatch => {
 
     dispatch(resetProducts());
 
-    checkForMsg(msg, dispatch, options);
+    checkForMsg(msg, dispatch, options, "productActionCreateProduct");
 
     history.push(`/products/${payload._id}`);
   } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "save", "product");
+    axiosResponseErrorHandling(
+      err,
+      dispatch,
+      "save",
+      "product",
+      "productActionCreateProductMsg"
+    );
   }
 };
 
 // Edit Product -----------------------------------------------
 export const editProduct = (productId, update, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/products/${productId}`, update);
 
@@ -184,11 +188,17 @@ export const editProduct = (productId, update, history) => async dispatch => {
 
     dispatch(resetProducts());
 
-    checkForMsg(msg, dispatch, options);
+    checkForMsg(msg, dispatch, options, "productActionEditProduct");
 
     history.push(`/products/${productId}`);
   } catch (err) {
-    axiosResponseErrorHandling(err, dispatch, "update", "product");
+    axiosResponseErrorHandling(
+      err,
+      dispatch,
+      "update",
+      "product",
+      "productActionEditProductMsg"
+    );
   }
 };
 

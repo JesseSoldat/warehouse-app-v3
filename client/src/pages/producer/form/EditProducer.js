@@ -11,7 +11,7 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg } from "../../../actions/ui";
+import { sendServerMsg } from "../../../actions/ui";
 import {
   startGetProducers,
   startEditProducer
@@ -24,9 +24,9 @@ class EditProducer extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
+    const { msg, sendServerMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg(msg, options, serverMsg);
+    clearUiMsg({ msg, sendServerMsg, from: "editProducerClearMsg" });
   }
 
   // api calls ------------------------------------------
@@ -83,12 +83,11 @@ class EditProducer extends Component {
 
 const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   producerEntity: producer.producerEntity
 });
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetProducers, startEditProducer }
+  { sendServerMsg, startGetProducers, startEditProducer }
 )(withRouter(EditProducer));

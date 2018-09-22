@@ -13,7 +13,11 @@ import createEditState from "./helpers/createEditState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading } from "../../../actions/ui";
+import {
+  startLoading,
+  startShowOverlay,
+  sendServerMsg
+} from "../../../actions/ui";
 import {
   productLoaded,
   startGetClients,
@@ -30,14 +34,13 @@ class EditProduct extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
+    const { msg, sendServerMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg(msg, options, serverMsg);
+    clearUiMsg({ msg, sendServerMsg, from: "editProductClearMsg" });
   }
 
   // api calls ----------------------------------------
   getFormData = () => {
-    this.props.startLoading({ from: "editProductLoading" });
     const { productEntity, product, customers, producers, match } = this.props;
     const { productId } = match.params;
 
@@ -71,7 +74,13 @@ class EditProduct extends Component {
     // have all the data already
     if (haveProduct && haveCustomers && haveProducers) {
       console.log("Have Product, Customers, Producers");
-    } else if (haveProduct && !haveCustomers && !haveProducers) {
+      return;
+    }
+
+    // Load from the STORE
+    this.props.startLoading({ from: "editProductLoading" });
+
+    if (haveProduct && !haveCustomers && !haveProducers) {
       console.log("Have Product but NO Clients");
 
       this.props.startGetClients();
@@ -98,7 +107,7 @@ class EditProduct extends Component {
   // events ------------------------------------------
   handleSubmit = form => {
     const { productId } = this.props.match.params;
-    // api call
+    this.props.startShowOverlay({ from: "editProductOverlay" });
     this.props.editProduct(productId, form, this.props.history);
   };
 
@@ -160,8 +169,9 @@ const mapStateToProps = ({ ui, product, producer, customer }) => {
 export default connect(
   mapStateToProps,
   {
-    serverMsg,
     startLoading,
+    startShowOverlay,
+    sendServerMsg,
     productLoaded,
     startGetProducers,
     startGetCustomers,

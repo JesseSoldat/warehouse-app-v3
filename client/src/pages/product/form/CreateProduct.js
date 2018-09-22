@@ -13,7 +13,11 @@ import getInitialState from "./helpers/getInitialState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   productLoaded,
   createProduct,
@@ -30,9 +34,9 @@ class CreateProduct extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
+    const { msg, sendServerMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg(msg, options, serverMsg);
+    clearUiMsg({ msg, sendServerMsg, from: "createProductClearMsg" });
   }
 
   // load api data --------------------------------------------
@@ -50,9 +54,15 @@ class CreateProduct extends Component {
       haveProducers = true;
     }
 
+    // Load from the STORE
     if (haveCustomers && haveProducers) {
       console.log("Have Product, Customers, Producers");
-    } else if (!haveCustomers && !haveProducers) {
+      return;
+    }
+
+    // Load from the API
+    this.props.startLoading({ from: "createProductLoading" });
+    if (!haveCustomers && !haveProducers) {
       console.log("NO Clients");
 
       this.props.startGetClients();
@@ -69,11 +79,12 @@ class CreateProduct extends Component {
 
   // events handle cb ----------------------------------------
   handleSubmit = form => {
+    this.props.startShowOverlay({ from: "createProductOverlay" });
     this.props.createProduct(form, this.props.history);
   };
 
   handleSendMsg = msg => {
-    this.props.serverMsg(msg);
+    this.props.sendServerMsg({ msg, from: "createProductMsg" });
   };
 
   render() {
@@ -118,7 +129,6 @@ class CreateProduct extends Component {
 
 const mapStateToProps = ({ ui, customer, producer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   producers: producer.producers, // select options
   customers: customer.customers // select options
@@ -132,6 +142,8 @@ export default connect(
     startGetProducers,
     startGetCustomers,
     startGetClients,
-    serverMsg
+    startShowOverlay,
+    sendServerMsg,
+    startLoading
   }
 )(withRouter(CreateProduct));

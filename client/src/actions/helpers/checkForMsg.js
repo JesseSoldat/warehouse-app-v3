@@ -11,7 +11,6 @@ const checkForMsg = (msg, dispatch, options = null, from = null) => {
     }
     // Have MSG but no OPTIONS
     const msgFrom = from ? from + "Msg" : null;
-    console.log("msgFrom:", msgFrom);
 
     return dispatch(serverMsg(buildClientMsg(msg), msgFrom));
   } else {

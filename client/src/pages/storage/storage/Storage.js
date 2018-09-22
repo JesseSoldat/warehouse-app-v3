@@ -13,7 +13,7 @@ import getUrlParameter from "../../../utils/getUrlParameter";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { startGetRack } from "../../../actions/storage";
-import { serverMsg } from "../../../actions/ui";
+import { sendServerMsg } from "../../../actions/ui";
 
 class Storage extends Component {
   // lifecyles -----------------------------
@@ -33,8 +33,9 @@ class Storage extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, options, serverMsg } = this.props;
-    clearUiMsg(msg, options, serverMsg);
+    const { msg, sendServerMsg } = this.props;
+    // check to see if the UiMsg should be cleared
+    clearUiMsg({ msg, sendServerMsg, from: "storageClearMsg" });
   }
 
   // Api calls ----------------------------
@@ -100,5 +101,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startGetRack }
+  { sendServerMsg, startGetRack }
 )(Storage);
