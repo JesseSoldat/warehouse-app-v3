@@ -13,22 +13,23 @@ import { startGetStorages } from "../../../actions/storage";
 import { startLoading } from "../../../actions/ui";
 
 class Storages extends Component {
-  // lifecycles ----------------------------------------------
+  // Lifecycles ----------------------------------------------
   componentDidMount() {
     this.getStorages();
   }
 
-  // STORE / API CALLS ----------------------------
+  // Store / Api Calls ----------------------------
   getStorages = () => {
     const { storages, startGetStorages, startLoading } = this.props;
 
-    // Load from the API
+    // Load from the Api
     if (storages && storages.length === 0) {
       startLoading({ from: "storagesLoadingStorages" });
       startGetStorages();
     }
   };
 
+  // Render -----------------------------------
   render() {
     const { loading, storages } = this.props;
 

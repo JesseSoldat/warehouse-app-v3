@@ -11,7 +11,7 @@ import producerCardData from "./helpers/producerCardData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetProducers } from "../../../actions/producer";
 
 class Producers extends Component {
@@ -21,9 +21,9 @@ class Producers extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "producersClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "producersClearMsg" });
   }
 
   // Api Calls --------------------------------------
@@ -72,5 +72,5 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetProducers }
+  { serverMsg, startLoading, startGetProducers }
 )(Producers);

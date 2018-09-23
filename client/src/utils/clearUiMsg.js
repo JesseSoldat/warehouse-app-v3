@@ -1,13 +1,13 @@
 const clearUiMsg = ({
   msg = null,
-  sendServerMsg,
+  serverMsg,
   shouldRemove = true,
   from = "componentUnMount"
 }) => {
   if (msg === null) return;
 
   // component specifies that the msg should be removed
-  if (shouldRemove) return sendServerMsg({ msg: null, from });
+  if (shouldRemove) return serverMsg({ msg: null, from });
 };
 
 export default clearUiMsg;

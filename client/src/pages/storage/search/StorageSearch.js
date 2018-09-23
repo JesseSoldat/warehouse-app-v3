@@ -21,7 +21,7 @@ class StorageSearch extends Component {
     searchTextErr: null
   };
 
-  // lifecycles ----------------------------
+  // Lifecycles ----------------------------
   componentWillUnmount() {
     this.props.searchStoragesLoaded([], null);
   }
@@ -39,13 +39,13 @@ class StorageSearch extends Component {
     startSearchStorages(selection, `${selection}Label`, searchText, history);
   };
 
-  // events -------------------------------
+  // Events and Cbs -------------------------------
   onSelect = ({ target: { value } }) => this.setState({ selection: value });
 
   onInput = ({ target: { value } }) =>
     this.setState({ searchText: value, searchTextErr: null });
 
-  // url for navigation --------------------------------------
+  // url for navigation --------------------------
   getlinksUrls = (item, storageType) => {
     let link, storageId, rackId, shelfId, shelfSpotId, boxId;
 
@@ -96,6 +96,7 @@ class StorageSearch extends Component {
     return link;
   };
 
+  // Render ------------------------------------
   render() {
     const { loading, search, storageType } = this.props;
 

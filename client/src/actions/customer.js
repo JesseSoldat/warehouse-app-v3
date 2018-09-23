@@ -2,8 +2,6 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
-// actions
-import { showOverlay } from "./ui";
 // types
 export const CUSTOMERS_REQUESTED = "CUSTOMERS_REQUESTED";
 export const CUSTOMERS_LOADED = "CUSTOMERS_LOADED";
@@ -55,7 +53,6 @@ export const createCustomer = customer => ({
 });
 
 export const startCreateCustomer = (data, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.post("/api/customers", data);
 
@@ -83,7 +80,6 @@ export const startEditCustomer = (
   data,
   history
 ) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/customers/${customerId}`, data);
 
@@ -105,7 +101,6 @@ export const deleteCustomer = customer => ({
 });
 
 export const startDeleteCustomer = (customerId, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.delete(`/api/customers/${customerId}`);
 

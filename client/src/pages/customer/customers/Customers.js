@@ -11,7 +11,7 @@ import customerCardData from "./helpers/customerCardData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetCustomers } from "../../../actions/customer";
 
 class Customers extends Component {
@@ -21,9 +21,9 @@ class Customers extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "customersClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "customersClearMsg" });
   }
 
   // Store / Api Calls ----------------------------
@@ -71,5 +71,5 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetCustomers }
+  { serverMsg, startLoading, startGetCustomers }
 )(Customers);

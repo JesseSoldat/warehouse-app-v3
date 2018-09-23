@@ -23,11 +23,7 @@ import createCustomersArray from "./helpers/createCustomersArray";
 import createObjWithAllPropsAsArrays from "../../../utils/createObjWithAllPropsAsArrays";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import {
-  startShowOverlay,
-  sendServerMsg,
-  startLoading
-} from "../../../actions/ui";
+import { startShowOverlay, serverMsg, startLoading } from "../../../actions/ui";
 import {
   productLoaded,
   startGetProduct,
@@ -42,9 +38,9 @@ class Product extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "productDetailsClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "productDetailsClearMsg" });
   }
 
   // API CALLS ---------------------------------------
@@ -225,7 +221,7 @@ export default connect(
   {
     startShowOverlay,
     startLoading,
-    sendServerMsg,
+    serverMsg,
     productLoaded,
     startGetProduct,
     deleteProduct,

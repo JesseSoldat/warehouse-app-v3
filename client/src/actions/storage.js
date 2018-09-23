@@ -5,7 +5,6 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import storageApiUrl from "./helpers/storageApiUrl";
 // actions
-import { showOverlay } from "./ui";
 import { resetBox } from "./box";
 // types
 export const RESET_STORAGE = "RESET_STORAGE";
@@ -258,7 +257,6 @@ export const startCreateStorage = (
   ids,
   history
 ) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const apiUrl = `${storageApiUrl(type)}/${id}`;
 
@@ -309,8 +307,6 @@ export const startEditStorage = (
   ids,
   history
 ) => async dispatch => {
-  dispatch(showOverlay());
-
   const apiUrl = `${storageApiUrl(type)}/${id}`;
 
   try {
@@ -351,8 +347,6 @@ export const startDeleteStorage = (
   history
 ) => async dispatch => {
   try {
-    dispatch(showOverlay());
-
     const apiUrl = `${storageApiUrl(type)}/${id}`;
 
     const res = await axios.delete(apiUrl);

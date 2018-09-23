@@ -173,10 +173,6 @@ export const serverMsg = (msg = null, from = null) => {
   };
 };
 
-export const sendServerMsg = ({ msg, from }) => dispatch => {
-  dispatch(serverMsg(msg, from));
-};
-
 export const serverOptions = (options = null, from = null) => {
   console.log("UI actions - serverOptions", from);
   return {

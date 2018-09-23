@@ -13,10 +13,10 @@ import getUrlParameter from "../../../utils/getUrlParameter";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { startGetRack } from "../../../actions/storage";
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 
 class Storage extends Component {
-  // lifecyles -----------------------------
+  // Lifecycles -----------------------------
   componentDidMount() {
     this.getRack();
   }
@@ -33,12 +33,12 @@ class Storage extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "storageClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "storageClearMsg" });
   }
 
-  // STORE / API CALLS ----------------------------
+  // Store / Api Calls ----------------------------
   getRack = () => {
     const { match, rack, startGetRack } = this.props;
     const { rackId } = match.params;
@@ -51,14 +51,13 @@ class Storage extends Component {
     startGetRack(rackId);
   };
 
+  // Render ------------------------------------
   render() {
-    // props
     const { loading, rack, match } = this.props;
     const { rackId } = match.params;
     const { shelfId } = match.params;
     const { shelfSpotId } = match.params;
 
-    // params
     const storageType = getUrlParameter("type");
 
     const heading = storageType === "shelfSpot" ? "Shelf Spot" : storageType;
@@ -103,5 +102,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetRack }
+  { serverMsg, startLoading, startGetRack }
 )(Storage);

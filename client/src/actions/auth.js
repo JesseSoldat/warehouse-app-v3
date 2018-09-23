@@ -5,8 +5,6 @@ import setAxiosHeader from "../utils/setAxiosHeader";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
-// actions
-import { showOverlay } from "./ui";
 // types
 export const AUTH_LOGIN = "AUTH_LOGIN";
 export const AUTH_LOGOUT = "AUTH_LOGOUT";
@@ -67,7 +65,6 @@ export const startLogin = user => async dispatch => {
 };
 
 export const startResendVerification = email => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.post("/api/resendVerification", { email });
     const { msg, options } = res.data;

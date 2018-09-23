@@ -13,11 +13,7 @@ import createEditState from "./helpers/createEditState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import {
-  startLoading,
-  startShowOverlay,
-  sendServerMsg
-} from "../../../actions/ui";
+import { startLoading, startShowOverlay, serverMsg } from "../../../actions/ui";
 import {
   productLoaded,
   startGetClients,
@@ -34,9 +30,9 @@ class EditProduct extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "editProductClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "editProductClearMsg" });
   }
 
   // Api Calls ----------------------------------------
@@ -171,7 +167,7 @@ export default connect(
   {
     startLoading,
     startShowOverlay,
-    sendServerMsg,
+    serverMsg,
     productLoaded,
     startGetProducers,
     startGetCustomers,

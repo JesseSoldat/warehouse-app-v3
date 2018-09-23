@@ -17,7 +17,7 @@ import onSelectBuildNewState from "./helpers/onSelectBuildNewState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetProducts, resetProducts } from "../../../actions/product";
 
 class Products extends Component {
@@ -40,9 +40,9 @@ class Products extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "productsClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "productsClearMsg" });
   }
 
   // api calls ----------------------------------
@@ -190,5 +190,5 @@ const mapStateToProps = ({ ui, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetProducts, resetProducts }
+  { serverMsg, startLoading, startGetProducts, resetProducts }
 )(Products);

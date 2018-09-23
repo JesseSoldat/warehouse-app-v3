@@ -3,8 +3,6 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
-// actions
-import { showOverlay } from "./ui";
 // types
 export const BOXES_RESET = "BOXES_RESET";
 export const BOXES_REQUESTED = "BOXES_REQUESTED";
@@ -87,7 +85,6 @@ export const createBoxAndLink = update => ({
 });
 
 export const startCreateBox = (obj, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const { boxLabel, params } = obj;
     const { storageId, rackId, shelfId, shelfSpotId } = params;
@@ -131,7 +128,6 @@ export const editBox = update => ({
 });
 
 export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
-  dispatch(showOverlay());
   try {
     const res = await axios.patch(`/api/boxes/${boxId}`, obj);
 
@@ -173,8 +169,6 @@ export const startDeleteBox = (
   history
 ) => async dispatch => {
   try {
-    dispatch(showOverlay());
-
     // No Location
     let apiUrl = `/api/boxes/${boxId}`;
     // Location

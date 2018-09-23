@@ -33,7 +33,7 @@ class BoxEdit extends Component {
   }
 
   // Helper Functions -------------------------------
-  sendServerMsg = () => {
+  createServerMsg = () => {
     const msg = buildClientMsg({
       info: "Delete or relink all products of this box first.",
       color: "red",
@@ -103,7 +103,7 @@ class BoxEdit extends Component {
         });
         startDeleteBox(boxId, historyUrl, null, history);
       } else {
-        this.sendServerMsg();
+        this.createServerMsg();
       }
     }
     // Have Location ---------------------------------
@@ -118,7 +118,7 @@ class BoxEdit extends Component {
         });
         startDeleteBox(boxId, historyUrl, ids.shelfSpotId, history);
       } else {
-        this.sendServerMsg();
+        this.createServerMsg();
       }
     }
   };

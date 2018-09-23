@@ -12,11 +12,7 @@ import producerListData from "./helpers/producerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import {
-  sendServerMsg,
-  startLoading,
-  startShowOverlay
-} from "../../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
 import {
   startGetProducers,
   startDeleteProducer
@@ -29,9 +25,9 @@ class Producer extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "producerDetailsClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "producerDetailsClearMsg" });
   }
 
   // APi Calls ----------------------------------------
@@ -116,7 +112,7 @@ export default connect(
   {
     startGetProducers,
     startDeleteProducer,
-    sendServerMsg,
+    serverMsg,
     startLoading,
     startShowOverlay
   }

@@ -13,11 +13,7 @@ import getInitialState from "./helpers/getInitialState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import {
-  sendServerMsg,
-  startLoading,
-  startShowOverlay
-} from "../../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
 import {
   productLoaded,
   createProduct,
@@ -34,9 +30,9 @@ class CreateProduct extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "createProductClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "createProductClearMsg" });
   }
 
   // Api Calls --------------------------------------------
@@ -85,7 +81,7 @@ class CreateProduct extends Component {
   };
 
   handleSendMsg = msg => {
-    this.props.sendServerMsg({ msg, from: "createProductMsg" });
+    this.props.serverMsg({ msg, from: "createProductMsg" });
   };
 
   // Render -------------------------------------
@@ -145,7 +141,7 @@ export default connect(
     startGetCustomers,
     startGetClients,
     startShowOverlay,
-    sendServerMsg,
+    serverMsg,
     startLoading
   }
 )(withRouter(CreateProduct));

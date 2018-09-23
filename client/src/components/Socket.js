@@ -3,7 +3,7 @@ import { connect } from "react-redux";
 import io from "socket.io-client";
 
 // actions
-import { sendServerMsg } from "../actions/ui";
+import { serverMsg } from "../actions/ui";
 
 // helpers
 import buildClientMsg from "../actions/helpers/buildClientMsg";
@@ -23,7 +23,7 @@ if (!process.env.NODE_ENV || process.env.NODE_ENV === "development") {
   socket = io(prodUrl);
 }
 
-const Socket = ({ userId, sendServerMsg }) => {
+const Socket = ({ userId, serverMsg }) => {
   socket.on("update", data => {
     const { msg, senderId, timestamp } = data;
 
@@ -34,7 +34,7 @@ const Socket = ({ userId, sendServerMsg }) => {
         color: "red"
       });
 
-      sendServerMsg({ msg, from: "socketDatabaseOffline" });
+      serverMsg({ msg, from: "socketDatabaseOffline" });
     }
 
     if (senderId === userId) return;
@@ -78,5 +78,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg }
+  { serverMsg }
 )(Socket);

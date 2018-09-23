@@ -12,6 +12,7 @@ import { startGetStorages } from "../../../actions/storage";
 import { startLoading } from "../../../actions/ui";
 
 class Details extends Component {
+  // Lifecycles -----------------------------
   componentDidMount() {
     // each time the route changes this will be called with a different TYPE
     this.getStorages();
@@ -28,6 +29,7 @@ class Details extends Component {
     }
   };
 
+  // Render ----------------------------------
   render() {
     const { match, loading, storages } = this.props;
     const storageId = match.params.storageId;

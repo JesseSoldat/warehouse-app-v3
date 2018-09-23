@@ -11,11 +11,7 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import {
-  sendServerMsg,
-  startLoading,
-  startShowOverlay
-} from "../../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
 import {
   startGetCustomers,
   startEditCustomer
@@ -28,9 +24,9 @@ class EditCustomer extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "editCustomerClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "editCustomerClearMsg" });
   }
 
   // Api Calls ----------------------------------
@@ -101,7 +97,7 @@ const mapStateToProps = ({ ui, customer }) => ({
 export default connect(
   mapStateToProps,
   {
-    sendServerMsg,
+    serverMsg,
     startLoading,
     startShowOverlay,
     startGetCustomers,

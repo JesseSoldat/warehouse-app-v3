@@ -11,11 +11,7 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import {
-  sendServerMsg,
-  startLoading,
-  startShowOverlay
-} from "../../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
 import {
   startGetProducers,
   startCreateProducer
@@ -28,9 +24,9 @@ class CreateProducer extends Component {
   }
 
   componentWillUnmount() {
-    const { msg, sendServerMsg } = this.props;
+    const { msg, serverMsg } = this.props;
     // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, sendServerMsg, from: "createProducerClearMsg" });
+    clearUiMsg({ msg, serverMsg, from: "createProducerClearMsg" });
   }
 
   // API Calls
@@ -89,7 +85,7 @@ const mapStateToProps = ({ ui, producer }) => ({
 export default connect(
   mapStateToProps,
   {
-    sendServerMsg,
+    serverMsg,
     startLoading,
     startShowOverlay,
     startGetProducers,
