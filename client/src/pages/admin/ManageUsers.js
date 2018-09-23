@@ -22,7 +22,7 @@ import {
 } from "../../actions/admin";
 
 class ManageUsers extends Component {
-  // lifecycles -----------------------------------------
+  // Lifecycles -----------------------------------------
   componentDidMount() {
     this.getAllUser();
   }
@@ -33,7 +33,7 @@ class ManageUsers extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "manageUserClearMsg" });
   }
 
-  // api calls ---------------------------------------------
+  // Api / Store  ---------------------------------------------
   getAllUser = () => {
     // Load from the STORE
     if (this.props.users.length) return;
@@ -43,6 +43,7 @@ class ManageUsers extends Component {
     this.props.startGetAllUsers();
   };
 
+  // Events -------------------------------------------------------
   handleChange = (email, role) => {
     this.props.startShowOverlay({ from: "manageUserUpdateShowOverlay" });
     this.props.changeUserRole(role, email);
@@ -53,6 +54,7 @@ class ManageUsers extends Component {
     this.props.deleteUser(email);
   };
 
+  // Render ---------------------------------------------
   render() {
     const { loading, users } = this.props;
     let content;

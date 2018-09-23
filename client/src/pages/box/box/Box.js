@@ -9,13 +9,13 @@ import Heading from "../../../components/Heading";
 // custom components
 import BoxTable from "./components/BoxTable";
 // actions
-import { serverMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
 import { startGetRack } from "../../../actions/storage";
 import { startGetBox } from "../../../actions/box";
 import { unlinkBox } from "../../../actions/unlink";
 
 class Box extends Component {
-  // lifecyles -----------------------------
+  // Lifecycles -----------------------------
   componentDidMount() {
     this.getBox();
   }
@@ -50,6 +50,9 @@ class Box extends Component {
   removeFromShelfSpot = () => {
     const { match, history } = this.props;
     const { shelfSpotId, boxId } = match.params;
+
+    // Api Calls
+    this.props.startShowOverlay({ from: "boxShowOverlayRemove" });
     this.props.unlinkBox({ shelfSpotId, boxId }, history);
   };
 
@@ -113,5 +116,12 @@ const mapStateToProps = ({ ui, storage, box }) => ({
 
 export default connect(
   mapStateToProps,
-  { unlinkBox, serverMsg, startLoading, startGetRack, startGetBox }
+  {
+    unlinkBox,
+    serverMsg,
+    startShowOverlay,
+    startLoading,
+    startGetRack,
+    startGetBox
+  }
 )(withRouter(Box));

@@ -10,6 +10,7 @@ import Heading from "../../../components/Heading";
 import ManageAccountAccordion from "./ManageAccountAccordion";
 // helpers
 import formIsValid from "../helpers/formIsValid";
+import verifyMsg from "../helpers/verifyMsg";
 // utils
 import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
@@ -22,6 +23,7 @@ import {
 import { serverMsg, startShowOverlay } from "../../../actions/ui";
 
 class AuthForm extends Component {
+  // State ----------------------------------------------
   state = {
     username: "",
     usernameErr: null,
@@ -33,26 +35,9 @@ class AuthForm extends Component {
     confirmPasswordErr: null
   };
 
+  // Lifecycles -----------------------------------------------
   componentDidMount() {
-    // When a user verifies their email show a message
-    const verify = getUrlParameter("verify");
-    if (verify) {
-      this.props.serverMsg({
-        heading: "Server Info",
-        details: "Your account has been verified. Please login!",
-        color: "info"
-      });
-    }
-    // An error occured while trying to verfiy email
-    const verifyErr = getUrlParameter("verifyErr");
-    if (verifyErr) {
-      this.props.serverMsg({
-        heading: "Server Error",
-        details:
-          "An error occured while trying to verify your account. Try to resend the email verification!",
-        color: "danger"
-      });
-    }
+    this.handleVerify();
   }
 
   componentWillUnmount() {
@@ -60,6 +45,25 @@ class AuthForm extends Component {
     if (parent === "login") serverMsg(null, "loginClearMsg");
   }
 
+  // Helper Functions -------------------------------
+  createSeverMsg = msg => {
+    this.props.serverMsg(msg);
+  };
+
+  handleVerify() {
+    // Success
+    const verify = getUrlParameter("verify");
+    if (verify) {
+      this.props.serverMsg(verifyMsg["success"]);
+    }
+    // Error
+    const verifyErr = getUrlParameter("verifyErr");
+    if (verifyErr) {
+      this.props.serverMsg(verifyMsg["error"]);
+    }
+  }
+
+  // Events --------------------------------------------------
   onChange = e => {
     const { name, value } = e.target;
     const error = name + "Err"; // reset any errors on target input
@@ -68,32 +72,43 @@ class AuthForm extends Component {
 
   registerFlow = () => {
     const { username, email, password } = this.state;
+    // Api Call
     this.props.startShowOverlay({ from: "registerShowOverlay" });
     this.props.startRegister({ username, email, password }, this.props.history);
   };
 
   loginFlow = () => {
     const { email, password } = this.state;
+    // Api Call
     this.props.startShowOverlay({ from: "loginShowOverlay" });
     this.props.startLogin({ email, password });
   };
 
   onSubmit = e => {
     e.preventDefault();
+
+    // Validation
     const { isValid, errObj } = formIsValid(this.state, this.props.parent);
 
     if (!isValid) return this.setState(() => ({ ...errObj }));
 
+    // Flow Control
     this.props.parent === "register" ? this.registerFlow() : this.loginFlow();
   };
 
-  resendEmail = () => this.props.startResendVerification(this.state.email);
+  resendEmail = () => {
+    // Api Call
+    this.props.startShowOverlay({ from: "resendVerificationShowOverlay" });
+    this.props.startResendVerification(this.state.email);
+  };
 
   resetPassword = email => {
+    // Api Call
     this.props.startShowOverlay({ from: "passwordResetShowOverlay" });
     this.props.requestResetPasswordEmail(email);
   };
 
+  // Render ---------------------------------------------
   render() {
     const { parent } = this.props;
 

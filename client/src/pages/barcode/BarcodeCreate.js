@@ -7,19 +7,20 @@ import Message from "../../components/Message";
 import Heading from "../../components/Heading";
 // utils
 import getUrlParameter from "../../utils/getUrlParameter";
-// actions
 
 class BarcodeCreate extends Component {
+  // State ----------------------------------
   state = {
     type: "",
     id: ""
   };
-  // lifecycles -------------------------------
+
+  // Lifecycles -------------------------------
   componentDidMount() {
     this.stateSetup();
   }
 
-  // setup state with url params
+  // Setup Local State with Url Params
   stateSetup = () => {
     const type = getUrlParameter("type");
     let id;
@@ -57,6 +58,7 @@ class BarcodeCreate extends Component {
     }
   };
 
+  // Render ---------------------------------
   render() {
     const { type, id } = this.state;
 

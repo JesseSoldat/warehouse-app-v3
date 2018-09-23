@@ -12,12 +12,13 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg, startLoading } from "../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
 import { linkItems } from "../../actions/link";
 import { startGetProducts } from "../../actions/product";
 
 class LinkFromBox extends Component {
+  // State ----------------------------------
   state = {
     type: "",
     location: null,
@@ -38,19 +39,19 @@ class LinkFromBox extends Component {
     boxId: ""
   };
 
-  // lifecycles --------------------------------------------
+  // Lifecycles --------------------------------------------
   componentDidMount() {
     this.apiData();
   }
 
-  // STATE setup and API calls ----------------------------------------
+  // State Setup and Api Calls ------------------------------------
   apiData = () => {
     const { storageIdsEntity, match } = this.props;
     const { boxId } = match.params;
     const type = getUrlParameter("type");
     const location = getUrlParameter("location");
 
-    // PRODUCT in BOX ---------------------------------------
+    // PRODUCT in BOX ----------------
     if (type === "linkProductToBox") {
       // fetch orphans to put in the box
       this.props.startLoading({ from: "linkFromBoxLoadingProduct" });
@@ -69,7 +70,7 @@ class LinkFromBox extends Component {
         firstScannedItemId: boxId
       });
     }
-    // BOX to SHELF SPOT ------------------------------------
+    // BOX to SHELF SPOT --------------
     else if (type === "linkBoxToSpot") {
       if (!storageIdsEntity) {
         this.props.startLoading({ from: "linkFromBoxLoadingStorageIds" });
@@ -86,13 +87,14 @@ class LinkFromBox extends Component {
     }
   };
 
-  // MANUAL LINK ----------------------------------------------------
+  // Events and Cbs -----------------------------------------------
+
+  // MANUAL LINK ---------------
   handleSelectChange = obj => {
     this.setState({ ...obj });
   };
 
-  // Link Box to ShelfSpot -------------------------
-  // OK
+  // Link Box to ShelfSpot -----
   handleLink = e => {
     e.preventDefault();
 
@@ -104,11 +106,14 @@ class LinkFromBox extends Component {
       type2: "shelfSpot"
     };
 
-    this.props.linkItems(linkObj, this.props.history);
+    // Api Calls
+    this.props.startShowOverlay({
+      from: "linkFromBoxShowOverlayBoxToShelfSpot"
+    });
+    this.props.this.props.linkItems(linkObj, this.props.history);
   };
 
   // Link Product To Box ---------------------------
-  // OK
   handleLinkProductToBox = productId => {
     const linkObj = {
       apiUrl: "/api/link/productToBox",
@@ -117,6 +122,11 @@ class LinkFromBox extends Component {
       type1: "box",
       type2: "product"
     };
+
+    // Api Calls
+    this.props.startShowOverlay({
+      from: "linkFromBoxShowOverlayProductToBox"
+    });
     this.props.linkItems(linkObj, this.props.history);
   };
 
@@ -157,7 +167,6 @@ class LinkFromBox extends Component {
     const type2 = this.state.secondScannedItemType;
 
     // LINK BOX WITH A PRODUCT
-    // OK
     if (type === "linkProductToBox") {
       if (type2 !== "product") {
         const errorMsg = buildClientMsg({
@@ -180,7 +189,6 @@ class LinkFromBox extends Component {
       }
     }
     // LINK BOX WITH A SHELF SPOT
-    // OK
     else if (type === "linkBoxToSpot") {
       if (type2 !== "shelfSpot") {
         const errorMsg = buildClientMsg({
@@ -207,6 +215,7 @@ class LinkFromBox extends Component {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
+  // Render --------------------------------------
   render() {
     return (
       <div className="container">
@@ -260,6 +269,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
+    startShowOverlay,
     getStorageIds,
     linkItems,
     startGetProducts

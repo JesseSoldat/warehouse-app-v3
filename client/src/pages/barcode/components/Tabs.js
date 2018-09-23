@@ -36,6 +36,7 @@ const Tabs = ({
 }) => {
   let content;
 
+  // Flow Control ------------------------------
   switch (type) {
     case "storeProduct":
     case "restoreProduct":
@@ -70,6 +71,7 @@ const Tabs = ({
       break;
   }
 
+  // Return HTML -------------------------------------
   return (
     <div>
       <ul className="nav nav-tabs" id="myTab" role="tablist">

@@ -5,8 +5,6 @@ import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
 import { showOverlay } from "./ui";
-// import { resetStorage } from "./storage";
-// import { resetBox } from "./box";
 // types
 export const LINK_PRODUCT_TO_SHELFSPOT = "LINK_PRODUCT_TO_SHELFSPOT";
 export const LINK_PRODUCT_TO_BOX = "LINK_PRODUCT_TO_BOX";

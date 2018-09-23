@@ -18,6 +18,7 @@ const BarcodeScan = ({
   secondScannedItemType,
   secondScannedItemId
 }) => {
+  // Return HTML ------------------------------------------
   const cameraIsOff = (
     <div
       className={scanning ? "invisible" : "visible"}
@@ -35,6 +36,7 @@ const BarcodeScan = ({
     </div>
   );
 
+  // Return HTML ------------------------------------------
   const cameraIsOn = (
     <div className={scanning ? "visible" : "invisible"}>
       <div style={{ marginTop: "-20px" }}>

@@ -14,11 +14,13 @@ const ManualLink = ({
   rackId,
   shelfId,
   shelfSpotId,
+  // cbs
   handleSelectChange,
   handleLink
 }) => {
   let spinner, text, racks, shelves, shelfSpots, boxes;
 
+  // Flow Control -------------------------------
   if (type === "storeProduct") {
     text = "Store Product";
   } else if (type === "restoreProduct") {
@@ -27,41 +29,9 @@ const ManualLink = ({
     text = "Box to Shelf Spot";
   }
 
-  const onChange = e => {
-    const { name, value } = e.target;
-    const obj = {
-      [name]: value
-    };
+  // Helper Functions ----------------------------------------
 
-    switch (name) {
-      case "storageId":
-        obj["rackId"] = "";
-        obj["shelfId"] = "";
-        obj["shelfSpotId"] = "";
-        obj["boxId"] = "";
-        break;
-
-      case "rackId":
-        obj["shelfId"] = "";
-        obj["shelfSpotId"] = "";
-        obj["boxId"] = "";
-        break;
-
-      case "shelfId":
-        obj["shelfSpotId"] = "";
-        obj["boxId"] = "";
-        break;
-
-      case "shelfSpotId":
-        obj["boxId"] = "";
-        break;
-
-      default:
-        break;
-    }
-    handleSelectChange(obj);
-  };
-
+  // Return HTML
   const createSelect = (
     label,
     name,
@@ -97,7 +67,44 @@ const ManualLink = ({
       </div>
     );
   };
-  // storage -------------------------------------------
+
+  // Events and Cbs ---------------------------
+  const onChange = e => {
+    const { name, value } = e.target;
+    const obj = {
+      [name]: value
+    };
+
+    switch (name) {
+      case "storageId":
+        obj["rackId"] = "";
+        obj["shelfId"] = "";
+        obj["shelfSpotId"] = "";
+        obj["boxId"] = "";
+        break;
+
+      case "rackId":
+        obj["shelfId"] = "";
+        obj["shelfSpotId"] = "";
+        obj["boxId"] = "";
+        break;
+
+      case "shelfId":
+        obj["shelfSpotId"] = "";
+        obj["boxId"] = "";
+        break;
+
+      case "shelfSpotId":
+        obj["boxId"] = "";
+        break;
+
+      default:
+        break;
+    }
+    handleSelectChange(obj);
+  };
+
+  // Storage get HTML -------------------------------------------
   const storageOptions = [];
 
   const storageSelect = createSelect(
@@ -107,7 +114,7 @@ const ManualLink = ({
     storageOptions
   );
 
-  // rack -----------------------------------------------
+  // Rack get HTML -----------------------------------------------
   let rackDisabled, rackSelect;
 
   let rackOptionText = storageId ? "Select a Rack" : "Pick a Storage first";
@@ -124,6 +131,7 @@ const ManualLink = ({
     rackDisabled
   );
 
+  // Flow Control -----------------------------------
   if (storageId) {
     racks = storageIdsEntity[storageId].racks;
 
@@ -190,7 +198,7 @@ const ManualLink = ({
     }
   }
 
-  // shelfSpot --------------------------------------------
+  // ShelfSpot --------------------------------------------
   let shelfSpotDisabled, shelfSpotSelect;
 
   let shelfSpotOptionText = shelfId
@@ -232,7 +240,7 @@ const ManualLink = ({
       }
     }
   }
-  // boxes -----------------------------------------------------
+  // Boxes -----------------------------------------------------
   let boxDisabled, boxSpotSelect;
 
   let boxOptionText = shelfSpotId
@@ -275,8 +283,7 @@ const ManualLink = ({
     }
   }
 
-  // render --------------------------------
-
+  // Render --------------------------------
   if (loading) {
     spinner = <Spinner />;
   } else if (storageIdsEntity) {

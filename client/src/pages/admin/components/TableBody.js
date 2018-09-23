@@ -4,6 +4,7 @@ import React from "react";
 import IconBtn from "../../../components/buttons/IconBtn";
 
 const TableBody = ({ users, handleChange, handleDelete }) => {
+  // Return HTML
   const selectBox = ({ email, role }) => (
     <div className="input-group mb-3">
       <select
@@ -17,6 +18,7 @@ const TableBody = ({ users, handleChange, handleDelete }) => {
     </div>
   );
 
+  // Return HTML
   const tableData = users.map(user => (
     <tr key={user._id}>
       <td> </td>

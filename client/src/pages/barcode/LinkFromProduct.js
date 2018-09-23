@@ -12,12 +12,13 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg, startLoading } from "../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
 import { linkItems } from "../../actions/link";
 import { startGetProduct } from "../../actions/product";
 
 class LinkFromProduct extends Component {
+  // State -----------------------------------
   state = {
     type: "",
     title: "",
@@ -38,12 +39,12 @@ class LinkFromProduct extends Component {
     boxId: ""
   };
 
-  // lifecycles --------------------------------------------
+  // Lifecycles --------------------------------------------
   componentDidMount() {
     this.apiData();
   }
 
-  // data setup and api calls -------------------------------
+  // State Setup and Api Calls -------------------------------
   apiData = () => {
     const { storageIdsEntity, match, product } = this.props;
     const { productId } = match.params;
@@ -51,6 +52,7 @@ class LinkFromProduct extends Component {
     let title = "Link Product";
 
     if (!storageIdsEntity) {
+      // Api Calls
       this.props.startLoading({ from: "linkFromProductLoadingStorageIds" });
       this.props.getStorageIds();
     }
@@ -59,6 +61,7 @@ class LinkFromProduct extends Component {
       title = "Restore Product";
 
       if (!product || product._id === productId) {
+        // Api Calls
         this.props.startLoading({ from: "linkFromProductLoadingProduct" });
         this.props.startGetProduct(productId);
       }
@@ -73,7 +76,7 @@ class LinkFromProduct extends Component {
     });
   };
 
-  // child component CBs -------------------------------------------
+  // Events and Cbs -------------------------------------
   handleSelectChange = obj => {
     this.setState({ ...obj });
   };
@@ -97,7 +100,8 @@ class LinkFromProduct extends Component {
     }
     return null;
   };
-  // MANUAL LINK ---------------------------------------------------
+
+  // MANUAL LINK -------------------------------------------
   handleLink = e => {
     e.preventDefault();
     const { type, productId, shelfSpotId, boxId } = this.state;
@@ -111,6 +115,7 @@ class LinkFromProduct extends Component {
           type === "storeProduct"
             ? "/api/link/productToBox"
             : "/api/relink/productToBox";
+
         linkObj = {
           apiUrl,
           productId,
@@ -127,6 +132,7 @@ class LinkFromProduct extends Component {
           type === "storeProduct"
             ? "/api/link/productToShelfSpot"
             : "/api/relink/productToShelfSpot";
+
         linkObj = {
           apiUrl,
           productId,
@@ -141,10 +147,14 @@ class LinkFromProduct extends Component {
         break;
     }
 
+    // Api Calls
+    this.props.startShowOverlay({
+      from: "linkFromProductShowOverlayManualLink"
+    });
     this.props.linkItems(linkObj, this.props.history);
   };
 
-  // BARCODE ----------------------------------------------
+  // Bar-code ----------------------------------------------
   handleErr = err => {
     console.log(err);
   };
@@ -172,7 +182,7 @@ class LinkFromProduct extends Component {
     });
   };
 
-  // SCAN LINK ---------------------------------------------------
+  // SCAN LINK --------------------------------------------
   linkScannedItems = e => {
     e.preventDefault();
     const {
@@ -227,14 +237,18 @@ class LinkFromProduct extends Component {
         });
         return this.props.serverMsg(errorMsg);
     }
+
+    // Api Calls
+    this.props.startShowOverlay({ from: "linkFromProductShowOverlayScanLink" });
     this.props.linkItems(linkObj, this.props.history);
   };
 
-  // Toggle Camera ----------------------------------------------
+  // Toggle Camera ----------------------------------------
   handleClickUseCamera = () => {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
+  // Render ----------------------------------------
   render() {
     return (
       <div className="container">
@@ -280,5 +294,12 @@ const mapStateToProps = ({ ui, storage, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startLoading, getStorageIds, startGetProduct, linkItems }
+  {
+    serverMsg,
+    startLoading,
+    startShowOverlay,
+    getStorageIds,
+    startGetProduct,
+    linkItems
+  }
 )(withRouter(LinkFromProduct));

@@ -92,10 +92,17 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.passwordResetShowOverlay:
     case UI_ACTION_TYPES.passwordResetWithTokenShowOverlay:
     case UI_ACTION_TYPES.productOnDeleteProductOverlay:
+    case UI_ACTION_TYPES.resendVerificationShowOverlay:
     case UI_ACTION_TYPES.createProductOverlay:
     case UI_ACTION_TYPES.startShowOverlay:
     case UI_ACTION_TYPES.manageUserUpdateShowOverlay:
     case UI_ACTION_TYPES.manageUserDeleteShowOverlay:
+    case UI_ACTION_TYPES.linkFromBoxShowOverlayBoxToShelfSpot:
+    case UI_ACTION_TYPES.linkFromBoxShowOverlayProductToBox:
+    case UI_ACTION_TYPES.linkFromProductShowOverlayManualLink:
+    case UI_ACTION_TYPES.linkFromProductShowOverlayScanLink:
+    case UI_ACTION_TYPES.linkItemsShowOverlayScanLink:
+    case UI_ACTION_TYPES.boxShowOverlayRemove:
       return { ...state, showOverlay };
 
     default:

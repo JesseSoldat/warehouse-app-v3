@@ -55,6 +55,9 @@ export const UI_ACTION_TYPES = {
   passwordResetShowOverlay: "[SHOW_OVERLAY Auth Form] Request Password Reset",
   passwordResetWithTokenShowOverlay:
     "[SHOW_OVERLAY ResetPassForm] Reset Password with token",
+  // Verification
+  resendVerificationShowOverlay:
+    "[SHOW_OVERLAY Auth Form] Resend email verification",
   // Products
   productOnDeleteProductOverlay:
     "[SHOW_OVERLAY Product Details Page] Delete a Product",
@@ -64,6 +67,19 @@ export const UI_ACTION_TYPES = {
   manageUserUpdateShowOverlay:
     "[SHOW_OVERLAY Manage User Page] Change user role",
   manageUserDeleteShowOverlay: "[SHOW_OVERLAY Manage User Page] Delete User",
+  // Link
+  linkFromBoxShowOverlayBoxToShelfSpot:
+    "[SHOW_OVERLAY Link From Box Page] Link Box to ShelfSpot",
+  linkFromBoxShowOverlayProductToBox:
+    "[SHOW_OVERLAY Link From Box Page] Link Product to Box",
+  linkFromProductShowOverlayManualLink:
+    "[SHOW_OVERLAY Link From Product Page] Manual Link Product to ?",
+  linkFromProductShowOverlayScanLink:
+    "[SHOW_OVERLAY Link From Product Page] Scan Link Product to ?",
+  linkItemsShowOverlayScanLink:
+    "[SHOW_OVERLAY Link Items Page] Scan Link ? to ?",
+  // Box
+  boxShowOverlayRemove: "[SHOW_OVERLAY Box Page] Remove Box from ShelfSpot",
 
   // ------------------- LOADING ------------------------
   // Products

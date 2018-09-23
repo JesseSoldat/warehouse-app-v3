@@ -10,10 +10,11 @@ import Heading from "../../components/Heading";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg } from "../../actions/ui";
+import { serverMsg, startShowOverlay } from "../../actions/ui";
 import { linkItems } from "../../actions/link";
 
 class LinkItems extends Component {
+  // State ----------------------------------------
   state = {
     title: "",
     showScan: false,
@@ -26,7 +27,7 @@ class LinkItems extends Component {
     scanItem: "1"
   };
 
-  // SCAN LINK ----------------------------------------------
+  // Scan Link --------------------------------------
   handleErr = err => {
     console.log(err);
   };
@@ -165,6 +166,8 @@ class LinkItems extends Component {
         return this.props.serverMsg(errorMsg);
     }
 
+    // Api Calls
+    this.props.startShowOverlay({ from: "linkItemsShowOverlayScanLink" });
     this.props.linkItems(obj, history);
   };
 
@@ -173,6 +176,7 @@ class LinkItems extends Component {
     this.setState(({ scanning }) => ({ scanning: !scanning }));
   };
 
+  // Render -------------------------------------
   render() {
     return (
       <div className="container">
@@ -199,5 +203,5 @@ class LinkItems extends Component {
 
 export default connect(
   null,
-  { linkItems, serverMsg }
+  { linkItems, serverMsg, startShowOverlay }
 )(withRouter(LinkItems));

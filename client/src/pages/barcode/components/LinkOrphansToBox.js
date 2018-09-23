@@ -13,6 +13,7 @@ const LinkOrphansToBox = ({
   handleLinkProductToBox,
   history
 }) => {
+  // Events / CBs --------------------------------------
   const viewDetails = productId => {
     history.push(`/products/${productId}`);
   };
@@ -22,6 +23,7 @@ const LinkOrphansToBox = ({
     handleLinkProductToBox(productId);
   };
 
+  // Show Spinner or Content -------------------------
   let content, noProducts;
 
   if (loading) {
@@ -43,6 +45,7 @@ const LinkOrphansToBox = ({
       </div>
     );
   }
+
   return (
     <div className="pt-4">
       {noProducts}

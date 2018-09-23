@@ -20,6 +20,20 @@ class ResetPassForm extends Component {
     confirmPasswordErr: null
   };
 
+  // Helper Functions -------------------------------
+  resetPasswordWithToken() {
+    const { token } = this.props.match.params;
+    const { email, password } = this.state;
+
+    this.props.startShowOverlay({ from: "passwordResetWithTokenShowOverlay" });
+
+    this.props.startResetPasswordWithToken(
+      { email, password, token },
+      this.props.history
+    );
+  }
+
+  // Events / CB ------------------------------------
   onChange = e => {
     const { name, value } = e.target;
     const error = name + "Err"; // reset any errors on target input
@@ -34,21 +48,11 @@ class ResetPassForm extends Component {
       return this.setState(() => ({ ...errObj }));
     }
 
+    // helper function
     this.resetPasswordWithToken();
   };
 
-  resetPasswordWithToken() {
-    const { token } = this.props.match.params;
-    const { email, password } = this.state;
-
-    this.props.startShowOverlay({ from: "passwordResetWithTokenShowOverlay" });
-
-    this.props.startResetPasswordWithToken(
-      { email, password, token },
-      this.props.history
-    );
-  }
-
+  // Render ----------------------------------------
   render() {
     return (
       <div className="col-md-8 mx-auto">
