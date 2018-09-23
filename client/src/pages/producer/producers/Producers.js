@@ -65,7 +65,6 @@ class Producers extends Component {
 
 const mapStateToProps = ({ ui, producer }) => ({
   msg: ui.msg,
-  options: ui.options,
   loading: ui.loading,
   producers: producer.producers
 });

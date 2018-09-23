@@ -67,6 +67,8 @@ export const UI_ACTION_TYPES = {
 
   // ------------------- LOADING ------------------------
   // Products
+  productsLoading: "[LOADING Products Page] Fetch Data",
+  productDetailsLoading: "[LOADING Product Details Page] Fetch Data",
   editProductLoading: "[LOADING Edit Product Page] Fetch Data",
   createProductLoading: "[LOADING Create Product Page] Fetch Data",
   // Producers
@@ -86,7 +88,23 @@ export const UI_ACTION_TYPES = {
   boxLoadingBox: "[LOADING Box Page] Fetch Box Data",
   boxLoadingRack: "[LOADING Box Page] Fetch Rack to populate Box Data",
   boxEditLoadingBox: "[LOADING Box Edit Page] Fetch Box Data",
-  boxEditLoadingRack: "[LOADING Box Edit Page] Fetch Rack to populate Box Data"
+  boxEditLoadingRack: "[LOADING Box Edit Page] Fetch Rack to populate Box Data",
+  // Storage
+  storageEditLoadingStorages: "[LOADING Storage Edit Page] Fetch all Storages",
+  storageEditLoadingRack: "[LOADING Storage Edit Page] Fetch a Single Rack",
+  storageDetailsLoadingRack:
+    "[LOADING Storage Details Page] Fetch a Single Rack",
+  storagesDetailsLoadingStorages:
+    "[LOADING Storage Details Page] Fetch all Storages",
+  storagesLoadingStorages: "[LOADING Storages Page] Fetch all Storages",
+  // Barcode / Link
+  linkFromProductLoadingStorageIds:
+    "[LOADING Link From Product Page] Fetch all StorageIds",
+  linkFromProductLoadingProduct:
+    "[LOADING Link From Product Page] Fetch Product",
+  linkFromBoxLoadingStorageIds:
+    "[LOADING Link From Box Page] Fetch all StorageIds",
+  linkFromBoxLoadingProduct: "[LOADING Link From Box Page] Fetch Product"
 };
 
 // ------------------- MSG ------------------------

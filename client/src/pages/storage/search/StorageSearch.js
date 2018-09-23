@@ -9,7 +9,10 @@ import Spinner from "../../../components/Spinner";
 // custom components
 import SearchInputs from "./components/SearchInputs";
 // actions
-import { searchStorages, startSearchStorages } from "../../../actions/storage";
+import {
+  searchStoragesLoaded,
+  startSearchStorages
+} from "../../../actions/storage";
 
 class StorageSearch extends Component {
   state = {
@@ -20,7 +23,7 @@ class StorageSearch extends Component {
 
   // lifecycles ----------------------------
   componentWillUnmount() {
-    this.props.searchStorages([], null);
+    this.props.searchStoragesLoaded([], null);
   }
 
   // api calls -----------------------------
@@ -160,5 +163,5 @@ const mapStateToProps = ({ storage, ui }) => ({
 
 export default connect(
   mapStateToProps,
-  { searchStorages, startSearchStorages }
+  { searchStoragesLoaded, startSearchStorages }
 )(withRouter(StorageSearch));

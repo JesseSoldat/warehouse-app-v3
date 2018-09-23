@@ -160,7 +160,6 @@ const mapStateToProps = ({ ui, product, producer, customer }) => {
     product: product.product,
     productEntity: product.productEntity,
     loading: ui.loading,
-    options: ui.options,
     msg: ui.msg,
     producers: producer.producers,
     customers: customer.customers

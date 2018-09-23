@@ -13,7 +13,7 @@ import getUrlParameter from "../../../utils/getUrlParameter";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { startGetRack } from "../../../actions/storage";
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 
 class Storage extends Component {
   // lifecyles -----------------------------
@@ -38,13 +38,16 @@ class Storage extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "storageClearMsg" });
   }
 
-  // Api calls ----------------------------
+  // STORE / API CALLS ----------------------------
   getRack = () => {
     const { match, rack, startGetRack } = this.props;
     const { rackId } = match.params;
 
+    // Load from the STORE
     if (rack && rack._id === rackId) return;
 
+    // Load from the API
+    this.props.startLoading({ from: "storageDetailsLoadingRack" });
     startGetRack(rackId);
   };
 
@@ -93,7 +96,6 @@ class Storage extends Component {
 
 const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
-  options: ui.options,
   rack: storage.rack,
   rackRequsted: storage.rackRequsted,
   loading: ui.loading
@@ -101,5 +103,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetRack }
+  { sendServerMsg, startLoading, startGetRack }
 )(Storage);

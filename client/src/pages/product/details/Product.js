@@ -23,7 +23,11 @@ import createCustomersArray from "./helpers/createCustomersArray";
 import createObjWithAllPropsAsArrays from "../../../utils/createObjWithAllPropsAsArrays";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { startShowOverlay, sendServerMsg } from "../../../actions/ui";
+import {
+  startShowOverlay,
+  sendServerMsg,
+  startLoading
+} from "../../../actions/ui";
 import {
   productLoaded,
   startGetProduct,
@@ -43,7 +47,7 @@ class Product extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "productDetailsClearMsg" });
   }
 
-  // api calls ---------------------------------------
+  // API CALLS ---------------------------------------
   getProduct = () => {
     const {
       productEntity,
@@ -54,10 +58,10 @@ class Product extends Component {
     } = this.props;
     const { productId } = match.params;
 
+    // Load from the STORE
     // check store if single product equal requested product
     if (product && product._id === productId) return;
 
-    // check store for product in productEntity map
     if (productEntity) {
       if (productEntity[productId]) {
         productLoaded(productEntity[productId]);
@@ -65,7 +69,8 @@ class Product extends Component {
       }
     }
 
-    // fetch new data from api
+    // Load from the API
+    this.props.startLoading({ from: "productDetailsLoading" });
     startGetProduct(productId);
   };
 
@@ -201,7 +206,6 @@ class Product extends Component {
 
 const mapStateToProps = ({ ui, product }) => ({
   loading: ui.loading,
-  options: ui.options,
   msg: ui.msg,
   product: product.product,
   productEntity: product.productEntity
@@ -211,6 +215,7 @@ export default connect(
   mapStateToProps,
   {
     startShowOverlay,
+    startLoading,
     sendServerMsg,
     productLoaded,
     startGetProduct,

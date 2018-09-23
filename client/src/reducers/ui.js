@@ -20,6 +20,8 @@ export default (state = initialState, action) => {
   switch (type) {
     // -------------- LOADING -----------------
     case LOADING:
+    case UI_ACTION_TYPES.productsLoading:
+    case UI_ACTION_TYPES.productDetailsLoading:
     case UI_ACTION_TYPES.editProductLoading:
     case UI_ACTION_TYPES.createProductLoading:
     case UI_ACTION_TYPES.producersLoading:
@@ -36,6 +38,14 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.boxesLoading:
     case UI_ACTION_TYPES.boxEditLoadingBox:
     case UI_ACTION_TYPES.boxEditLoadingRack:
+    case UI_ACTION_TYPES.storageEditLoadingStorages:
+    case UI_ACTION_TYPES.storagesDetailsLoadingStorages:
+    case UI_ACTION_TYPES.storagesLoadingStorages:
+    case UI_ACTION_TYPES.storageEditLoadingRack:
+    case UI_ACTION_TYPES.linkFromProductLoadingStorageIds:
+    case UI_ACTION_TYPES.linkFromProductLoadingProduct:
+    case UI_ACTION_TYPES.linkFromBoxLoadingStorageIds:
+    case UI_ACTION_TYPES.linkFromBoxLoadingProduct:
       return { ...state, loading };
 
     // ---------------- MSG ---------------------

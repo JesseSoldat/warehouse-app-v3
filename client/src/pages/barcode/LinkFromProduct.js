@@ -12,7 +12,7 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg } from "../../actions/ui";
+import { serverMsg, startLoading } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
 import { linkItems } from "../../actions/link";
 import { startGetProduct } from "../../actions/product";
@@ -51,6 +51,7 @@ class LinkFromProduct extends Component {
     let title = "Link Product";
 
     if (!storageIdsEntity) {
+      this.props.startLoading({ from: "linkFromProductLoadingStorageIds" });
       this.props.getStorageIds();
     }
 
@@ -58,6 +59,7 @@ class LinkFromProduct extends Component {
       title = "Restore Product";
 
       if (!product || product._id === productId) {
+        this.props.startLoading({ from: "linkFromProductLoadingProduct" });
         this.props.startGetProduct(productId);
       }
     }
@@ -278,5 +280,5 @@ const mapStateToProps = ({ ui, storage, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, getStorageIds, startGetProduct, linkItems }
+  { serverMsg, startLoading, getStorageIds, startGetProduct, linkItems }
 )(withRouter(LinkFromProduct));

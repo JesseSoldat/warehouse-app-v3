@@ -1,8 +1,10 @@
 import {
   RESET_STORAGE,
   // storage
-  STORAGE_SEARCH,
-  STORAGE_FETCH_ALL,
+  STORAGES_SEARCH_REQUESTED,
+  STORAGES_SEARCH_LOADED,
+  STORAGES_REQUESTED,
+  STORAGES_LOADED,
   STORAGE_UPDATE_ONE,
   STORAGE_CREATE_ONE,
   STORAGE_DELETE_ONE,
@@ -30,7 +32,11 @@ import {
 
 const initialState = {
   search: [],
+  storagesSearchRequsted: false,
+  storagesSearchLoaded: false,
   storages: [],
+  storagesRequsted: false,
+  storagesLoaded: false,
   storageIdsEntity: null,
   storageIdsRequsted: false,
   storageIdsLoaded: false,
@@ -158,18 +164,36 @@ export default (state = initialState, action) => {
       };
 
     // ----------------------------- STORAGES ---------------------------------
-    case STORAGE_SEARCH:
+    case STORAGES_SEARCH_REQUESTED:
+      return {
+        ...state,
+        storagesSearchRequsted: true,
+        storagesSearchLoaded: false
+      };
+
+    case STORAGES_SEARCH_LOADED:
       return {
         ...state,
         search,
-        storageType
+        storageType,
+        storagesSearchRequsted: false,
+        storagesSearchLoaded: true
       };
 
-    case STORAGE_FETCH_ALL:
+    case STORAGES_REQUESTED:
+      return {
+        ...state,
+        storagesRequsted: true,
+        storagesLoaded: false
+      };
+
+    case STORAGES_LOADED:
       return {
         ...state,
         storages: [...storages],
-        storageType: null
+        storageType: null,
+        storagesRequsted: false,
+        storagesLoaded: true
       };
     // -------------------- STORAGE IDS -------------------------------
     case STORAGE_IDS_REQUESTED:

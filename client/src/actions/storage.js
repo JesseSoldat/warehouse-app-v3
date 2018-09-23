@@ -12,8 +12,13 @@ export const RESET_STORAGE = "RESET_STORAGE";
 
 export const STORAGE_IDS_REQUESTED = "STORAGE_IDS_REQUESTED";
 export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
-export const STORAGE_SEARCH = "STORAGE_SEARCH";
-export const STORAGE_FETCH_ALL = "STORAGE_FETCH_ALL";
+
+export const STORAGES_SEARCH_REQUESTED = "STORAGES_SEARCH_REQUESTED";
+export const STORAGES_SEARCH_LOADED = "STORAGES_SEARCH_LOADED";
+
+export const STORAGES_REQUESTED = "STORAGES_REQUESTED";
+export const STORAGES_LOADED = "STORAGES_LOADED";
+
 export const STORAGE_CREATE_ONE = "STORAGE_CREATE_ONE";
 export const STORAGE_UPDATE_ONE = "STORAGE_UPDATE_ONE";
 export const STORAGE_DELETE_ONE = "STORAGE_DELETE_ONE";
@@ -133,7 +138,6 @@ const createEntity = storagesArray => {
 
 export const getStorageIds = () => async dispatch => {
   dispatch(storageIdsRequested());
-  dispatch(loading());
   try {
     const res = await axios.get("/api/storages/ids");
 
@@ -150,8 +154,12 @@ export const getStorageIds = () => async dispatch => {
   }
 };
 // Search Storages -------------------------
-export const searchStorages = (search, storageType) => ({
-  type: STORAGE_SEARCH,
+export const searchStoragesRequested = () => ({
+  type: STORAGES_SEARCH_REQUESTED
+});
+
+export const searchStoragesLoaded = (search, storageType) => ({
+  type: STORAGES_SEARCH_LOADED,
   search,
   storageType
 });
@@ -161,6 +169,7 @@ export const startSearchStorages = (
   searchBy,
   searchText
 ) => async dispatch => {
+  dispatch(searchStoragesRequested());
   try {
     const apiUrl = `/api/storages/search/${storageType}/${searchBy}/${searchText}`;
 
@@ -168,7 +177,7 @@ export const startSearchStorages = (
 
     const { msg, payload } = res.data;
 
-    dispatch(searchStorages(payload, storageType));
+    dispatch(searchStoragesLoaded(payload, storageType));
 
     checkForMsg(msg, dispatch);
   } catch (err) {
@@ -177,19 +186,23 @@ export const startSearchStorages = (
 };
 
 // GET All Storages ---------------------------
-export const getStorages = (storages = []) => ({
-  type: STORAGE_FETCH_ALL,
+export const storagesRequested = () => ({
+  type: STORAGES_REQUESTED
+});
+
+export const storagesLoaded = (storages = []) => ({
+  type: STORAGES_LOADED,
   storages
 });
 
 export const startGetStorages = () => async dispatch => {
-  dispatch(loading());
+  dispatch(storagesRequested());
   try {
     const res = await axios.get("/api/storages");
 
     const { msg, payload, options } = res.data;
 
-    dispatch(getStorages(payload));
+    dispatch(storagesLoaded(payload));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
@@ -211,7 +224,6 @@ export const rackLoaded = rack => ({
 
 export const startGetRack = rackId => async dispatch => {
   dispatch(rackRequested());
-  dispatch(loading());
   try {
     const res = await axios.get(`/api/racks/${rackId}`);
 

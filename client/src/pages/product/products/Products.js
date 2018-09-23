@@ -17,7 +17,7 @@ import onSelectBuildNewState from "./helpers/onSelectBuildNewState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg } from "../../../actions/ui";
+import { sendServerMsg, startLoading } from "../../../actions/ui";
 import { startGetProducts, resetProducts } from "../../../actions/product";
 
 class Products extends Component {
@@ -50,6 +50,8 @@ class Products extends Component {
     // take current query and update if with state values
     const updatedQuery = createGetProductsQuery(query, this.state);
     // send query to the server
+    // Load from the API
+    this.props.startLoading({ from: "productsLoading" });
     this.props.startGetProducts(updatedQuery);
   };
 
@@ -178,7 +180,6 @@ class Products extends Component {
 
 const mapStateToProps = ({ ui, product }) => ({
   msg: ui.msg,
-  options: ui.options,
   products: product.products,
   productsRequest: product.productsRequest,
   productsLoaded: product.productsLoaded,
@@ -187,5 +188,5 @@ const mapStateToProps = ({ ui, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startGetProducts, resetProducts }
+  { sendServerMsg, startLoading, startGetProducts, resetProducts }
 )(Products);

@@ -17,7 +17,7 @@ import {
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
-import { serverMsg } from "../../../actions/ui";
+import { serverMsg, startLoading } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
@@ -45,23 +45,30 @@ class StorageEdit extends Component {
 
   findItemFromArray = (array, id) => array.find(obj => obj._id === id);
 
-  // store / api call -------------------------------
+  // STORE / API CALLS ----------------------------
   getFormData() {
     const type = getUrlParameter("type");
     const { match, storages, rack } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId } = match.params;
     const ids = { storageId, rackId, shelfId, shelfSpotId };
 
-    // STORAGE -----------------------------------
-    if (type === "storage" && storages.length === 0)
+    // Load from the API - STORAGE ------------------------------
+    if (type === "storage" && storages.length === 0) {
+      this.props.startLoading({ from: "storageEditLoadingStorages" });
       this.props.startGetStorages();
-    // RACK, SHELF, SHELFSPOT -------------------
-    else if (!rack || rack._id !== rackId) this.props.startGetRack(rackId);
+    }
+
+    // Load from the API - RACK, SHELF, SHELFSPOT --------------
+    else if (!rack || rack._id !== rackId) {
+      this.props.startLoading({ from: "storageEditLoadingRack" });
+      this.props.startGetRack(rackId);
+    }
 
     const idType = type + "Id";
 
     this.setState({ type, id: ids[idType], ids });
   }
+
   // DOM cb ---------------------------------------------
   handleSubmit = form => {
     const { startEditStorage, history } = this.props;
@@ -209,6 +216,7 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
+    startLoading,
     startGetStorages,
     startGetRack,
     startEditStorage,

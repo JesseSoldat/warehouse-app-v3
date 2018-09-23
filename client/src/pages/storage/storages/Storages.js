@@ -10,6 +10,7 @@ import Heading from "../../../components/Heading";
 import StoragesTable from "./components/StoragesTable";
 // actions
 import { startGetStorages } from "../../../actions/storage";
+import { startLoading } from "../../../actions/ui";
 
 class Storages extends Component {
   // lifecycles ----------------------------------------------
@@ -17,12 +18,13 @@ class Storages extends Component {
     this.getStorages();
   }
 
-  // api calls ------------------------------------------------
+  // STORE / API CALLS ----------------------------
   getStorages = () => {
-    const { storages, startGetStorages } = this.props;
+    const { storages, startGetStorages, startLoading } = this.props;
 
-    // check if the store has a copy of storages
+    // Load from the API
     if (storages && storages.length === 0) {
+      startLoading({ from: "storagesLoadingStorages" });
       startGetStorages();
     }
   };
@@ -90,5 +92,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetStorages }
+  { startGetStorages, startLoading }
 )(Storages);

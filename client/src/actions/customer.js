@@ -3,7 +3,7 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { loading, showOverlay } from "./ui";
+import { showOverlay } from "./ui";
 // types
 export const CUSTOMERS_REQUESTED = "CUSTOMERS_REQUESTED";
 export const CUSTOMERS_LOADED = "CUSTOMERS_LOADED";

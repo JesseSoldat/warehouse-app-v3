@@ -4,7 +4,7 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
-import { loading, showOverlay } from "./ui";
+import { showOverlay } from "./ui";
 // types
 export const BOXES_RESET = "BOXES_RESET";
 export const BOXES_REQUESTED = "BOXES_REQUESTED";

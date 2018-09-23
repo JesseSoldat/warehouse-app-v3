@@ -9,6 +9,7 @@ import Heading from "../../../components/Heading";
 import StoragesTable from "./components/StoragesTable";
 // actions
 import { startGetStorages } from "../../../actions/storage";
+import { startLoading } from "../../../actions/ui";
 
 class Details extends Component {
   componentDidMount() {
@@ -18,11 +19,12 @@ class Details extends Component {
 
   // Api calls ----------------------------
   getStorages = () => {
-    const { storages, startGetStorages } = this.props;
+    const { storages, startLoading, startGetStorages } = this.props;
 
-    // check if the store has a copy of storages
+    // Load from the API
     if (storages && storages.length === 0) {
-      return startGetStorages();
+      startLoading({ from: "storagesDetailsLoadingStorages" });
+      startGetStorages();
     }
   };
 
@@ -65,5 +67,5 @@ const mapStateToProps = ({ ui, storage }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetStorages }
+  { startGetStorages, startLoading }
 )(Details);

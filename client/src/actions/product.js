@@ -5,7 +5,6 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import createEntity from "./helpers/createEntity";
 // actions
-import { loading, showOverlay } from "./ui";
 import { customersRequested, customersLoaded } from "./customer";
 import { producersRequested, producersLoaded } from "./producer";
 import { resetStorage } from "./storage";

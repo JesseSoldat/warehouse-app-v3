@@ -12,7 +12,7 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg } from "../../actions/ui";
+import { serverMsg, startLoading } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
 import { linkItems } from "../../actions/link";
 import { startGetProducts } from "../../actions/product";
@@ -53,6 +53,7 @@ class LinkFromBox extends Component {
     // PRODUCT in BOX ---------------------------------------
     if (type === "linkProductToBox") {
       // fetch orphans to put in the box
+      this.props.startLoading({ from: "linkFromBoxLoadingProduct" });
       this.props.startGetProducts({
         searchType: "orphans",
         skip: 0,
@@ -71,6 +72,7 @@ class LinkFromBox extends Component {
     // BOX to SHELF SPOT ------------------------------------
     else if (type === "linkBoxToSpot") {
       if (!storageIdsEntity) {
+        this.props.startLoading({ from: "linkFromBoxLoadingStorageIds" });
         this.props.getStorageIds();
       }
 
@@ -257,6 +259,7 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
+    startLoading,
     getStorageIds,
     linkItems,
     startGetProducts

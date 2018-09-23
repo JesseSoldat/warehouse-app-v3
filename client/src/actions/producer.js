@@ -5,7 +5,7 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import createEntity from "./helpers/createEntity";
 // actions
-import { loading, showOverlay } from "./ui";
+import { showOverlay } from "./ui";
 // types
 export const PRODUCERS_REQUESTED = "PRODUCERS_REQUESTED";
 export const PRODUCERS_LOADED = "PRODUCERS_LOADED";

@@ -25,7 +25,7 @@ class Customers extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "customersClearMsg" });
   }
 
-  // api calls ----------------------------
+  // STORE / API CALLS ----------------------------
   getCustomers = () => {
     const { customers } = this.props;
 
