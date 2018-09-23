@@ -80,6 +80,12 @@ export const UI_ACTION_TYPES = {
     "[SHOW_OVERLAY Link Items Page] Scan Link ? to ?",
   // Box
   boxShowOverlayRemove: "[SHOW_OVERLAY Box Page] Remove Box from ShelfSpot",
+  boxCreateShowOverlay: "[SHOW_OVERLAY Box Create Page] Create a Box",
+  boxEditShowOverlay: "[SHOW_OVERLAY Box Edit Page] Update a Box",
+  boxEditShowOverlayDeleteNoLocation:
+    "[SHOW_OVERLAY Box Edit Page] Delete a Box with No Location",
+  boxEditShowOverlayDeleteLocation:
+    "[SHOW_OVERLAY Box Edit Page] Delete a Box with a Location",
 
   // ------------------- LOADING ------------------------
   // Products

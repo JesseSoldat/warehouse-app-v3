@@ -46,7 +46,7 @@ class Box extends Component {
     }
   };
 
-  // CB
+  // Events and Cbs ---------------------------------------
   removeFromShelfSpot = () => {
     const { match, history } = this.props;
     const { shelfSpotId, boxId } = match.params;
@@ -56,6 +56,7 @@ class Box extends Component {
     this.props.unlinkBox({ shelfSpotId, boxId }, history);
   };
 
+  // Render ---------------------------------------
   render() {
     // props
     const { loading, rack, box, match } = this.props;

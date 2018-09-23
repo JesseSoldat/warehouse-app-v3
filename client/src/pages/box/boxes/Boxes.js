@@ -16,6 +16,7 @@ import { startGetBoxes } from "../../../actions/box";
 import { startLoading } from "../../../actions/ui";
 
 class Boxes extends Component {
+  // State -----------------------------------------
   state = {
     searchOption: "boxLabel",
     value: "",
@@ -24,16 +25,16 @@ class Boxes extends Component {
     orphanSearch: false
   };
 
-  // lifecycles ---------------------------------------------
+  // Lifecycles ---------------------------------------------
   componentDidMount() {
     this.getApiData();
   }
-  // api calls ----------------------------------------------
+  // Api Calls ----------------------------------------------
   getApiData = () => {
     this.props.startLoading({ from: "boxesLoading" });
     this.props.startGetBoxes(this.props.query);
   };
-  //-------------------------- search bar ---------------------------------------
+  //------------------- search bar ---------------------------
   // Select Value Changed CB
   onChangeSearchOption = e => {
     const searchOption = e.target.value;
@@ -86,6 +87,7 @@ class Boxes extends Component {
       limit: 20
     };
 
+    // Api Calls
     this.props.startLoading({ from: "boxesLoading" });
     this.props.startGetBoxes(query);
   };
@@ -105,10 +107,12 @@ class Boxes extends Component {
     query["searchOption"] = searchOption;
     query["value"] = value;
 
+    // Api Calls
     this.props.startLoading({ from: "boxesLoading" });
     this.props.startGetBoxes(query);
   };
 
+  // Render
   render() {
     const { loading, boxes, query } = this.props;
     let content;

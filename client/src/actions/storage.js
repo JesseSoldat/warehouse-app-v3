@@ -5,7 +5,7 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import storageApiUrl from "./helpers/storageApiUrl";
 // actions
-import { loading, showOverlay } from "./ui";
+import { showOverlay } from "./ui";
 import { resetBox } from "./box";
 // types
 export const RESET_STORAGE = "RESET_STORAGE";

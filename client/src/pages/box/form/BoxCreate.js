@@ -8,12 +8,15 @@ import Heading from "../../../components/Heading";
 // custom components
 import BoxForm from "./components/BoxForm";
 // actions
+import { startShowOverlay } from "../../../actions/ui";
 import { startCreateBox } from "../../../actions/box";
 
 const BoxCreate = ({ startCreateBox, history, match }) => {
-  // api calls ------------------
+  // Api Calls ------------------
   const handleSubmit = boxLabel => {
     const { params } = match;
+    // Api Calls
+    this.props.startShowOverlay({ from: "boxCreateShowOverlay" });
     startCreateBox({ boxLabel, params }, history);
   };
 
@@ -30,5 +33,5 @@ const BoxCreate = ({ startCreateBox, history, match }) => {
 
 export default connect(
   null,
-  { startCreateBox }
+  { startCreateBox, startShowOverlay }
 )(withRouter(BoxCreate));

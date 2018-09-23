@@ -103,6 +103,10 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.linkFromProductShowOverlayScanLink:
     case UI_ACTION_TYPES.linkItemsShowOverlayScanLink:
     case UI_ACTION_TYPES.boxShowOverlayRemove:
+    case UI_ACTION_TYPES.boxCreateShowOverlay:
+    case UI_ACTION_TYPES.boxEditShowOverlay:
+    case UI_ACTION_TYPES.boxEditShowOverlayDeleteLocation:
+    case UI_ACTION_TYPES.boxEditShowOverlayDeleteNoLocation:
       return { ...state, showOverlay };
 
     default:

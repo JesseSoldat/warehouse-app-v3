@@ -15,6 +15,7 @@ import { sendServerMsg, startLoading } from "../../../actions/ui";
 import { startGetCustomers } from "../../../actions/customer";
 
 class Customers extends Component {
+  // Lifecycles -------------------------------------
   componentDidMount() {
     this.getCustomers();
   }
@@ -25,20 +26,21 @@ class Customers extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "customersClearMsg" });
   }
 
-  // STORE / API CALLS ----------------------------
+  // Store / Api Calls ----------------------------
   getCustomers = () => {
     const { customers } = this.props;
 
-    // Load from the STORE
+    // Load from the Store
     if (customers.length > 0) {
       return;
     }
 
-    // Load from the API
+    // Load from the Api
     this.props.startLoading({ from: "customersLoading" });
     this.props.startGetCustomers();
   };
 
+  // Render -------------------------------------------
   render() {
     const { loading, customers } = this.props;
     let content;

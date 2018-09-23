@@ -4,7 +4,6 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
-import { showOverlay } from "./ui";
 // types
 export const LINK_PRODUCT_TO_SHELFSPOT = "LINK_PRODUCT_TO_SHELFSPOT";
 export const LINK_PRODUCT_TO_BOX = "LINK_PRODUCT_TO_BOX";
@@ -50,7 +49,6 @@ export const linkBoxToShelfSpot = update => ({
 
 // SCAN || MANUAL LINK two items - check item types - arre already linked?
 export const linkItems = (obj, history) => async dispatch => {
-  dispatch(showOverlay());
   const { type1, type2, apiUrl, productId, boxId } = obj;
 
   try {

@@ -15,23 +15,24 @@ import {
   startEditBox,
   startDeleteBox
 } from "../../../actions/box";
-import { serverMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
 class BoxEdit extends Component {
+  // State ------------------------------------
   state = {
     historyUrl: "",
     boxId: "",
     ids: {}
   };
 
-  // lifecycle -----------------------------------
+  // Lifecycles -----------------------------------
   componentDidMount() {
     this.getFormData();
   }
 
-  // helpers ---------------------------------------
+  // Helper Functions -------------------------------
   sendServerMsg = () => {
     const msg = buildClientMsg({
       info: "Delete or relink all products of this box first.",
@@ -52,7 +53,7 @@ class BoxEdit extends Component {
     return box;
   };
 
-  // store / api call -------------------------------
+  // Store / Api Calls -------------------------------
   getFormData() {
     const { match, rack } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
@@ -67,12 +68,14 @@ class BoxEdit extends Component {
 
     // Box and No Location -----------------------
     if (!shelfSpotId) {
+      // Api Calls
       this.props.startLoading({ from: "boxEditLoadingBox" });
       this.props.startGetBox(boxId);
     }
     // Box with Location -------------------------
     // Rack is NOT present in the STORE or rackId does not match
     else if (!rack || rack._id !== rackId) {
+      // Api Calls
       this.props.startLoading({ from: "boxEditLoadingRack" });
       this.props.startGetRack(rackId);
     }
@@ -82,6 +85,8 @@ class BoxEdit extends Component {
   handleSubmit = boxLabel => {
     const { startEditBox, history } = this.props;
     const { boxId, ids } = this.state;
+    // Api Call
+    this.props.startShowOverlay({ from: "boxEditShowOverlay" });
     startEditBox({ boxLabel }, boxId, ids, history);
   };
 
@@ -91,9 +96,15 @@ class BoxEdit extends Component {
 
     // No Location ---------------------------------
     if (box && !ids.shelfSpotId) {
-      box.storedItems.length === 0
-        ? startDeleteBox(boxId, historyUrl, null, history)
-        : this.sendServerMsg();
+      if (box.storedItems.length === 0) {
+        // Api Call
+        this.props.startShowOverlay({
+          from: "boxEditShowOverlayDeleteNoLocation"
+        });
+        startDeleteBox(boxId, historyUrl, null, history);
+      } else {
+        this.sendServerMsg();
+      }
     }
     // Have Location ---------------------------------
     else {
@@ -101,6 +112,10 @@ class BoxEdit extends Component {
       const { storedItems } = box.item;
 
       if (storedItems && storedItems.length === 0) {
+        // Api Call
+        this.props.startShowOverlay({
+          from: "boxEditShowOverlayDeleteLocation"
+        });
         startDeleteBox(boxId, historyUrl, ids.shelfSpotId, history);
       } else {
         this.sendServerMsg();
@@ -182,6 +197,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
+    startShowOverlay,
     startGetRack,
     startGetBox,
     startEditBox,
