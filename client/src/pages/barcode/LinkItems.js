@@ -10,7 +10,7 @@ import Heading from "../../components/Heading";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg, startShowOverlay } from "../../actions/ui";
+import { serverMsg, showOverlay } from "../../actions/ui";
 import { linkItems } from "../../actions/link";
 
 class LinkItems extends Component {
@@ -167,7 +167,7 @@ class LinkItems extends Component {
     }
 
     // Api Calls
-    this.props.startShowOverlay({ from: "linkItemsShowOverlayScanLink" });
+    this.props.showOverlay({ from: "linkItemsShowOverlayScanLink" });
     this.props.linkItems(obj, history);
   };
 
@@ -203,5 +203,5 @@ class LinkItems extends Component {
 
 export default connect(
   null,
-  { linkItems, serverMsg, startShowOverlay }
+  { linkItems, serverMsg, showOverlay }
 )(withRouter(LinkItems));

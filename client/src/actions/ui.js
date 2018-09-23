@@ -48,8 +48,8 @@ export const UI_ACTION_TYPES = {
 
   // ------------------- OVERLAY ------------------------
   // AUTH
-  registerShowOverlay: "[SHOW_OVERLAY Auth Form - Register Page]",
-  loginShowOverlay: "[SHOW_OVERLAY Auth Form - Login Page]",
+  registerShowOverlay: "[SHOW_OVERLAY Register Page]",
+  loginShowOverlay: "[SHOW_OVERLAY Login Page]",
   navBarLogoutShowOverlay: "[SHOW_OVERLAY Navbar] Logout",
   // Password Reset
   passwordResetShowOverlay: "[SHOW_OVERLAY Auth Form] Request Password Reset",
@@ -164,56 +164,43 @@ export const UI_ACTION_TYPES = {
 };
 
 // ------------------- MSG ------------------------
-export const serverMsg = (msg = null, from = null) => {
-  return {
-    type: from ? UI_ACTION_TYPES[from] : NEW_MSG,
-    msg,
-    loading: false,
-    showOverlay: false
-  };
-};
+export const serverMsg = (msg = null, from = null) => ({
+  type: from ? UI_ACTION_TYPES[from] : NEW_MSG,
+  msg,
+  loading: false,
+  showOverlay: false
+});
 
-export const serverOptions = (options = null, from = null) => {
-  console.log("UI actions - serverOptions", from);
-  return {
-    type: NEW_OPTIONS,
-    options,
-    loading: false,
-    showOverlay: false
-  };
-};
+// ------------------- Options ------------------------
+export const serverOptions = (options = null, from = null) => ({
+  type: NEW_OPTIONS,
+  options,
+  loading: false,
+  showOverlay: false
+});
 
-export const clearUIAfterAsync = from => {
-  return {
-    type: from ? UI_ACTION_TYPES[from] : CLEAR_UI_AFTER_ASYNC,
-    msg: null,
-    options: null,
-    loading: false,
-    showOverlay: false
-  };
-};
+// ------------------- Clear After Async ------------------------
+export const clearUIAfterAsync = from => ({
+  type: from ? UI_ACTION_TYPES[from] : CLEAR_UI_AFTER_ASYNC,
+  msg: null,
+  options: null,
+  loading: false,
+  showOverlay: false
+});
 
 // ------------------- LOADING ------------------------
-export const loading = (from = null) => ({
+export const startLoading = ({ from }) => ({
   type: from ? UI_ACTION_TYPES[from] : LOADING,
   loading: true
 });
 
-export const startLoading = ({ from }) => dispatch => {
-  dispatch(loading(from));
-};
-
 // ------------------- OVERLAY ------------------------
-export const showOverlay = from => ({
+export const showOverlay = ({ from }) => ({
   type: from ? UI_ACTION_TYPES[from] : SHOW_OVERLAY,
   showOverlay: true
 });
 
-export const hideOverlay = from => ({
+export const hideOverlay = ({ from }) => ({
   type: from ? UI_ACTION_TYPES[from] : SHOW_OVERLAY,
   showOverlay: false
 });
-
-export const startShowOverlay = ({ from }) => dispatch => {
-  dispatch(showOverlay(from));
-};

@@ -12,7 +12,7 @@ import customerListData from "./helpers/customerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   startGetCustomers,
   startDeleteCustomer
@@ -53,7 +53,7 @@ class Customer extends Component {
     const { startDeleteCustomer, match, history } = this.props;
     const { customerId } = match.params;
     // api call
-    this.props.startShowOverlay({ from: "customersShowOverlayDelete" });
+    this.props.showOverlay({ from: "customersShowOverlayDelete" });
     startDeleteCustomer(customerId, history);
   };
 
@@ -112,7 +112,7 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
-    startShowOverlay,
+    showOverlay,
     startLoading,
     startGetCustomers,
     startDeleteCustomer

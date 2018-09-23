@@ -13,7 +13,7 @@ import getInitialState from "./helpers/getInitialState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   productLoaded,
   createProduct,
@@ -76,7 +76,7 @@ class CreateProduct extends Component {
   // Events and Cbs ----------------------------------------
   handleSubmit = form => {
     // Api Calls
-    this.props.startShowOverlay({ from: "createProductOverlay" });
+    this.props.showOverlay({ from: "createProductOverlay" });
     this.props.createProduct(form, this.props.history);
   };
 
@@ -140,7 +140,7 @@ export default connect(
     startGetProducers,
     startGetCustomers,
     startGetClients,
-    startShowOverlay,
+    showOverlay,
     serverMsg,
     startLoading
   }

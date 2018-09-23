@@ -8,7 +8,7 @@ import Heading from "../../../components/Heading";
 // custom components
 import BoxForm from "./components/BoxForm";
 // actions
-import { startShowOverlay } from "../../../actions/ui";
+import { showOverlay } from "../../../actions/ui";
 import { startCreateBox } from "../../../actions/box";
 
 const BoxCreate = ({ startCreateBox, history, match }) => {
@@ -16,7 +16,7 @@ const BoxCreate = ({ startCreateBox, history, match }) => {
   const handleSubmit = boxLabel => {
     const { params } = match;
     // Api Calls
-    this.props.startShowOverlay({ from: "boxCreateShowOverlay" });
+    this.props.showOverlay({ from: "boxCreateShowOverlay" });
     startCreateBox({ boxLabel, params }, history);
   };
 
@@ -33,5 +33,5 @@ const BoxCreate = ({ startCreateBox, history, match }) => {
 
 export default connect(
   null,
-  { startCreateBox, startShowOverlay }
+  { startCreateBox, showOverlay }
 )(withRouter(BoxCreate));

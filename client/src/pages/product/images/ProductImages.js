@@ -14,7 +14,12 @@ import ImageCard from "./components/ImageCard";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 // actions
-import { showOverlay, hideOverlay, serverMsg } from "../../../actions/ui";
+import {
+  showOverlay,
+  hideOverlay,
+  serverMsg,
+  startLoading
+} from "../../../actions/ui";
 import { productLoaded, startGetProduct } from "../../../actions/product";
 import { uploadImage, deleteImage } from "../../../actions/image";
 
@@ -45,7 +50,7 @@ class ProductImages extends Component {
     if (product && product._id === productId) return;
 
     // Api Calls
-    this.props.loading({ from: "productImagesLoading" });
+    this.props.startLoading({ from: "productImagesLoading" });
     this.props.startGetProduct(productId);
   };
 
@@ -78,8 +83,6 @@ class ProductImages extends Component {
 
   // delete image
   handleDeleteImage = async (url, type) => {
-    this.props.showOverlay();
-
     const { product } = this.props;
 
     try {
@@ -225,6 +228,7 @@ export default connect(
     serverMsg,
     showOverlay,
     hideOverlay,
+    startLoading,
     productLoaded,
     startGetProduct,
     uploadImage,

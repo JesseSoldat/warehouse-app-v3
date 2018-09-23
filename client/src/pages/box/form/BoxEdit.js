@@ -15,7 +15,7 @@ import {
   startEditBox,
   startDeleteBox
 } from "../../../actions/box";
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
@@ -86,7 +86,7 @@ class BoxEdit extends Component {
     const { startEditBox, history } = this.props;
     const { boxId, ids } = this.state;
     // Api Call
-    this.props.startShowOverlay({ from: "boxEditShowOverlay" });
+    this.props.showOverlay({ from: "boxEditShowOverlay" });
     startEditBox({ boxLabel }, boxId, ids, history);
   };
 
@@ -98,7 +98,7 @@ class BoxEdit extends Component {
     if (box && !ids.shelfSpotId) {
       if (box.storedItems.length === 0) {
         // Api Call
-        this.props.startShowOverlay({
+        this.props.showOverlay({
           from: "boxEditShowOverlayDeleteNoLocation"
         });
         startDeleteBox(boxId, historyUrl, null, history);
@@ -113,7 +113,7 @@ class BoxEdit extends Component {
 
       if (storedItems && storedItems.length === 0) {
         // Api Call
-        this.props.startShowOverlay({
+        this.props.showOverlay({
           from: "boxEditShowOverlayDeleteLocation"
         });
         startDeleteBox(boxId, historyUrl, ids.shelfSpotId, history);
@@ -197,7 +197,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
-    startShowOverlay,
+    showOverlay,
     startGetRack,
     startGetBox,
     startEditBox,

@@ -52,6 +52,7 @@ const sendMail = async (req, user, token, type) => {
 
   client.mailer.send(msg, function(err, result) {
     if (err) {
+      console.log("Mail Link", link);
       return console.error("Err:", err);
     }
 

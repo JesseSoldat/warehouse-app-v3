@@ -10,7 +10,7 @@ import UserTable from "./components/UserTable";
 // utils
 import clearUiMsg from "../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../actions/ui";
 import {
   startGetAllUsers,
   changeUserRole,
@@ -41,12 +41,12 @@ class ManageUsers extends Component {
 
   // Events -------------------------------------------------------
   handleChange = (email, role) => {
-    this.props.startShowOverlay({ from: "manageUserUpdateShowOverlay" });
+    this.props.showOverlay({ from: "manageUserUpdateShowOverlay" });
     this.props.changeUserRole(role, email);
   };
 
   handleDelete = email => {
-    this.props.startShowOverlay({ from: "manageUserDeleteShowOverlay" });
+    this.props.showOverlay({ from: "manageUserDeleteShowOverlay" });
     this.props.deleteUser(email);
   };
 
@@ -96,7 +96,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
-    startShowOverlay,
+    showOverlay,
     startGetAllUsers,
     changeUserRole,
     deleteUser

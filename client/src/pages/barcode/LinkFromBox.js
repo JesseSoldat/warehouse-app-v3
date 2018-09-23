@@ -12,7 +12,7 @@ import getUrlParameter from "../../utils/getUrlParameter";
 // helpers
 import buildClientMsg from "../../actions/helpers/buildClientMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../actions/ui";
 import { getStorageIds } from "../../actions/storage";
 import { linkItems } from "../../actions/link";
 import { startGetProducts } from "../../actions/product";
@@ -107,7 +107,7 @@ class LinkFromBox extends Component {
     };
 
     // Api Calls
-    this.props.startShowOverlay({
+    this.props.showOverlay({
       from: "linkFromBoxShowOverlayBoxToShelfSpot"
     });
     this.props.this.props.linkItems(linkObj, this.props.history);
@@ -124,7 +124,7 @@ class LinkFromBox extends Component {
     };
 
     // Api Calls
-    this.props.startShowOverlay({
+    this.props.showOverlay({
       from: "linkFromBoxShowOverlayProductToBox"
     });
     this.props.linkItems(linkObj, this.props.history);
@@ -269,7 +269,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
-    startShowOverlay,
+    showOverlay,
     getStorageIds,
     linkItems,
     startGetProducts

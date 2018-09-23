@@ -11,7 +11,7 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   startGetCustomers,
   startEditCustomer
@@ -51,7 +51,7 @@ class EditCustomer extends Component {
   handleSubmit = formData => {
     const { customerId } = this.props.match.params;
     // Api Calls
-    this.props.startShowOverlay({ from: "customerEditOverlayUpdate" });
+    this.props.showOverlay({ from: "customerEditOverlayUpdate" });
     this.props.startEditCustomer(customerId, formData, this.props.history);
   };
 
@@ -99,7 +99,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
-    startShowOverlay,
+    showOverlay,
     startGetCustomers,
     startEditCustomer
   }

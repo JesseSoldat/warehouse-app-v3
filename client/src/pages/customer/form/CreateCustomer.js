@@ -11,7 +11,7 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   startGetCustomers,
   startCreateCustomer
@@ -42,7 +42,7 @@ class CreateCustomer extends Component {
   handleSubmit = formData => {
     const { history, startCreateCustomer } = this.props;
     // api call
-    this.props.startShowOverlay({ from: "customerCreateOverlay" });
+    this.props.showOverlay({ from: "customerCreateOverlay" });
     startCreateCustomer(formData, history);
   };
 
@@ -86,7 +86,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
-    startShowOverlay,
+    showOverlay,
     startGetCustomers,
     startCreateCustomer
   }

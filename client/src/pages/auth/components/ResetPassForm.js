@@ -7,7 +7,7 @@ import TextInput from "../../../components/inputs/TextInput";
 // helpers
 import formIsValid from "../helpers/formIsValid";
 // actions
-import { startShowOverlay } from "../../../actions/ui";
+import { showOverlay } from "../../../actions/ui";
 import { startResetPasswordWithToken } from "../../../actions/auth";
 
 class ResetPassForm extends Component {
@@ -25,7 +25,7 @@ class ResetPassForm extends Component {
     const { token } = this.props.match.params;
     const { email, password } = this.state;
 
-    this.props.startShowOverlay({ from: "passwordResetWithTokenShowOverlay" });
+    this.props.showOverlay({ from: "passwordResetWithTokenShowOverlay" });
 
     this.props.startResetPasswordWithToken(
       { email, password, token },
@@ -97,5 +97,5 @@ class ResetPassForm extends Component {
 
 export default connect(
   null,
-  { startShowOverlay, startResetPasswordWithToken }
+  { showOverlay, startResetPasswordWithToken }
 )(withRouter(ResetPassForm));

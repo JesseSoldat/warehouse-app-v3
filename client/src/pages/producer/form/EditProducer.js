@@ -11,7 +11,7 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   startGetProducers,
   startEditProducer
@@ -51,7 +51,7 @@ class EditProducer extends Component {
   handleSubmit = formData => {
     const { producerId } = this.props.match.params;
     // Api Calls
-    this.props.startShowOverlay({ from: "producersEditOverlayUpdate" });
+    this.props.showOverlay({ from: "producersEditOverlayUpdate" });
     this.props.startEditProducer(producerId, formData, this.props.history);
   };
 
@@ -96,7 +96,7 @@ export default connect(
   mapStateToProps,
   {
     serverMsg,
-    startShowOverlay,
+    showOverlay,
     startLoading,
     startGetProducers,
     startEditProducer

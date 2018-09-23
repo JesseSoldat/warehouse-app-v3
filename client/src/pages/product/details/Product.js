@@ -23,7 +23,7 @@ import createCustomersArray from "./helpers/createCustomersArray";
 import createObjWithAllPropsAsArrays from "../../../utils/createObjWithAllPropsAsArrays";
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { startShowOverlay, serverMsg, startLoading } from "../../../actions/ui";
+import { showOverlay, serverMsg, startLoading } from "../../../actions/ui";
 import {
   productLoaded,
   startGetProduct,
@@ -74,7 +74,7 @@ class Product extends Component {
   onDeleteProduct = () => {
     const { productId } = this.props.match.params;
     // Api Calls
-    this.props.startShowOverlay({ from: "productOnDeleteProductOverlay" });
+    this.props.showOverlay({ from: "productOnDeleteProductOverlay" });
     this.props.deleteProduct(productId, this.props.history);
   };
 
@@ -95,7 +95,7 @@ class Product extends Component {
       const shelfSpotId = item._id;
       const obj = { shelfSpotId, kind, productId };
 
-      this.props.startShowOverlay({
+      this.props.showOverlay({
         from: "productDetailsShowOverlayUnlinkFromShelfSpot"
       });
       unlinkProduct(obj, product);
@@ -104,7 +104,7 @@ class Product extends Component {
     else if (kind === "box") {
       const boxId = item._id;
       const obj = { boxId, kind, productId };
-      this.props.startShowOverlay({
+      this.props.showOverlay({
         from: "productDetailsShowOverlayUnlinkFromBox"
       });
       unlinkProduct(obj, product);
@@ -219,7 +219,7 @@ const mapStateToProps = ({ ui, product }) => ({
 export default connect(
   mapStateToProps,
   {
-    startShowOverlay,
+    showOverlay,
     startLoading,
     serverMsg,
     productLoaded,

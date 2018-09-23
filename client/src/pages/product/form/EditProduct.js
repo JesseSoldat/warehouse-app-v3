@@ -13,7 +13,7 @@ import createEditState from "./helpers/createEditState";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { startLoading, startShowOverlay, serverMsg } from "../../../actions/ui";
+import { startLoading, showOverlay, serverMsg } from "../../../actions/ui";
 import {
   productLoaded,
   startGetClients,
@@ -103,7 +103,7 @@ class EditProduct extends Component {
   handleSubmit = form => {
     const { productId } = this.props.match.params;
     // Api Calls
-    this.props.startShowOverlay({ from: "editProductOverlay" });
+    this.props.showOverlay({ from: "editProductOverlay" });
     this.props.editProduct(productId, form, this.props.history);
   };
 
@@ -166,7 +166,7 @@ export default connect(
   mapStateToProps,
   {
     startLoading,
-    startShowOverlay,
+    showOverlay,
     serverMsg,
     productLoaded,
     startGetProducers,

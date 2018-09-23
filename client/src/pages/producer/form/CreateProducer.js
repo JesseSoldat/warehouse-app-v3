@@ -11,7 +11,7 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   startGetProducers,
   startCreateProducer
@@ -43,7 +43,7 @@ class CreateProducer extends Component {
   handleSubmit = formData => {
     const { history, startCreateProducer } = this.props;
     // Api Calls
-    this.props.startShowOverlay({ from: "producersCreateOverlay" });
+    this.props.showOverlay({ from: "producersCreateOverlay" });
     startCreateProducer(formData, history);
   };
 
@@ -87,7 +87,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
-    startShowOverlay,
+    showOverlay,
     startGetProducers,
     startCreateProducer
   }

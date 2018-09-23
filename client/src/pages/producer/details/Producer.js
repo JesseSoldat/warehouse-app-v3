@@ -12,7 +12,7 @@ import producerListData from "./helpers/producerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   startGetProducers,
   startDeleteProducer
@@ -52,7 +52,7 @@ class Producer extends Component {
     const { startDeleteProducer, match, history } = this.props;
     const { producerId } = match.params;
     // Api Calls
-    this.props.startShowOverlay({ from: "producersShowOverlayDelete" });
+    this.props.showOverlay({ from: "producersShowOverlayDelete" });
     startDeleteProducer(producerId, history);
   };
 
@@ -114,6 +114,6 @@ export default connect(
     startDeleteProducer,
     serverMsg,
     startLoading,
-    startShowOverlay
+    showOverlay
   }
 )(Producer);

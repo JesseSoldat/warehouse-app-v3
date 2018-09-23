@@ -9,7 +9,7 @@ import Heading from "../../../components/Heading";
 // custom components
 import BoxTable from "./components/BoxTable";
 // actions
-import { serverMsg, startLoading, startShowOverlay } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import { startGetRack } from "../../../actions/storage";
 import { startGetBox } from "../../../actions/box";
 import { unlinkBox } from "../../../actions/unlink";
@@ -52,7 +52,7 @@ class Box extends Component {
     const { shelfSpotId, boxId } = match.params;
 
     // Api Calls
-    this.props.startShowOverlay({ from: "boxShowOverlayRemove" });
+    this.props.showOverlay({ from: "boxShowOverlayRemove" });
     this.props.unlinkBox({ shelfSpotId, boxId }, history);
   };
 
@@ -120,7 +120,7 @@ export default connect(
   {
     unlinkBox,
     serverMsg,
-    startShowOverlay,
+    showOverlay,
     startLoading,
     startGetRack,
     startGetBox
