@@ -12,14 +12,18 @@ import customerListData from "./helpers/customerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   startGetCustomers,
   startDeleteCustomer
 } from "../../../actions/customer";
 
 class Customer extends Component {
-  // lifecycles ----------------------------------
+  // Lifecycles ----------------------------------
   componentDidMount() {
     this.getCustomer();
   }
@@ -30,7 +34,7 @@ class Customer extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "customerDetailsClearMsg" });
   }
 
-  // api calls ----------------------------
+  // Api Calls ----------------------------
   getCustomer = () => {
     const { customerEntity, match } = this.props;
     const { customerId } = match.params;
@@ -48,11 +52,12 @@ class Customer extends Component {
     this.props.startGetCustomers();
   };
 
-  // events -------------------------------
+  // Events and Cbs -----------------------------
   onDeleteCustomer = () => {
     const { startDeleteCustomer, match, history } = this.props;
     const { customerId } = match.params;
     // api call
+    this.props.startShowOverlay({ from: "customersShowOverlayDelete" });
     startDeleteCustomer(customerId, history);
   };
 
@@ -62,8 +67,8 @@ class Customer extends Component {
     history.push(`/customers/edit/${customerId}`);
   };
 
+  // Render ------------------------------
   render() {
-    // props
     const { loading, customerEntity, match } = this.props;
     const { customerId } = match.params;
 
@@ -109,5 +114,11 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetCustomers, startDeleteCustomer }
+  {
+    sendServerMsg,
+    startShowOverlay,
+    startLoading,
+    startGetCustomers,
+    startDeleteCustomer
+  }
 )(Customer);

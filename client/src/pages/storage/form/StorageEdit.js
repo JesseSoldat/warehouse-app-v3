@@ -17,23 +17,24 @@ import {
   startEditStorage,
   startDeleteStorage
 } from "../../../actions/storage";
-import { serverMsg, startLoading } from "../../../actions/ui";
+import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 // helpers
 import buildClientMsg from "../../../actions/helpers/buildClientMsg";
 
 class StorageEdit extends Component {
+  // State -----------------------------------------
   state = {
     type: "",
     id: "",
     ids: {}
   };
 
-  // lifecycle -----------------------------------
+  // Lifecycles -----------------------------------
   componentDidMount() {
     this.getFormData();
   }
 
-  // helpers --------------------------------------
+  // Helper Functions --------------------------------------
   createServeMsg = (type1, type2) => {
     const msg = buildClientMsg({
       info: `Delete or relink all ${type1} of this ${type2} first.`,
@@ -69,10 +70,12 @@ class StorageEdit extends Component {
     this.setState({ type, id: ids[idType], ids });
   }
 
-  // DOM cb ---------------------------------------------
+  // Events and Cbs ---------------------------------------------
   handleSubmit = form => {
     const { startEditStorage, history } = this.props;
     const { type, id, ids } = this.state;
+    // Api Calls
+    this.props.showOverlay({ from: "storageEditShowOverlayUpdate" });
     startEditStorage(form, type, id, ids, history);
   };
 
@@ -85,16 +88,24 @@ class StorageEdit extends Component {
       case "storage":
         const storage = this.findItemFromArray(storages, ids.storageId);
 
-        if (storage.racks.length === 0)
+        if (storage.racks.length === 0) {
+          // Api Calls
+          this.props.showOverlay({
+            from: "storageEditShowOverlayDeleteStorage"
+          });
           return startDeleteStorage(type, id, ids, history);
+        }
 
         this.createServeMsg("racks", "storage");
         break;
 
       case "rack":
         const { shelves } = rack;
-        if (shelves && shelves.length === 0)
+        if (shelves && shelves.length === 0) {
+          // Api Calls
+          this.props.showOverlay({ from: "storageEditShowOverlayDeleteRack" });
           return startDeleteStorage(type, id, ids, history);
+        }
 
         this.createServeMsg("shelves", "rack");
         break;
@@ -103,8 +114,11 @@ class StorageEdit extends Component {
         shelf = this.findItemFromArray(rack.shelves, ids.shelfId);
         shelfSpots = shelf.shelfSpots;
 
-        if (shelfSpots && shelfSpots.length === 0)
+        if (shelfSpots && shelfSpots.length === 0) {
+          // Api Calls
+          this.props.showOverlay({ from: "storageEditShowOverlayDeleteShelf" });
           return startDeleteStorage(type, id, ids, history);
+        }
 
         this.createServeMsg("shelf spots", "shelf");
         break;
@@ -114,8 +128,13 @@ class StorageEdit extends Component {
         shelfSpot = this.findItemFromArray(shelf.shelfSpots, ids.shelfSpotId);
         const { storedItems } = shelfSpot;
 
-        if (storedItems.length === 0)
+        if (storedItems.length === 0) {
+          // Api Calls
+          this.props.showOverlay({
+            from: "storageEditShowOverlayDeleteShelfSpot"
+          });
           return startDeleteStorage(type, id, ids, history);
+        }
 
         this.createServeMsg("products or boxes", "shelf spot");
         break;
@@ -135,6 +154,7 @@ class StorageEdit extends Component {
     />
   );
 
+  // Render ------------------------------------------
   render() {
     const { loading, storages, rack } = this.props;
     const { type, ids } = this.state;
@@ -217,6 +237,7 @@ export default connect(
   {
     serverMsg,
     startLoading,
+    showOverlay,
     startGetStorages,
     startGetRack,
     startEditStorage,

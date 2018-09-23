@@ -24,6 +24,7 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.productDetailsLoading:
     case UI_ACTION_TYPES.editProductLoading:
     case UI_ACTION_TYPES.createProductLoading:
+    case UI_ACTION_TYPES.productImagesLoading:
     case UI_ACTION_TYPES.producersLoading:
     case UI_ACTION_TYPES.producerDetailsLoading:
     case UI_ACTION_TYPES.producersEditLoading:
@@ -92,6 +93,8 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.passwordResetShowOverlay:
     case UI_ACTION_TYPES.passwordResetWithTokenShowOverlay:
     case UI_ACTION_TYPES.productOnDeleteProductOverlay:
+    case UI_ACTION_TYPES.productImagesShowOverlay:
+    case UI_ACTION_TYPES.productImagesHideOverlay:
     case UI_ACTION_TYPES.resendVerificationShowOverlay:
     case UI_ACTION_TYPES.createProductOverlay:
     case UI_ACTION_TYPES.startShowOverlay:
@@ -107,6 +110,20 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.boxEditShowOverlay:
     case UI_ACTION_TYPES.boxEditShowOverlayDeleteLocation:
     case UI_ACTION_TYPES.boxEditShowOverlayDeleteNoLocation:
+    case UI_ACTION_TYPES.customersShowOverlayDelete:
+    case UI_ACTION_TYPES.customerCreateOverlay:
+    case UI_ACTION_TYPES.customerEditOverlayUpdate:
+    case UI_ACTION_TYPES.producersShowOverlayDelete:
+    case UI_ACTION_TYPES.producersCreateOverlay:
+    case UI_ACTION_TYPES.producersEditOverlayUpdate:
+    case UI_ACTION_TYPES.productDetailsShowOverlayUnlinkFromBox:
+    case UI_ACTION_TYPES.productDetailsShowOverlayUnlinkFromShelfSpot:
+    case UI_ACTION_TYPES.storageCreateShowOverlay:
+    case UI_ACTION_TYPES.storageEditShowOverlayUpdate:
+    case UI_ACTION_TYPES.storageEditShowOverlayDeleteStorage:
+    case UI_ACTION_TYPES.storageEditShowOverlayDeleteRack:
+    case UI_ACTION_TYPES.storageEditShowOverlayDeleteShelf:
+    case UI_ACTION_TYPES.storageEditShowOverlayDeleteShelfSpot:
       return { ...state, showOverlay };
 
     default:

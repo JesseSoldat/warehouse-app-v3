@@ -11,14 +11,18 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   startGetProducers,
   startEditProducer
 } from "../../../actions/producer";
 
 class EditProducer extends Component {
-  // lifecycle ----------------------------------------------
+  // Lifecycles ----------------------------------------------
   componentDidMount() {
     this.getProducers();
   }
@@ -29,7 +33,7 @@ class EditProducer extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "editProducerClearMsg" });
   }
 
-  // api calls ------------------------------------------
+  // Api Calls ------------------------------------------
   getProducers = () => {
     const { producerEntity, match, startGetProducers } = this.props;
     const { producerId } = match.params;
@@ -47,13 +51,15 @@ class EditProducer extends Component {
     startGetProducers();
   };
 
-  // events ---------------------------------------------
+  // Events and Cbs ---------------------------------------------
   handleSubmit = formData => {
     const { producerId } = this.props.match.params;
-    // api call
+    // Api Calls
+    this.props.startShowOverlay({ from: "producersEditOverlayUpdate" });
     this.props.startEditProducer(producerId, formData, this.props.history);
   };
 
+  // Render ----------------------------------
   render() {
     const { loading, producerEntity, match } = this.props;
     const { producerId } = match.params;
@@ -92,5 +98,11 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetProducers, startEditProducer }
+  {
+    sendServerMsg,
+    startShowOverlay,
+    startLoading,
+    startGetProducers,
+    startEditProducer
+  }
 )(withRouter(EditProducer));

@@ -11,14 +11,18 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   startGetCustomers,
   startEditCustomer
 } from "../../../actions/customer";
 
 class EditCustomer extends Component {
-  // lifecycle --------------------------------------
+  // Lifecycles --------------------------------------
   componentDidMount() {
     this.getCustomer();
   }
@@ -29,7 +33,7 @@ class EditCustomer extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "editCustomerClearMsg" });
   }
 
-  // API Calls ----------------------------------
+  // Api Calls ----------------------------------
   getCustomer = () => {
     const { customerEntity, match } = this.props;
     const { customerId } = match.params;
@@ -47,13 +51,15 @@ class EditCustomer extends Component {
     this.props.startGetCustomers();
   };
 
-  // events ------------------------------------
+  // Events and Cbs ------------------------------------
   handleSubmit = formData => {
     const { customerId } = this.props.match.params;
-    // api call
+    // Api Calls
+    this.props.startShowOverlay({ from: "customerEditOverlayUpdate" });
     this.props.startEditCustomer(customerId, formData, this.props.history);
   };
 
+  // Render -------------------------------------------
   render() {
     // props
     const { loading, customerEntity, match } = this.props;
@@ -94,5 +100,11 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetCustomers, startEditCustomer }
+  {
+    sendServerMsg,
+    startLoading,
+    startShowOverlay,
+    startGetCustomers,
+    startEditCustomer
+  }
 )(withRouter(EditCustomer));

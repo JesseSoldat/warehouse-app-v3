@@ -11,7 +11,11 @@ import CustomerForm from "./components/CustomerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   startGetCustomers,
   startCreateCustomer
@@ -42,9 +46,11 @@ class CreateCustomer extends Component {
   handleSubmit = formData => {
     const { history, startCreateCustomer } = this.props;
     // api call
+    this.props.startShowOverlay({ from: "customerCreateOverlay" });
     startCreateCustomer(formData, history);
   };
 
+  // Render ----------------------------------
   render() {
     // create default state data for child component
     const data = {
@@ -81,5 +87,11 @@ const mapStateToProps = ({ ui, customer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetCustomers, startCreateCustomer }
+  {
+    sendServerMsg,
+    startLoading,
+    startShowOverlay,
+    startGetCustomers,
+    startCreateCustomer
+  }
 )(withRouter(CreateCustomer));

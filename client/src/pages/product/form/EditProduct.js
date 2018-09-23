@@ -28,7 +28,7 @@ import { startGetProducers } from "../../../actions/producer";
 import { startGetCustomers } from "../../../actions/customer";
 
 class EditProduct extends Component {
-  // lifecycle ------------------------------------------
+  // Lifecycles ------------------------------------------
   componentDidMount() {
     this.getFormData();
   }
@@ -39,7 +39,7 @@ class EditProduct extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "editProductClearMsg" });
   }
 
-  // api calls ----------------------------------------
+  // Api Calls ----------------------------------------
   getFormData = () => {
     const { productEntity, product, customers, producers, match } = this.props;
     const { productId } = match.params;
@@ -49,7 +49,6 @@ class EditProduct extends Component {
     let haveProducers = false;
 
     // PRODUCT ----------------------------------
-
     // check store if single product equal requested product
     if (product && product._id === productId) {
       haveProduct = true;
@@ -104,9 +103,10 @@ class EditProduct extends Component {
     }
   };
 
-  // events ------------------------------------------
+  // Events and Cbs ------------------------------------------
   handleSubmit = form => {
     const { productId } = this.props.match.params;
+    // Api Calls
     this.props.startShowOverlay({ from: "editProductOverlay" });
     this.props.editProduct(productId, form, this.props.history);
   };
@@ -115,6 +115,7 @@ class EditProduct extends Component {
     this.props.serverMsg(msg);
   };
 
+  // Render ---------------------------------------
   render() {
     const { product, loading, producers, customers } = this.props;
 

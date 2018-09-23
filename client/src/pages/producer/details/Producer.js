@@ -12,14 +12,18 @@ import producerListData from "./helpers/producerListData";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   startGetProducers,
   startDeleteProducer
 } from "../../../actions/producer";
 
 class Producer extends Component {
-  // lifecycle --------------------------------------
+  // Lifecycles --------------------------------------
   componentDidMount() {
     this.getProducers();
   }
@@ -30,7 +34,7 @@ class Producer extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "producerDetailsClearMsg" });
   }
 
-  // api calls ----------------------------------------
+  // APi Calls ----------------------------------------
   getProducers = () => {
     const { producerEntity, match, startGetProducers } = this.props;
     const { producerId } = match.params;
@@ -47,11 +51,12 @@ class Producer extends Component {
     startGetProducers();
   };
 
-  // events -----------------------------------------
+  // Events and Cbs -----------------------------------------
   onDeleteProduct = () => {
     const { startDeleteProducer, match, history } = this.props;
     const { producerId } = match.params;
-    // api call
+    // Api Calls
+    this.props.startShowOverlay({ from: "producersShowOverlayDelete" });
     startDeleteProducer(producerId, history);
   };
 
@@ -61,8 +66,8 @@ class Producer extends Component {
     history.push(`/producers/edit/${producerId}`);
   };
 
+  // Render --------------------------------------
   render() {
-    // props
     const { loading, producerEntity, match } = this.props;
     const { producerId } = match.params;
 
@@ -108,5 +113,11 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetProducers, startDeleteProducer, sendServerMsg, startLoading }
+  {
+    startGetProducers,
+    startDeleteProducer,
+    sendServerMsg,
+    startLoading,
+    startShowOverlay
+  }
 )(Producer);

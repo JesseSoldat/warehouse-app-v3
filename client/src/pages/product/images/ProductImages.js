@@ -23,12 +23,12 @@ class ProductImages extends Component {
     type: "productPictures"
   };
 
-  // lifecycles --------------------------------------------------
+  // Lifecycles --------------------------------------------------
   componentDidMount() {
     this.getProduct();
   }
 
-  // state setup - api calls -----------------------------------------
+  // Api Calls -----------------------------------------
   getProduct = () => {
     const { productEntity, product, match } = this.props;
     const { productId } = match.params;
@@ -44,23 +44,24 @@ class ProductImages extends Component {
     // check store if single product equal requested product
     if (product && product._id === productId) return;
 
-    // fetch new data from api
+    // Api Calls
+    this.props.loading({ from: "productImagesLoading" });
     this.props.startGetProduct(productId);
   };
 
-  // select cb
+  // Events and Cbs ------------------------------
   selectType = e => {
     this.setState({ type: e.target.value });
   };
 
   // uploading
   handleUploadStart = () => {
-    this.props.showOverlay();
+    this.props.showOverlay({ from: "productImagesShowOverlay" });
   };
 
-  handleUploadError = error => {
-    this.props.hideOverlay();
-    console.error(error);
+  handleUploadError = err => {
+    this.props.hideOverlay({ from: "productImagesHideOverlay" });
+    console.error("handleUploadError", err);
   };
 
   handleUploadSuccess = filename => {
@@ -89,12 +90,12 @@ class ProductImages extends Component {
 
       this.props.deleteImage(url, type, product);
     } catch (err) {
-      this.props.showOverlay(false);
-      console.log("ERR deleting img", err);
+      this.props.hideOverlay({ from: "productImagesHideOverlay" });
+      console.log("Err deleting img", err);
     }
   };
 
-  // server msg
+  // Server msg
   showServerMsg = key => {
     const msgs = {
       size: "The file you are trying to upload is too large.",
@@ -105,6 +106,7 @@ class ProductImages extends Component {
     this.props.serverMsg(buildClientMsg({ info: msg, color: "red" }));
   };
 
+  // Return HTML -----------------------------------
   renderPicsContainer = (title, picArray, type) => (
     <Fragment>
       <div className="row">
@@ -128,6 +130,7 @@ class ProductImages extends Component {
     </Fragment>
   );
 
+  // Render --------------------------------------
   render() {
     const { loading, match, product } = this.props;
     const { productId } = match.params;

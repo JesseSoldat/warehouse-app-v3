@@ -36,7 +36,7 @@ import {
 import { unlinkProduct } from "../../../actions/unlink";
 
 class Product extends Component {
-  // lifecycle -------------------------------------
+  // Lifecycles -------------------------------------
   componentDidMount() {
     this.getProduct();
   }
@@ -74,9 +74,10 @@ class Product extends Component {
     startGetProduct(productId);
   };
 
-  // events -----------------------------------------
+  // Events and Cbs -----------------------------------------
   onDeleteProduct = () => {
     const { productId } = this.props.match.params;
+    // Api Calls
     this.props.startShowOverlay({ from: "productOnDeleteProductOverlay" });
     this.props.deleteProduct(productId, this.props.history);
   };
@@ -97,16 +98,24 @@ class Product extends Component {
     if (kind === "shelfSpot") {
       const shelfSpotId = item._id;
       const obj = { shelfSpotId, kind, productId };
+
+      this.props.startShowOverlay({
+        from: "productDetailsShowOverlayUnlinkFromShelfSpot"
+      });
       unlinkProduct(obj, product);
     }
     // remove product from box
     else if (kind === "box") {
       const boxId = item._id;
       const obj = { boxId, kind, productId };
+      this.props.startShowOverlay({
+        from: "productDetailsShowOverlayUnlinkFromBox"
+      });
       unlinkProduct(obj, product);
     }
   };
 
+  // Render -----------------------------------
   render() {
     const { product, match, history } = this.props;
     const { productId } = match.params;

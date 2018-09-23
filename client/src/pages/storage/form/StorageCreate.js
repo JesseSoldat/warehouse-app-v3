@@ -10,9 +10,10 @@ import StorageForm from "./components/StorageForm";
 import getUrlParameter from "../../../utils/getUrlParameter";
 // actions
 import { startCreateStorage } from "../../../actions/storage";
+import { showOverlay } from "../../../actions/ui";
 
 class StorageCreate extends Component {
-  // api calls ------------------
+  // Events and Cbs ------------------
   handleSubmit = form => {
     const { match, history, startCreateStorage } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId } = match.params;
@@ -39,9 +40,12 @@ class StorageCreate extends Component {
         break;
     }
 
+    // Api Calls
+    this.props.showOverlay({ from: "storageCreateShowOverlay" });
     startCreateStorage(form, type, id, ids, history);
   };
 
+  // Render ------------------------------------------
   render() {
     const type = getUrlParameter("type");
 
@@ -72,5 +76,5 @@ class StorageCreate extends Component {
 
 export default connect(
   null,
-  { startCreateStorage }
+  { startCreateStorage, showOverlay }
 )(StorageCreate);

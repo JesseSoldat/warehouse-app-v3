@@ -15,7 +15,7 @@ import { sendServerMsg, startLoading } from "../../../actions/ui";
 import { startGetProducers } from "../../../actions/producer";
 
 class Producers extends Component {
-  // lifecycle --------------------------------------
+  // Lifecycles --------------------------------------
   componentDidMount() {
     this.getProducers();
   }
@@ -26,7 +26,7 @@ class Producers extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "producersClearMsg" });
   }
 
-  // api calls --------------------------------------
+  // Api Calls --------------------------------------
   getProducers = () => {
     const { producers } = this.props;
 
@@ -39,6 +39,7 @@ class Producers extends Component {
     this.props.startGetProducers();
   };
 
+  // Render ---------------------------------------
   render() {
     const { loading, producers } = this.props;
     let content;

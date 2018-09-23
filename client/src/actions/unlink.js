@@ -4,7 +4,6 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // actions
 import { productLoaded } from "./product";
-import { showOverlay } from "./ui";
 import { resetBox } from "./box";
 
 export const UNLINK_PRODUCT_FROM_SHELFSPOT = "UNLINK_PRODUCT_FROM_SHELFSPOT";
@@ -22,8 +21,6 @@ export const unlinkBoxFromShelfSpot = update => ({
 
 export const unlinkProduct = (obj, product) => async dispatch => {
   let apiUrl, errMsg;
-
-  dispatch(showOverlay());
 
   try {
     switch (obj.kind) {
@@ -59,8 +56,6 @@ export const unlinkProduct = (obj, product) => async dispatch => {
 };
 
 export const unlinkBox = (obj, history) => async dispatch => {
-  dispatch(showOverlay());
-
   try {
     const res = await axios.patch("/api/unlink/boxFromShelfSpot", obj);
 

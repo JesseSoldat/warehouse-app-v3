@@ -21,6 +21,7 @@ import { sendServerMsg, startLoading } from "../../../actions/ui";
 import { startGetProducts, resetProducts } from "../../../actions/product";
 
 class Products extends Component {
+  // State -------------------------------------
   state = {
     searchOption: "productName",
     valueErr: "",
@@ -31,7 +32,7 @@ class Products extends Component {
     orphanSearch: false
   };
 
-  // lifecycles -------------------------------------
+  // Lifecycles -------------------------------------
   componentDidMount() {
     const { query } = this.props;
     // fetch the products using inital query params stored in product reducer
@@ -121,6 +122,7 @@ class Products extends Component {
     this.getApiData(query);
   };
 
+  // Render -------------------------------------
   render() {
     const { products, productsRequest, productsLoaded, query } = this.props;
     let content;

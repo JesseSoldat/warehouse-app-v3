@@ -27,7 +27,7 @@ import { startGetProducers } from "../../../actions/producer";
 import { startGetCustomers } from "../../../actions/customer";
 
 class CreateProduct extends Component {
-  // lifecycle -----------------------------------------------
+  // Lifecycles -----------------------------------------------
   componentDidMount() {
     this.props.productLoaded(null);
     this.getFormData();
@@ -39,7 +39,7 @@ class CreateProduct extends Component {
     clearUiMsg({ msg, sendServerMsg, from: "createProductClearMsg" });
   }
 
-  // load api data --------------------------------------------
+  // Api Calls --------------------------------------------
   getFormData = () => {
     const { customers, producers } = this.props;
 
@@ -77,8 +77,9 @@ class CreateProduct extends Component {
     }
   };
 
-  // events handle cb ----------------------------------------
+  // Events and Cbs ----------------------------------------
   handleSubmit = form => {
+    // Api Calls
     this.props.startShowOverlay({ from: "createProductOverlay" });
     this.props.createProduct(form, this.props.history);
   };
@@ -87,6 +88,7 @@ class CreateProduct extends Component {
     this.props.sendServerMsg({ msg, from: "createProductMsg" });
   };
 
+  // Render -------------------------------------
   render() {
     const { msg, loading, customers, producers } = this.props;
     let content;

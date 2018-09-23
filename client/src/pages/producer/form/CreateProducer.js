@@ -11,14 +11,18 @@ import ProducerForm from "./components/ProducerForm";
 // utils
 import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
-import { sendServerMsg, startLoading } from "../../../actions/ui";
+import {
+  sendServerMsg,
+  startLoading,
+  startShowOverlay
+} from "../../../actions/ui";
 import {
   startGetProducers,
   startCreateProducer
 } from "../../../actions/producer";
 
 class CreateProducer extends Component {
-  // lifecycle ----------------------------------------------
+  // Lifecycles ----------------------------------------------
   componentDidMount() {
     this.getProducers();
   }
@@ -39,12 +43,15 @@ class CreateProducer extends Component {
     this.props.startGetProducers();
   }
 
-  // events -----------------------------------------------
+  // Events and Cbs ----------------------------------
   handleSubmit = formData => {
     const { history, startCreateProducer } = this.props;
+    // Api Calls
+    this.props.startShowOverlay({ from: "producersCreateOverlay" });
     startCreateProducer(formData, history);
   };
 
+  // Render --------------------------------
   render() {
     const { loading } = this.props;
     // default producer data to use in child component state
@@ -81,5 +88,11 @@ const mapStateToProps = ({ ui, producer }) => ({
 
 export default connect(
   mapStateToProps,
-  { sendServerMsg, startLoading, startGetProducers, startCreateProducer }
+  {
+    sendServerMsg,
+    startLoading,
+    startShowOverlay,
+    startGetProducers,
+    startCreateProducer
+  }
 )(withRouter(CreateProducer));

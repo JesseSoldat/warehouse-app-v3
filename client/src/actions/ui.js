@@ -63,6 +63,28 @@ export const UI_ACTION_TYPES = {
     "[SHOW_OVERLAY Product Details Page] Delete a Product",
   createProductOverlay: "[SHOW_OVERLAY Create Product Page] Create a Product",
   editProductOverlay: "[SHOW_OVERLAY Edit Product Page] Edit a Product",
+  productDetailsShowOverlayUnlinkFromShelfSpot:
+    "[SHOW_OVERLAY Product Details Page] Unlink Product from ShelfSpot",
+  productDetailsShowOverlayUnlinkFromBox:
+    "[SHOW_OVERLAY Product Details Page] Unlink Product from Box",
+  productImagesShowOverlay:
+    "[SHOW_OVERLAY ProductImages Page] handle upload start",
+  productImagesHideOverlay:
+    "[HIDE_OVERLAY ProductImages Page] handle upload error",
+  // Customers
+  customersShowOverlayDelete:
+    "[SHOW_OVERLAY Customer Details Page] Delete a Customer",
+  customerCreateOverlay:
+    "[SHOW_OVERLAY Customer Create Page] Create a Customer",
+  customerEditOverlayUpdate:
+    "[SHOW_OVERLAY Customer Details Page] Update a Customer",
+  // Producers
+  producersShowOverlayDelete:
+    "[SHOW_OVERLAY Producer Details Page] Delete a Producer",
+  producersCreateOverlay:
+    "[SHOW_OVERLAY Producer Create Page] Create a Producer",
+  producersEditOverlayUpdate:
+    "[SHOW_OVERLAY Producer Details Page] Update a Producer",
   // Admin
   manageUserUpdateShowOverlay:
     "[SHOW_OVERLAY Manage User Page] Change user role",
@@ -86,6 +108,17 @@ export const UI_ACTION_TYPES = {
     "[SHOW_OVERLAY Box Edit Page] Delete a Box with No Location",
   boxEditShowOverlayDeleteLocation:
     "[SHOW_OVERLAY Box Edit Page] Delete a Box with a Location",
+  // Storage
+  storageCreateShowOverlay: "[SHOW_OVERLAY Storage Create Page] Create Storage",
+  storageEditShowOverlayUpdate: "[SHOW_OVERLAY Storage Edit Page] Edit Storage",
+  storageEditShowOverlayDeleteStorage:
+    "[SHOW_OVERLAY Storage Edit Page] Delete Storage",
+  storageEditShowOverlayDeleteRack:
+    "[SHOW_OVERLAY Storage Edit Page] Delete Rack",
+  storageEditShowOverlayDeleteShelf:
+    "[SHOW_OVERLAY Storage Edit Page] Delete Shelf",
+  storageEditShowOverlayDeleteShelfSpot:
+    "[SHOW_OVERLAY Storage Edit Page] Delete ShelfSpot",
 
   // ------------------- LOADING ------------------------
   // Products
@@ -93,6 +126,7 @@ export const UI_ACTION_TYPES = {
   productDetailsLoading: "[LOADING Product Details Page] Fetch Data",
   editProductLoading: "[LOADING Edit Product Page] Fetch Data",
   createProductLoading: "[LOADING Create Product Page] Fetch Data",
+  productImagesLoading: "[LOADING ProductImages Page] Fetch Product",
   // Producers
   producersLoading: "[LOADING Producers Page] Fetch Data",
   producerDetailsLoading: "[LOADING Producer Details Page] Fetch Data",
