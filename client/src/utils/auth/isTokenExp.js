@@ -1,17 +1,17 @@
 import decodeToken from "./decodeToken";
 
 const isTokenExp = token => {
-  let isTokenExp = false;
+  let tokenIsExpired = false;
   const decodedToken = decodeToken(token);
-  const { expires } = decodedToken.payload;
+  const { expires, role } = decodedToken.payload;
   const now = new Date().getTime();
 
   // console.log("now", now);
   // console.log("expires", expires);
 
-  if (expires < now) isTokenExp = true;
+  if (expires < now) tokenIsExpired = true;
 
-  return isTokenExp;
+  return { role, tokenIsExpired };
 };
 
 export default isTokenExp;

@@ -112,7 +112,12 @@ module.exports = app => {
         "blue",
         "hide-3"
       );
-      serverRes(res, 200, msg, { _id: user._id, token, expires });
+      serverRes(res, 200, msg, {
+        _id: user._id,
+        token,
+        expires,
+        role: user.role
+      });
     } catch (err) {
       const msg = serverMsg("error", "login", "user", "loginErr");
       serverRes(res, 400, msg, null);
@@ -272,7 +277,9 @@ module.exports = app => {
       await sendMail(req, user, resetPasswordToken.token, (type = "reset"));
 
       const msg = msgObj(
-        `Reset password has been sent to ${user.email}.`,
+        `Reset password has been sent to ${
+          user.email
+        }. If you have not recieved the email try adding jlab.development.coding@gmail.com to your contacts.`,
         "blue"
       );
       serverRes(res, 200, msg, null);

@@ -3,13 +3,14 @@ const User = require("../models/user");
 const AuthToken = require("../models/tokens/authToken");
 // middleware
 const isAuth = require("../middleware/isAuth");
+const isAdmin = require("../middleware/isAdmin");
 // utils
 const { msgObj, serverRes } = require("../utils/serverRes");
 const serverMsg = require("../utils/serverMsg");
 
 module.exports = app => {
   // get all of the users of the app
-  app.get("/api/users", isAuth, async (req, res) => {
+  app.get("/api/users", isAuth, isAdmin, async (req, res) => {
     try {
       const users = await User.find();
       serverRes(res, 200, null, users);
@@ -20,7 +21,7 @@ module.exports = app => {
   });
 
   // change the users role
-  app.patch("/api/changeUserRole", isAuth, async (req, res) => {
+  app.patch("/api/changeUserRole", isAuth, isAdmin, async (req, res) => {
     const { role, email } = req.body;
 
     try {
@@ -43,7 +44,7 @@ module.exports = app => {
   });
 
   // delete a user
-  app.patch("/api/deleteUser", async (req, res) => {
+  app.patch("/api/deleteUser", isAuth, isAdmin, async (req, res) => {
     const { email } = req.body;
 
     try {
@@ -71,7 +72,7 @@ module.exports = app => {
     }
   });
 
-  // delete an expired token
+  // TODO DEPRECATE delete an expired token
   app.post("/api/token", async (req, res) => {
     const { token } = req.body;
     try {

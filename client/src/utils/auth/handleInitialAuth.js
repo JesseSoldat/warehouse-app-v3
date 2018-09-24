@@ -5,7 +5,6 @@ import { NEW_MSG } from "../../actions/ui";
 // utils
 import setAxiosHeader from "../setAxiosHeader";
 import isTokenExp from "./isTokenExp";
-// import deleteExpToken from "./deleteExpToken";
 
 const handleInitialAuth = (store, renderApp) => {
   const user = JSON.parse(localStorage.getItem("user"));
@@ -13,9 +12,9 @@ const handleInitialAuth = (store, renderApp) => {
   if (user) {
     const { _id, token } = user;
 
-    // console.log(user);
+    const { role, tokenIsExpired } = isTokenExp(token);
 
-    if (isTokenExp(token)) {
+    if (tokenIsExpired) {
       localStorage.removeItem("user");
 
       setAxiosHeader(null);
@@ -29,14 +28,13 @@ const handleInitialAuth = (store, renderApp) => {
         loading: false
       });
 
-      // deleteExpToken(token);
-
       renderApp();
     } else {
       store.dispatch({
         type: AUTH_LOGIN,
         _id,
-        token
+        token,
+        role
       });
 
       setAxiosHeader(token);

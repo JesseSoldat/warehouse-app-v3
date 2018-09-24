@@ -21,7 +21,6 @@ import createProducerArray from "./helpers/createProducerArray";
 import createCustomersArray from "./helpers/createCustomersArray";
 // utils
 import createObjWithAllPropsAsArrays from "../../../utils/createObjWithAllPropsAsArrays";
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { showOverlay, serverMsg, startLoading } from "../../../actions/ui";
 import {
@@ -39,8 +38,7 @@ class Product extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "productDetailsClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "productDetailsClearMsg");
   }
 
   // API CALLS ---------------------------------------

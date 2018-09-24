@@ -8,8 +8,6 @@ import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
 // custom components
 import ProducerForm from "./components/ProducerForm";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
@@ -25,8 +23,7 @@ class CreateProducer extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "createProducerClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "createProducerClearMsg");
   }
 
   // API Calls

@@ -8,8 +8,6 @@ import Heading from "../../../components/Heading";
 import CardList from "../../../components/cards/CardList";
 // helpers
 import producerCardData from "./helpers/producerCardData";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetProducers } from "../../../actions/producer";
@@ -22,8 +20,7 @@ class Producers extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "producersClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "producersClearMsg");
   }
 
   // Api Calls --------------------------------------

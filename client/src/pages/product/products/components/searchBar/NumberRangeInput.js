@@ -19,7 +19,7 @@ const NumberRangeInput = ({
 
   return (
     <div className="col-xs-12 col-md-5 d-inline-block py-2 my-0">
-      <div className="input-group d-flex">
+      <div className="input-group">
         <span className="mr-3">
           <label className="p-0 m-0">
             <small>Starting</small>

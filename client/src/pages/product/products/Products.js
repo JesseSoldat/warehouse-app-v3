@@ -14,8 +14,6 @@ import searchBarFields from "./helpers/searchBarFields";
 import productCardData from "./helpers/productCardData";
 import createGetProductsQuery from "./helpers/createGetProductsQuery";
 import onSelectBuildNewState from "./helpers/onSelectBuildNewState";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetProducts, resetProducts } from "../../../actions/product";
@@ -41,8 +39,7 @@ class Products extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "productsClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "productsClearMsg");
   }
 
   // api calls ----------------------------------

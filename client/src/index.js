@@ -3,7 +3,7 @@ import ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import * as firebase from "firebase/app";
 
-// import registerServiceWorker from "./registerServiceWorker";
+import registerServiceWorker from "./registerServiceWorker";
 
 // css
 import "./index.css";
@@ -44,6 +44,7 @@ const renderApp = () => {
 };
 
 ReactDOM.render(<Loading />, document.getElementById("root"));
-// registerServiceWorker();
+
+registerServiceWorker();
 
 handleInitialAuth(store, renderApp);

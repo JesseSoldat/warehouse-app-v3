@@ -10,7 +10,6 @@ import TableContainer from "./components/TableContainer";
 // utils
 import capitalizeFirstLetter from "../../../utils/stringManipulation/capitalizeFirstLetter";
 import getUrlParameter from "../../../utils/getUrlParameter";
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { startGetRack } from "../../../actions/storage";
 import { serverMsg, startLoading } from "../../../actions/ui";
@@ -34,8 +33,7 @@ class Storage extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "storageClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "storageClearMsg");
   }
 
   // Store / Api Calls ----------------------------

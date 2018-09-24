@@ -102,7 +102,7 @@ UserSchema.statics.findByCredentials = async function(email, password) {
 UserSchema.methods.generateAuthToken = async function() {
   const user = this;
 
-  const { _id } = user;
+  const { _id, role } = user;
 
   // - Token expiration time by milliseconds OR days -
   //const expires = milliFromNow(tokenExpirationTime); // TESTING TOKEN
@@ -113,7 +113,8 @@ UserSchema.methods.generateAuthToken = async function() {
     .sign(
       {
         _id: _id.toHexString(),
-        expires
+        expires,
+        role
       },
       process.env.TOKEN_SECRET
     )

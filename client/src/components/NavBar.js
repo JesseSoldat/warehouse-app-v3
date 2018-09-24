@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 
-// custom components
+// common components
 import SiteLink from "./links/SiteLink";
 import MenuLink from "./links/MenuLink";
 import DropdownLink from "./links/DropdownLink";

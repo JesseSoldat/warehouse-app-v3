@@ -41,6 +41,7 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.boxEditLoadingRack:
     case UI_ACTION_TYPES.storageEditLoadingStorages:
     case UI_ACTION_TYPES.storagesDetailsLoadingStorages:
+    case UI_ACTION_TYPES.storageDetailsLoadingRack:
     case UI_ACTION_TYPES.storagesLoadingStorages:
     case UI_ACTION_TYPES.storageEditLoadingRack:
     case UI_ACTION_TYPES.linkFromProductLoadingStorageIds:

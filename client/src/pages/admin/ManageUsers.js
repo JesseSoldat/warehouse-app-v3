@@ -7,8 +7,6 @@ import Heading from "../../components/Heading";
 import Spinner from "../../components/Spinner";
 // custom components
 import UserTable from "./components/UserTable";
-// utils
-import clearUiMsg from "../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../actions/ui";
 import {
@@ -25,8 +23,7 @@ class ManageUsers extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "manageUserClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "manageUserClearMsg");
   }
 
   // Api / Store  ---------------------------------------------

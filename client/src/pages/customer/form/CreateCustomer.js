@@ -8,8 +8,6 @@ import Message from "../../../components/Message";
 import Heading from "../../../components/Heading";
 // custom components
 import CustomerForm from "./components/CustomerForm";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
@@ -24,8 +22,7 @@ class CreateCustomer extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "createCustomerClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "createCustomerClearMsg");
   }
 
   // API Calls

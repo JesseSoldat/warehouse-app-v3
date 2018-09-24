@@ -8,8 +8,6 @@ import Heading from "../../../components/Heading";
 import CardList from "../../../components/cards/CardList";
 // helpers
 import customerCardData from "./helpers/customerCardData";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading } from "../../../actions/ui";
 import { startGetCustomers } from "../../../actions/customer";
@@ -22,8 +20,7 @@ class Customers extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "customersClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "customersClearMsg");
   }
 
   // Store / Api Calls ----------------------------

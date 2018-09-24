@@ -10,8 +10,6 @@ import Spinner from "../../../components/Spinner";
 import ProductForm from "./components/ProductForm";
 // helpers
 import getInitialState from "./helpers/getInitialState";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
@@ -31,8 +29,7 @@ class CreateProduct extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "createProductClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "createProductClearMsg");
   }
 
   // Api Calls --------------------------------------------

@@ -10,8 +10,6 @@ import Spinner from "../../../components/Spinner";
 import ProductForm from "./components/ProductForm";
 // helpers
 import createEditState from "./helpers/createEditState";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { startLoading, showOverlay, serverMsg } from "../../../actions/ui";
 import {
@@ -31,8 +29,7 @@ class EditProduct extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "editProductClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "editProductClearMsg");
   }
 
   // Api Calls ----------------------------------------

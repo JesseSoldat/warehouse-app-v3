@@ -29,10 +29,11 @@ export const startRegister = (user, history) => async dispatch => {
   }
 };
 
-export const login = (_id, token) => ({
+export const login = (_id, token, role) => ({
   type: AUTH_LOGIN,
   _id,
-  token
+  token,
+  role
 });
 
 export const startLogin = user => async dispatch => {
@@ -42,14 +43,14 @@ export const startLogin = user => async dispatch => {
     const { msg, payload, options } = res.data;
 
     if (payload) {
-      const { _id, token, expires } = payload;
+      const { _id, token, expires, role } = payload;
 
       // axios headers
       setAxiosHeader(token);
       // set user to local storage
       localStorage.setItem("user", JSON.stringify({ _id, token, expires }));
 
-      dispatch(login(_id, token));
+      dispatch(login(_id, token, role));
     }
 
     checkForMsg(msg, dispatch, options, "authActionStartLogin");
@@ -133,7 +134,7 @@ export const startLogout = () => async dispatch => {
     // remove user to local storage
     localStorage.removeItem("user");
 
-    dispatch({ type: AUTH_LOGOUT, _id: null, token: null });
+    dispatch({ type: AUTH_LOGOUT, _id: null, token: null, role: null });
 
     checkForMsg(msg, dispatch, options, "authActionStartLogout");
   } catch (err) {

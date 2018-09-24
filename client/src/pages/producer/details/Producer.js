@@ -9,8 +9,6 @@ import TopRowBtns from "../../../components/TopRowBtns";
 import SingleFieldList from "../../../components/SingleFieldList";
 // helpers
 import producerListData from "./helpers/producerListData";
-// utils
-import clearUiMsg from "../../../utils/clearUiMsg";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
@@ -26,8 +24,7 @@ class Producer extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    // check to see if the UiMsg should be cleared
-    clearUiMsg({ msg, serverMsg, from: "producerDetailsClearMsg" });
+    if (msg.color === "danger") serverMsg(null, "producerDetailsClearMsg");
   }
 
   // APi Calls ----------------------------------------
