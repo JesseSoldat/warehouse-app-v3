@@ -115,7 +115,7 @@ export default (state = initialState, action) => {
 
     rackCopy = state.rack ? { ...state.rack } : null;
 
-    if (!rackCopy && rackCopy._id !== rackId) {
+    if (!rackCopy || rackCopy._id !== rackId) {
       console.log("STORE Rack is null || rackId does not match");
       storagesCopy = [];
       rackCopy = null;

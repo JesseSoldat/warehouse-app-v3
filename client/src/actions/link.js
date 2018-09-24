@@ -125,10 +125,11 @@ export const linkItems = (obj, history) => async dispatch => {
         );
         break;
     }
-    console.log("FINISHED ACTION CODE");
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
+    console.log("Err: Link Action - linkItems", err);
+
     axiosResponseErrorHandling(err, dispatch, "link", `${type1} to ${type2}`);
   }
 };

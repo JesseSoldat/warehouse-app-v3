@@ -33,7 +33,7 @@ export const unlinkProduct = (obj, product) => async dispatch => {
         errMsg = "product from box";
         break;
       default:
-        throw new Error("An error occured while trying to unlink the product.");
+        throw new Error("An error ocurred while trying to unlink the product.");
     }
 
     const res = await axios.patch(apiUrl, obj);
@@ -43,7 +43,8 @@ export const unlinkProduct = (obj, product) => async dispatch => {
     const { shelfSpot } = payload;
 
     const updatedProduct = { ...product };
-    updatedProduct.productLocation = {};
+    updatedProduct.productLocation = null;
+    console.log("Unlink UpdatedProduct", updatedProduct);
 
     dispatch(productLoaded(updatedProduct));
     dispatch(unlinkProductFromShelfSpot({ shelfSpot }));
@@ -51,6 +52,8 @@ export const unlinkProduct = (obj, product) => async dispatch => {
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {
+    console.log("Err: Unlink Action - unlinkProduct", err);
+
     axiosResponseErrorHandling(err, dispatch, "unlink", errMsg);
   }
 };
