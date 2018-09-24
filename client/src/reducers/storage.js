@@ -408,14 +408,8 @@ export default (state = initialState, action) => {
     // ---------- UPDATE STORE Storages and Rack with ShelfSpot ---------
     // API returns update = { shelfSpot }
     // ------------------------ UNLINK & LINK ----------------------------
-    case UNLINK_BOX_FROM_SHELFSPOT:
     case UNLINK_PRODUCT_FROM_SHELFSPOT:
-    case BOX_DELETE_ONE_WITH_LOCATION:
-    case BOX_CREATE_ONE_LINK:
-    case LINK_BOX_TO_SHELFSPOT:
     case LINK_PRODUCT_TO_SHELFSPOT:
-      console.log("UPDATE STORE Storages and Rack with ShelfSpot", update);
-
       findShelfSpotInRackAndUpdate(update.shelfSpot);
 
       return {
@@ -425,6 +419,11 @@ export default (state = initialState, action) => {
         rack: rackCopy
       };
 
+    // ---------------- Box -------------------
+    case BOX_DELETE_ONE_WITH_LOCATION:
+    case BOX_CREATE_ONE_LINK:
+    case LINK_BOX_TO_SHELFSPOT:
+    case UNLINK_BOX_FROM_SHELFSPOT:
     case BOX_UPDATE_ONE:
       return {
         ...state,

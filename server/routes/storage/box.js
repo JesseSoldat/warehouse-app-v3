@@ -12,7 +12,8 @@ const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
 const {
   getAllBoxesWithLocations,
-  getBoxWithLocation
+  getBoxWithLocation,
+  linkItemToBoxPopIds
 } = require("../queries/box");
 const {
   linkItemToShelfSpotPopIds,
@@ -105,17 +106,19 @@ module.exports = (app, io) => {
   // POST BOX with location
   app.post("/api/boxes/link/:shelfSpotId", isAuth, async (req, res) => {
     const { shelfSpotId } = req.params;
-    const box = new Box(req.body);
+    let box = new Box(req.body);
     try {
-      const [updateBox, shelfSpot] = await Promise.all([
+      const [updatedBox, shelfSpot] = await Promise.all([
         box.save(),
         linkItemToShelfSpotPopIds(shelfSpotId, "box", box._id)
       ]);
 
+      box = await linkItemToBoxPopIds(box._id, "shelfSpot", shelfSpotId);
+
       emit(req.user._id);
 
       const msg = msgObj("Box created.", "blue", "hide-3");
-      serverRes(res, 200, msg, { box: updateBox, shelfSpot });
+      serverRes(res, 200, msg, { box, shelfSpot });
     } catch (err) {
       console.log("ERR: POST/BOX/WithLocation", err);
 

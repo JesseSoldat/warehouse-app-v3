@@ -12,7 +12,7 @@ const BoxTable = ({
   ids,
   removeFromShelfSpot
 }) => {
-  // console.log("Box:", box);
+  console.log("Box:", box);
 
   const { boxLabel, storedItems = [], _id: boxId } = box;
 

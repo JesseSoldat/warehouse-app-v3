@@ -51,7 +51,9 @@ const unlinkProductFromBox = (boxId, productId) => {
     boxId,
     { $pull: { storedItems: productId } },
     { new: true }
-  );
+  )
+    .populate(boxLocationQuery)
+    .populate("storedItems");
 };
 
 const unlinkShelfSpotFromBox = boxId => {
@@ -59,7 +61,7 @@ const unlinkShelfSpotFromBox = boxId => {
     boxId,
     { $set: { shelfSpot: null } },
     { new: true }
-  );
+  ).populate("storedItems");
 };
 
 module.exports = {

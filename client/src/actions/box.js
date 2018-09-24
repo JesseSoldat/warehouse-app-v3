@@ -89,6 +89,8 @@ export const startCreateBox = (obj, history) => async dispatch => {
     const { boxLabel, params } = obj;
     const { storageId, rackId, shelfId, shelfSpotId } = params;
 
+    console.log(params);
+
     let apiUrl;
 
     // Manual Link allows a user to create a box and link it
@@ -100,7 +102,7 @@ export const startCreateBox = (obj, history) => async dispatch => {
 
     const { msg, payload, options } = res.data;
 
-    const boxId = payload._id;
+    const boxId = payload.box._id;
 
     shelfSpotId
       ? dispatch(createBoxAndLink(payload))
@@ -114,6 +116,8 @@ export const startCreateBox = (obj, history) => async dispatch => {
     shelfSpotId
       ? (historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`)
       : (historyUrl = `/box/${boxId}?type=box`);
+
+    console.log("historyUrl", historyUrl);
 
     history.push(historyUrl);
   } catch (err) {
