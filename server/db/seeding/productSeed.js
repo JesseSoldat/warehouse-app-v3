@@ -30,12 +30,12 @@ const createProducts = () => ({
   packagingPictures: generateArray(randomMinMaxNum(1, 6), "image"),
   productPictures: generateArray(randomMinMaxNum(1, 11), "avatar"),
   // objects
-  productMeasurments: {
+  productMeasurements: {
     prodHeight: randomMinMaxNum(5, 25),
     prodWidth: randomMinMaxNum(5, 25),
     prodLength: randomMinMaxNum(5, 25)
   },
-  packagingMeasurments: {
+  packagingMeasurements: {
     packHeight: randomMinMaxNum(5, 25),
     packWidth: randomMinMaxNum(5, 25),
     packLength: randomMinMaxNum(5, 25)

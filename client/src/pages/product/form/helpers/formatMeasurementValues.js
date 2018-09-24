@@ -11,13 +11,13 @@ const formatMeasurmentsValues = (type, state) => {
   const obj = {};
 
   switch (type) {
-    case "productMeasurments":
+    case "productMeasurements":
       obj["prodHeight"] = parseInt(prodHeight, 10) || 0;
       obj["prodWidth"] = parseInt(prodWidth, 10) || 0;
       obj["prodLength"] = parseInt(prodLength, 10) || 0;
       break;
 
-    case "packagingMeasurments":
+    case "packagingMeasurements":
       obj["packHeight"] = parseInt(packHeight, 10) || 0;
       obj["packWidth"] = parseInt(packWidth, 10) || 0;
       obj["packLength"] = parseInt(packLength, 10) || 0;

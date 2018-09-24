@@ -10,6 +10,7 @@ const formatFormValues = state => {
     price,
     pointOfBuy,
     weight,
+    quantity,
     manufacturingDate,
     dateCheckbox,
     amountOfPieces,
@@ -29,14 +30,15 @@ const formatFormValues = state => {
     pointOfBuy: pointOfBuy || "",
     amountOfPieces: amountOfPieces || 0,
     weight: weight || 0,
+    quantity: quantity || 1,
 
     productMaterial: splitStrToArray(productMaterial, ",") || [],
     comments: splitStrToArray(comments, ",") || [],
 
-    productMeasurments:
-      formatMeasurementValues("productMeasurments", state) || {},
-    packagingMeasurments:
-      formatMeasurementValues("packagingMeasurments", state) || {},
+    productMeasurements:
+      formatMeasurementValues("productMeasurements", state) || {},
+    packagingMeasurements:
+      formatMeasurementValues("packagingMeasurements", state) || {},
 
     producerId: selectedProducer.value || "",
     customerIds: selectedCustomers.map(obj => obj.value) || []

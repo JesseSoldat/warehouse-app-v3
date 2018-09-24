@@ -1,13 +1,13 @@
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
-const ProductMeasurmentsSchema = new Schema({
+const ProductMeasurementsSchema = new Schema({
   prodHeight: { type: Number, default: 0 },
   prodWidth: { type: Number, default: 0 },
   prodLength: { type: Number, default: 0 }
 });
 
-const PackagingMeasurmentsSchema = new Schema({
+const PackagingMeasurementsSchema = new Schema({
   packHeight: { type: Number, default: 0 },
   packWidth: { type: Number, default: 0 },
   packLength: { type: Number, default: 0 }
@@ -33,8 +33,8 @@ const ProductSchema = new Schema(
     // Date
     manufacturingDate: { type: Date },
     // Ref to Schema
-    productMeasurments: { type: ProductMeasurmentsSchema },
-    packagingMeasurments: { type: PackagingMeasurmentsSchema },
+    productMeasurements: { type: ProductMeasurementsSchema },
+    packagingMeasurements: { type: PackagingMeasurementsSchema },
     // Ref to Model
     producer: { type: Schema.Types.ObjectId, ref: "producer" },
     customer: [{ type: Schema.Types.ObjectId, ref: "customer" }],

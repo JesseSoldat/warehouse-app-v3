@@ -11,12 +11,12 @@ import TopRowBtns from "../../../components/TopRowBtns";
 import InfoCard from "./components/InfoCard";
 import LocationCard from "./components/LocationCard";
 import ToggleListCard from "./components/ToggleListCard";
-import MeasurmentCard from "./components/MeasurmentCard";
+import MeasurementCard from "./components/MeasurementCard";
 import ClientsCard from "./components/ClientsCard";
 // helpers
 import createDetailsArray from "./helpers/createDetailsArray";
 import createLocationObj from "./helpers/createLocationObj";
-import createMeasurmentsArray from "./helpers/createMeasurmentsArray";
+import createMeasurementsArray from "./helpers/createMeasurementsArray";
 import createProducerArray from "./helpers/createProducerArray";
 import createCustomersArray from "./helpers/createCustomersArray";
 // utils
@@ -129,8 +129,8 @@ class Product extends Component {
         customer: customers,
         // obj ----------
         producer,
-        packagingMeasurments,
-        productMeasurments,
+        packagingMeasurements,
+        productMeasurements,
         productLocation
       } = product;
 
@@ -147,10 +147,10 @@ class Product extends Component {
       const productDetails = createDetailsArray(product);
       // Location Card
       const locationDetails = createLocationObj(productLocation, productId);
-      // MeasurmentCard
-      const measurmentDetails = createMeasurmentsArray(
-        productMeasurments,
-        packagingMeasurments
+      // MeasurementCard
+      const measurementDetails = createMeasurementsArray(
+        productMeasurements,
+        packagingMeasurements
       );
       // ClientsCard
       const producerDetails = createProducerArray(producer);
@@ -178,8 +178,8 @@ class Product extends Component {
           <ToggleListCard array={comments} label="Comments" />
           <ToggleListCard array={productMaterial} label="Materials" />
 
-          {measurmentDetails.map((array, i) => (
-            <MeasurmentCard array={array} key={i} />
+          {measurementDetails.map((array, i) => (
+            <MeasurementCard array={array} key={i} />
           ))}
 
           <ClientsCard array={producerDetails} />

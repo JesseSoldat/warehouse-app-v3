@@ -12,6 +12,12 @@ const SearchInputs = ({
   onInput,
   onSearch
 }) => {
+  const onEnterKey = e => {
+    if (e.key === "Enter") {
+      onSearch();
+    }
+  };
+
   return (
     <div className="row">
       <div className="col-12">
@@ -49,6 +55,7 @@ const SearchInputs = ({
               }
               placeholder="Search by item label"
               onChange={onInput}
+              onKeyPress={onEnterKey}
             />
           </div>
           <div>

@@ -38,7 +38,7 @@ const productFieldData = [
   {
     placeholder: "Product Material",
     name: "productMaterial",
-    info: "Please enter a comma seperated list of Product Materials",
+    info: "Please enter a comma separated list of Product Materials",
     err: null,
     msg: null
   },
@@ -52,7 +52,7 @@ const productFieldData = [
   {
     placeholder: "Comments",
     name: "comments",
-    info: "Please enter a comma seperated list of Comments",
+    info: "Please enter a comma separated list of Comments",
     err: null,
     msg: null
   },

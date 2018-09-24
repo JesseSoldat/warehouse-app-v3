@@ -73,8 +73,16 @@ class BoxEdit extends Component {
       this.props.startGetBox(boxId);
     }
     // Box with Location -------------------------
-    // Rack is NOT present in the STORE or rackId does not match
-    else if (!rack || rack._id !== rackId) {
+    // Rack is NOT present in the STORE
+    else if (!rack) {
+      console.log("Get Box withLocation no Rack in the Store");
+      // Api Calls
+      this.props.startLoading({ from: "boxEditLoadingRack" });
+      this.props.startGetRack(rackId);
+    }
+    // Rack is in the Store but rackId does not match
+    else if (rack && rack._id !== rackId) {
+      console.log("Boxes is on another rack");
       // Api Calls
       this.props.startLoading({ from: "boxEditLoadingRack" });
       this.props.startGetRack(rackId);
@@ -160,7 +168,7 @@ class BoxEdit extends Component {
     }
 
     // BOX HAS LOCATION
-    else if (rack && shelfSpotId) {
+    else if (rack && shelfSpotId && rack._id === rackId) {
       const box = this.findBoxInRack(rack, ids);
       const contentObj = this.renderContent(box.item.boxLabel);
       content = contentObj.content;

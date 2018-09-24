@@ -3,7 +3,7 @@ import React from "react";
 // common components
 import SingleField from "../../../../components/SingleField";
 
-const MeasurmentCard = ({ array }) => {
+const MeasurementCard = ({ array }) => {
   return (
     <div className="card card-body mb-3">
       <div className="row">
@@ -30,4 +30,4 @@ const MeasurmentCard = ({ array }) => {
   );
 };
 
-export default MeasurmentCard;
+export default MeasurementCard;
