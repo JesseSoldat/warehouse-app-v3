@@ -39,7 +39,7 @@ class Products extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "productsClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "productsClearMsg");
   }
 
   // api calls ----------------------------------

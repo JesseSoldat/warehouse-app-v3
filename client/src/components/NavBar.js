@@ -9,7 +9,7 @@ import DropdownLink from "./links/DropdownLink";
 import { showOverlay } from "../actions/ui";
 import { startLogout } from "../actions/auth";
 
-const NavBar = ({ isAuth, startLogout }) => {
+const NavBar = ({ isAuth, role, startLogout }) => {
   const brand = (
     <SiteLink
       text="Warehouse"
@@ -63,12 +63,14 @@ const NavBar = ({ isAuth, startLogout }) => {
         <SiteLink text="Storage" icon="fa-archive" />
       </li>
 
-      <li className={`dropdown ${navLinkClass}`}>
-        <MenuLink text="Admin" icon="fa-unlock-alt" />
-        <div className="dropdown-menu" aria-labelledby="navbarDropdown">
-          <DropdownLink text="Manage User" />
-        </div>
-      </li>
+      {role === "admin" && (
+        <li className={`dropdown ${navLinkClass}`}>
+          <MenuLink text="Admin" icon="fa-unlock-alt" />
+          <div className="dropdown-menu" aria-labelledby="navbarDropdown">
+            <DropdownLink text="Manage User" />
+          </div>
+        </li>
+      )}
 
       <li className={navLinkClass}>
         <a href="" onClick={e => onStartLogout(e)}>
@@ -105,6 +107,7 @@ const NavBar = ({ isAuth, startLogout }) => {
 };
 
 const mapStateToProps = ({ auth }) => ({
+  role: auth.role,
   isAuth: !!auth._id
 });
 

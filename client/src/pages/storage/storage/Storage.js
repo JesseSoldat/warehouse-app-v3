@@ -33,7 +33,7 @@ class Storage extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "storageClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "storageClearMsg");
   }
 
   // Store / Api Calls ----------------------------

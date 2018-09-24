@@ -23,7 +23,8 @@ class CreateProducer extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "createProducerClearMsg");
+    if (msg && msg.color === "danger")
+      serverMsg(null, "createProducerClearMsg");
   }
 
   // API Calls

@@ -23,7 +23,7 @@ class EditCustomer extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "editCustomerClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "editCustomerClearMsg");
   }
 
   // Api Calls ----------------------------------

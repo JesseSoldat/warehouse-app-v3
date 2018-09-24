@@ -20,7 +20,7 @@ class Customers extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "customersClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "customersClearMsg");
   }
 
   // Store / Api Calls ----------------------------

@@ -22,7 +22,8 @@ class CreateCustomer extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "createCustomerClearMsg");
+    if (msg && msg.color === "danger")
+      serverMsg(null, "createCustomerClearMsg");
   }
 
   // API Calls

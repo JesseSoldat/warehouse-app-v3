@@ -29,7 +29,7 @@ class CreateProduct extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "createProductClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "createProductClearMsg");
   }
 
   // Api Calls --------------------------------------------

@@ -20,7 +20,7 @@ class Producers extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "producersClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "producersClearMsg");
   }
 
   // Api Calls --------------------------------------

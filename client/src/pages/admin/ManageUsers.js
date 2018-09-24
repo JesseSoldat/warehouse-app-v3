@@ -23,7 +23,7 @@ class ManageUsers extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "manageUserClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "manageUserClearMsg");
   }
 
   // Api / Store  ---------------------------------------------

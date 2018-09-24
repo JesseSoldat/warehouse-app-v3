@@ -29,7 +29,7 @@ class EditProduct extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
-    if (msg.color === "danger") serverMsg(null, "editProductClearMsg");
+    if (msg && msg.color === "danger") serverMsg(null, "editProductClearMsg");
   }
 
   // Api Calls ----------------------------------------
