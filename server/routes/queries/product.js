@@ -17,7 +17,7 @@ const productLocationQuery = {
   }
 };
 // LINK --------------------------------------------------------------
-const linkItemToProductPopIds = (productId, item, itemId) => {
+const linkItemToProductWithLocation = (productId, item, itemId) => {
   return Product.findByIdAndUpdate(
     productId,
     {
@@ -44,6 +44,6 @@ const removeLocationFromProduct = productId => {
 };
 
 module.exports = {
-  linkItemToProductPopIds,
+  linkItemToProductWithLocation,
   removeLocationFromProduct
 };

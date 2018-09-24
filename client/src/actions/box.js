@@ -16,11 +16,9 @@ export const BOX_UPDATE_ONE = "BOX_UPDATE_ONE";
 export const BOX_DELETE_ONE = "BOX_DELETE_ONE";
 export const BOX_DELETE_ONE_WITH_LOCATION = "BOX_DELETE_ONE_WITH_LOCATION";
 
-// Rest Boxes
 export const resetBox = () => ({
   type: BOXES_RESET
 });
-
 // Get All Boxes
 export const boxesRequested = () => ({
   type: BOXES_REQUESTED
@@ -39,6 +37,8 @@ export const startGetBoxes = query => async dispatch => {
 
     const { msg, options, payload } = res.data;
 
+    // payload = { boxes, query }
+
     dispatch(boxesLoaded(payload));
 
     checkForMsg(msg, dispatch, options);
@@ -52,7 +52,7 @@ export const boxRequested = () => ({
   type: BOX_REQUESTED
 });
 
-export const boxLoaded = box => ({
+export const boxLoaded = ({ box }) => ({
   type: BOX_LOADED,
   storageType: "box",
   box
@@ -64,6 +64,8 @@ export const startGetBox = boxId => async dispatch => {
     const res = await axios.get(`/api/boxes/${boxId}`);
 
     const { msg, options, payload } = res.data;
+
+    // payload = { box }
 
     dispatch(boxLoaded(payload));
 
@@ -89,8 +91,6 @@ export const startCreateBox = (obj, history) => async dispatch => {
     const { boxLabel, params } = obj;
     const { storageId, rackId, shelfId, shelfSpotId } = params;
 
-    console.log(params);
-
     let apiUrl;
 
     // Manual Link allows a user to create a box and link it
@@ -101,6 +101,8 @@ export const startCreateBox = (obj, history) => async dispatch => {
     const res = await axios.post(apiUrl, { boxLabel });
 
     const { msg, payload, options } = res.data;
+
+    // payload = { box } || { box, shelfSpot }
 
     const boxId = payload.box._id;
 
@@ -117,10 +119,9 @@ export const startCreateBox = (obj, history) => async dispatch => {
       ? (historyUrl = `/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`)
       : (historyUrl = `/box/${boxId}?type=box`);
 
-    console.log("historyUrl", historyUrl);
-
     history.push(historyUrl);
   } catch (err) {
+    console.log("Box Action - startCreateBox Err:", err);
     axiosResponseErrorHandling(err, dispatch, "post", "box");
   }
 };
@@ -136,6 +137,8 @@ export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
     const res = await axios.patch(`/api/boxes/${boxId}`, obj);
 
     const { msg, payload, options } = res.data;
+
+    // payload = { box }
 
     const { storageId, rackId, shelfId, shelfSpotId } = ids;
 
@@ -181,6 +184,8 @@ export const startDeleteBox = (
     const res = await axios.delete(apiUrl);
 
     const { msg, options, payload } = res.data;
+
+    // payload = { boxId }
 
     history.push(historyUrl);
 

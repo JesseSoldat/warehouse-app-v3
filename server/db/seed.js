@@ -32,5 +32,5 @@ const seedDb = async () => {
   }
 };
 
-// Uncomment to seed db
+// Un-comment to seed db
 // seedDb();

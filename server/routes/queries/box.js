@@ -20,7 +20,7 @@ const boxLocationQuery = {
 
 // GET ---------------------------------------------------------
 // BOXES with and without a LOCATION
-const getAllBoxesWithLocations = (skip, limit, mongoQuery = {}) => {
+const getAllBoxesWithLocation = (skip, limit, mongoQuery = {}) => {
   return Box.find(mongoQuery, ["_id", "boxLabel"])
     .skip(skip)
     .limit(limit)
@@ -35,10 +35,26 @@ const getBoxWithLocation = boxId => {
 };
 
 // LINK --------------------------------------------------------
-const linkItemToBoxPopIds = (boxId, item, itemId) => {
+
+const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
   return Box.findByIdAndUpdate(
     boxId,
-    { $set: { [item]: itemId } },
+    { $set: { shelfSpot: itemId } },
+    { new: true }
+  )
+    .populate(boxLocationQuery)
+    .populate("storedItems");
+};
+
+const productToBoxWithLocation = async (productId, boxId) => {
+  const box = await Box.findById(boxId);
+  console.log(box);
+
+  return Box.findByIdAndUpdate(
+    boxId,
+    {
+      $push: { storedItems: productId }
+    },
     { new: true }
   )
     .populate(boxLocationQuery)
@@ -65,9 +81,10 @@ const unlinkShelfSpotFromBox = boxId => {
 };
 
 module.exports = {
-  getAllBoxesWithLocations,
+  getAllBoxesWithLocation,
   getBoxWithLocation,
-  linkItemToBoxPopIds,
+  linkShelfSpotToBoxWithLocation,
+  productToBoxWithLocation,
   unlinkProductFromBox,
   unlinkShelfSpotFromBox
 };

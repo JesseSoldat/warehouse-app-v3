@@ -1,8 +1,6 @@
 import {
   BOXES_RESET,
-  BOXES_REQUESTED,
   BOXES_LOADED,
-  BOX_REQUESTED,
   BOX_LOADED,
   BOX_CREATE_ONE,
   BOX_CREATE_ONE_LINK,
@@ -13,22 +11,20 @@ import {
 import { LINK_BOX_TO_SHELFSPOT, LINK_PRODUCT_TO_BOX } from "../actions/link";
 import { UNLINK_BOX_FROM_SHELFSPOT } from "../actions/unlink";
 
+const initialQuery = {
+  page: 1,
+  skip: 0,
+  limit: 20,
+  count: 0, // can be filtered
+  totalCount: 0, // all of the boxes
+  value: null,
+  searchType: "string"
+};
+
 const initialState = {
   boxes: [],
-  boxesRequsted: false,
-  boxesLoaded: false,
   box: null,
-  boxRequsted: false,
-  boxLoaded: false,
-  query: {
-    page: 1,
-    skip: 0,
-    limit: 20,
-    count: 0, // can be filtered
-    totalCount: 0, // all of the boxes
-    value: null,
-    searchType: "string"
-  }
+  query: initialQuery
 };
 
 export default (state = initialState, action) => {
@@ -37,54 +33,24 @@ export default (state = initialState, action) => {
   switch (type) {
     case BOXES_RESET:
       return {
-        ...state,
         boxes: [],
-        boxesRequsted: false,
-        boxesLoaded: false,
         box: null,
-        boxRequsted: false,
-        boxLoaded: false,
-        query: {
-          page: 1,
-          skip: 0,
-          limit: 20,
-          count: 0, // can be filtered
-          totalCount: 0, // all of the boxes
-          value: null,
-          searchType: "string"
-        }
-      };
-    // --------------------- GET BOXES ----------------------
-    case BOXES_REQUESTED:
-      return {
-        ...state,
-        boxesRequsted: true,
-        boxesLoaded: false
+        query: initialQuery
       };
 
+    // --------------------- GET BOXES ----------------------
     case BOXES_LOADED:
-      // console.log("BOXES_LOADED", boxes[1]);
       return {
         ...state,
         boxes,
-        boxesRequsted: false,
-        boxesLoaded: true,
+        box: null,
         query
       };
     // ----------------------- GET BOX ----------------------
-    case BOX_REQUESTED:
-      return {
-        ...state,
-        boxRequsted: true,
-        boxLoaded: false
-      };
-
     case BOX_LOADED:
       return {
         ...state,
-        box,
-        boxRequsted: false,
-        boxLoaded: true
+        box
       };
     // ----------------------- CREATE ----------------------
     case BOX_CREATE_ONE:
@@ -100,7 +66,7 @@ export default (state = initialState, action) => {
       return {
         ...state,
         boxes: [],
-        box: null
+        box
       };
     // ----------------------- UPDATE ----------------------
     case BOX_UPDATE_ONE:

@@ -1,6 +1,5 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import { withRouter } from "react-router-dom";
 
 // common components
 import Spinner from "../../../components/Spinner";
@@ -10,7 +9,7 @@ import Heading from "../../../components/Heading";
 import BoxTable from "./components/BoxTable";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
-import { startGetBox } from "../../../actions/box";
+import { startGetBox, boxLoaded } from "../../../actions/box";
 import { unlinkBox } from "../../../actions/unlink";
 
 class Box extends Component {
@@ -31,13 +30,15 @@ class Box extends Component {
     // Check for Box in the Store
     if (box && box._id === boxId) return;
 
-    let isBoxInBoxes;
-    // Check for box in boxes
+    let boxFromBoxes;
+    // Check for Box in Boxes in the Store
     if (boxes && boxes.length > 0) {
-      isBoxInBoxes = boxes.find(box => box._id === boxId);
-      console.log(isBoxInBoxes);
+      boxFromBoxes = boxes.find(box => box._id === boxId);
     }
 
+    if (boxFromBoxes) {
+      return this.props.boxLoaded(boxFromBoxes);
+    }
     // Api Calls
     this.props.startLoading({ from: "boxLoadingBox" });
     this.props.startGetBox(boxId);
@@ -98,9 +99,10 @@ export default connect(
   mapStateToProps,
   {
     unlinkBox,
+    boxLoaded,
     serverMsg,
     showOverlay,
     startLoading,
     startGetBox
   }
-)(withRouter(Box));
+)(Box);

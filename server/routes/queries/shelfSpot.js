@@ -30,7 +30,7 @@ const storedItemsQuery = {
 };
 
 // LINK -------------------------------------------------------
-const linkItemToShelfSpotPopIds = (shelfSpotId, item, itemId) => {
+const linkItemToShelfSpotWithLocation = (shelfSpotId, item, itemId) => {
   return ShelfSpot.findByIdAndUpdate(
     shelfSpotId,
     {
@@ -55,4 +55,4 @@ const unlinkItemFromShelfSpot = (shelfSpotId, itemId) => {
     .populate(storedItemsQuery);
 };
 
-module.exports = { linkItemToShelfSpotPopIds, unlinkItemFromShelfSpot };
+module.exports = { linkItemToShelfSpotWithLocation, unlinkItemFromShelfSpot };

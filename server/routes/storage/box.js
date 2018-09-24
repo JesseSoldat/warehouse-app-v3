@@ -11,12 +11,12 @@ const mergeObjFields = require("../../utils/mergeObjFields");
 const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
 const {
-  getAllBoxesWithLocations,
+  getAllBoxesWithLocation,
   getBoxWithLocation,
-  linkItemToBoxPopIds
+  linkShelfSpotToBoxWithLocation
 } = require("../queries/box");
 const {
-  linkItemToShelfSpotPopIds,
+  linkItemToShelfSpotWithLocation,
   unlinkItemFromShelfSpot
 } = require("../queries/shelfSpot");
 
@@ -50,7 +50,7 @@ module.exports = (app, io) => {
 
     try {
       const [boxes, count, totalCount] = await Promise.all([
-        getAllBoxesWithLocations(skip, limit, mongoQuery),
+        getAllBoxesWithLocation(skip, limit, mongoQuery),
         Box.find(mongoQuery).countDocuments(),
         Box.find({}).countDocuments()
       ]);
@@ -73,7 +73,7 @@ module.exports = (app, io) => {
     try {
       const box = await getBoxWithLocation(boxId);
 
-      serverRes(res, 200, null, box);
+      serverRes(res, 200, null, { box });
     } catch (err) {
       console.log("Err: GET/SINGLE BOX NO LOCATION", err);
 
@@ -82,10 +82,11 @@ module.exports = (app, io) => {
     }
   });
 
-  // -------------------------- CREATE NEW BOX --------------------------------
+  // -------------------- CREATE NEW BOX ----------------------------
   // POST BOX with no location
   app.post("/api/boxes", isAuth, async (req, res) => {
     const box = new Box(req.body);
+    console.log(box);
 
     try {
       await box.save();
@@ -94,7 +95,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("Box created.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, box);
+      serverRes(res, 200, msg, { box });
     } catch (err) {
       console.log("ERR: POST/BOX", err);
 
@@ -110,10 +111,10 @@ module.exports = (app, io) => {
     try {
       const [updatedBox, shelfSpot] = await Promise.all([
         box.save(),
-        linkItemToShelfSpotPopIds(shelfSpotId, "box", box._id)
+        linkItemToShelfSpotWithLocation(shelfSpotId, "box", box._id)
       ]);
 
-      box = await linkItemToBoxPopIds(box._id, "shelfSpot", shelfSpotId);
+      box = await linkShelfSpotToBoxWithLocation(box._id, shelfSpotId);
 
       emit(req.user._id);
 
