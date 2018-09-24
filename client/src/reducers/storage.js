@@ -17,6 +17,7 @@ import {
   RACK_UPDATE_ONE,
   RACK_DELETE_ONE
 } from "../actions/storage";
+import { BOX_UPDATE_ONE } from "../actions/box";
 import {
   LINK_BOX_TO_SHELFSPOT,
   LINK_PRODUCT_TO_SHELFSPOT
@@ -422,6 +423,13 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         storageIdsEntity: null,
         rack: rackCopy
+      };
+
+    case BOX_UPDATE_ONE:
+      return {
+        ...state,
+        storages: [],
+        rack: null
       };
 
     default:

@@ -7,31 +7,27 @@ import CardList from "../../../../components/cards/CardList";
 import productCardData from "../helpers/productCardData";
 
 const BoxTable = ({
-  // both
-  location,
+  box,
   // have location
   ids,
-  rack,
-  // no location
-  items,
-  boxId,
-  boxLabel,
-  // cb
   removeFromShelfSpot
 }) => {
-  let storedItems = [];
+  // console.log("Box:", box);
 
-  // NO location ----------------------------------------------
+  const { boxLabel, storedItems = [], _id: boxId } = box;
+
+  const hasLocation = box.shelfSpot ? true : false;
+
+  // ---------------------------- No Location ---------------------------------------
   // default URL for when the box has no location
   let editUrl = `/box/edit/${boxId}?type=box&location=false`;
   let boxToSpotUrl = `/barcode/scan/box/${boxId}?type=linkBoxToSpot&location=false`;
   let productToBoxUrl = `/barcode/scan/box/${boxId}?type=linkProductToBox&location=false`;
   let barcodeUrl = `/barcode/create/box/${boxId}?type=box`;
+
   let notStored;
-  if (!location) {
-    if (items) {
-      storedItems = items;
-    }
+
+  if (!hasLocation) {
     notStored = (
       <tr className="py-4">
         <td>
@@ -47,11 +43,9 @@ const BoxTable = ({
       </tr>
     );
   }
-  // have location --------------------------------------
-  let label = boxLabel;
-  let shelf, shelfSpot, box;
 
-  if (location) {
+  // ------------------------------- Has location ------------------------------------
+  if (hasLocation) {
     const { storageId, rackId, shelfId, shelfSpotId, boxId } = ids;
 
     // change the URL for a box with a location
@@ -59,28 +53,15 @@ const BoxTable = ({
     boxToSpotUrl = `/barcode/scan/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkBoxToSpot&location=true`;
     productToBoxUrl = `/barcode/scan/box/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=linkProductToBox&location=true`;
     barcodeUrl = `/barcode/create/${storageId}/${rackId}/${shelfId}/${shelfSpotId}/${boxId}?type=box`;
-
-    // get the BOX from the RACK object
-    shelf = rack.shelves.find(shelf => shelf._id === shelfId);
-
-    shelfSpot = shelf.shelfSpots.find(spot => spot._id === shelfSpotId);
-
-    box = shelfSpot.storedItems.find(
-      storedItem => storedItem.item._id === boxId
-    );
-
-    if (box && box.item) {
-      label = box.item.boxLabel;
-      storedItems = box.item.storedItems || [];
-    }
   }
 
-  // have products --------------------------------------------
-  let haveProducts;
+  // ---------------------------------- Has Products ------------------------------------
+  let hasProducts;
   if (storedItems.length > 0) {
-    haveProducts = <CardList data={productCardData(storedItems)} />;
+    hasProducts = <CardList data={productCardData(storedItems)} />;
   }
-  // no products ------------------------------------------------
+
+  // ---------------------------------- No Products ------------------------------------------
   let noProducts;
   if (storedItems.length === 0) {
     noProducts = (
@@ -102,7 +83,7 @@ const BoxTable = ({
   return (
     <div className="card card-body mb-3" style={{ minHeight: "400px" }}>
       <div className="d-flex flex-wrap justify-content-between mb-3">
-        {location ? (
+        {hasLocation ? (
           <button
             className="btn btn-default m-1 mr-2"
             onClick={removeFromShelfSpot}
@@ -110,7 +91,7 @@ const BoxTable = ({
             <i className="fas fa-minus-circle mr-2" /> Remove from Shelf Spot
           </button>
         ) : (
-          <h2 className="my-2 ml-2">Box {label}</h2>
+          <h2 className="my-2 ml-2">Box {boxLabel}</h2>
         )}
 
         <div>
@@ -127,10 +108,10 @@ const BoxTable = ({
         </div>
       </div>
 
-      {location && (
+      {hasLocation && (
         <div className="row">
           <div className="col-12">
-            <h2 className="my-2 ml-2">Box {label}</h2>
+            <h2 className="my-2 ml-2">Box {boxLabel}</h2>
           </div>
         </div>
       )}
@@ -144,7 +125,7 @@ const BoxTable = ({
         </table>
       </div>
 
-      {haveProducts}
+      {hasProducts}
     </div>
   );
 };

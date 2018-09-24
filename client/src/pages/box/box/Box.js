@@ -10,7 +10,6 @@ import Heading from "../../../components/Heading";
 import BoxTable from "./components/BoxTable";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
-import { startGetRack } from "../../../actions/storage";
 import { startGetBox } from "../../../actions/box";
 import { unlinkBox } from "../../../actions/unlink";
 
@@ -21,29 +20,27 @@ class Box extends Component {
   }
 
   componentWillUpdate() {
-    if (!this.props.rack || !this.props.box) this.getBox();
+    this.getBox();
   }
 
   // Api calls ----------------------------
   getBox = () => {
-    const { match, rack, box } = this.props;
+    const { match, box, boxes } = this.props;
+    const { boxId } = match.params;
 
-    // -------------- Box has NO location ----------------
-    if (match.path === "/box/:boxId") {
-      const { boxId } = match.params;
-      // check for box in the store
-      if (box && box._id === boxId) return;
-      this.props.startLoading({ from: "boxLoadingBox" });
-      this.props.startGetBox(boxId);
-    }
-    // ----------------- Box has a Location ----------------
-    else {
-      const { rackId } = match.params;
+    // Check for Box in the Store
+    if (box && box._id === boxId) return;
 
-      if (rack && rack._id === rackId) return;
-      this.props.startLoading({ from: "boxLoadingRack" });
-      this.props.startGetRack(rackId);
+    let isBoxInBoxes;
+    // Check for box in boxes
+    if (boxes && boxes.length > 0) {
+      isBoxInBoxes = boxes.find(box => box._id === boxId);
+      console.log(isBoxInBoxes);
     }
+
+    // Api Calls
+    this.props.startLoading({ from: "boxLoadingBox" });
+    this.props.startGetBox(boxId);
   };
 
   // Events and Cbs ---------------------------------------
@@ -59,7 +56,7 @@ class Box extends Component {
   // Render ---------------------------------------
   render() {
     // props
-    const { loading, rack, box, match } = this.props;
+    const { loading, box, match } = this.props;
     const { storageId, rackId, shelfId, shelfSpotId, boxId } = match.params;
     const ids = { storageId, rackId, shelfId, shelfSpotId, boxId };
 
@@ -67,33 +64,15 @@ class Box extends Component {
 
     if (loading) {
       content = <Spinner />;
-    }
-    // NO location
-    else if (match.path === "/box/:boxId") {
-      // Box is in the STORE
-      if (box && box._id === boxId) {
-        content = (
-          <BoxTable
-            items={box.storedItems}
-            boxLabel={box.boxLabel}
-            boxId={boxId}
-            location={false}
-          />
-        );
-      }
-    }
-    // have location
-    else if (match.path !== "/box/:boxId") {
-      if (rack && rack._id === rackId) {
-        content = (
-          <BoxTable
-            ids={ids}
-            rack={rack}
-            location={true}
-            removeFromShelfSpot={this.removeFromShelfSpot}
-          />
-        );
-      }
+    } else if (box && box._id === boxId) {
+      content = (
+        <BoxTable
+          box={box}
+          // used when box has a location
+          ids={ids}
+          removeFromShelfSpot={this.removeFromShelfSpot}
+        />
+      );
     }
 
     return (
@@ -108,10 +87,10 @@ class Box extends Component {
   }
 }
 
-const mapStateToProps = ({ ui, storage, box }) => ({
+const mapStateToProps = ({ ui, box }) => ({
   msg: ui.msg,
-  rack: storage.rack,
   box: box.box,
+  boxes: box.boxes,
   loading: ui.loading
 });
 
@@ -122,7 +101,6 @@ export default connect(
     serverMsg,
     showOverlay,
     startLoading,
-    startGetRack,
     startGetBox
   }
 )(withRouter(Box));

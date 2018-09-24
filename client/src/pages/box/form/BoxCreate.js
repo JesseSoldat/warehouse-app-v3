@@ -11,12 +11,12 @@ import BoxForm from "./components/BoxForm";
 import { showOverlay } from "../../../actions/ui";
 import { startCreateBox } from "../../../actions/box";
 
-const BoxCreate = ({ startCreateBox, history, match }) => {
+const BoxCreate = ({ startCreateBox, history, match, showOverlay }) => {
   // Api Calls ------------------
   const handleSubmit = boxLabel => {
     const { params } = match;
     // Api Calls
-    this.props.showOverlay({ from: "boxCreateShowOverlay" });
+    showOverlay({ from: "boxCreateShowOverlay" });
     startCreateBox({ boxLabel, params }, history);
   };
 

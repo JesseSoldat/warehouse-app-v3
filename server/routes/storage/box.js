@@ -10,7 +10,10 @@ const serverMsg = require("../../utils/serverMsg");
 const mergeObjFields = require("../../utils/mergeObjFields");
 const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
-const { getAllBoxesWithLocations, getBox } = require("../queries/box");
+const {
+  getAllBoxesWithLocations,
+  getBoxWithLocation
+} = require("../queries/box");
 const {
   linkItemToShelfSpotPopIds,
   unlinkItemFromShelfSpot
@@ -63,11 +66,11 @@ module.exports = (app, io) => {
     }
   });
 
-  // Box with NO location
+  // Single Box
   app.get("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
     try {
-      const box = await getBox(boxId);
+      const box = await getBoxWithLocation(boxId);
 
       serverRes(res, 200, null, box);
     } catch (err) {
@@ -168,6 +171,7 @@ module.exports = (app, io) => {
       serverRes(res, 400, msg, null);
     }
   });
+
   // DELETE BOX with location
   app.delete("/api/boxes/:shelfSpotId/:boxId", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.params;

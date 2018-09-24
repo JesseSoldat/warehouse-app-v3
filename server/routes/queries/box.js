@@ -24,28 +24,14 @@ const getAllBoxesWithLocations = (skip, limit, mongoQuery = {}) => {
   return Box.find(mongoQuery, ["_id", "boxLabel"])
     .skip(skip)
     .limit(limit)
-    .populate({
-      path: "shelfSpot",
-      select: ["_id"],
-      populate: {
-        path: "shelf",
-        select: ["_id"],
-        populate: {
-          path: "rack",
-          select: ["_id"],
-          populate: {
-            path: "storage",
-            select: ["_id"]
-          }
-        }
-      }
-    })
+    .populate(boxLocationQuery)
     .populate("storedItems");
 };
 
-// Box with NO LOCATION
-const getBox = boxId => {
-  return Box.findById(boxId, ["_id", "boxLabel"]).populate("storedItems");
+const getBoxWithLocation = boxId => {
+  return Box.findById(boxId, ["_id", "boxLabel"])
+    .populate(boxLocationQuery)
+    .populate("storedItems");
 };
 
 // LINK --------------------------------------------------------
@@ -78,7 +64,7 @@ const unlinkShelfSpotFromBox = boxId => {
 
 module.exports = {
   getAllBoxesWithLocations,
-  getBox,
+  getBoxWithLocation,
   linkItemToBoxPopIds,
   unlinkProductFromBox,
   unlinkShelfSpotFromBox

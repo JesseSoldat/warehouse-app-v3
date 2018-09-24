@@ -110,7 +110,7 @@ class LinkFromBox extends Component {
     this.props.showOverlay({
       from: "linkFromBoxShowOverlayBoxToShelfSpot"
     });
-    this.props.this.props.linkItems(linkObj, this.props.history);
+    this.props.linkItems(linkObj, this.props.history);
   };
 
   // Link Product To Box ---------------------------
