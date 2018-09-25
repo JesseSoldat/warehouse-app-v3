@@ -17,7 +17,7 @@ const {
 } = require("../queries/box");
 const {
   linkItemToShelfSpotWithLocation,
-  unlinkItemFromShelfSpot
+  unlinkItemFromShelfSpotWithLocation
 } = require("../queries/shelfSpot");
 
 const checkForStoredItems = box => {
@@ -176,7 +176,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // DELETE BOX with location
+  // Delete Box with location
   app.delete("/api/boxes/:shelfSpotId/:boxId", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.params;
     let msg;
@@ -189,7 +189,11 @@ module.exports = (app, io) => {
 
       // ------------ no stored items -----------
       // UNLINK Box from ShelfSpot
-      const shelfSpot = await unlinkItemFromShelfSpot(shelfSpotId, boxId);
+      const shelfSpot = await unlinkItemFromShelfSpotWithLocation(
+        shelfSpotId,
+        "box",
+        boxId
+      );
 
       box.remove();
 

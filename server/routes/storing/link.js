@@ -10,7 +10,7 @@ const serverMsg = require("../../utils/serverMsg");
 const { linkItemToProductWithLocation } = require("../queries/product");
 const {
   linkItemToShelfSpotWithLocation,
-  unlinkProductFromShelfSpot,
+  unlinkItemFromShelfSpotWithLocation,
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
 const {
@@ -50,7 +50,7 @@ module.exports = (app, io) => {
     });
   };
   // ------------------------- Linking ------------------------------
-  // Product -> Shelf Spot -----------------------------
+  // Product -> Shelf Spot
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
@@ -78,7 +78,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // Product -> Box ---------------------------------
+  // Product -> Box
   app.patch("/api/link/productToBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
 
@@ -110,7 +110,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // Box -> Shelf Spot ---------------------------------
+  // Box -> Shelf Spot
   app.patch("/api/link/boxToShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
 
@@ -139,7 +139,7 @@ module.exports = (app, io) => {
   });
 
   //------------------------ Re-Linking --------------------------------
-  // Product -> Shelf Spot -----------------------------
+  // Product -> Shelf Spot
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
     const { prevLocation, productId, shelfSpotId } = req.body;
 
@@ -149,7 +149,11 @@ module.exports = (app, io) => {
 
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
-        await unlinkProductFromShelfSpot(oldShelfSpotId, productId);
+        await unlinkItemFromShelfSpotWithLocation(
+          oldShelfSpotId,
+          "product",
+          productId
+        );
       }
       if (kind === "box") {
         const oldBoxId = _id;
@@ -171,7 +175,7 @@ module.exports = (app, io) => {
 
       serverRes(res, 200, msg, { shelfSpot, product });
     } catch (err) {
-      console.log("Err: PATCH/relink/productToShelfSpot,", err);
+      console.log("Err: Patch/relink/productToShelfSpot,", err);
 
       const msg = serverMsg("error", "relink", "product to shelf spot");
 
@@ -179,7 +183,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // Product -> Box ---------------------------------
+  // Product -> Box
   app.patch("/api/relink/productToBox", isAuth, async (req, res) => {
     const { prevLocation, productId, boxId } = req.body;
 
@@ -189,7 +193,11 @@ module.exports = (app, io) => {
 
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
-        await unlinkProductFromShelfSpot(oldShelfSpotId, productId);
+        await unlinkItemFromShelfSpotWithLocation(
+          oldShelfSpotId,
+          "product",
+          productId
+        );
       }
       if (kind === "box") {
         const oldBoxId = _id;
@@ -223,8 +231,8 @@ module.exports = (app, io) => {
     }
   });
 
-  // -------------- SCAN TWO UNKOWN ITEMS CHECK FOR OLD REF -----------------------
-  // Product -> Shelf Spot ---------------------------------------------
+  // ------------ Scan two Unknown Items -----------------------
+  // Product -> Shelf Spot
   app.patch("/api/scan/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
@@ -269,7 +277,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // Product -> Box -----------------------------------------------------
+  // Product -> Box
   app.patch("/api/scan/productToBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
 
@@ -315,7 +323,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // Box -> Shelf Spot ----------------------------------------------
+  // Box -> Shelf Spot
   app.patch("/api/scan/boxToShelfSpot", isAuth, async (req, res) => {
     const { shelfSpotId, boxId } = req.body;
 

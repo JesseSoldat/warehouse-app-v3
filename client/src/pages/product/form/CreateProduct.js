@@ -77,8 +77,8 @@ class CreateProduct extends Component {
     this.props.startCreateProduct(form, this.props.history);
   };
 
-  handleSendMsg = msg => {
-    this.props.serverMsg({ msg, from: "createProductMsg" });
+  clearSeverMsg = () => {
+    this.props.serverMsg({ msg: null, from: "createProductMsg" });
   };
 
   // Render -------------------------------------
@@ -104,7 +104,7 @@ class CreateProduct extends Component {
           selectedProducer={selectedProducer}
           selectedCustomers={selectedCustomers}
           customerOptions={customers}
-          handleSendMsg={this.handleSendMsg}
+          clearSeverMsg={this.clearSeverMsg}
           handleSubmit={this.handleSubmit}
         />
       );
@@ -112,7 +112,7 @@ class CreateProduct extends Component {
 
     return (
       <div className="container">
-        <Message cb={this.props.startGetClients} />
+        <Message />
         <Heading title="Create Product" />
         <div className="row">
           <div className="col-xs-12 col-md-8 mx-auto">{content}</div>

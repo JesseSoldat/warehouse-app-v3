@@ -1,6 +1,7 @@
-// models
+// Models
 const ShelfSpot = require("../../models/storage/shelfSpot");
 
+// Get Shelf / Rack / Storage
 const shelfRackStorageQuery = {
   path: "shelf",
   select: ["_id", "shelfLabel"],
@@ -14,6 +15,7 @@ const shelfRackStorageQuery = {
   }
 };
 
+// Stored items for a Product Card
 const storedItemsQuery = {
   path: "storedItems.item",
   select: ["_id", "boxLabel", "productName"],
@@ -45,14 +47,21 @@ const linkItemToShelfSpotWithLocation = (shelfSpotId, item, itemId) => {
 };
 
 // UNLINK ------------------------------------------------------
-const unlinkItemFromShelfSpot = (shelfSpotId, itemId) => {
+const unlinkItemFromShelfSpotWithLocation = async (
+  shelfSpotId,
+  item,
+  itemId
+) => {
   return ShelfSpot.findByIdAndUpdate(
     shelfSpotId,
-    { $pull: { storedItems: { item: itemId } } },
+    { $pull: { storedItems: { [item]: itemId } } },
     { new: true }
   )
     .populate(shelfRackStorageQuery)
     .populate(storedItemsQuery);
 };
 
-module.exports = { linkItemToShelfSpotWithLocation, unlinkItemFromShelfSpot };
+module.exports = {
+  linkItemToShelfSpotWithLocation,
+  unlinkItemFromShelfSpotWithLocation
+};

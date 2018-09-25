@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 // common components
 import Spinner from "../../../components/Spinner";
@@ -28,9 +29,8 @@ class Producers extends Component {
     const { producers } = this.props;
 
     // Load from the STORE
-    if (producers.length > 0) {
-      return;
-    }
+    if (producers.length > 0) return;
+
     // Load from the API
     this.props.startLoading({ from: "producersLoading" });
     this.props.startGetProducers();
@@ -43,7 +43,17 @@ class Producers extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (!producers || !producers.length) {
+    } else if (!loading && !producers.length) {
+      content = (
+        <div className="row">
+          <div className="col-12 text-center">
+            <h3 className="mt-3 mb-3">No producers found.</h3>
+            <Link to="/producers/create">
+              <h4>Create One?</h4>
+            </Link>
+          </div>
+        </div>
+      );
     } else {
       content = (
         <CardList data={producerCardData(producers)} cardType="basic" />

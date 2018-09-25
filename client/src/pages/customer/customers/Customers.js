@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Link } from "react-router-dom";
 
 // common components
 import Spinner from "../../../components/Spinner";
@@ -28,9 +29,7 @@ class Customers extends Component {
     const { customers } = this.props;
 
     // Load from the Store
-    if (customers.length > 0) {
-      return;
-    }
+    if (customers.length > 0) return;
 
     // Load from the Api
     this.props.startLoading({ from: "customersLoading" });
@@ -44,6 +43,17 @@ class Customers extends Component {
 
     if (loading) {
       content = <Spinner />;
+    } else if (!loading && !customers.length) {
+      content = (
+        <div className="row">
+          <div className="col-12 text-center">
+            <h3 className="mt-3 mb-3">No Customers found.</h3>
+            <Link to="/customers/create">
+              <h4>Create One?</h4>
+            </Link>
+          </div>
+        </div>
+      );
     } else {
       content = (
         <CardList data={customerCardData(customers)} cardType="basic" />

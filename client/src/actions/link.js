@@ -30,6 +30,7 @@ const checkBoxUrlType = (shelfSpot, box, boxId, history) => {
   history.push(url);
 };
 
+// ----------------- Link -------------------------
 export const linkProductToShelfSpot = update => ({
   type: LINK_PRODUCT_TO_SHELFSPOT,
   update

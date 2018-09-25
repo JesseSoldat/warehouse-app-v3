@@ -51,10 +51,10 @@ class ProductForm extends Component {
 
   // Events --------------------------------
   onSubmit = e => {
-    const { handleSendMsg, handleSubmit } = this.props;
+    const { clearSeverMsg, handleSubmit } = this.props;
     e.preventDefault();
     // clear any messages from the server
-    handleSendMsg(null);
+    clearSeverMsg();
 
     // check if any of the required fields are empty
     const { isValid, errObj } = validateRequiredFieldsOnSubmit(

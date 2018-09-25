@@ -4,7 +4,7 @@ const isAuth = require("../../middleware/isAuth");
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
 // queries
-const { unlinkItemFromShelfSpot } = require("../queries/shelfSpot");
+const { unlinkItemFromShelfSpotWithLocation } = require("../queries/shelfSpot");
 const { removeLocationFromProduct } = require("../queries/product");
 const {
   unlinkProductFromBox,
@@ -25,7 +25,7 @@ module.exports = (app, io) => {
 
     try {
       const [shelfSpot, product] = await Promise.all([
-        unlinkItemFromShelfSpot(shelfSpotId, productId),
+        unlinkItemFromShelfSpotWithLocation(shelfSpotId, "product", productId),
         removeLocationFromProduct(productId)
       ]);
 
@@ -76,7 +76,7 @@ module.exports = (app, io) => {
     try {
       const [box, shelfSpot] = await Promise.all([
         unlinkShelfSpotFromBox(boxId),
-        unlinkItemFromShelfSpot(shelfSpotId, boxId)
+        unlinkItemFromShelfSpotWithLocation(shelfSpotId, "box", boxId)
       ]);
 
       emit(req.user._id);

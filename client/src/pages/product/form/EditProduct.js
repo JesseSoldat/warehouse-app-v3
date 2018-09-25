@@ -104,8 +104,8 @@ class EditProduct extends Component {
     this.props.startEditProduct(productId, form, this.props.history);
   };
 
-  handleSendMsg = msg => {
-    this.props.serverMsg(msg);
+  clearSeverMsg = () => {
+    this.props.serverMsg({ msg: null, from: "editProductMsg" });
   };
 
   // Render ---------------------------------------
@@ -116,7 +116,7 @@ class EditProduct extends Component {
 
     if (loading) {
       content = <Spinner />;
-    } else if (product && producers.length > 0 && customers.length > 0) {
+    } else if (!loading && product) {
       // productObj & selectedProducer & selectedCustomers - used to hydrate child form's state
       const {
         productObj,
@@ -131,7 +131,7 @@ class EditProduct extends Component {
           selectedProducer={selectedProducer}
           customerOptions={customers}
           selectedCustomers={selectedCustomers}
-          handleSendMsg={this.handleSendMsg}
+          clearSeverMsg={this.clearSeverMsg}
           handleSubmit={this.handleSubmit}
         />
       );
@@ -139,7 +139,7 @@ class EditProduct extends Component {
 
     return (
       <div className="container">
-        <Message cb={this.getFormData} />
+        <Message />
         <Heading title="Edit Product" />
         <div className="row">
           <div className="col-xs-12 col-md-8 mx-auto">{content}</div>

@@ -120,23 +120,23 @@ export const UI_ACTION_TYPES = {
 
   // ------------------- LOADING ------------------------
   // Products
-  productsLoading: "LOADING [Products Page] Fetch Data",
-  productDetailsLoading: "LOADING [Product Details Page] Fetch Data",
-  editProductLoading: "LOADING [Edit Product Page] Fetch Data",
-  createProductLoading: "LOADING [Create Product Page] Fetch Data",
-  productImagesLoading: "LOADING [ProductImages Page] Fetch Product",
+  productsLoading: "LOADING [Products Page]",
+  productDetailsLoading: "LOADING [Product Details Page]",
+  editProductLoading: "LOADING [Edit Product Page]",
+  createProductLoading: "LOADING [Create Product Page]",
+  productImagesLoading: "LOADING [ProductImages Page]",
   // Producers
-  producersLoading: "LOADING [Producers Page] Fetch Data",
-  producerDetailsLoading: "LOADING [Producer Details Page] Fetch Data",
-  producersCreateLoading: "LOADING [Producer Create Page] Fetch Data",
-  producersEditLoading: "LOADING [Producer Edit Page] Fetch Data",
+  producersLoading: "LOADING [Producers Page]",
+  producerDetailsLoading: "LOADING [Producer Details Page]",
+  producersCreateLoading: "LOADING [Producer Create Page]",
+  producersEditLoading: "LOADING [Producer Edit Page]",
   // Customers
-  customersLoading: "LOADING [Customers Page] Fetch Data",
-  customerDetailsLoading: "LOADING [Customer Details Page] Fetch Data",
-  customerCreateLoading: "LOADING [Customer Create Page] Fetch Data",
-  customerEditLoading: "LOADING [Customer Edit Page] Fetch Data",
+  customersLoading: "LOADING [Customers Page]",
+  customerDetailsLoading: "LOADING [Customer Details Page]",
+  customerCreateLoading: "LOADING [Customer Create Page]",
+  customerEditLoading: "LOADING [Customer Edit Page]",
   // Admin
-  manageUserLoading: "LOADING [Manage User Page] Fetch Data",
+  manageUserLoading: "LOADING [Manage User Page]",
   // Box
   boxesLoading: "LOADING [Boxes Page] Fetch Boxes Data",
   boxLoadingBox: "LOADING [Box Page] Fetch Box Data",

@@ -8,10 +8,8 @@ import {
 
 const initialState = {
   producerEntity: null,
-  producerOrder: [],
-  producers: [],
-  producersRequest: false,
-  producersLoaded: false
+  producerOrder: null,
+  producers: []
 };
 
 export default (state = initialState, action) => {
@@ -19,11 +17,7 @@ export default (state = initialState, action) => {
 
   switch (type) {
     case PRODUCERS_REQUESTED:
-      return {
-        ...state,
-        producersLoaded: false,
-        producersRequest: true
-      };
+      return { ...state };
 
     case PRODUCERS_LOADED:
       const producers = [];
