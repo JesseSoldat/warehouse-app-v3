@@ -77,9 +77,7 @@ class CreateProduct extends Component {
     this.props.startCreateProduct(form, this.props.history);
   };
 
-  clearSeverMsg = () => {
-    this.props.serverMsg({ msg: null, from: "createProductMsg" });
-  };
+  clearSeverMsg = () => this.props.serverMsg(null, "createProductMsg");
 
   // Render -------------------------------------
   render() {

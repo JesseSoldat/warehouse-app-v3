@@ -104,9 +104,7 @@ class EditProduct extends Component {
     this.props.startEditProduct(productId, form, this.props.history);
   };
 
-  clearSeverMsg = () => {
-    this.props.serverMsg({ msg: null, from: "editProductMsg" });
-  };
+  clearSeverMsg = () => this.props.serverMsg(null, "editProductMsg");
 
   // Render ---------------------------------------
   render() {

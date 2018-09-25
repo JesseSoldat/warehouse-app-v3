@@ -6,11 +6,10 @@ export const CLEAR_UI_AFTER_ASYNC = "CLEAR_UI_AFTER_ASYNC";
 
 export const UI_ACTION_TYPES = {
   // ------------------- MSG ------------------------
-  msg: "MSG [Source Unknown]",
   socketDatabaseOffline: "MSG [Socket Component] Database if offline",
-  msgComponentAutomaticClearMsg: "[MSG Message Component] Automatic Clear msg",
+  msgComponentAutomaticClearMsg: "MSG [Message Component] Auto Clear msg",
   // AUTH
-  loginClearMsg: "MSG [Login Page] Clear msg on willUnmount",
+  loginClearMsg: "MSG [Login Page] Clear msg",
   authActionStartRegisterMsg: "MSG [Auth Action] startRegister",
   authActionStartLoginMsg: "MSG [Auth Action] startLogin",
   authActionStartLogoutMsg: "MSG [Auth Action] startLogout",
@@ -21,30 +20,29 @@ export const UI_ACTION_TYPES = {
     "MSG [Auth Action] startResetPasswordWithToken",
   // Products
   productActionDeleteProductMsg: "MSG [Product Action] deleteProduct",
-  createProductMsg: "MSG [Create Product Page] Send NULL to clear a msg",
-  productActionCreateProductMsg: "MSG [Create Product Page] Send msg",
-  productActionEditProductMsg: "MSG [Edit Product Page] Send msg",
+  createProductMsg: "MSG [Create Product Page]  Clear msg",
+  editProductMsg: "MSG [Edit Product Page]  Clear msg",
+  productActionCreateProductMsg: "MSG [Create Product Page]",
+  productActionEditProductMsg: "MSG [Edit Product Page]",
   // Product Clear Msg
-  createProductClearMsg: "MSG [Create Page] Clear msg on willUnmount",
-  editProductClearMsg: "MSG [Edit Page] Clear msg on willUnmount",
-  productsClearMsg: "MSG [Products Page] Clear msg on willUnmount",
-  productDetailsClearMsg: "MSG [Product Details Page] Clear msg on willUnmount",
+  createProductClearMsg: "MSG [Create Page] Clear msg",
+  editProductClearMsg: "MSG [Edit Page] Clear msg",
+  productsClearMsg: "MSG [Products Page] Clear msg",
+  productDetailsClearMsg: "MSG [Product Details Page] Clear msg",
   // Producers
-  producersClearMsg: "MSG [Producers Page] Clear msg on willUnmount",
-  producerDetailsClearMsg:
-    "MSG [Producer Detail Page] Clear msg on willUnmount",
-  createProducerClearMsg: "MSG [Create Producer Page] Clear msg on willUnmount",
-  editProducerClearMsg: "MSG [Edit Producer Page] Clear msg on willUnmount",
+  producersClearMsg: "MSG [Producers Page] Clear msg",
+  producerDetailsClearMsg: "MSG [Producer Detail Page] Clear msg",
+  createProducerClearMsg: "MSG [Create Producer Page] Clear msg",
+  editProducerClearMsg: "MSG [Edit Producer Page] Clear msg",
   // Customers
-  customersClearMsg: "MSG [Customers Page] Clear msg on willUnmount",
-  customerDetailsClearMsg:
-    "MSG [Customer Details Page] Clear msg on willUnmount",
-  createCustomerClearMsg: "MSG [Create Customer Page] Clear msg on willUnmount",
-  editCustomerClearMsg: "MSG [Edit Customer Page] Clear msg on willUnmount",
+  customersClearMsg: "MSG [Customers Page] Clear msg",
+  customerDetailsClearMsg: "MSG [Customer Details Page] Clear msg",
+  createCustomerClearMsg: "MSG [Create Customer Page] Clear msg",
+  editCustomerClearMsg: "MSG [Edit Customer Page] Clear msg",
   // Admin
-  manageUserClearMsg: "MSG [Edit Manage User Page] Clear msg on willUnmount",
+  manageUserClearMsg: "MSG [Edit Manage User Page] Clear msg",
   // Storage
-  storageClearMsg: "MSG [Storage Page] Clear msg on willUnmount",
+  storageClearMsg: "MSG [Storage Page] Clear msg",
 
   // ------------------- OVERLAY ------------------------
   // AUTH

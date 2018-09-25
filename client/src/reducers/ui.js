@@ -64,6 +64,7 @@ export default (state = initialState, action) => {
     case UI_ACTION_TYPES.createProductMsg:
     case UI_ACTION_TYPES.createProductClearMsg:
     case UI_ACTION_TYPES.productActionEditProductMsg:
+    case UI_ACTION_TYPES.editProductMsg:
     case UI_ACTION_TYPES.editProductClearMsg:
     case UI_ACTION_TYPES.productsClearMsg:
     case UI_ACTION_TYPES.productDetailsClearMsg:

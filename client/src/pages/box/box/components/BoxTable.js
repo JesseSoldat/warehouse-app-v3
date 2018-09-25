@@ -33,13 +33,7 @@ const BoxTable = ({
         <td>
           <h4 className="pt-1">The Box is not Stored</h4>
         </td>
-        <td>
-          <Link to={boxToSpotUrl}>
-            <button className="btn btn-default float-right">
-              <i className="fas fa-archive mr-2" /> Store Box
-            </button>
-          </Link>
-        </td>
+        <td />
       </tr>
     );
   }
@@ -69,13 +63,7 @@ const BoxTable = ({
         <td>
           <h4 className="pt-1">No Products Stored</h4>
         </td>
-        <td>
-          <Link to={productToBoxUrl}>
-            <button className="btn btn-default float-right">
-              <i className="fas fa-link mr-2" /> Link Product
-            </button>
-          </Link>
-        </td>
+        <td />
       </tr>
     );
   }
@@ -119,6 +107,24 @@ const BoxTable = ({
       <div className="table-responsive-xs table-hover table-responsive-sm">
         <table className="table col-12 mt-5">
           <tbody>
+            <tr className="py-4">
+              <td />
+              <td>
+                <Link to={productToBoxUrl}>
+                  <button className="btn btn-default float-right">
+                    <i className="fas fa-link mr-2" /> Link Product
+                  </button>
+                </Link>
+
+                {!hasLocation && (
+                  <Link to={boxToSpotUrl}>
+                    <button className="btn btn-default float-right mr-2">
+                      <i className="fas fa-archive mr-2" /> Store Box
+                    </button>
+                  </Link>
+                )}
+              </td>
+            </tr>
             {notStored}
             {noProducts}
           </tbody>
