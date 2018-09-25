@@ -4,11 +4,8 @@ import axios from "axios";
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 import storageApiUrl from "./helpers/storageApiUrl";
-// actions
-import { resetBox } from "./box";
-// types
-export const RESET_STORAGE = "RESET_STORAGE";
 
+// types
 export const STORAGE_IDS_REQUESTED = "STORAGE_IDS_REQUESTED";
 export const STORAGE_IDS_LOADED = "STORAGE_IDS_LOADED";
 
@@ -53,9 +50,6 @@ const mapTypeToParentHistoryUrl = (type, ids) => {
   };
   return historyUrlObj[type];
 };
-
-// RESET Storage -----------------------------
-export const resetStorage = () => ({ type: RESET_STORAGE });
 
 // ----------------------------- STORAGES --------------------------------
 
@@ -273,7 +267,6 @@ export const startCreateStorage = (
 
     const dispatchRackActions = () => {
       dispatch(createRack(type, payload));
-      dispatch(resetBox());
     };
 
     type === "storage"

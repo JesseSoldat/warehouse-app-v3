@@ -7,16 +7,17 @@ import createEntity from "./helpers/createEntity";
 // actions
 import { customersRequested, customersLoaded } from "./customer";
 import { producersRequested, producersLoaded } from "./producer";
-import { resetStorage } from "./storage";
-// types
-// all products
+// -------------- types -------------------
+// All Products
 export const PRODUCTS_REQUESTED = "PRODUCTS_REQUESTED";
 export const PRODUCTS_LOADED = "PRODUCTS_LOADED";
-// single product
+// Single Product
 export const PRODUCT_REQUESTED = "PRODUCT_REQUESTED";
 export const PRODUCT_LOADED = "PRODUCT_LOADED";
-
-export const PRODUCTS_RESET = "PRODUCTS_RESET";
+// Update Product
+export const PRODUCT_CREATED = "PRODUCT_CREATED";
+export const PRODUCT_EDITED = "PRODUCT_EDITED";
+export const PRODUCT_DELETED = "PRODUCT_DELETED";
 
 const getProductsQueryUrl = query => {
   const { skip, limit, page, keyName, value, value2, searchType } = query;
@@ -25,11 +26,6 @@ const getProductsQueryUrl = query => {
 
   return `${baseUrl}${params}`;
 };
-
-// Reset Filter -------------------------------------------------------------
-export const resetProducts = () => ({
-  type: PRODUCTS_RESET
-});
 
 // All Products or a subset based on the query ------------------------------
 export const productsRequested = () => ({
@@ -156,13 +152,17 @@ export const startGetProductWithClients = productId => async dispatch => {
 };
 
 // Create Product -----------------------------------------------
-export const createProduct = (newProduct, history) => async dispatch => {
+export const createProduct = () => ({
+  type: PRODUCT_CREATED
+});
+
+export const startCreateProduct = (newProduct, history) => async dispatch => {
   try {
     const res = await axios.post("/api/products", newProduct);
 
     const { msg, payload, options } = res.data;
 
-    dispatch(resetProducts());
+    dispatch(createProduct());
 
     checkForMsg(msg, dispatch, options, "productActionCreateProduct");
 
@@ -179,13 +179,21 @@ export const createProduct = (newProduct, history) => async dispatch => {
 };
 
 // Edit Product -----------------------------------------------
-export const editProduct = (productId, update, history) => async dispatch => {
+export const editProduct = () => ({
+  type: PRODUCT_EDITED
+});
+
+export const startEditProduct = (
+  productId,
+  update,
+  history
+) => async dispatch => {
   try {
     const res = await axios.patch(`/api/products/${productId}`, update);
 
     const { msg, options } = res.data;
 
-    dispatch(resetProducts());
+    dispatch(editProduct());
 
     checkForMsg(msg, dispatch, options, "productActionEditProduct");
 
@@ -202,15 +210,21 @@ export const editProduct = (productId, update, history) => async dispatch => {
 };
 
 // Delete Product -----------------------------------------------
-export const deleteProduct = (productId, history) => async dispatch => {
+export const deleteProduct = update => ({
+  type: PRODUCT_DELETED,
+  update
+});
+
+export const startDeleteProduct = (productId, history) => async dispatch => {
   try {
     const res = await axios.delete(`/api/products/${productId}`);
 
-    const { msg, options } = res.data;
+    const { msg, options, payload } = res.data;
 
-    dispatch(resetProducts());
+    // payload = { productId }
 
-    dispatch(resetStorage());
+    // Product could belong to ShelfSpot or a Box
+    dispatch(deleteProduct(payload));
 
     checkForMsg(msg, dispatch, options, "productActionDeleteProduct");
 

@@ -16,7 +16,7 @@ import createGetProductsQuery from "./helpers/createGetProductsQuery";
 import onSelectBuildNewState from "./helpers/onSelectBuildNewState";
 // actions
 import { serverMsg, startLoading } from "../../../actions/ui";
-import { startGetProducts, resetProducts } from "../../../actions/product";
+import { startGetProducts } from "../../../actions/product";
 
 class Products extends Component {
   // State -------------------------------------
@@ -186,5 +186,5 @@ const mapStateToProps = ({ ui, product }) => ({
 
 export default connect(
   mapStateToProps,
-  { serverMsg, startLoading, startGetProducts, resetProducts }
+  { serverMsg, startLoading, startGetProducts }
 )(Products);

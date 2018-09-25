@@ -16,7 +16,7 @@ import {
   productLoaded,
   startGetClients,
   startGetProductWithClients,
-  editProduct
+  startEditProduct
 } from "../../../actions/product";
 import { startGetProducers } from "../../../actions/producer";
 import { startGetCustomers } from "../../../actions/customer";
@@ -101,7 +101,7 @@ class EditProduct extends Component {
     const { productId } = this.props.match.params;
     // Api Calls
     this.props.showOverlay({ from: "editProductOverlay" });
-    this.props.editProduct(productId, form, this.props.history);
+    this.props.startEditProduct(productId, form, this.props.history);
   };
 
   handleSendMsg = msg => {
@@ -170,6 +170,6 @@ export default connect(
     startGetCustomers,
     startGetClients,
     startGetProductWithClients,
-    editProduct
+    startEditProduct
   }
 )(withRouter(EditProduct));

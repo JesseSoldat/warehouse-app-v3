@@ -2,9 +2,6 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
-// actions
-import { productLoaded } from "./product";
-import { resetBox } from "./box";
 
 export const UNLINK_PRODUCT_FROM_BOX = "UNLINK_PRODUCT_FROM_BOX";
 export const UNLINK_PRODUCT_FROM_SHELFSPOT = "UNLINK_PRODUCT_FROM_SHELFSPOT";

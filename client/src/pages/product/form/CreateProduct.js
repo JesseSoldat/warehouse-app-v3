@@ -14,7 +14,7 @@ import getInitialState from "./helpers/getInitialState";
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import {
   productLoaded,
-  createProduct,
+  startCreateProduct,
   startGetClients
 } from "../../../actions/product";
 import { startGetProducers } from "../../../actions/producer";
@@ -74,7 +74,7 @@ class CreateProduct extends Component {
   handleSubmit = form => {
     // Api Calls
     this.props.showOverlay({ from: "createProductOverlay" });
-    this.props.createProduct(form, this.props.history);
+    this.props.startCreateProduct(form, this.props.history);
   };
 
   handleSendMsg = msg => {
@@ -133,7 +133,7 @@ export default connect(
   mapStateToProps,
   {
     productLoaded,
-    createProduct,
+    startCreateProduct,
     startGetProducers,
     startGetCustomers,
     startGetClients,

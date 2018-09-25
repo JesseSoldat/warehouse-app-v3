@@ -5,8 +5,10 @@ import {
   // Single Product
   PRODUCT_REQUESTED,
   PRODUCT_LOADED,
-  // Reset
-  PRODUCTS_RESET
+  // Update
+  PRODUCT_CREATED,
+  PRODUCT_EDITED,
+  PRODUCT_DELETED
 } from "../actions/product";
 import {
   LINK_PRODUCT_TO_BOX,
@@ -77,6 +79,13 @@ export default (state = initialState, action) => {
         product
       };
 
+    case PRODUCT_CREATED:
+    case PRODUCT_EDITED:
+    case PRODUCT_DELETED:
+      return {
+        ...initialState
+      };
+
     // Link
     case LINK_PRODUCT_TO_BOX:
     case LINK_PRODUCT_TO_SHELFSPOT:
@@ -111,11 +120,6 @@ export default (state = initialState, action) => {
         productOrder: [],
         products: [],
         product: update.product
-      };
-    // Reset Products State
-    case PRODUCTS_RESET:
-      return {
-        ...initialState
       };
 
     default:

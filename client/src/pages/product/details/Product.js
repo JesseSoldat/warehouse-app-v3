@@ -26,7 +26,7 @@ import { showOverlay, serverMsg, startLoading } from "../../../actions/ui";
 import {
   productLoaded,
   startGetProduct,
-  deleteProduct
+  startDeleteProduct
 } from "../../../actions/product";
 import {
   startUnlinkProductFromShelfSpot,
@@ -76,7 +76,7 @@ class Product extends Component {
     const { productId } = this.props.match.params;
     // Api Calls
     this.props.showOverlay({ from: "productOnDeleteProductOverlay" });
-    this.props.deleteProduct(productId, this.props.history);
+    this.props.startDeleteProduct(productId, this.props.history);
   };
 
   onEditProduct = () => {
@@ -225,7 +225,7 @@ export default connect(
     serverMsg,
     productLoaded,
     startGetProduct,
-    deleteProduct,
+    startDeleteProduct,
     startUnlinkProductFromShelfSpot,
     startUnlinkProductFromBox
   }

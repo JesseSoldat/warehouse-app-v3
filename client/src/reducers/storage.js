@@ -1,5 +1,4 @@
 import {
-  RESET_STORAGE,
   // storage
   STORAGES_SEARCH_LOADED,
   STORAGES_LOADED,
@@ -13,6 +12,7 @@ import {
   RACK_UPDATE_ONE,
   RACK_DELETE_ONE
 } from "../actions/storage";
+import { PRODUCT_DELETED } from "../actions/product";
 import { BOX_UPDATE_ONE } from "../actions/box";
 import {
   LINK_BOX_TO_SHELFSPOT,
@@ -139,16 +139,6 @@ export default (state = initialState, action) => {
   };
 
   switch (type) {
-    case RESET_STORAGE:
-      return {
-        ...state,
-        storages: [],
-        storageIdsEntity: null,
-        rack: null,
-        search: [],
-        storageType: null
-      };
-
     // -------------------------- STORAGES ------------------------------
 
     case STORAGES_SEARCH_LOADED:
@@ -356,6 +346,12 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         storageIdsEntity: null,
         rack: rackCopy
+      };
+
+    // ---------------------- Product Deleted -----------------------
+    case PRODUCT_DELETED:
+      return {
+        ...initialState
       };
 
     // ---------- UPDATE STORE Storages and Rack with ShelfSpot ---------

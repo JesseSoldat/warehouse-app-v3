@@ -208,75 +208,80 @@ module.exports = (app, io) => {
   });
 
   // Delete a Product -----------------------------------------------
+  const productHasPictures = product => {
+    let hasPictures = false;
+
+    const { productPictures, packagingPictures } = product;
+
+    if (
+      (productPictures && productPictures.length > 0) ||
+      (productPictures && packagingPictures.length > 0)
+    ) {
+      hasPictures = true;
+    }
+
+    return hasPictures;
+  };
+
+  const getDeleteErrMsg = errType => {
+    const errs = {
+      noProdErr: "No product could be found.",
+      picErr: "Delete all pictures and their parent folders first."
+    };
+
+    return msgObj(errs[errType], "red", "delete err");
+  };
+
   app.delete("/api/products/:productId", isAuth, async (req, res) => {
     const { productId } = req.params;
-    const options = {};
 
     try {
       const product = await Product.findById(productId);
 
-      const {
-        productFolder,
-        pictureFolder,
-        packagingFolder,
-        productPictures,
-        packagingPictures,
-        productLocation
-      } = product;
-
-      // if any of these exist
-      if (
-        productFolder ||
-        pictureFolder ||
-        packagingFolder ||
-        (productPictures && productPictures.length > 0) ||
-        (productPictures && packagingPictures.length > 0)
-      ) {
-        const msg = msgObj(
-          "Delete all pictures and their parent folders first.",
-          "red",
-          "delete err"
-        );
-
+      if (!product) {
+        const msg = getDeleteErrMsg("noProdErr");
         return serverRes(res, 400, msg, product);
-      } else if (productLocation) {
+      }
+
+      const { productLocation } = product;
+
+      // ---- Check if the Product has any Pictures ------
+      if (productHasPictures(product)) {
+        const msg = getDeleteErrMsg("picErr");
+        return serverRes(res, 400, msg, product);
+      }
+
+      // Product does not have Pictures
+      else if (product.productLocation) {
         const { kind, item } = productLocation;
-        switch (kind) {
-          case "shelfSpot":
-            const shelfSpotId = item;
 
-            await ShelfSpot.findByIdAndUpdate(
-              shelfSpotId,
-              {
-                $pull: {
-                  storedItems: { item: productId }
-                }
-              },
-              { new: true }
-            );
+        // Unlink Product from ShelfSpot
+        if (kind === "shelfSpot") {
+          const shelfSpotId = item;
 
-            options["update"] = "storage";
-            console.log("removed product from shelf spot");
-            break;
+          await ShelfSpot.findByIdAndUpdate(
+            shelfSpotId,
+            {
+              $pull: {
+                storedItems: { item: productId }
+              }
+            },
+            { new: true }
+          );
+        }
+        // Unlink Product from Box
+        else if (kind === "box") {
+          const boxId = item;
 
-          case "box":
-            const boxId = item;
-
-            await Box.findByIdAndUpdate(
-              boxId,
-              {
-                $pull: {
-                  storedItems: productId
-                }
-              },
-              { new: true }
-            );
-
-            options["update"] = "storage";
-            break;
-
-          default:
-            break;
+          await Box.findByIdAndUpdate(
+            boxId,
+            {
+              $pull: {
+                storedItems: productId
+              }
+            },
+            { new: true }
+          );
         }
       }
 
@@ -286,9 +291,9 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The product was deleted.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, options);
+      serverRes(res, 200, msg, { productId });
     } catch (err) {
-      console.log("ERR: DELETE/api/products/:productId", err);
+      console.log("Err: Delete/Product", err);
 
       const msg = serverMsg("error", "delete", "product", "delete error");
       serverRes(res, 400, msg, null);

@@ -3,8 +3,7 @@ import axios from "axios";
 // helpers
 import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
-// types
-export const BOXES_RESET = "BOXES_RESET";
+// ------------ types --------------
 // Get
 export const BOXES_REQUESTED = "BOXES_REQUESTED";
 export const BOXES_LOADED = "BOXES_LOADED";
@@ -18,9 +17,6 @@ export const BOX_UPDATE_ONE = "BOX_UPDATE_ONE";
 export const BOX_DELETE_ONE = "BOX_DELETE_ONE";
 export const BOX_DELETE_ONE_WITH_LOCATION = "BOX_DELETE_ONE_WITH_LOCATION";
 
-export const resetBox = () => ({
-  type: BOXES_RESET
-});
 // -------- Get All Boxes ----------------
 export const boxesRequested = () => ({
   type: BOXES_REQUESTED

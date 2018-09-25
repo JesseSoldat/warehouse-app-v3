@@ -1,5 +1,4 @@
 import {
-  BOXES_RESET,
   BOXES_LOADED,
   BOX_LOADED,
   BOX_CREATE_ONE,
@@ -8,6 +7,7 @@ import {
   BOX_DELETE_ONE,
   BOX_DELETE_ONE_WITH_LOCATION
 } from "../actions/box";
+import { PRODUCT_DELETED } from "../actions/product";
 import { LINK_BOX_TO_SHELFSPOT, LINK_PRODUCT_TO_BOX } from "../actions/link";
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
@@ -34,13 +34,6 @@ export default (state = initialState, action) => {
   const { type, box, boxes, update, query } = action;
 
   switch (type) {
-    case BOXES_RESET:
-      return {
-        boxes: [],
-        box: null,
-        query: initialQuery
-      };
-
     // --------------------- GET BOXES ----------------------
     case BOXES_LOADED:
       return {
@@ -85,6 +78,12 @@ export default (state = initialState, action) => {
         ...state,
         boxes: [],
         box: null
+      };
+
+    // ------------------- Product Deleted ---------------------
+    case PRODUCT_DELETED:
+      return {
+        ...initialState
       };
 
     // ---------------- UN-LINKING & LINKING ----------------
