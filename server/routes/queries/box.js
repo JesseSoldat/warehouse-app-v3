@@ -42,7 +42,14 @@ const getBoxWithLocation = boxId => {
     .populate(boxStoredItemsCardInfo);
 };
 
-// LINK -------------------------------------------------------
+// --------------------------- Edit -------------------------------
+const editBox = (boxId, updates) => {
+  return Box.findByIdAndUpdate(boxId, updates, {
+    new: true
+  });
+};
+
+// --------------------------- Link -------------------------------
 const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
   return Box.findByIdAndUpdate(
     boxId,
@@ -53,7 +60,7 @@ const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
     .populate(boxStoredItemsCardInfo);
 };
 
-// UNLINK ------------------------------------------------------
+// -------------------------- Un-Link -------------------------------
 const unlinkProductFromBox = (boxId, productId) => {
   return Box.findByIdAndUpdate(
     boxId,
@@ -75,6 +82,7 @@ const unlinkShelfSpotFromBox = boxId => {
 module.exports = {
   getAllBoxesWithLocation,
   getBoxWithLocation,
+  editBox,
   linkShelfSpotToBoxWithLocation,
   unlinkProductFromBox,
   unlinkShelfSpotFromBox

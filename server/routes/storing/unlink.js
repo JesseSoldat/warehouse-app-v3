@@ -1,5 +1,3 @@
-// Models
-const ShelfSpot = require("../../models/storage/shelfSpot");
 // middleware
 const isAuth = require("../../middleware/isAuth");
 // utils

@@ -307,6 +307,8 @@ export const startEditStorage = (
 
     const { msg, options, payload } = res.data;
 
+    // payload = label based on the type of storage
+
     const historyUrl = mapTypeToHistoryUrl(type, ids);
 
     history.push(historyUrl);

@@ -37,7 +37,7 @@ const Socket = ({ userId, serverMsg }) => {
       serverMsg({ msg, from: "socketDatabaseOffline" });
     }
 
-    if (senderId === userId) return;
+    // if (senderId === userId) return;
 
     switch (msg) {
       case "product":
@@ -57,6 +57,11 @@ const Socket = ({ userId, serverMsg }) => {
 
       case "storage":
         console.log("storage updated", timestamp);
+
+        break;
+
+      case "box":
+        console.log("box updated", timestamp);
 
         break;
 

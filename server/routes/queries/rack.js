@@ -30,6 +30,12 @@ const getSingleRack = rackId => {
     });
 };
 
+// Edit -------------------------------------------------------------
+const editRack = (rackId, updates) =>
+  Rack.findByIdAndUpdate(rackId, updates, {
+    new: true
+  });
+
 // LINK ----------------------------------------------------------------
 const linkShelfToRackPopIds = (rackId, shelfId) => {
   return Rack.findByIdAndUpdate(
@@ -52,4 +58,4 @@ const linkShelfToRackPopIds = (rackId, shelfId) => {
     .populate("storage");
 };
 
-module.exports = { getSingleRack, linkShelfToRackPopIds };
+module.exports = { getSingleRack, editRack, linkShelfToRackPopIds };

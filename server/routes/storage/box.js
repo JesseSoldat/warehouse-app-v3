@@ -4,15 +4,17 @@ const Box = require("../../models/storage/box");
 const isAuth = require("../../middleware/isAuth");
 // helpers
 const buildBoxesQuery = require("../helpers/buildBoxesQuery");
+const checkForStoredItems = require("../helpers/boxCheckForStoredItems");
+const socketEmit = require("../helpers/socketEmit");
 // utils
 const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
-const mergeObjFields = require("../../utils/mergeObjFields");
 const stringParamsToIntegers = require("../../utils/stringParamsToIntegers");
 // queries
 const {
   getAllBoxesWithLocation,
   getBoxWithLocation,
+  editBox,
   linkShelfSpotToBoxWithLocation
 } = require("../queries/box");
 const {
@@ -20,26 +22,7 @@ const {
   unlinkBoxFromShelfSpotWithLocation
 } = require("../queries/shelfSpot");
 
-const checkForStoredItems = box => {
-  if (box["storedItems"].length !== 0) {
-    return msgObj(
-      "Delete or relink all products of this box first.",
-      "red",
-      "hide-3"
-    );
-  }
-  return null;
-};
-
 module.exports = (app, io) => {
-  const emit = senderId => {
-    io.emit("update", {
-      msg: "storage",
-      senderId,
-      timestamp: Date.now()
-    });
-  };
-
   app.post("/api/boxes/search", isAuth, async (req, res) => {
     const { query } = req.body;
 
@@ -60,7 +43,7 @@ module.exports = (app, io) => {
 
       serverRes(res, 200, null, { boxes, query });
     } catch (err) {
-      console.log("Err: GET/BOXES", err);
+      console.log("Err: Get/Boxes", err);
 
       const msg = serverMsg("error", "fetch", "boxes");
       serverRes(res, 400, msg, null);
@@ -75,14 +58,14 @@ module.exports = (app, io) => {
 
       serverRes(res, 200, null, { box });
     } catch (err) {
-      console.log("Err: GET/SINGLE BOX NO LOCATION", err);
+      console.log("Err: Get/Box", err);
 
       const msg = serverMsg("error", "fetch", "box");
       serverRes(res, 400, msg, null);
     }
   });
 
-  // -------------------- CREATE NEW BOX ----------------------------
+  // -------------------- Create Box ------------------------
   // POST BOX with no location
   app.post("/api/boxes", isAuth, async (req, res) => {
     const box = new Box(req.body);
@@ -90,13 +73,13 @@ module.exports = (app, io) => {
     try {
       await box.save();
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "box");
 
       const msg = msgObj("Box created.", "blue", "hide-3");
 
       serverRes(res, 200, msg, { box });
     } catch (err) {
-      console.log("ERR: POST/BOX", err);
+      console.log("ERR: Create Box", err);
 
       const msg = serverMsg("error", "post", "box");
       serverRes(res, 400, msg, null);
@@ -115,33 +98,30 @@ module.exports = (app, io) => {
 
       box = await linkShelfSpotToBoxWithLocation(box._id, shelfSpotId);
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "box");
 
       const msg = msgObj("Box created.", "blue", "hide-3");
       serverRes(res, 200, msg, { box, shelfSpot });
     } catch (err) {
-      console.log("ERR: POST/BOX/WithLocation", err);
+      console.log("ERR: Crete Box WithLocation", err);
 
       const msg = serverMsg("error", "post", "box");
       serverRes(res, 400, msg, null);
     }
   });
 
-  // -------------------------- EDIT BOX --------------------------------
+  // ----------------------- Edit Box ------------------------------
   app.patch("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
-    const update = req.body;
 
     try {
-      await Box.findByIdAndUpdate(boxId, mergeObjFields("", req.body), {
-        new: true
-      });
+      const box = await editBox(boxId, req.body);
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "box");
 
       const msg = msgObj("Box updated.", "blue", "hide-3");
 
-      serverRes(res, 200, msg, { box: { ...update, boxId } });
+      serverRes(res, 200, msg, { box });
     } catch (err) {
       console.log("ERR: PATCH/BOX", err);
 
@@ -150,7 +130,7 @@ module.exports = (app, io) => {
     }
   });
 
-  // -------------------------- DELETE BOX --------------------------------
+  // ---------------------- Delete Box ------------------------------
   // DELETE BOX with no location
   app.delete("/api/boxes/:boxId", isAuth, async (req, res) => {
     const { boxId } = req.params;
@@ -158,12 +138,15 @@ module.exports = (app, io) => {
     try {
       const box = await Box.findById(boxId);
 
-      // --------- check for stored items ---------
+      // --------- Check for Stored Items ---------
       msg = checkForStoredItems(box);
-      if (msg) return serverRes(res, 400, msg, null);
-      // ------------ no stored items -----------
 
+      if (msg) return serverRes(res, 400, msg, null);
+
+      // ------------ No Stored Items -----------
       box.remove();
+
+      socketEmit(io, req.user._id, "box");
 
       msg = msgObj("Box deleted", "blue", "hide-3");
 
@@ -183,11 +166,12 @@ module.exports = (app, io) => {
     try {
       const box = await Box.findById(boxId);
 
-      // --------- check for stored items ---------
+      // --------- Check for Stored Items ---------
       msg = checkForStoredItems(box);
+
       if (msg) return serverRes(res, 400, msg, null);
 
-      // ------------ no stored items -----------
+      // ------------ No Stored Items -----------
       // UNLINK Box from ShelfSpot
       const shelfSpot = await unlinkBoxFromShelfSpotWithLocation(
         shelfSpotId,
@@ -195,6 +179,8 @@ module.exports = (app, io) => {
       );
 
       box.remove();
+
+      socketEmit(io, req.user._id, "box");
 
       msg = msgObj("Box delete and removed from ShelfSpot", "blue", "hide-3");
 

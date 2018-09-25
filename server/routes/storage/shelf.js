@@ -3,47 +3,16 @@ const Rack = require("../../models/storage/rack");
 const Shelf = require("../../models/storage/shelf");
 // middleware
 const isAuth = require("../../middleware/isAuth");
+// helpers
+const socketEmit = require("../helpers/socketEmit");
+const storageCheckForStoredItems = require("../helpers/storageCheckForStoredItems");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
-const mergeObjFields = require("../../utils/mergeObjFields");
 // queries
 const { linkShelfToRackPopIds } = require("../queries/rack");
 
 module.exports = (app, io) => {
-  const emit = senderId => {
-    io.emit("update", {
-      msg: "storage",
-      senderId,
-      timestamp: Date.now()
-    });
-  };
-
-  // Get a single shelf
-  app.get("/api/shelves/:shelfId", isAuth, async (req, res) => {
-    const { shelfId } = req.params;
-
-    try {
-      const shelf = await Shelf.findById(shelfId)
-        .populate({
-          path: "shelfSpots",
-          populate: { path: "storedItems.item " }
-        })
-        .populate({
-          path: "rack",
-          populate: {
-            path: "storage"
-          }
-        });
-
-      serverRes(res, 200, null, shelf);
-    } catch (err) {
-      console.log("Err: GET/api/shelf/:shelfId", err);
-
-      const msg = serverMsg("error", "fetch", "shelf");
-      serverRes(res, 400, msg, null);
-    }
-  });
   // Create a new shelf inside a rack and link it to the rack
   app.post("/api/shelves/:rackId", isAuth, async (req, res) => {
     let { rackId } = req.params;
@@ -59,7 +28,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The shelf was saved.", "blue", "hide-3");
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { shelf: { _id: shelf._id }, rack });
     } catch (err) {
@@ -74,13 +43,13 @@ module.exports = (app, io) => {
     const { shelfId } = req.params;
     const update = req.body;
     try {
-      await Shelf.findByIdAndUpdate(shelfId, mergeObjFields("", update), {
+      await Shelf.findByIdAndUpdate(shelfId, update, {
         new: true
       });
 
       const msg = msgObj("The shelf was updated.", "blue", "hide-3");
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { ...update, shelfId });
     } catch (err) {
@@ -98,10 +67,7 @@ module.exports = (app, io) => {
 
       // check for shelf spots
       if (shelf.shelfSpots.length !== 0) {
-        const msg = msgObj(
-          "Delete or relink all shelf spots of this shelf first.",
-          "red"
-        );
+        const msg = storageCheckForStoredItems("shelf");
         return serverRes(res, 400, msg, shelf);
       }
 
@@ -116,7 +82,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("Shelf deleted.", "blue", "hide-3");
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { shelfId: shelf._id });
     } catch (err) {

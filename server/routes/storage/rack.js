@@ -3,23 +3,17 @@ const Storage = require("../../models/storage/storage");
 const Rack = require("../../models/storage/rack");
 // middleware
 const isAuth = require("../../middleware/isAuth");
+// helpers
+const socketEmit = require("../helpers/socketEmit");
+const storageCheckForStoredItems = require("../helpers/storageCheckForStoredItems");
 // utils
 const { msgObj, serverRes } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
-const mergeObjFields = require("../../utils/mergeObjFields");
 // queries
-const { getSingleRack } = require("../queries/rack");
+const { getSingleRack, editRack } = require("../queries/rack");
 const { linkRackToStorage } = require("../queries/storage");
 
 module.exports = (app, io) => {
-  const emit = senderId => {
-    io.emit("update", {
-      msg: "storage",
-      senderId,
-      timestamp: Date.now()
-    });
-  };
-
   // Get a single rack
   app.get("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
@@ -29,7 +23,7 @@ module.exports = (app, io) => {
 
       serverRes(res, 200, null, rack);
     } catch (err) {
-      console.log("Err: GET/api/rack/:rackId", err);
+      console.log("Err: GET Rack", err);
 
       const msg = serverMsg("error", "fetch", "rack");
       serverRes(res, 400, msg, null);
@@ -52,7 +46,7 @@ module.exports = (app, io) => {
 
       const msg = msgObj("The rack was saved.", "blue", "hide-3");
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { rack });
     } catch (err) {
@@ -65,18 +59,16 @@ module.exports = (app, io) => {
   // Update a rack
   app.patch("/api/racks/:rackId", isAuth, async (req, res) => {
     const { rackId } = req.params;
-    const update = req.body;
+    const updates = req.body;
 
     try {
-      await Rack.findByIdAndUpdate(rackId, mergeObjFields("", update), {
-        new: true
-      });
+      await editRack(rackId, updates);
 
       const msg = msgObj("The rack was updated.", "blue", "hide-3");
 
-      emit(req.user._id);
+      socketEmit(io, req.user._id, "storage");
 
-      serverRes(res, 200, msg, update);
+      serverRes(res, 200, msg, updates);
     } catch (err) {
       console.log("Err: PATCH/api/rack/:rackId", err);
 
@@ -91,11 +83,7 @@ module.exports = (app, io) => {
       const rack = await Rack.findById(rackId);
 
       if (rack.shelves.length !== 0) {
-        const msg = msgObj(
-          "Delete or relink all shelves of this rack first.",
-          "red",
-          "hide-3"
-        );
+        const msg = storageCheckForStoredItems("rack");
         return serverRes(res, 400, msg, null);
       }
 
@@ -108,13 +96,13 @@ module.exports = (app, io) => {
         rack.remove()
       ]);
 
-      const msg = msgObj("Rack deleted.", "blue", "hide-3");
+      socketEmit(io, req.user._id, "storage");
 
-      emit(req.user._id);
+      const msg = msgObj("Rack deleted.", "blue", "hide-3");
 
       serverRes(res, 200, msg, { storageId, rackId: rack._id });
     } catch (err) {
-      console.log("Err: DELETE/api/racks/:rackId", err);
+      console.log("Err: Delete/api/racks/:rackId", err);
 
       const msg = serverMsg("error", "delete", "rack", "delete error");
       serverRes(res, 400, msg, null);
