@@ -28,7 +28,10 @@ import {
   startGetProduct,
   deleteProduct
 } from "../../../actions/product";
-import { unlinkProduct } from "../../../actions/unlink";
+import {
+  startUnlinkProductFromShelfSpot,
+  startUnlinkProductFromBox
+} from "../../../actions/unlink";
 
 class Product extends Component {
   // Lifecycles -------------------------------------
@@ -83,29 +86,29 @@ class Product extends Component {
   };
 
   onUnlinkProduct = () => {
-    const { product, unlinkProduct } = this.props;
-    const { productLocation, _id } = product;
+    const { productLocation, _id } = this.props.product;
     const { kind, item } = productLocation;
     const productId = _id;
 
-    // remove product from shelf spot
+    // Remove Product from ShelfSpot
     if (kind === "shelfSpot") {
       const shelfSpotId = item._id;
       const obj = { shelfSpotId, kind, productId };
-
+      // Api Call
       this.props.showOverlay({
         from: "productDetailsShowOverlayUnlinkFromShelfSpot"
       });
-      unlinkProduct(obj, product);
+      this.props.startUnlinkProductFromShelfSpot(obj, this.props.product);
     }
-    // remove product from box
+    // Remove Product from Box
     else if (kind === "box") {
       const boxId = item._id;
-      const obj = { boxId, kind, productId };
+      const boxAndProductIds = { boxId, productId };
+      // Api Call
       this.props.showOverlay({
         from: "productDetailsShowOverlayUnlinkFromBox"
       });
-      unlinkProduct(obj, product);
+      this.props.startUnlinkProductFromBox(boxAndProductIds);
     }
   };
 
@@ -223,6 +226,7 @@ export default connect(
     productLoaded,
     startGetProduct,
     deleteProduct,
-    unlinkProduct
+    startUnlinkProductFromShelfSpot,
+    startUnlinkProductFromBox
   }
 )(withRouter(Product));

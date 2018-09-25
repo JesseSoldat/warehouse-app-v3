@@ -13,6 +13,10 @@ import {
   LINK_PRODUCT_TO_SHELFSPOT,
   LINK_BOX_TO_SHELFSPOT
 } from "../actions/link";
+import {
+  UNLINK_BOX_FROM_SHELFSPOT,
+  UNLINK_PRODUCT_FROM_BOX
+} from "../actions/unlink";
 
 const initialQuery = {
   page: 1,
@@ -78,6 +82,8 @@ export default (state = initialState, action) => {
       return {
         ...state,
         products: [],
+        productEntity: null,
+        productOrder: [],
         product: update.product
       };
     case LINK_BOX_TO_SHELFSPOT:
@@ -85,6 +91,18 @@ export default (state = initialState, action) => {
         ...initialState
       };
     // UnLink
+    case UNLINK_BOX_FROM_SHELFSPOT:
+      return {
+        ...initialState
+      };
+    case UNLINK_PRODUCT_FROM_BOX:
+      return {
+        ...state,
+        productEntity: null,
+        productOrder: [],
+        products: [],
+        product: update.product
+      };
     // Reset Products State
     case PRODUCTS_RESET:
       return {

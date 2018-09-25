@@ -35,6 +35,12 @@ const boxLocationQuery = {
   }
 };
 
+// Get the minimum data for display a product card in the box details
+const boxStoredItemsCardInfo = {
+  path: "storedItems",
+  select: ["_id", "productName", "productPictures", "packagingPictures"]
+};
+
 module.exports = (app, io) => {
   const emit = senderId => {
     io.emit("update", {
@@ -87,15 +93,7 @@ module.exports = (app, io) => {
           { new: true }
         )
           .populate(boxLocationQuery)
-          .populate({
-            path: "storedItems",
-            select: [
-              "_id",
-              "productName",
-              "productPictures",
-              "packagingPictures"
-            ]
-          })
+          .populate(boxStoredItemsCardInfo)
       ]);
 
       emit(req.user._id);

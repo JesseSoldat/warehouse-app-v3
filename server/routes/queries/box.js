@@ -1,6 +1,7 @@
 // models
 const Box = require("../../models/storage/box");
 
+// Get the location of a box with only the _ids
 const boxLocationQuery = {
   path: "shelfSpot",
   select: ["_id"],
@@ -18,24 +19,30 @@ const boxLocationQuery = {
   }
 };
 
-// GET ---------------------------------------------------------
-// BOXES with and without a LOCATION
+// Get the minimum data for display a product card in the box details
+const boxStoredItemsCardInfo = {
+  path: "storedItems",
+  select: ["_id", "productName", "productPictures", "packagingPictures"]
+};
+
+// --------------------------- Get -------------------------------
+// All Boxes with and without Locations
 const getAllBoxesWithLocation = (skip, limit, mongoQuery = {}) => {
   return Box.find(mongoQuery, ["_id", "boxLabel"])
     .skip(skip)
     .limit(limit)
     .populate(boxLocationQuery)
-    .populate("storedItems");
+    .populate(boxStoredItemsCardInfo);
 };
 
+// Single Box with Locations
 const getBoxWithLocation = boxId => {
   return Box.findById(boxId, ["_id", "boxLabel"])
     .populate(boxLocationQuery)
-    .populate("storedItems");
+    .populate(boxStoredItemsCardInfo);
 };
 
-// LINK --------------------------------------------------------
-
+// LINK -------------------------------------------------------
 const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
   return Box.findByIdAndUpdate(
     boxId,
@@ -43,7 +50,7 @@ const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
     { new: true }
   )
     .populate(boxLocationQuery)
-    .populate("storedItems");
+    .populate(boxStoredItemsCardInfo);
 };
 
 // UNLINK ------------------------------------------------------
@@ -54,7 +61,7 @@ const unlinkProductFromBox = (boxId, productId) => {
     { new: true }
   )
     .populate(boxLocationQuery)
-    .populate("storedItems");
+    .populate(boxStoredItemsCardInfo);
 };
 
 const unlinkShelfSpotFromBox = boxId => {
@@ -62,7 +69,7 @@ const unlinkShelfSpotFromBox = boxId => {
     boxId,
     { $set: { shelfSpot: null } },
     { new: true }
-  ).populate("storedItems");
+  ).populate(boxStoredItemsCardInfo);
 };
 
 module.exports = {

@@ -8,9 +8,10 @@ import IconBtn from "../../../../components/buttons/IconBtn";
 const LocationCard = ({
   productLocationObj,
   productId,
-  unlinkCb,
   history,
-  width = "12"
+  width = "12",
+  // Cbs
+  unlinkCb
 }) => {
   // haveLocation true | false
 

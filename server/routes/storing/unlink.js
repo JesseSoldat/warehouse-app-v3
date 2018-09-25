@@ -19,7 +19,7 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
-
+  // Unlink Product From ShelfSpot
   app.patch("/api/unlink/productFromShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
 
@@ -46,6 +46,7 @@ module.exports = (app, io) => {
     }
   });
 
+  // Unlink Product From Box
   app.patch("/api/unlink/productFromBox", isAuth, async (req, res) => {
     const { productId, boxId } = req.body;
     try {
@@ -68,6 +69,7 @@ module.exports = (app, io) => {
     }
   });
 
+  // Unlink Box From ShelfSpot
   app.patch("/api/unlink/boxFromShelfSpot", isAuth, async (req, res) => {
     const { boxId, shelfSpotId } = req.body;
 

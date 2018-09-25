@@ -10,7 +10,7 @@ import BoxTable from "./components/BoxTable";
 // actions
 import { serverMsg, startLoading, showOverlay } from "../../../actions/ui";
 import { startGetBox, boxLoaded } from "../../../actions/box";
-import { unlinkBox } from "../../../actions/unlink";
+import { startUnlinkBoxFromShelfSpot } from "../../../actions/unlink";
 
 class Box extends Component {
   // Lifecycles -----------------------------
@@ -51,7 +51,7 @@ class Box extends Component {
 
     // Api Calls
     this.props.showOverlay({ from: "boxShowOverlayRemove" });
-    this.props.unlinkBox({ shelfSpotId, boxId }, history);
+    this.props.startUnlinkBoxFromShelfSpot({ shelfSpotId, boxId }, history);
   };
 
   // Render ---------------------------------------
@@ -98,7 +98,7 @@ const mapStateToProps = ({ ui, box }) => ({
 export default connect(
   mapStateToProps,
   {
-    unlinkBox,
+    startUnlinkBoxFromShelfSpot,
     boxLoaded,
     serverMsg,
     showOverlay,

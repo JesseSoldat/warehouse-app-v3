@@ -9,7 +9,10 @@ import {
   BOX_DELETE_ONE_WITH_LOCATION
 } from "../actions/box";
 import { LINK_BOX_TO_SHELFSPOT, LINK_PRODUCT_TO_BOX } from "../actions/link";
-import { UNLINK_BOX_FROM_SHELFSPOT } from "../actions/unlink";
+import {
+  UNLINK_BOX_FROM_SHELFSPOT,
+  UNLINK_PRODUCT_FROM_BOX
+} from "../actions/unlink";
 
 const initialQuery = {
   page: 1,
@@ -87,6 +90,7 @@ export default (state = initialState, action) => {
     // ---------------- UN-LINKING & LINKING ----------------
     // API update = { box }
     case UNLINK_BOX_FROM_SHELFSPOT:
+    case UNLINK_PRODUCT_FROM_BOX:
     case LINK_BOX_TO_SHELFSPOT:
     case LINK_PRODUCT_TO_BOX:
       return {

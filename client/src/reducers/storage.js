@@ -20,7 +20,8 @@ import {
 } from "../actions/link";
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
-  UNLINK_PRODUCT_FROM_SHELFSPOT
+  UNLINK_PRODUCT_FROM_SHELFSPOT,
+  UNLINK_PRODUCT_FROM_BOX
 } from "../actions/unlink";
 import {
   BOX_CREATE_ONE_LINK,
@@ -376,6 +377,7 @@ export default (state = initialState, action) => {
     case BOX_CREATE_ONE_LINK:
     case LINK_BOX_TO_SHELFSPOT:
     case UNLINK_BOX_FROM_SHELFSPOT:
+    case UNLINK_PRODUCT_FROM_BOX:
     case BOX_UPDATE_ONE:
       return {
         ...state,
