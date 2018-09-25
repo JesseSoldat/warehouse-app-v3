@@ -12,12 +12,11 @@ const seedDb = async () => {
 
   try {
     //#1 first step ----------------------------
-    // await seedProducer();
-    // await seedCustomer();
-    // await seedProducts();
-
-    // await storageSeed();
-    // await boxSeed();
+    await seedProducer();
+    await seedCustomer();
+    await seedProducts();
+    await storageSeed();
+    await boxSeed();
 
     // TODO set it up so they can all run
     // BUG products are not linked to box only shelf spot

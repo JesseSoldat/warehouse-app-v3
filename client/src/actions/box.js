@@ -5,11 +5,13 @@ import checkForMsg from "./helpers/checkForMsg";
 import axiosResponseErrorHandling from "./helpers/axiosResponseErrorHandling";
 // types
 export const BOXES_RESET = "BOXES_RESET";
+// Get
 export const BOXES_REQUESTED = "BOXES_REQUESTED";
 export const BOXES_LOADED = "BOXES_LOADED";
 export const BOX_SEARCH = "BOX_SEARCH";
 export const BOX_REQUESTED = "BOX_REQUESTED";
 export const BOX_LOADED = "BOX_LOADED";
+// Update
 export const BOX_CREATE_ONE = "BOX_CREATE_ONE";
 export const BOX_CREATE_ONE_LINK = "BOX_CREATE_ONE_LINK";
 export const BOX_UPDATE_ONE = "BOX_UPDATE_ONE";
@@ -19,7 +21,7 @@ export const BOX_DELETE_ONE_WITH_LOCATION = "BOX_DELETE_ONE_WITH_LOCATION";
 export const resetBox = () => ({
   type: BOXES_RESET
 });
-// Get All Boxes
+// -------- Get All Boxes ----------------
 export const boxesRequested = () => ({
   type: BOXES_REQUESTED
 });
@@ -47,7 +49,7 @@ export const startGetBoxes = query => async dispatch => {
   }
 };
 
-// GET SINGLE BOX
+// ------- Get Single Box -------------
 export const boxRequested = () => ({
   type: BOX_REQUESTED
 });
@@ -75,7 +77,7 @@ export const startGetBox = boxId => async dispatch => {
   }
 };
 
-// CREATE BOX
+// -------- Create Box -------------------
 export const createBox = box => ({
   type: BOX_CREATE_ONE,
   box
@@ -126,7 +128,7 @@ export const startCreateBox = (obj, history) => async dispatch => {
   }
 };
 
-// UPDATE BOX
+// -------- Update Box ----------------
 export const editBox = update => ({
   type: BOX_UPDATE_ONE,
   update
@@ -158,7 +160,7 @@ export const startEditBox = (obj, boxId, ids, history) => async dispatch => {
   }
 };
 
-// DELETE BOX
+// -------- Delete Box ------------------
 export const deleteBox = update => ({
   type: BOX_DELETE_ONE,
   update

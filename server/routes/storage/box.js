@@ -86,7 +86,6 @@ module.exports = (app, io) => {
   // POST BOX with no location
   app.post("/api/boxes", isAuth, async (req, res) => {
     const box = new Box(req.body);
-    console.log(box);
 
     try {
       await box.save();
@@ -141,6 +140,7 @@ module.exports = (app, io) => {
       emit(req.user._id);
 
       const msg = msgObj("Box updated.", "blue", "hide-3");
+
       serverRes(res, 200, msg, { box: { ...update, boxId } });
     } catch (err) {
       console.log("ERR: PATCH/BOX", err);

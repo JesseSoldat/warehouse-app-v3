@@ -121,12 +121,12 @@ class Products extends Component {
 
   // Render -------------------------------------
   render() {
-    const { products, productsRequest, productsLoaded, query } = this.props;
+    const { loading, products, query } = this.props;
     let content;
 
-    if (productsRequest) {
+    if (loading) {
       content = <Spinner />;
-    } else if (productsLoaded && !products.length) {
+    } else if (!loading && !products.length) {
       content = (
         <div className="row">
           <div className="col-12 text-center">
@@ -134,7 +134,7 @@ class Products extends Component {
           </div>
         </div>
       );
-    } else if (productsLoaded) {
+    } else if (products && products.length) {
       content = <CardList data={productCardData(products)} />;
     }
 
@@ -178,10 +178,9 @@ class Products extends Component {
 }
 
 const mapStateToProps = ({ ui, product }) => ({
+  loading: ui.loading,
   msg: ui.msg,
   products: product.products,
-  productsRequest: product.productsRequest,
-  productsLoaded: product.productsLoaded,
   query: product.query
 });
 

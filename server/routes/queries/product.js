@@ -1,21 +1,25 @@
 const Product = require("../../models/product");
 
-const productLocationQuery = {
+// Gets Box or ShelfSpot Location
+// { kind: string, item: {}}
+const productQuery = {
   path: "productLocation.item",
   select: ["_id"],
   populate: {
-    path: "shelf",
+    path: "shelf shelfSpot",
     select: ["_id"],
     populate: {
-      path: "rack",
+      path: "shelf rack",
       select: ["_id"],
       populate: {
-        path: "storage",
-        select: ["_id"]
+        path: "rack storage",
+        select: ["_id"],
+        populate: { path: "storage", select: ["_id"] }
       }
     }
   }
 };
+
 // LINK --------------------------------------------------------------
 const linkItemToProductWithLocation = (productId, item, itemId) => {
   return Product.findByIdAndUpdate(
@@ -31,7 +35,7 @@ const linkItemToProductWithLocation = (productId, item, itemId) => {
     { new: true }
   )
     .populate("producer customer")
-    .populate(productLocationQuery);
+    .populate(productQuery);
 };
 
 // UNLINK ----------------------------------------------------------------

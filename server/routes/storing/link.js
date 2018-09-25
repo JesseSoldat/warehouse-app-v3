@@ -14,10 +14,26 @@ const {
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
 const {
-  productToBoxWithLocation,
   linkShelfSpotToBoxWithLocation,
   unlinkProductFromBox
 } = require("../queries/box");
+
+const boxLocationQuery = {
+  path: "shelfSpot",
+  select: ["_id"],
+  populate: {
+    path: "shelf",
+    select: ["_id"],
+    populate: {
+      path: "rack",
+      select: ["_id"],
+      populate: {
+        path: "storage",
+        select: ["_id"]
+      }
+    }
+  }
+};
 
 module.exports = (app, io) => {
   const emit = senderId => {
@@ -27,7 +43,7 @@ module.exports = (app, io) => {
       timestamp: Date.now()
     });
   };
-  // ------------------------- LINKING ---------------------------------
+  // ------------------------- Linking --------------------------------
   // Product -> Shelf Spot -----------------------------
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
     const { productId, shelfSpotId } = req.body;
@@ -61,20 +77,32 @@ module.exports = (app, io) => {
     const { productId, boxId } = req.body;
 
     try {
-      // const [product, box] = await Promise.all([
-      //   linkItemToProductWithLocation(productId, "box", boxId),
-      //   productToBoxWithLocation(boxId, productId)
-      // ]);
-
-      const box = await productToBoxWithLocation(boxId, productId);
-
-      console.log("Box", box);
+      const [product, box] = await Promise.all([
+        linkItemToProductWithLocation(productId, "box", boxId),
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $addToSet: { storedItems: productId }
+          },
+          { new: true }
+        )
+          .populate(boxLocationQuery)
+          .populate({
+            path: "storedItems",
+            select: [
+              "_id",
+              "productName",
+              "productPictures",
+              "packagingPictures"
+            ]
+          })
+      ]);
 
       emit(req.user._id);
 
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
 
-      // serverRes(res, 200, msg, { box, product });
+      serverRes(res, 200, msg, { box, product });
     } catch (err) {
       console.log("Err: PATCH/link/productToBox,", err);
 
@@ -112,7 +140,7 @@ module.exports = (app, io) => {
     }
   });
 
-  //-------------------------------- RELINKING ------------------------------------
+  //------------------------ Re-Linking --------------------------------
   // Product -> Shelf Spot -----------------------------
   app.patch("/api/relink/productToShelfSpot", isAuth, async (req, res) => {
     const { prevLocation, productId, shelfSpotId } = req.body;
@@ -172,7 +200,15 @@ module.exports = (app, io) => {
 
       const [product, box] = await Promise.all([
         linkItemToProductWithLocation(productId, "box", boxId),
-        productToBoxWithLocation(boxId, productId)
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $addToSet: { storedItems: productId }
+          },
+          { new: true }
+        )
+          .populate(boxLocationQuery)
+          .populate("storedItems")
       ]);
 
       emit(req.user._id);
@@ -208,7 +244,7 @@ module.exports = (app, io) => {
         }
       }
 
-      // update product and shelfspot
+      // Update Product and ShelfSpot
       const [updateProduct, shelfSpot] = await Promise.all([
         linkItemToProductWithLocation(productId, "shelfSpot", shelfSpotId),
         linkItemToShelfSpotWithLocation(shelfSpotId, "product", productId)
@@ -256,7 +292,15 @@ module.exports = (app, io) => {
 
       const [updateProduct, box] = await Promise.all([
         linkItemToProductWithLocation(productId, "box", boxId),
-        productToBoxWithLocation(boxId, productId)
+        Box.findByIdAndUpdate(
+          boxId,
+          {
+            $addToSet: { storedItems: productId }
+          },
+          { new: true }
+        )
+          .populate(boxLocationQuery)
+          .populate("storedItems")
       ]);
 
       emit(req.user._id);

@@ -37,7 +37,7 @@ class Box extends Component {
     }
 
     if (boxFromBoxes) {
-      return this.props.boxLoaded(boxFromBoxes);
+      return this.props.boxLoaded({ box: boxFromBoxes });
     }
     // Api Calls
     this.props.startLoading({ from: "boxLoadingBox" });

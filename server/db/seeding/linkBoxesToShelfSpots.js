@@ -36,7 +36,7 @@ module.exports = linkBoxesToShelfSpots = async () => {
         } else {
           // break out of the loop
           duplicateSpot = false;
-          // add the index to accumalative list
+
           shelfSpotWithBox.push(randomSpotIndex);
 
           // get the random shelf spot
@@ -57,8 +57,7 @@ module.exports = linkBoxesToShelfSpots = async () => {
       }
     });
 
-    // console.log("shelfSpotWithBox");
-    // console.log(shelfSpotWithBox);
+    console.log("done with shelfSpotWithBox");
   } catch (err) {
     console.log("ERR: Link Seed", err);
   }

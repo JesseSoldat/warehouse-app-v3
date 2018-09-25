@@ -1,17 +1,13 @@
 import {
   RESET_STORAGE,
   // storage
-  STORAGES_SEARCH_REQUESTED,
   STORAGES_SEARCH_LOADED,
-  STORAGES_REQUESTED,
   STORAGES_LOADED,
   STORAGE_UPDATE_ONE,
   STORAGE_CREATE_ONE,
   STORAGE_DELETE_ONE,
-  STORAGE_IDS_REQUESTED,
   STORAGE_IDS_LOADED,
   // rack
-  RACK_REQUESTED,
   RACK_LOADED,
   RACK_CREATE_ONE,
   RACK_UPDATE_ONE,
@@ -33,17 +29,9 @@ import {
 
 const initialState = {
   search: [],
-  storagesSearchRequsted: false,
-  storagesSearchLoaded: false,
   storages: [],
-  storagesRequsted: false,
-  storagesLoaded: false,
   storageIdsEntity: null,
-  storageIdsRequsted: false,
-  storageIdsLoaded: false,
   rack: null,
-  rackRequsted: false,
-  rackLoaded: false,
   storageType: null
 };
 
@@ -155,64 +143,35 @@ export default (state = initialState, action) => {
         ...state,
         storages: [],
         storageIdsEntity: null,
-        storageIdsRequsted: false,
-        storageIdsLoaded: false,
         rack: null,
-        rackRequsted: false,
-        rackLoaded: false,
         search: [],
         storageType: null
       };
 
-    // ----------------------------- STORAGES ---------------------------------
-    case STORAGES_SEARCH_REQUESTED:
-      return {
-        ...state,
-        storagesSearchRequsted: true,
-        storagesSearchLoaded: false
-      };
+    // -------------------------- STORAGES ------------------------------
 
     case STORAGES_SEARCH_LOADED:
       return {
         ...state,
         search,
-        storageType,
-        storagesSearchRequsted: false,
-        storagesSearchLoaded: true
-      };
-
-    case STORAGES_REQUESTED:
-      return {
-        ...state,
-        storagesRequsted: true,
-        storagesLoaded: false
+        storageType
       };
 
     case STORAGES_LOADED:
       return {
         ...state,
         storages: [...storages],
-        storageType: null,
-        storagesRequsted: false,
-        storagesLoaded: true
+        storageType: null
       };
     // -------------------- STORAGE IDS -------------------------------
-    case STORAGE_IDS_REQUESTED:
-      return {
-        ...state,
-        storageIdsRequsted: true,
-        storageIdsLoaded: false
-      };
 
     case STORAGE_IDS_LOADED:
       storageIdsCopy = { ...storageIdsEntity };
       return {
         ...state,
-        storageIdsEntity: storageIdsCopy,
-        storageIdsRequsted: false,
-        storageIdsLoaded: true
+        storageIdsEntity: storageIdsCopy
       };
-    // --------------------------- STORAGE UPDATE
+    // ---------------------- STORAGE UPDATE -----------------------
     case STORAGE_UPDATE_ONE:
       // API update = { storage }
       storagesCopy = [...state.storages];
@@ -227,7 +186,7 @@ export default (state = initialState, action) => {
         storages: storagesCopy,
         storageIdsEntity: null
       };
-
+    // ---------------------- Storage Create -----------------------
     case STORAGE_CREATE_ONE:
       // API update = { storage }
       storagesCopy = [...state.storages];
@@ -240,6 +199,7 @@ export default (state = initialState, action) => {
         rack: null
       };
 
+    // ---------------------- Storage Delete -----------------------
     case STORAGE_DELETE_ONE:
       // API update = { storageId }
       storagesCopy = [...state.storages];
@@ -258,23 +218,14 @@ export default (state = initialState, action) => {
         rack: null
       };
 
-    // --------------------------- RACKS --------------------------------------
-    case RACK_REQUESTED:
-      return {
-        ...state,
-        rackRequsted: true,
-        rackLoaded: false
-      };
-
+    // --------------------- Rack Loaded ----------------------------
     case RACK_LOADED:
       return {
         ...state,
         rack,
-        storageType,
-        rackRequsted: false,
-        rackLoaded: true
+        storageType
       };
-
+    // --------------------- Rack Updated ----------------------------
     case RACK_UPDATE_ONE:
       rackCopy = { ...state.rack };
 
@@ -317,6 +268,7 @@ export default (state = initialState, action) => {
         storageIdsEntity: null
       };
 
+    // --------------------- Rack Created ----------------------------
     case RACK_CREATE_ONE:
       // API update = { rack }
       rackCopy = update.rack;
@@ -331,8 +283,8 @@ export default (state = initialState, action) => {
         storageIdsEntity: null
       };
 
+    // --------------------- Rack Deleted ----------------------------
     case RACK_DELETE_ONE:
-      // console.log("RACK_DELETE_ONE", storageType, update);
       storagesCopy = [...state.storages];
       rackCopy = state.rack === null ? null : { ...state.rack };
 
@@ -427,7 +379,6 @@ export default (state = initialState, action) => {
     case BOX_UPDATE_ONE:
       return {
         ...state,
-        storages: [],
         rack: null
       };
 

@@ -46,21 +46,6 @@ const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
     .populate("storedItems");
 };
 
-const productToBoxWithLocation = async (productId, boxId) => {
-  const box = await Box.findById(boxId);
-  console.log(box);
-
-  return Box.findByIdAndUpdate(
-    boxId,
-    {
-      $push: { storedItems: productId }
-    },
-    { new: true }
-  )
-    .populate(boxLocationQuery)
-    .populate("storedItems");
-};
-
 // UNLINK ------------------------------------------------------
 const unlinkProductFromBox = (boxId, productId) => {
   return Box.findByIdAndUpdate(
@@ -84,7 +69,6 @@ module.exports = {
   getAllBoxesWithLocation,
   getBoxWithLocation,
   linkShelfSpotToBoxWithLocation,
-  productToBoxWithLocation,
   unlinkProductFromBox,
   unlinkShelfSpotFromBox
 };

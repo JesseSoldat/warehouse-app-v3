@@ -59,8 +59,7 @@ class Product extends Component {
 
     if (productEntity) {
       if (productEntity[productId]) {
-        productLoaded(productEntity[productId]);
-        return;
+        return productLoaded(productEntity[productId]);
       }
     }
 
