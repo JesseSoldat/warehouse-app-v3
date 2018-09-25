@@ -17,7 +17,7 @@ const {
 } = require("../queries/box");
 const {
   linkItemToShelfSpotWithLocation,
-  unlinkItemFromShelfSpotWithLocation
+  unlinkBoxFromShelfSpotWithLocation
 } = require("../queries/shelfSpot");
 
 const checkForStoredItems = box => {
@@ -189,9 +189,8 @@ module.exports = (app, io) => {
 
       // ------------ no stored items -----------
       // UNLINK Box from ShelfSpot
-      const shelfSpot = await unlinkItemFromShelfSpotWithLocation(
+      const shelfSpot = await unlinkBoxFromShelfSpotWithLocation(
         shelfSpotId,
-        "box",
         boxId
       );
 

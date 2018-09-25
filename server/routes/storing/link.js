@@ -10,7 +10,7 @@ const serverMsg = require("../../utils/serverMsg");
 const { linkItemToProductWithLocation } = require("../queries/product");
 const {
   linkItemToShelfSpotWithLocation,
-  unlinkItemFromShelfSpotWithLocation,
+  unlinkProductFromShelfSpotWithLocation,
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
 const {
@@ -149,11 +149,7 @@ module.exports = (app, io) => {
 
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
-        await unlinkItemFromShelfSpotWithLocation(
-          oldShelfSpotId,
-          "product",
-          productId
-        );
+        await unlinkProductFromShelfSpotWithLocation(oldShelfSpotId, productId);
       }
       if (kind === "box") {
         const oldBoxId = _id;
@@ -193,11 +189,7 @@ module.exports = (app, io) => {
 
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
-        await unlinkItemFromShelfSpotWithLocation(
-          oldShelfSpotId,
-          "product",
-          productId
-        );
+        await unlinkProductFromShelfSpotWithLocation(oldShelfSpotId, productId);
       }
       if (kind === "box") {
         const oldBoxId = _id;

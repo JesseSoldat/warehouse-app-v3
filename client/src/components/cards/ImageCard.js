@@ -24,7 +24,10 @@ const ImageCard = ({ data, cardSize = "240px" }) => {
     picSrc = "http://via.placeholder.com/150x100"
   } = data;
   return (
-    <div className="card mb-3" style={{ width: cardSize, height: "330px" }}>
+    <div
+      className="card mb-3"
+      style={{ width: cardSize, height: "330px", position: "relative" }}
+    >
       {showPic && (
         <img
           className="card-img-top"

@@ -47,21 +47,23 @@ const linkItemToShelfSpotWithLocation = (shelfSpotId, item, itemId) => {
 };
 
 // UNLINK ------------------------------------------------------
-const unlinkItemFromShelfSpotWithLocation = async (
-  shelfSpotId,
-  item,
-  itemId
-) => {
+const unlinkItemFromShelfSpot = (shelfSpotId, itemId) => {
   return ShelfSpot.findByIdAndUpdate(
     shelfSpotId,
-    { $pull: { storedItems: { [item]: itemId } } },
+    { $pull: { storedItems: { item: itemId } } },
     { new: true }
   )
     .populate(shelfRackStorageQuery)
     .populate(storedItemsQuery);
 };
+const unlinkBoxFromShelfSpotWithLocation = (shelfSpotId, itemId) =>
+  unlinkItemFromShelfSpot(shelfSpotId, itemId);
+
+const unlinkProductFromShelfSpotWithLocation = (shelfSpotId, itemId) =>
+  unlinkItemFromShelfSpot(shelfSpotId, itemId);
 
 module.exports = {
   linkItemToShelfSpotWithLocation,
-  unlinkItemFromShelfSpotWithLocation
+  unlinkBoxFromShelfSpotWithLocation,
+  unlinkProductFromShelfSpotWithLocation
 };
