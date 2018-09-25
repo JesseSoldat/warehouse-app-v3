@@ -16,7 +16,6 @@ export const unlinkProductFromBox = update => ({
   update
 });
 
-// TODO
 export const startUnlinkProductFromBox = boxAndProductIds => async dispatch => {
   const apiUrl = "/api/unlink/productFromBox";
 
@@ -48,27 +47,20 @@ export const unlinkProductFromShelfSpot = update => ({
   update
 });
 
-export const startUnlinkProductFromShelfSpot = (
-  obj,
-  product
-) => async dispatch => {
+export const startUnlinkProductFromShelfSpot = shelfSpotAndProductIds => async dispatch => {
   const apiUrl = "/api/unlink/productFromShelfSpot";
 
   try {
-    const res = await axios.patch(apiUrl, obj);
+    const res = await axios.patch(apiUrl, shelfSpotAndProductIds);
 
     const { msg, options, payload } = res.data;
 
     console.log("startUnlinkProductFromShelfSpot");
     console.log("Payload", payload);
 
-    const { shelfSpot } = payload;
+    const { shelfSpot, product } = payload;
 
-    const updatedProduct = { ...product };
-
-    dispatch(productLoaded(updatedProduct));
-    dispatch(unlinkProductFromShelfSpot({ shelfSpot }));
-    dispatch(resetBox());
+    dispatch(unlinkProductFromShelfSpot({ shelfSpot, product }));
 
     checkForMsg(msg, dispatch, options);
   } catch (err) {

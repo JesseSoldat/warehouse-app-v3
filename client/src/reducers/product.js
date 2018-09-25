@@ -15,7 +15,8 @@ import {
 } from "../actions/link";
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
-  UNLINK_PRODUCT_FROM_BOX
+  UNLINK_PRODUCT_FROM_BOX,
+  UNLINK_PRODUCT_FROM_SHELFSPOT
 } from "../actions/unlink";
 
 const initialQuery = {
@@ -91,6 +92,14 @@ export default (state = initialState, action) => {
         ...initialState
       };
     // UnLink
+    case UNLINK_PRODUCT_FROM_SHELFSPOT:
+      return {
+        ...state,
+        productEntity: null,
+        productOrder: [],
+        products: [],
+        product: update.product
+      };
     case UNLINK_BOX_FROM_SHELFSPOT:
       return {
         ...initialState

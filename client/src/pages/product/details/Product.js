@@ -93,12 +93,12 @@ class Product extends Component {
     // Remove Product from ShelfSpot
     if (kind === "shelfSpot") {
       const shelfSpotId = item._id;
-      const obj = { shelfSpotId, kind, productId };
+      const shelfSpotAndProductIds = { shelfSpotId, productId };
       // Api Call
       this.props.showOverlay({
         from: "productDetailsShowOverlayUnlinkFromShelfSpot"
       });
-      this.props.startUnlinkProductFromShelfSpot(obj, this.props.product);
+      this.props.startUnlinkProductFromShelfSpot(shelfSpotAndProductIds);
     }
     // Remove Product from Box
     else if (kind === "box") {
