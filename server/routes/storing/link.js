@@ -17,17 +17,9 @@ const {
 } = require("../queries/shelfSpot");
 const {
   linkProductToBoxWithLocation,
-  // temp
-  boxLocationQuery,
   linkShelfSpotToBoxWithLocation,
   unlinkProductFromBox
 } = require("../queries/box");
-
-// Get the minimum data for display a product card in the box details
-const boxStoredItemsCardInfo = {
-  path: "storedItems",
-  select: ["_id", "productName", "productPictures", "packagingPictures"]
-};
 
 module.exports = (app, io) => {
   // ------------------------- Linking ------------------------------
@@ -67,15 +59,6 @@ module.exports = (app, io) => {
       const [product, box] = await Promise.all([
         linkItemToProductWithLocation(productId, "box", boxId),
         linkProductToBoxWithLocation(boxId, productId)
-        // Box.findByIdAndUpdate(
-        //   boxId,
-        //   {
-        //     $addToSet: { storedItems: productId }
-        //   },
-        //   { new: true }
-        // )
-        //   .populate(boxLocationQuery)
-        //   .populate(boxStoredItemsCardInfo)
       ]);
 
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");

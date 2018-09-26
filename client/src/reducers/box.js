@@ -1,4 +1,5 @@
 import {
+  BOXES_RESET_QUERY,
   BOXES_LOADED,
   BOX_LOADED,
   BOX_CREATE_ONE,
@@ -34,6 +35,11 @@ export default (state = initialState, action) => {
   const { type, box, boxes, update, query } = action;
 
   switch (type) {
+    case BOXES_RESET_QUERY:
+      return {
+        ...state,
+        query: initialQuery
+      };
     // --------------------- GET BOXES ----------------------
     case BOXES_LOADED:
       return {

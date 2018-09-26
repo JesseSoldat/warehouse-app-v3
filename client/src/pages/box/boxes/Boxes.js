@@ -12,7 +12,7 @@ import SearchBar from "./components/SearchBar";
 import boxCardData from "./helpers/boxCardData";
 import searchBarFields from "./helpers/searchBarFields";
 // actions
-import { startGetBoxes } from "../../../actions/box";
+import { startGetBoxes, boxesResetQuery } from "../../../actions/box";
 import { startLoading } from "../../../actions/ui";
 
 class Boxes extends Component {
@@ -28,6 +28,11 @@ class Boxes extends Component {
   // Lifecycles ---------------------------------------------
   componentDidMount() {
     this.getApiData();
+  }
+
+  componentWillUnmount() {
+    // Re-fetch all boxes to clear any searches
+    this.props.boxesResetQuery();
   }
   // Api Calls ----------------------------------------------
   getApiData = () => {
@@ -169,5 +174,5 @@ const mapStateToProps = ({ ui, box }) => ({
 
 export default connect(
   mapStateToProps,
-  { startGetBoxes, startLoading }
+  { startGetBoxes, boxesResetQuery, startLoading }
 )(Boxes);
