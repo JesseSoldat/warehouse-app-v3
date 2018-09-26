@@ -13,7 +13,7 @@ const { linkItemToProductWithLocation } = require("../queries/product");
 const {
   linkItemToShelfSpotWithLocation,
   unlinkProductFromShelfSpotWithLocation,
-  unlinkBoxFromShelfSpot
+  unlinkBoxFromShelfSpotWithLocation
 } = require("../queries/shelfSpot");
 const {
   linkProductToBoxWithLocation,
@@ -163,15 +163,7 @@ module.exports = (app, io) => {
 
       const [product, box] = await Promise.all([
         linkItemToProductWithLocation(productId, "box", boxId),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $addToSet: { storedItems: productId }
-          },
-          { new: true }
-        )
-          .populate(boxLocationQuery)
-          .populate("storedItems")
+        linkProductToBoxWithLocation(boxId, productId)
       ]);
 
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
@@ -201,7 +193,7 @@ module.exports = (app, io) => {
       if (product && product.productLocation && product.productLocation.kind) {
         const { kind, item } = product.productLocation;
         if (kind === "shelfSpot") {
-          await unlinkProductFromShelfSpot(item, productId);
+          await unlinkBoxFromShelfSpotWithLocation(item, productId);
         } else if (kind === "box") {
           await unlinkProductFromBox(item, productId);
         }
@@ -247,7 +239,7 @@ module.exports = (app, io) => {
         const { kind, item } = product.productLocation;
 
         if (kind === "shelfSpot") {
-          await unlinkProductFromShelfSpot(item, productId);
+          await unlinkProductFromShelfSpotWithLocation(item, productId);
         } else if (kind === "box") {
           await unlinkProductFromBox(item, productId);
         }
@@ -255,15 +247,7 @@ module.exports = (app, io) => {
 
       const [updateProduct, box] = await Promise.all([
         linkItemToProductWithLocation(productId, "box", boxId),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $addToSet: { storedItems: productId }
-          },
-          { new: true }
-        )
-          .populate(boxLocationQuery)
-          .populate("storedItems")
+        linkProductToBoxWithLocation(boxId, productId)
       ]);
 
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
@@ -290,7 +274,7 @@ module.exports = (app, io) => {
       // Remove the old location ------------------------------------------
       if (box && box.shelfSpot) {
         const oldShelfSpotId = box.shelfSpot;
-        await unlinkBoxFromShelfSpot(oldShelfSpotId, boxId);
+        await unlinkBoxFromShelfSpotWithLocation(oldShelfSpotId, boxId);
       }
       // update items
       const [updateBox, shelfSpot] = await Promise.all([

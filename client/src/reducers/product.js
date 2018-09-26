@@ -13,7 +13,10 @@ import {
 import {
   LINK_PRODUCT_TO_BOX,
   LINK_PRODUCT_TO_SHELFSPOT,
-  LINK_BOX_TO_SHELFSPOT
+  LINK_BOX_TO_SHELFSPOT,
+  RE_LINK_PRODUCT_TO_SHELFSPOT,
+  RE_LINK_PRODUCT_TO_BOX,
+  RE_LINK_BOX_TO_SHELFSPOT
 } from "../actions/link";
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
@@ -86,40 +89,27 @@ export default (state = initialState, action) => {
         ...initialState
       };
 
-    // Link
+    // Link - ReLink
+    // api - update = { product, ( box || shelfSpot )}
     case LINK_PRODUCT_TO_BOX:
     case LINK_PRODUCT_TO_SHELFSPOT:
-      return {
-        ...state,
-        products: [],
-        productEntity: null,
-        productOrder: [],
-        product: update.product
-      };
-    case LINK_BOX_TO_SHELFSPOT:
-      return {
-        ...initialState
-      };
-    // UnLink
+    case RE_LINK_PRODUCT_TO_SHELFSPOT:
+    case RE_LINK_PRODUCT_TO_BOX:
+    case UNLINK_PRODUCT_FROM_BOX:
     case UNLINK_PRODUCT_FROM_SHELFSPOT:
       return {
         ...state,
+        products: [],
         productEntity: null,
         productOrder: [],
-        products: [],
         product: update.product
       };
+
+    case LINK_BOX_TO_SHELFSPOT:
+    case RE_LINK_BOX_TO_SHELFSPOT:
     case UNLINK_BOX_FROM_SHELFSPOT:
       return {
         ...initialState
-      };
-    case UNLINK_PRODUCT_FROM_BOX:
-      return {
-        ...state,
-        productEntity: null,
-        productOrder: [],
-        products: [],
-        product: update.product
       };
 
     default:

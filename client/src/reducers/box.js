@@ -9,7 +9,14 @@ import {
   BOX_DELETE_ONE_WITH_LOCATION
 } from "../actions/box";
 import { PRODUCT_DELETED } from "../actions/product";
-import { LINK_BOX_TO_SHELFSPOT, LINK_PRODUCT_TO_BOX } from "../actions/link";
+import {
+  LINK_BOX_TO_SHELFSPOT,
+  LINK_PRODUCT_TO_BOX,
+  RE_LINK_PRODUCT_TO_SHELFSPOT,
+  RE_LINK_PRODUCT_TO_BOX,
+  RE_LINK_BOX_TO_SHELFSPOT
+} from "../actions/link";
+
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
   UNLINK_PRODUCT_FROM_BOX
@@ -98,10 +105,17 @@ export default (state = initialState, action) => {
     case UNLINK_PRODUCT_FROM_BOX:
     case LINK_BOX_TO_SHELFSPOT:
     case LINK_PRODUCT_TO_BOX:
+    case RE_LINK_PRODUCT_TO_BOX:
+    case RE_LINK_BOX_TO_SHELFSPOT:
       return {
         ...state,
         boxes: [],
         box: update.box
+      };
+
+    case RE_LINK_PRODUCT_TO_SHELFSPOT:
+      return {
+        ...initialState
       };
 
     default:

@@ -16,7 +16,10 @@ import { PRODUCT_DELETED } from "../actions/product";
 import { BOX_UPDATE_ONE } from "../actions/box";
 import {
   LINK_BOX_TO_SHELFSPOT,
-  LINK_PRODUCT_TO_SHELFSPOT
+  LINK_PRODUCT_TO_SHELFSPOT,
+  RE_LINK_PRODUCT_TO_SHELFSPOT,
+  RE_LINK_PRODUCT_TO_BOX,
+  RE_LINK_BOX_TO_SHELFSPOT
 } from "../actions/link";
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
@@ -359,6 +362,7 @@ export default (state = initialState, action) => {
     // ------------------------ UNLINK & LINK ----------------------------
     case UNLINK_PRODUCT_FROM_SHELFSPOT:
     case LINK_PRODUCT_TO_SHELFSPOT:
+    case RE_LINK_PRODUCT_TO_SHELFSPOT:
       findShelfSpotInRackAndUpdate(update.shelfSpot);
 
       return {
@@ -372,6 +376,8 @@ export default (state = initialState, action) => {
     case BOX_DELETE_ONE_WITH_LOCATION:
     case BOX_CREATE_ONE_LINK:
     case LINK_BOX_TO_SHELFSPOT:
+    case RE_LINK_BOX_TO_SHELFSPOT:
+    case RE_LINK_PRODUCT_TO_BOX:
     case UNLINK_BOX_FROM_SHELFSPOT:
     case UNLINK_PRODUCT_FROM_BOX:
     case BOX_UPDATE_ONE:

@@ -39,6 +39,7 @@ class Products extends Component {
 
   componentWillUnmount() {
     const { msg, serverMsg } = this.props;
+    // Reset the query for next load of this page
     if (msg && msg.color === "danger") serverMsg(null, "productsClearMsg");
   }
 
