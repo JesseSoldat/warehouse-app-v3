@@ -60,6 +60,18 @@ const linkShelfSpotToBoxWithLocation = (boxId, itemId) => {
     .populate(boxStoredItemsCardInfo);
 };
 
+const linkProductToBoxWithLocation = (boxId, productId) => {
+  return Box.findByIdAndUpdate(
+    boxId,
+    {
+      $addToSet: { storedItems: productId }
+    },
+    { new: true }
+  )
+    .populate(boxLocationQuery)
+    .populate(boxStoredItemsCardInfo);
+};
+
 // -------------------------- Un-Link -------------------------------
 const unlinkProductFromBox = (boxId, productId) => {
   return Box.findByIdAndUpdate(
@@ -80,6 +92,7 @@ const unlinkShelfSpotFromBox = boxId => {
 };
 
 module.exports = {
+  linkProductToBoxWithLocation,
   getAllBoxesWithLocation,
   getBoxWithLocation,
   editBox,

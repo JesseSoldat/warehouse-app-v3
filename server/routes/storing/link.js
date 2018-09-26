@@ -3,6 +3,8 @@ const Product = require("../../models/product");
 const Box = require("../../models/storage/box");
 // middleware
 const isAuth = require("../../middleware/isAuth");
+// helpers
+const socketEmit = require("../helpers/socketEmit");
 // utils
 const { serverRes, msgObj } = require("../../utils/serverRes");
 const serverMsg = require("../../utils/serverMsg");
@@ -14,26 +16,12 @@ const {
   unlinkBoxFromShelfSpot
 } = require("../queries/shelfSpot");
 const {
+  linkProductToBoxWithLocation,
+  // temp
+  boxLocationQuery,
   linkShelfSpotToBoxWithLocation,
   unlinkProductFromBox
 } = require("../queries/box");
-
-const boxLocationQuery = {
-  path: "shelfSpot",
-  select: ["_id"],
-  populate: {
-    path: "shelf",
-    select: ["_id"],
-    populate: {
-      path: "rack",
-      select: ["_id"],
-      populate: {
-        path: "storage",
-        select: ["_id"]
-      }
-    }
-  }
-};
 
 // Get the minimum data for display a product card in the box details
 const boxStoredItemsCardInfo = {
@@ -42,13 +30,6 @@ const boxStoredItemsCardInfo = {
 };
 
 module.exports = (app, io) => {
-  const emit = senderId => {
-    io.emit("update", {
-      msg: "storing",
-      senderId,
-      timestamp: Date.now()
-    });
-  };
   // ------------------------- Linking ------------------------------
   // Product -> Shelf Spot
   app.patch("/api/link/productToShelfSpot", isAuth, async (req, res) => {
@@ -60,13 +41,13 @@ module.exports = (app, io) => {
         linkItemToShelfSpotWithLocation(shelfSpotId, "product", productId)
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj(
         "Product and Shelf Spot are now linked.",
         "blue",
         "hide-3"
       );
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { shelfSpot, product });
     } catch (err) {
@@ -85,20 +66,21 @@ module.exports = (app, io) => {
     try {
       const [product, box] = await Promise.all([
         linkItemToProductWithLocation(productId, "box", boxId),
-        Box.findByIdAndUpdate(
-          boxId,
-          {
-            $addToSet: { storedItems: productId }
-          },
-          { new: true }
-        )
-          .populate(boxLocationQuery)
-          .populate(boxStoredItemsCardInfo)
+        linkProductToBoxWithLocation(boxId, productId)
+        // Box.findByIdAndUpdate(
+        //   boxId,
+        //   {
+        //     $addToSet: { storedItems: productId }
+        //   },
+        //   { new: true }
+        // )
+        //   .populate(boxLocationQuery)
+        //   .populate(boxStoredItemsCardInfo)
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { box, product });
     } catch (err) {
@@ -120,13 +102,13 @@ module.exports = (app, io) => {
         linkShelfSpotToBoxWithLocation(boxId, shelfSpotId)
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj(
         "Box and Shelf Spot are now linked.",
         "blue",
         "hide-3"
       );
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { shelfSpot, box });
     } catch (err) {
@@ -161,13 +143,13 @@ module.exports = (app, io) => {
         linkItemToShelfSpotWithLocation(shelfSpotId, "product", productId)
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj(
         "Product and Shelf Spot are now linked.",
         "blue",
         "hide-3"
       );
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { shelfSpot, product });
     } catch (err) {
@@ -209,9 +191,9 @@ module.exports = (app, io) => {
           .populate("storedItems")
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { box, product });
     } catch (err) {
@@ -248,13 +230,13 @@ module.exports = (app, io) => {
         linkItemToShelfSpotWithLocation(shelfSpotId, "product", productId)
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj(
         "Product and Shelf Spot are now linked.",
         "blue",
         "hide-3"
       );
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, {
         product: updateProduct,
@@ -301,9 +283,9 @@ module.exports = (app, io) => {
           .populate("storedItems")
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj("Product and Box are now linked.", "blue", "hide-3");
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { product: updateProduct, box });
     } catch (err) {
@@ -333,13 +315,13 @@ module.exports = (app, io) => {
         linkItemToShelfSpotWithLocation(shelfSpotId, "box", boxId)
       ]);
 
-      emit(req.user._id);
-
       const msg = msgObj(
         "Box and Shelf Spot are now linked.",
         "blue",
         "hide-3"
       );
+
+      socketEmit(io, req.user._id, "storage");
 
       serverRes(res, 200, msg, { box, shelfSpot });
     } catch (err) {
