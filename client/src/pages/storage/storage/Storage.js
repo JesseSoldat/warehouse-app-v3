@@ -21,14 +21,10 @@ class Storage extends Component {
   }
 
   componentDidUpdate() {
-    const { match, rack, rackRequsted } = this.props;
+    const { match, rack } = this.props;
     const { rackId } = match.params;
 
-    if (!rack || rack._id !== rackId) {
-      if (rackRequsted === false) {
-        this.getRack();
-      }
-    }
+    if (!rack || rack._id !== rackId) this.getRack();
   }
 
   componentWillUnmount() {
@@ -94,7 +90,6 @@ class Storage extends Component {
 const mapStateToProps = ({ ui, storage }) => ({
   msg: ui.msg,
   rack: storage.rack,
-  rackRequsted: storage.rackRequsted,
   loading: ui.loading
 });
 

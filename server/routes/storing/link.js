@@ -112,6 +112,8 @@ module.exports = (app, io) => {
       // create query to remove old storage ref
       const { kind, _id } = prevLocation;
 
+      onReLinkRemoveOldRef(kind, _id);
+
       if (kind === "shelfSpot") {
         const oldShelfSpotId = _id;
         await unlinkProductFromShelfSpotWithLocation(oldShelfSpotId, productId);

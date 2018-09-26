@@ -7,6 +7,14 @@ export const UNLINK_PRODUCT_FROM_BOX = "UNLINK_PRODUCT_FROM_BOX";
 export const UNLINK_PRODUCT_FROM_SHELFSPOT = "UNLINK_PRODUCT_FROM_SHELFSPOT";
 export const UNLINK_BOX_FROM_SHELFSPOT = "UNLINK_BOX_FROM_SHELFSPOT";
 
+const unLinkItemLogger = (method, apiUrl, payload) => {
+  console.log("---------------- unLinkItems ---------------------");
+  console.log(method);
+  console.log("Api Url:", apiUrl);
+  console.log("PayLoad:", payload);
+  console.log("-------------------------------------------");
+};
+
 // Unlink Product From Box
 export const unlinkProductFromBox = update => ({
   type: UNLINK_PRODUCT_FROM_BOX,
@@ -21,12 +29,9 @@ export const startUnlinkProductFromBox = boxAndProductIds => async dispatch => {
 
     const { msg, options, payload } = res.data;
 
-    // payload = { box, product }
+    unLinkItemLogger("startUnlinkProductFromBox", apiUrl, payload);
 
     const { box, product } = payload;
-
-    console.log("startUnlinkProductFromBox");
-    console.log("Payload", payload);
 
     dispatch(unlinkProductFromBox({ box, product }));
 
@@ -52,8 +57,7 @@ export const startUnlinkProductFromShelfSpot = shelfSpotAndProductIds => async d
 
     const { msg, options, payload } = res.data;
 
-    console.log("startUnlinkProductFromShelfSpot");
-    console.log("Payload", payload);
+    unLinkItemLogger("startUnlinkProductFromShelfSpot", apiUrl, payload);
 
     const { shelfSpot, product } = payload;
 
@@ -79,12 +83,12 @@ export const unlinkBoxFromShelfSpot = update => ({
 
 export const startUnlinkBoxFromShelfSpot = (obj, history) => async dispatch => {
   try {
-    const res = await axios.patch("/api/unlink/boxFromShelfSpot", obj);
+    const apiUrl = "/api/unlink/boxFromShelfSpot";
+    const res = await axios.patch(apiUrl, obj);
 
     const { msg, options, payload } = res.data;
 
-    console.log("startUnlinkBoxFromShelfSpot");
-    console.log("Payload", payload);
+    unLinkItemLogger("startUnlinkBoxFromShelfSpot", apiUrl, payload);
 
     const { box, shelfSpot } = payload;
 

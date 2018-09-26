@@ -1,19 +1,20 @@
 import {
-  // storage
+  // Storage
   STORAGES_SEARCH_LOADED,
   STORAGES_LOADED,
   STORAGE_UPDATE_ONE,
   STORAGE_CREATE_ONE,
   STORAGE_DELETE_ONE,
   STORAGE_IDS_LOADED,
-  // rack
+  // Rack
   RACK_LOADED,
   RACK_CREATE_ONE,
   RACK_UPDATE_ONE,
   RACK_DELETE_ONE
 } from "../actions/storage";
+// Product
 import { PRODUCT_DELETED } from "../actions/product";
-import { BOX_UPDATE_ONE } from "../actions/box";
+// Link
 import {
   LINK_BOX_TO_SHELFSPOT,
   LINK_PRODUCT_TO_SHELFSPOT,
@@ -21,12 +22,15 @@ import {
   RE_LINK_PRODUCT_TO_BOX,
   RE_LINK_BOX_TO_SHELFSPOT
 } from "../actions/link";
+// UnLink
 import {
   UNLINK_BOX_FROM_SHELFSPOT,
   UNLINK_PRODUCT_FROM_SHELFSPOT,
   UNLINK_PRODUCT_FROM_BOX
 } from "../actions/unlink";
+// Box
 import {
+  BOX_UPDATE_ONE,
   BOX_CREATE_ONE_LINK,
   BOX_DELETE_ONE_WITH_LOCATION
 } from "../actions/box";
@@ -63,23 +67,23 @@ export default (state = initialState, action) => {
   // FIND RACK in STORAGE --------------------------------
   const findRackInStoragesAndUpdate = () => {
     // Needs rackCopy
-    console.log("----------findRackInStoragesAndUpdate-----------");
+    // console.log("----------findRackInStoragesAndUpdate-----------");
     storagesCopy = [...state.storages];
 
     if (storagesCopy.length === 0) return console.log("STORE Storages empty");
     // FIND Rack in Storages in the STORE
     storageId = rackCopy.storage._id;
-    console.log("storageId", storageId);
+    // console.log("storageId", storageId);
 
     storageIndex = getIndexFromArray(storagesCopy, storageId);
-    console.log("storageIndex", storageIndex);
+    // console.log("storageIndex", storageIndex);
 
     if (storageIndex >= 0) {
       rackId = rackCopy._id;
-      console.log("rackId", rackId);
+      // console.log("rackId", rackId);
 
       rackIndex = getIndexFromArray(storagesCopy[storageIndex].racks, rackId);
-      console.log("rackIndex", rackIndex);
+      // console.log("rackIndex", rackIndex);
 
       // Update old Rack || Add new Rack to Storages
       rackIndex >= 0
@@ -95,21 +99,21 @@ export default (state = initialState, action) => {
     rackId = shelfSpot.shelf.rack._id;
     storageId = shelfSpot.shelf.rack.storage._id;
 
-    console.log("--- getIdsFromShelfSpot ---");
-    console.log("shelfSpotId", shelfSpotId);
-    console.log("shelfId", shelfId);
-    console.log("rackId", rackId);
-    console.log("storageId", storageId);
+    // console.log("--- getIdsFromShelfSpot ---");
+    // console.log("shelfSpotId", shelfSpotId);
+    // console.log("shelfId", shelfId);
+    // console.log("rackId", rackId);
+    // console.log("storageId", storageId);
   };
 
   const findShelfSpotInRackAndUpdate = shelfSpot => {
-    console.log("----------findItemInRackAndUpdate-----------");
+    // console.log("----------findItemInRackAndUpdate-----------");
     getIdsFromShelfSpot(shelfSpot);
 
     rackCopy = state.rack ? { ...state.rack } : null;
 
     if (!rackCopy || rackCopy._id !== rackId) {
-      console.log("STORE Rack is null || rackId does not match");
+      // console.log("STORE Rack is null || rackId does not match");
       storagesCopy = [];
       rackCopy = null;
       return;
@@ -117,7 +121,7 @@ export default (state = initialState, action) => {
 
     // FIND Shelf Index
     shelfIndex = getIndexFromArray(rackCopy.shelves, shelfId);
-    console.log("shelfIndex", shelfIndex);
+    // console.log("shelfIndex", shelfIndex);
 
     // FIND ShelfSpot Index
     if (shelfIndex >= 0) {
@@ -125,7 +129,7 @@ export default (state = initialState, action) => {
         rackCopy.shelves[shelfIndex].shelfSpots,
         shelfSpotId
       );
-      console.log("shelfSpotIndex", shelfSpotIndex);
+      // console.log("shelfSpotIndex", shelfSpotIndex);
     }
 
     // UPDATE ShelfSpot in Rack

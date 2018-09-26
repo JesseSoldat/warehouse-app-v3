@@ -9,9 +9,6 @@ export const LINK_BOX_TO_SHELFSPOT = "LINK_BOX_TO_SHELFSPOT";
 export const RE_LINK_PRODUCT_TO_SHELFSPOT = "RE_LINK_PRODUCT_TO_SHELFSPOT";
 export const RE_LINK_PRODUCT_TO_BOX = "RE_LINK_PRODUCT_TO_BOX";
 export const RE_LINK_BOX_TO_SHELFSPOT = "RE_LINK_BOX_TO_SHELFSPOT";
-// export const SCAN_PRODUCT_TO_SHELFSPOT = "SCAN_PRODUCT_TO_SHELFSPOT";
-// export const SCAN_PRODUCT_TO_BOX = "SCAN_PRODUCT_TO_BOX";
-// export const SCAN_BOX_TO_SHELFSPOT = "SCAN_BOX_TO_SHELFSPOT";
 
 // helpers --------------------------------------------------------------------
 const createHistoryUrl = (shelfSpot, type, boxId) => {
@@ -34,6 +31,14 @@ const checkBoxUrlType = (shelfSpot, box, boxId, history) => {
       : (url = createHistoryUrl(box.shelfSpot, "box", boxId));
   }
   history.push(url);
+};
+
+const linkItemLogger = (type1, type2, apiUrl, payload) => {
+  console.log("----------- linkItems Method ----------------");
+  console.log(`Types: ${type1} | ${type2}`);
+  console.log("Api Url:", apiUrl);
+  console.log("PayLoad:", payload);
+  console.log("-------------------------------------------");
 };
 
 // ----------------- Link -------------------------
@@ -68,14 +73,8 @@ export const reLinkBoxToShelfSpot = update => ({
   update
 });
 
-const linkItemLogger = (type1, type2, apiUrl, payload) => {
-  console.log("---------------- linkItems ---------------------");
-  console.log(`Link ${type1} to ${type2}`);
-  console.log("Api Url:", apiUrl);
-  console.log("PayLoad:", payload);
-  console.log("-------------------------------------------");
-};
 // Scan || Manual Link two items - check item types - are already linked?
+
 export const linkItems = (obj, history) => async dispatch => {
   const { type1, type2, apiUrl, productId, boxId } = obj;
 
