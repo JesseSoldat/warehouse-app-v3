@@ -18,7 +18,9 @@ CLIENT package.json
 
 RENAME
 https://devcenter.heroku.com/articles/renaming-apps#updating-git-remotes
-heroku apps:rename jlab-warehouse-app
+
+newName - oldName
+heroku apps:rename around-the-world-react --app ancient-falls-85649
 
 Check that the app is running
 heroku ps:scale web=1

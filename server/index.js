@@ -1,5 +1,6 @@
 require("./config/config");
 const express = require("express");
+const helmet = require("helmet");
 const bodyParser = require("body-parser");
 const connectToDb = require("./db/mongoose");
 
@@ -11,6 +12,7 @@ const io = require("socket.io")(server);
 
 connectToDb(io);
 
+app.use(helmet());
 app.use(bodyParser.json());
 
 require("./routes/user")(app);
